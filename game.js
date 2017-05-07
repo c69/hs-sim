@@ -1,42 +1,65 @@
 "use strict";
 
 class Game {
-  constructor (player1, player2, deck1, deck2) {
-    this.player1 = player1;
-    this.player2 = player2;
-    this.deck1 = deck1;
-    this.deck2 = deck2;
+  constructor (players) {
+    this.players = players;
     this.turn = 0;
   }
   start () {
-    // = each ?
-    player1.hand += deck1.draw(5);
-    player2.hand += deck2.draw(5);
-    player1.mana = 1;
-    player2.mana = 1;
+    this.players.forEach(player => {
+      player.deck.draw(5).forEach(card => (
+        player.hand.add(card)
+      ));
+      player.mana = 1;
+    });
+
+    return this;  
   }
   nextTurn () {
     turn += 1;
-    if (player1.mana < 10) {
-      player1.mana += 1;
-    }
-    if (player1.mana < 10) {
-      player1.mana += 1;
-    }
-    player1.hand += deck1.draw(1);
-    player2.hand += deck2.draw(1);
-    
+    this.players.forEach(player => {
+      if (player.mana < 10) {
+        player.mana += 1;
+      }
+      player.deck.draw(1).forEach(card => (
+        player.hand.add(card)
+      ));
+    });   
+
+    return this;
   }
-  finish () {}
+  view () {
+    console.log(42);
+    //console.log(`${this.players.forEach(({mana, hp, deck, hand})=>[mana, hp, deck.length, hand.length])}`);
+    console.log(`hand: ${this.players[0].hand.size}`);
+    
+    return this;
+  }
+  finish () {
+    //return this;
+  }
 }
 
 class Deck {
-  draw (n = 1) {}
+  constructor (arr) {
+    this._deck = arr;
+  }
+  draw (n = 1) {
+    return [this._deck.unshift()]; // only 1 for now, N is ignored
+  }
 }
 
 class Hand {
+  constructor () {
+    this._hand = [];
+  }
   play (card_id) {} // ?
-  add (card)
+  add (card) {
+    this._hand.push(card);
+  }
+  get size () {
+    return this._hand.length;
+  }
 }
 
 class Card {
@@ -73,7 +96,10 @@ class Mana {
 }
 
 class Player {
-  constructor () {}
+  constructor (deck) {
+    this.deck = deck;
+    this.hand = new Hand();
+  }
   get hp () {}
 
 }
@@ -87,5 +113,9 @@ for (let i = 0; i < 30; i++) {
 var deck_prime = new Deck(fireballs);
 var deck_prime2 = new Deck(fireballs);
 
-var g = new Game(p1, p2, deck_prime, deck_prime2);
+var p1 = new Player(deck_prime);
+var p2 = new Player(deck_prime2);
+
+var g = new Game([p1, p2]);
 g.start();
+g.view();

@@ -28,7 +28,7 @@ class Game {
     //console.log(`${this.players.forEach(({mana, hp, deck, hand})=>[mana, hp, deck.length, hand.length])}`);
     console.log(`hand: ${this.players[0].hand.size}`);
     console.log(`mana: ${this.players[0].mana}`);
-    console.log(`hp: ${this.players[0].hp}`);
+    console.log(`hp: ${this.players[0].hero.hp}`);
 
     return this;
   }
@@ -106,33 +106,51 @@ class Mana {
   get amount () {}
 }
 
-//maybe add class Hero ?
 class Player {
-  constructor (deck) {
+  constructor (deck, name) {
     this.deck = deck;
     this.hand = new Hand();
-    this.health = 30;
+    this.name = name;
+    this.hero = new Hero(this);
     this.fatigue = 1;
   }
   draw (n) {
     var newCards = this.deck.draw(n);
-    if (!newCards.length) this.damage(this.fatigue++);
+    if (!newCards.length) this.hero.damage(this.fatigue++);
     newCards.forEach(card => (
       this.hand.add(card)
     ), this);
+  }
+  loose () {
+    console.warn(`player LOST the game`);
+  }
+}
+
+class Board {
+  constructor (player1, player2) {
+    this.hero1 = player1.hero;
+    this.hero2 = player2.hero;
+  }
+} 
+
+class Hero {
+  constructor (player) {
+    this.health = 30;
+    this.owner = player;
   }
   get hp () {
     return this.health;
   }
   damage (n) {
     this.health -= n;
-    console.log(`player takes ${n} damage!`);
+    console.log(`hero of ${this.owner.name} takes ${n} damage!`);
     if (this.health < 0) {
       this.die();
     }
   }
   die () {
-    console.warn('player died');
+    console.warn(`hero died`);
+    this.owner.loose();
   }
 }
 
@@ -145,8 +163,8 @@ for (let i = 0; i < 30; i++) {
 var deck_prime = new Deck(fireballs);
 var deck_prime2 = new Deck(fireballs);
 
-var p1 = new Player(deck_prime);
-var p2 = new Player(deck_prime2);
+var p1 = new Player(deck_prime, 'Alice');
+var p2 = new Player(deck_prime2, 'Bob');
 
 var g = new Game([p1, p2]);
 g.start();

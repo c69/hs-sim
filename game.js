@@ -7,32 +7,29 @@ class Game {
   }
   start () {
     this.players.forEach(player => {
-      player.deck.draw(5).forEach(card => (
-        player.hand.add(card)
-      ));
+      player.deck.draw(5);
       player.mana = 1;
     });
 
     return this;  
   }
   nextTurn () {
-    turn += 1;
-    this.players.forEach(player => {
-      if (player.mana < 10) {
-        player.mana += 1;
-      }
-      player.deck.draw(1).forEach(card => (
-        player.hand.add(card)
-      ));
-    });   
-
+    this.turn += 1;
+    let player = this.players[this.turn % 2];
+    if (player.mana < 10) {
+      player.mana += 1;
+    }
+    player.draw(1);
+  
     return this;
   }
   view () {
-    console.log(42);
+    console.log(`turn # ${this.turn}`);
     //console.log(`${this.players.forEach(({mana, hp, deck, hand})=>[mana, hp, deck.length, hand.length])}`);
     console.log(`hand: ${this.players[0].hand.size}`);
-    
+    console.log(`mana: ${this.players[0].mana}`);
+    console.log(`hp: ${this.players[0].hp}`);
+
     return this;
   }
   finish () {
@@ -45,7 +42,18 @@ class Deck {
     this._deck = arr;
   }
   draw (n = 1) {
-    return [this._deck.unshift()]; // only 1 for now, N is ignored
+    var result = [];
+    while (n > 0) {
+      var card = this._deck.shift();
+      if (card) {
+       result.push(card);
+      }
+      n--;
+    }
+    return result;
+  }
+  get size () {
+    return this._deck.length;
   }
 }
 
@@ -55,6 +63,9 @@ class Hand {
   }
   play (card_id) {} // ?
   add (card) {
+    if (this._hand.length > 9) {
+      return;
+    } 
     this._hand.push(card);
   }
   get size () {
@@ -95,13 +106,34 @@ class Mana {
   get amount () {}
 }
 
+//maybe add class Hero ?
 class Player {
   constructor (deck) {
     this.deck = deck;
     this.hand = new Hand();
+    this.health = 30;
+    this.fatigue = 1;
   }
-  get hp () {}
-
+  draw (n) {
+    var newCards = this.deck.draw(n);
+    if (!newCards.length) this.damage(this.fatigue++);
+    newCards.forEach(card => (
+      this.hand.add(card)
+    ), this);
+  }
+  get hp () {
+    return this.health;
+  }
+  damage (n) {
+    this.health -= n;
+    console.log(`player takes ${n} damage!`);
+    if (this.health < 0) {
+      this.die();
+    }
+  }
+  die () {
+    console.warn('player died');
+  }
 }
 
 var fireballs = [];
@@ -119,3 +151,7 @@ var p2 = new Player(deck_prime2);
 var g = new Game([p1, p2]);
 g.start();
 g.view();
+
+for(let i = 0; i < 42; i++) {
+  g.nextTurn().view();
+}

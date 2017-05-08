@@ -16,6 +16,7 @@ class Game {
       player.draw(5);
       player.manaCrystals = 1;
       player.mana = player.manaCrystals;
+      player.board = this.board;// temporary hack - wiring
     });
 
     return this;  
@@ -35,14 +36,13 @@ class Game {
   }
   view () {
     console.log(`turn # ${this.turn}`);
-    //console.log(`${this.players.forEach(({mana, hp, deck, hand})=>[mana, hp, deck.length, hand.length])}`);
     this.players.forEach(player => {
       console.log(`
         player ${player.name} hand: ${player.hand.size} mana: ${player.mana} / ${player.manaCrystals}
         hp: ${player.hero.hp}
       `);
+      console.log(this.board.listOwn(player));
     });
-    console.log(this.board.list());
     
     return this;
   }
@@ -149,10 +149,13 @@ class MinionCard {
     this.health = minion.health;
     this.attack = minion.attack;
     this.summons = this.minion = minion; // ???
+
+    this.action = this.action.bind(this); // ES6 caveman bind
   }
   action (player) {
     //player.board.choosePosition(); ??
-    player.summonMinion(this.minion);
+    player.board.addOwn(player, this.minion); //bug !!!
+    //player.summonMinion(this.minion);
   }
 }
 
@@ -173,6 +176,9 @@ class Minion {
   defend () {}
   damage () {}
   die () {}
+  toString () {
+    return `[Object Minion: ${this.name}]`;
+  }
 }
 
 class Player {
@@ -217,8 +223,9 @@ class Board {
   listOwn (player) {
     return [this._board.get(player)];
   }
-  add (player, minion) {
-    this._board[42].minions.splice(idx, 0, minion);
+  addOwn (player, minion) {
+    var idx = 0;
+    this._board.get(player).minions.splice(idx, 0, minion); //same bug
   }
   remove () {
 
@@ -228,6 +235,7 @@ class Board {
 class Hero {
   constructor (player) {
     this.health = 30;
+    //this.attack = 0;
     this.owner = player;
   }
   get hp () {
@@ -252,7 +260,13 @@ for (let i = 0; i < 30; i++) {
   fireballs.push(
     //new Card('Fireball')
     dice === 4 ? new FireballCard() :
-      new JunkCard('x'.repeat(dice), dice)
+      //new JunkCard('x'.repeat(dice), dice)
+      new MinionCard({
+        name: 'Elemental ' + '*'.repeat(dice),
+        attack: dice + 1,
+        health: dice,
+        price: dice
+      }, dice)
   );
 }
 var deck_prime = new Deck(fireballs);
@@ -279,7 +293,8 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
     p1.hand.play(fireball.id)(p2.hero);
   } else {
     let whatever = p1.hand.listPlayable()[0];
-    whatever && p1.hand.play(whatever.id)(p2.hero);
+    //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
+    whatever && p1.hand.play(whatever.id)(p1); // minion - owner is player: Alice  
   }
   g.nextTurn().view();
 }

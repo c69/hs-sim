@@ -1,4 +1,5 @@
 'use strict';
+const Board = require('./board.js');
 
 class Game {
   constructor (players) {

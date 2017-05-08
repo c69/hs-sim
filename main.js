@@ -2,7 +2,6 @@
 // @ts-check
 
 const Game = require('./classes/game.js');
-const Board = require('./classes/board.js');
 
 class Deck {
   constructor (arr) {

@@ -4,6 +4,7 @@
 class Game {
   constructor (players) {
     this.players = players;
+    this.board = new Board(...players);
     this.turn = 0;
   }
   start () {
@@ -35,10 +36,14 @@ class Game {
   view () {
     console.log(`turn # ${this.turn}`);
     //console.log(`${this.players.forEach(({mana, hp, deck, hand})=>[mana, hp, deck.length, hand.length])}`);
-    console.log(`hand: ${this.players[0].hand.size}`);
-    console.log(`mana: ${this.players[0].mana} / ${this.players[0].manaCrystals}`);
-    console.log(`hp: ${this.players[0].hero.hp}`);
-
+    this.players.forEach(player => {
+      console.log(`
+        player ${player.name} hand: ${player.hand.size} mana: ${player.mana} / ${player.manaCrystals}
+        hp: ${player.hero.hp}
+      `);
+    });
+    console.log(this.board.list());
+    
     return this;
   }
   finish () {
@@ -136,6 +141,40 @@ class JunkCard {
   }//o_O you cannot bind(this) es6 methods ??? // .bind(this);// becoz we return action fn from hand.play()
 }
 
+class MinionCard {
+  constructor (minion, price) {
+    // cannot pick a good name :(
+    this.price = price;
+    this.name = minion.name;
+    this.health = minion.health;
+    this.attack = minion.attack;
+    this.summons = this.minion = minion; // ???
+  }
+  action (player) {
+    //player.board.choosePosition(); ??
+    player.summonMinion(this.minion);
+  }
+}
+
+class Minion {
+  constructor (name, attack, health) {
+    Object.assign(this, {
+      name, health, attack
+    });
+    this.isWaiting = true; // initial ZZZ / sleep
+    this.attackedThisTurn = 0; // this is getting convoluted =/
+  } 
+  play () {}
+  attack (target) {
+    target.damage(this.attack);
+    //target.defend(this.attack);
+    //target.defend(this);
+  }
+  defend () {}
+  damage () {}
+  die () {}
+}
+
 class Player {
   constructor (deck, name) {
     this.deck = deck;
@@ -160,8 +199,29 @@ class Player {
 
 class Board {
   constructor (player1, player2) {
-    this.hero1 = player1.hero;
-    this.hero2 = player2.hero;
+    this.player1 = player1;
+    this.player2 = player2;
+    this._board = new Map([[
+      player1, {
+        hero: player1.hero,
+        minions: []
+      }],[
+      player2, {
+        hero: player2.hero,
+        minions: []
+    }]]);
+  }
+  list () { // ??
+    return [this._board.get(this.player1), this._board.get(this.player2)];
+  }
+  listOwn (player) {
+    return [this._board.get(player)];
+  }
+  add (player, minion) {
+    this._board[42].minions.splice(idx, 0, minion);
+  }
+  remove () {
+
   }
 } 
 

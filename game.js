@@ -1,4 +1,5 @@
 "use strict";
+// @ts-check
 
 class Game {
   constructor (players) {
@@ -83,7 +84,6 @@ class Hand {
         id: i, // consider a harder proof, like autoincrement
         name: v.name,
         price: v.price
-        // cannot deduct .isPlayable !!! - no mana info, no global state
       }
     });
   }
@@ -93,17 +93,10 @@ class Hand {
     this.owner.mana -= card.price;
     console.log(card);
     return card.action;
-    /*
-    if (card_id in hand) // lol yes, pseudo code
-     and isPlayable
-     and enoughMana // do we need 2 ? 
 
-     then play
-      hand[id].play();
-      // what about targeting ?!
-      // if card.isNeedTarget ? isNeedOptionalTarget ? isNeedTargetIfConditionMet ??? (-__-)
-    */  
-  } // ?
+    // what about targeting ?!
+    // if card.isNeedTarget ? isNeedOptionalTarget ? isNeedTargetIfConditionMet ??? (-__-)
+  }
   add (card) {
     if (this._hand.length > 9) {
       return;
@@ -141,39 +134,6 @@ class JunkCard {
     //console.log(`nothing happens [${this.price} mana wasted..]`)
     console.log(`nothing happens, -some- mana wasted..]`)
   }//o_O you cannot bind(this) es6 methods ??? // .bind(this);// becoz we return action fn from hand.play()
-}
-
-class Card {
-  constructor ({
-    type,
-    id,
-    name,
-    price,
-    text
-  }) {
-    Object.assign(this, {
-      type,
-      id,
-      name,
-      price,
-      text //?
-    });
-  }
-  play () {
-    this.action(); //o, yeah.. no action in API :( 
-  }
-}
-
-function dealDamage (target, amount) {
-  target.damage(amount); //...
-}
-
-class Mana {
-  constructor (player) {
-
-  }
-  increment (n) {}
-  get amount () {}
 }
 
 class Player {
@@ -241,6 +201,7 @@ var deck_prime2 = new Deck(fireballs);
 var p1 = new Player(deck_prime, 'Alice');
 var p2 = new Player(deck_prime2, 'Bob');
 
+// actual play
 var g = new Game([p1, p2]);
 g.start();
 g.view();
@@ -249,6 +210,7 @@ for(let i = 0; i < 10; i++) {
   g.nextTurn().view();
 }
 
+//AI - Artificial stupIdity
 for(let i = 0; i < 42 && !g.isOver; i++) {
   p1.hand.view();
   let fireball = p1.hand.list().find(({name}) => name === 'Fireball');

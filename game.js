@@ -4,7 +4,8 @@
 class Game {
   constructor (players) {
     this.players = players;
-    this.board = new Board(...players);
+    //this.board = new Board(...players);
+    this.board = new Board(players[0], players[1]); // make tsc happy
     this.turn = 0;
   }
   start () {
@@ -147,7 +148,7 @@ class MinionCard {
     this.price = price;
     this.name = minion.name;
     this.health = minion.health;
-    this.attack = minion.attack;
+    this.attackPower = minion.attackPower;
     this.summons = this.minion = minion; // ???
 
     this.action = this.action.bind(this); // ES6 caveman bind
@@ -160,17 +161,17 @@ class MinionCard {
 }
 
 class Minion {
-  constructor (name, attack, health) {
-    Object.assign(this, {
-      name, health, attack
-    });
+  constructor ({name, attackPower, health, price}) {
+    this.name = name;
+    this.health = health;
+    this.attackPower = attackPower;
     this.isWaiting = true; // initial ZZZ / sleep
     this.attackedThisTurn = 0; // this is getting convoluted =/
   } 
   play () {}
   attack (target) {
-    target.damage(this.attack);
-    //target.defend(this.attack);
+    target.damage(this.attackPower);
+    //target.defend(this.attackPower);
     //target.defend(this);
   }
   defend () {}
@@ -221,7 +222,7 @@ class Board {
     return [this._board.get(this.player1), this._board.get(this.player2)];
   }
   listOwn (player) {
-    return [this._board.get(player)];
+    return this._board.get(player);
   }
   addOwn (player, minion) {
     var idx = 0;
@@ -235,7 +236,7 @@ class Board {
 class Hero {
   constructor (player) {
     this.health = 30;
-    //this.attack = 0;
+    //this.attackPower = 0;
     this.owner = player;
   }
   get hp () {
@@ -261,12 +262,12 @@ for (let i = 0; i < 30; i++) {
     //new Card('Fireball')
     dice === 4 ? new FireballCard() :
       //new JunkCard('x'.repeat(dice), dice)
-      new MinionCard({
+      new MinionCard(new Minion({
         name: 'Elemental ' + '*'.repeat(dice),
-        attack: dice + 1,
+        attackPower: dice + 1,
         health: dice,
         price: dice
-      }, dice)
+      }), dice)
   );
 }
 var deck_prime = new Deck(fireballs);
@@ -286,6 +287,12 @@ for(let i = 0; i < 10; i++) {
 
 //AI - Artificial stupIdity
 for(let i = 0; i < 42 && !g.isOver; i++) {
+  
+  // attack face with all you have !
+  let minions = p1.board.listOwn(p1).minions;
+  let enemy = p1.board.listOwn(p2).hero;
+  minions.forEach(minion => minion.attack(enemy));
+
   p1.hand.view();
   let fireball = p1.hand.list().find(({name}) => name === 'Fireball');
   if (fireball) {

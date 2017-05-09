@@ -5,6 +5,8 @@ const Game = require('./classes/game.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 
+const Minion = require('./classes/minion.js');
+
 /**
  * intentionally non-generic card class / API sketch
  */
@@ -53,37 +55,6 @@ class MinionCard {
     this.minion.owner = player;
     player.board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
-  }
-}
-
-class Minion {
-  constructor ({name, attackPower, health, price}) {
-    this.name = name;
-    this.health = health;
-    this.attackPower = attackPower;
-    this.isWaiting = true; // initial ZZZ / sleep
-    this.attackedThisTurn = 0; // this is getting convoluted =/
-  } 
-  play () {}
-  attack (target) {
-    if (!target) return;
-    if (target.health < 1) return;
-    console.log(`${this.name} attacks ${target.name}`);
-    target.damage(this.attackPower);
-    //target.defend(this.attackPower);
-    //target.defend(this);
-  }
-  defend () {}
-  damage (n) {
-    this.health -= n;
-    if (this.health < 1) this.die();
-  }
-  die () {
-    console.log(`minion died: ${this.owner.name}'s ${this.name}`)
-    //this.owner.board.remove ????
-  }
-  toString () {
-    return `[Object Minion: ${this.name}]`;
   }
 }
 
@@ -145,7 +116,7 @@ for(let i = 0; i < 12 && !g.isOver; i++) {
   // attack minions with all Bob has ..
   let bobsMinions = p2.board.listOwn(p2).minions;
   let bobsEnemy = p2.board.listOwn(p1).minions[0];
-  minions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
+  bobsMinions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
 
   p1.hand.view();
   let fireball = p1.hand.list().find(({name}) => name === 'Fireball');
@@ -161,8 +132,9 @@ for(let i = 0; i < 12 && !g.isOver; i++) {
   p2.hand.view();
   let aMinion = p2.hand.listPlayable().filter(({type}) => type === 'minion')[0];
   if (aMinion) {
-    p2.hand.play(aMinion.id)(p2); // minion - owner is player: Alice  
+    p2.hand.play(aMinion.id)(p2); // minion - owner is player: Bob  
   } else {
+    // do we even check whether the turn is active ?
     console.warn('Bob only has fireballs ?');
   }
    

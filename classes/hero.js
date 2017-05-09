@@ -11,12 +11,20 @@ class Hero {
   get hp () {
     return this.health;
   }
+  defend (attacker) {
+    console.log(`${attacker.name} attacks ${this.name}`);
+    //ignore shields, etc for now
+    this.health -= attacker.attackPower;
+    attacker.damage -= this.attackPower;  
+    this.isStillAlive();  
+  }
   damage (n) {
-    this.health -= n;
     console.log(`hero of ${this.owner.name} takes ${n} damage!`);
-    if (this.health < 0) {
-      this.die();
-    }
+    this.health -= n;
+    this.isStillAlive();
+  }
+  isStillAlive() {
+    if (this.health < 1) this.die();
   }
   die () {
     console.warn(`hero died`);

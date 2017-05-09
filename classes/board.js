@@ -1,4 +1,5 @@
 'use strict';
+// @ts-check
 
 class Board {
   constructor (player1, player2) {

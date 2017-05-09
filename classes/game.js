@@ -1,4 +1,6 @@
 'use strict';
+// @ts-check
+
 const Board = require('./board.js');
 
 class Game {

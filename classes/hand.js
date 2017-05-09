@@ -17,6 +17,7 @@ class Hand {
       return {
         id: i, // consider a harder proof, like autoincrement
         name: v.name,
+        type: v.type,
         price: v.price
       }
     });
@@ -25,7 +26,7 @@ class Hand {
     // add sanity check for if mana/cost changed but ID remains the same, etc
     var card = this._hand.splice(card_idx, 1)[0];
     this.owner.mana -= card.price;
-    console.log(card);
+    console.log(`${this.owner.name} played`, card);
     return card.action;
 
     // what about targeting ?!

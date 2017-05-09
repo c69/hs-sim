@@ -10,6 +10,7 @@ const Player = require('./classes/player.js');
  */
 class FireballCard {
   constructor () {
+    this.type = "spell";
     // cannot pick a good name :(
     this.price = 4;
     this.name = 'Fireball';
@@ -24,6 +25,7 @@ class FireballCard {
 
 class JunkCard {
   constructor (name, price) {
+    this.type = "spell";
     this.price = price;
     this.name = name;
   }
@@ -35,12 +37,13 @@ class JunkCard {
 
 class MinionCard {
   constructor (minion, price) {
+    this.type = "minion";
     // cannot pick a good name :(
     this.price = price;
     this.name = minion.name;
     this.health = minion.health;
     this.attackPower = minion.attackPower;
-    this.summons = this.minion = minion; // ???
+    this.minion = minion;
 
     this.action = this.action.bind(this); // ES6 caveman bind
   }
@@ -67,7 +70,9 @@ class Minion {
   }
   defend () {}
   damage () {}
-  die () {}
+  die () {
+    //this.owner.board.remove ????
+  }
   toString () {
     return `[Object Minion: ${this.name}]`;
   }
@@ -81,7 +86,7 @@ for (let i = 0; i < 30; i++) {
     dice === 4 ? new FireballCard() :
       //new JunkCard('x'.repeat(dice), dice)
       new MinionCard(new Minion({
-        name: 'Elemental ' + '*'.repeat(dice),
+        name: 'Mob' + dice, //'*'.repeat(dice),
         attackPower: dice + 1,
         health: dice,
         price: dice
@@ -101,27 +106,44 @@ var g = new Game([p1, p2]);
 g.start();
 g.view();
 
-for(let i = 0; i < 10; i++) {
+for(let i = 0; i < 1; i++) {
   g.nextTurn().view();
 }
 
 //AI - Artificial stupIdity
-for(let i = 0; i < 42 && !g.isOver; i++) {
+for(let i = 0; i < 12 && !g.isOver; i++) {
   
   // attack face with all you have !
   let minions = p1.board.listOwn(p1).minions;
   let enemy = p1.board.listOwn(p2).hero;
   minions.forEach(minion => minion.attack(enemy));
 
+
+  // attack minions with all Bob has ..
+  let bobsMinions = p2.board.listOwn(p2).minions;
+  let bobsEnemy = p2.board.listOwn(p1).minions[0];
+  minions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
+
   p1.hand.view();
   let fireball = p1.hand.list().find(({name}) => name === 'Fireball');
   if (fireball) {
-    console.log(fireball, p1.hand.play);
+    //console.log(fireball, p1.hand.play);
     p1.hand.play(fireball.id)(p2.hero);
   } else {
     let whatever = p1.hand.listPlayable()[0];
     //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
     whatever && p1.hand.play(whatever.id)(p1); // minion - owner is player: Alice  
   }
+
+  p2.hand.view();
+  let whatever2 = p2.hand.listPlayable()[0];
+  if (whatever2) {
+    if (whatever2.type === 'minion') {
+      p2.hand.play(whatever2.id)(p2); // minion - owner is player: Alice  
+    } else {
+      console.warn('Bob only has', whatever2.type, whatever2);
+    }
+  } 
+
   g.nextTurn().view();
 }

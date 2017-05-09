@@ -23,10 +23,14 @@ class Hand {
     });
   }
   play (card_idx) {
+    if (!this.owner.activeTurn) {
+      console.log(`${this.owner.name} cannot play card on other player's turn`);
+      return () => {};
+    }
     // add sanity check for if mana/cost changed but ID remains the same, etc
     var card = this._hand.splice(card_idx, 1)[0];
     this.owner.mana -= card.price;
-    console.log(`${this.owner.name} played`, card);
+    console.log(`${this.owner.name} played `, card.name);
     return card.action;
 
     // what about targeting ?!

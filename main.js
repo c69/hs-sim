@@ -44,12 +44,14 @@ class MinionCard {
     this.health = minion.health;
     this.attackPower = minion.attackPower;
     this.minion = minion;
+    this.owner = null; // is it ??? should the owner of card be the owner of hand ?!
 
     this.action = this.action.bind(this); // ES6 caveman bind
   }
   action (player) {
     //player.board.choosePosition(); ??
-    player.board.addOwn(player, this.minion); //bug !!!
+    this.minion.owner = player;
+    player.board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
   }
 }
@@ -64,13 +66,20 @@ class Minion {
   } 
   play () {}
   attack (target) {
+    if (!target) return;
+    if (target.health < 1) return;
+    console.log(`${this.name} attacks ${target.name}`);
     target.damage(this.attackPower);
     //target.defend(this.attackPower);
     //target.defend(this);
   }
   defend () {}
-  damage () {}
+  damage (n) {
+    this.health -= n;
+    if (this.health < 1) this.die();
+  }
   die () {
+    console.log(`minion died: ${this.owner.name}'s ${this.name}`)
     //this.owner.board.remove ????
   }
   toString () {
@@ -86,8 +95,22 @@ for (let i = 0; i < 30; i++) {
     dice === 4 ? new FireballCard() :
       //new JunkCard('x'.repeat(dice), dice)
       new MinionCard(new Minion({
-        name: 'Mob' + dice, //'*'.repeat(dice),
+        name: 'Elf' + dice, //'*'.repeat(dice),
         attackPower: dice + 1,
+        health: dice,
+        price: dice
+      }), dice)
+  );
+}
+
+
+var zombies = [];
+for (let i = 0; i < 30; i++) {
+  let dice = (Math.floor(1 + Math.random()*5));
+  zombies.push(
+    new MinionCard(new Minion({
+        name: 'Zomb' + dice, //'*'.repeat(dice),
+        attackPower: dice + 2,
         health: dice,
         price: dice
       }), dice)
@@ -96,7 +119,7 @@ for (let i = 0; i < 30; i++) {
 
 // bootstrap / init
 var deck_prime = new Deck(fireballs);
-var deck_prime2 = new Deck(fireballs);
+var deck_prime2 = new Deck(zombies);
 
 var p1 = new Player(deck_prime, 'Alice');
 var p2 = new Player(deck_prime2, 'Bob');
@@ -136,14 +159,13 @@ for(let i = 0; i < 12 && !g.isOver; i++) {
   }
 
   p2.hand.view();
-  let whatever2 = p2.hand.listPlayable()[0];
-  if (whatever2) {
-    if (whatever2.type === 'minion') {
-      p2.hand.play(whatever2.id)(p2); // minion - owner is player: Alice  
-    } else {
-      console.warn('Bob only has', whatever2.type, whatever2);
-    }
-  } 
+  let aMinion = p2.hand.listPlayable().filter(({type}) => type === 'minion')[0];
+  if (aMinion) {
+    p2.hand.play(aMinion.id)(p2); // minion - owner is player: Alice  
+  } else {
+    console.warn('Bob only has fireballs ?');
+  }
+   
 
   g.nextTurn().view();
 }

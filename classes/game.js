@@ -25,6 +25,10 @@ class Game {
     return this;  
   }
   nextTurn () {
+    this.players.map(v => {
+      v.activeTurn = false;
+      return v;
+    });
     if (this.isOver) return this;
 
     this.turn += 1;
@@ -34,15 +38,15 @@ class Game {
     }
     player.mana = player.manaCrystals;
     player.draw(1);
-  
+    player.activeTurn = true; // maybe rename
+
     return this;
   }
   view () {
     console.log(`turn # ${this.turn}`);
     this.players.forEach(player => {
       console.log(`
-player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrystals}
-hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
+player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrystals} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
       console.log('minions on board', this.board.listOwn(player).minions.map(v=>v.name));
     });

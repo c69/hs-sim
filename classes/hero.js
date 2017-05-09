@@ -3,6 +3,7 @@
 
 class Hero {
   constructor (player) {
+    this.name = player.name; // yes, technically - "Guldan" != "CutePumkin312"
     this.health = 30;
     //this.attackPower = 0;
     this.owner = player;
@@ -20,6 +21,9 @@ class Hero {
   die () {
     console.warn(`hero died`);
     this.owner.loose();
+  }
+  toString () {
+    return `[Object Hero: ${this.name}]`;
   }
 }
 

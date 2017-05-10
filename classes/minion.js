@@ -8,26 +8,27 @@ class Minion { //will extend Character
     this.attackPower = attackPower;
     this.isWaiting = true; // initial ZZZ / sleep
     this.attackedThisTurn = 0; // this is getting convoluted =/
+    this.owner = null; // maybe init Minion with owner upon creation ?
 
-    this.tribe = "";
-    this.battleCry = [];
-    this.deathrattle = [];
-    this.inspire = [];
-    this.effect = []; //trigger-condition-action
-    this.buff = [];
+    // this.tribe = "";
+    // this.battleCry = [];
+    // this.deathrattle = [];
+    // this.inspire = [];
+    // this.effect = []; //trigger-condition-action
+    // this.buff = [];
 
-    this.taunt = false;
-    this.charge = false;
-    this.spellShield = false;
-    this.immune = false;
-    this.poisonous = false;
-    //this.isEnraged = false;
-    //this.canAttackHeroesWithCharge = false;
-    this.divineShield = false;
-    this.windFury = false;
-    this.megaWindFury = false;
+    // this.taunt = false;
+    // this.charge = false;
+    // this.spellShield = false;
+    // this.immune = false;
+    // this.poisonous = false;
+    //? this.isEnraged = false;
+    //? this.canAttackHeroesWithCharge = false;
+    // this.divineShield = false;
+    // this.windFury = false;
+    // this.megaWindFury = false;
     
-    this.isSilenced = false;
+    // this.isSilenced = false;
   } 
   attack (target) {
     if (!target) return;

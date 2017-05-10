@@ -49,7 +49,7 @@ class Game {
     console.log(`turn # ${this.turn}`);
     this.players.forEach(player => {
       console.log(`
-player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrystals} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
+player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
       console.log('minions on board', this.board.listOwn(player).minions.map(v=>v.name));
     });

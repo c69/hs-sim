@@ -18,7 +18,7 @@ class FireballCard {
     this.name = 'Fireball';
   }
   action (fireballTarget) {
-    fireballTarget.damage(6);
+    fireballTarget.damage(1);
     //return chooseTarget(['minion', 'hero']).damage(6);
     //return chooseTarget(['minion', 'hero'], spell.dealDamage(6));
     //return dealDamageToSingleTarget(6, ['minion', 'hero']);
@@ -55,6 +55,11 @@ class MinionCard {
     this.minion.owner = player;
     player.board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
+  }
+  isPlayable (player) { // this could become a god function :/
+    if (player.board.listOwn(p1).minions.length > 6) return false;
+    if (player.mana < this.price) return false;
+    return true;
   }
 }
 
@@ -105,7 +110,7 @@ for(let i = 0; i < 1; i++) {
 }
 
 //AI - Artificial stupIdity
-for(let i = 0; i < 12 && !g.isOver; i++) {
+for(let i = 0; i < 42 && !g.isOver; i++) {
   
   // attack face with all you have !
   let minions = p1.board.listOwn(p1).minions;

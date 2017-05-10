@@ -12,24 +12,34 @@ class Board {
       }]))
     );
   }
-  list () { // ??
+  /** @deprecated */
+  x_list () { // ??
     //return [this._board.get(this.player1), this._board.get(this.player2)];
     return this._board.values();
   }
-  listOwn (player) {
-    //this.removeDead(); // this is just a BUGGY hack, as we need to remove dead IMMEDIATELY after the move they die
+  listOwnAll (player) {
     return this._board.get(player);
   }
-  addOwn (player, minion) {
-    var idx = 0;
-    this._board.get(player).minions.splice(idx, 0, minion); //same bug
+  /** Returns current hero and alive minions for player */
+  listOwn (player) {
+    let {hero, minions} = this._board.get(player);
+    return {
+      hero,
+      minions: minions.filter(v => v.health > 0)
+    }
   }
-  removeDead () {
+  addOwn (player, minion) {
+    let idx = 0;
+    let m = this._board.get(player).minions;
+    if (m.length > 6) return;
+    m.splice(idx, 0, minion);
+  }
+  showAlive () {
     // silently remove dead minions
     //console.log(this.list());
-    [...this.list()].forEach(v => {
-      v.minions = v.minions.filter(m => m.hp > 0) 
-    });
+    // [...this.list()].forEach(v => {
+    //   v.minions = v.minions.filter(m => m.hp > 0) 
+    // });
   }
 } 
 

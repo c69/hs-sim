@@ -14,9 +14,10 @@ class Board {
   }
   list () { // ??
     //return [this._board.get(this.player1), this._board.get(this.player2)];
-    return this.board.values();
+    return this._board.values();
   }
   listOwn (player) {
+    //this.removeDead(); // this is just a BUGGY hack, as we need to remove dead IMMEDIATELY after the move they die
     return this._board.get(player);
   }
   addOwn (player, minion) {
@@ -25,8 +26,9 @@ class Board {
   }
   removeDead () {
     // silently remove dead minions
-    this._board.list().forEach(v => {
-      v.minions = v.minions.filter(v => v.hp < 0) 
+    //console.log(this.list());
+    [...this.list()].forEach(v => {
+      v.minions = v.minions.filter(m => m.hp > 0) 
     });
   }
 } 

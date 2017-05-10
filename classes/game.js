@@ -5,9 +5,9 @@ const Board = require('./board.js');
 
 class Game {
   constructor (players) {
+    if (players.length !== 2) throw new RangeError("Game expects two players");
     this.players = players;
-    //this.board = new Board(...players);
-    this.board = new Board(players[0], players[1]); // make tsc happy
+    this.board = new Board(players[0], players[1]);
     this.turn = 0;
   }
   start () {
@@ -23,6 +23,9 @@ class Game {
     });
 
     return this;  
+  }
+  move () {
+    // an action by player - card.play, weapon/self.attack, minion.attack, ability.do,
   }
   nextTurn () {
     this.players.map(v => {
@@ -56,6 +59,10 @@ player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrys
   finish () {
     this.isOver = true;
     //return this;
+  }
+  concede (player) {
+    //..
+    this.finish();
   }
 }
 

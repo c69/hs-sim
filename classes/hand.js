@@ -29,6 +29,10 @@ class Hand {
     }
     // add sanity check for if mana/cost changed but ID remains the same, etc
     var card = this._hand.splice(card_idx, 1)[0];
+    if (this.price >= this.owner.mana) {
+      console.warn(`HH ${this.owner.name} cannot play card - not enough mana`);
+      return () => {};
+    }
     this.owner.mana -= card.price;
     console.log(`HH ${this.owner.name} played `, card.name);
     return card.action;

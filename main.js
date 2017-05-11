@@ -17,7 +17,7 @@ class FireballCard {
     this.name = 'Fireball';
   }
   action (fireballTarget) {
-    fireballTarget.damage(1);
+    fireballTarget.damage(3);
     //return chooseTarget(['minion', 'hero']).damage(6);
     //return chooseTarget(['minion', 'hero'], spell.dealDamage(6));
     //return dealDamageToSingleTarget(6, ['minion', 'hero']);
@@ -74,8 +74,8 @@ for (let i = 0; i < 30; i++) {
       //new JunkCard('x' + dice, dice)
       new MinionCard(new Minion({
         name: 'Elf' + dice,
-        attackPower: dice + 1,
-        health: dice + 1,
+        attackPower: dice,
+        health: dice,
         price: dice
       }), dice)
   );
@@ -121,12 +121,15 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
   let minions = pActive.board.listOwn(pActive).minions; // this is super redundand and ugly
   //let enemy = pActive.board.listEnemy(pActive).hero;
   let enemy;
-  if (Math.random()*3 > 1) {
-     enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
+  if (Math.random()*4 > 3) {
+    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
   } else {
-     enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
+    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
   }
-  
+  if (!enemy) { // just attack face, if no enemey minions
+    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
+  }
+
   console.log(`${pActive.name} wants to attack ${enemy && enemy.name} with ${minions}`);
   minions.length && minions.forEach(minion => minion.attack(enemy));
  
@@ -143,27 +146,28 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
   // console.log(`${p2.name} wants to attack ${(bobsEnemy || {}).name} with ${bobsMinions}`);
   // bobsMinions.length && bobsMinions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
 
-  p1.hand.view();
-  let fireball = p1.hand.list().find(({name}) => name === 'Fireball');
-  if (fireball) {
-    p1.hand.play(fireball.id)(p2.hero);
+  if (pActive === p1) {
+    pActive.hand.view();
+    let fireball = pActive.hand.listPlayable().find(({name}) => name === 'Fireball');
+    if (fireball) {
+      p1.hand.play(fireball.id)(p2.hero); // hardcode :(
+    } else {
+      let whatever = pActive.hand.listPlayable()[0];
+      console.log(`x Alice has no fireball, so she want to play ${whatever}`);
+      //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
+      whatever && pActive.hand.play(whatever.id)(pActive); // minion - owner is player: Alice  
+    }
   } else {
-    let whatever = p1.hand.listPlayable()[0];
-    console.log(`x Alice has no fireball, so she want to play ${whatever}`);
-    //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
-    whatever && p1.hand.play(whatever.id)(p1); // minion - owner is player: Alice  
+    pActive.hand.view();
+    let aMinion = pActive.hand.listPlayable().filter(({type}) => type === 'minion').sort((a,b)=>b.price-a.price)[0];
+    if (aMinion) {
+      pActive.hand.play(aMinion.id)(pActive); // minion - owner is player: Bob  
+    } else {
+      // do we even check whether the turn is active ?
+      console.warn('Bob only has fireballs ?');
+    }
   }
-
-  p2.hand.view();
-  let aMinion = p2.hand.listPlayable().filter(({type}) => type === 'minion')[0];
-  if (aMinion) {
-    p2.hand.play(aMinion.id)(p2); // minion - owner is player: Bob  
-  } else {
-    // do we even check whether the turn is active ?
-    console.warn('Bob only has fireballs ?');
-  }
-   
-
+  
   console.log('___________________');
   g.nextTurn();
 }

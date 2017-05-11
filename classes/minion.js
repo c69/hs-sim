@@ -1,8 +1,11 @@
 'use strict';
 // @ts-check
 
+let id = 1;
+
 class Minion { //will extend Character
   constructor ({name, attackPower, health, price}) {
+    this._id = id++;
     this.name = name;
     this.health = health;
     this.attackPower = attackPower;
@@ -61,7 +64,7 @@ class Minion { //will extend Character
     console.log(`minion died: ${this.owner.name}'s ${this.name}`)
   }
   toString () {
-    return `[Object Minion: ${this.name}]`;
+    return `[Object Minion: ${this.name}#${this._id}]`;
   }
 }
 

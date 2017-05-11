@@ -37,13 +37,14 @@ class Game {
     this.turn += 1;
     let activePlayer = this.players[this.turn % 2];
     this.activePlayer = activePlayer;
+    activePlayer.activeTurn = true; // maybe rename
     if (activePlayer.manaCrystals < 10) {
       activePlayer.manaCrystals += 1;
     }
     if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     activePlayer.mana = activePlayer.manaCrystals;
+    
     activePlayer.draw(1);
-    activePlayer.activeTurn = true; // maybe rename
 
     return this;
   }

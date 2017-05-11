@@ -41,12 +41,12 @@ class Minion { //will extend Character
     if (this.health < 1) return;
     if (!this.owner.activeTurn) return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
     if (target.owner === this.owner) return; // will fail for Hunter:Misdirection secret, and Ogres
-    console.log(`A ${this.name}(${this.attackPower}/${this.health}) attacks ${target.name}`);
+    console.log(`⚔️ ${this.name}(${this.attackPower}/${this.health}) attacks ${target.name}`);
 
     target.defend(this);
   }
   defend (attacker) {
-    console.log(`D ${attacker.name} attacks ${this.name}(${this.attackPower}/${this.health})`);
+    console.log(`🛡️ ${attacker.name} attacks ${this.name}(${this.attackPower}/${this.health})`);
     //ignore shields, etc for now
     this.health -= attacker.attackPower;
     attacker.damage -= this.attackPower;  
@@ -61,7 +61,7 @@ class Minion { //will extend Character
     if (this.health < 1) this.die();
   }
   die () {
-    console.log(`minion died: ${this.owner.name}'s ${this.name}`)
+    console.log(`☠️ minion died: ${this.owner.name}'s ${this.name}`)
   }
   toString () {
     return `[Object Minion: ${this.name}#${this._id}]`;

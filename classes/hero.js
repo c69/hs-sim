@@ -19,7 +19,7 @@ class Hero {
     this.isStillAlive();  
   }
   damage (n) {
-    console.log(`hero of ${this.owner.name} takes ${n} damage!`);
+    console.log(`🔥 hero of ${this.owner.name} takes ${n} damage!`);
     this.health -= n;
     this.isStillAlive();
   }

@@ -3,7 +3,7 @@
 
 class Deck {
   constructor (arr) {
-    this._deck = arr;
+    this._deck = arr.map(v => v);
   }
   draw (n = 1) {
     var result = [];

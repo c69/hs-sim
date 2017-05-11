@@ -95,6 +95,20 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
+//e2e test for Fatigue
+var g_fatigue = new Game([
+  new Player(new Deck(zombies), 'Lazy1'), 
+  new Player(new Deck(zombies), 'Lazy2')
+]);
+g_fatigue.start();
+
+for(let i = 0; i < 42 && !g_fatigue.isOver; i++) {
+  g_fatigue.nextTurn();
+}
+g_fatigue.view();
+
+console.log('==================');
+
 // bootstrap / init
 var deck_prime = new Deck(fireballs);
 var deck_prime2 = new Deck(zombies);
@@ -105,10 +119,6 @@ var p2 = new Player(deck_prime2, 'Bob');
 // actual play
 var g = new Game([p1, p2]);
 g.start();
-
-// for(let i = 0; i < 1; i++) {
-//   g.nextTurn().view();
-// }
 
 //AI - Artificial stupIdity
 for(let i = 0; i < 42 && !g.isOver; i++) {

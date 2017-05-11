@@ -22,6 +22,14 @@ class Board {
   }
   /** Returns current hero and alive minions for player */
   listOwn (player) {
+    //let enemyPlayer = [...this._board.keys()].filter(v => v !== player);
+    let {hero, minions} = this._board.get(player);
+        return {
+      hero,
+      minions: minions.filter(v => v.health > 0)
+    }
+  }
+  listEnemy (player) {
     let {hero, minions} = this._board.get(player);
     return {
       hero,

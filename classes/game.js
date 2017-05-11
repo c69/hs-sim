@@ -9,6 +9,7 @@ class Game {
     this.players = players;
     this.board = new Board(players[0], players[1]);
     this.turn = 0;
+    this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
   }
   start () {
     this.isOver = false;
@@ -28,30 +29,30 @@ class Game {
     // an action by player - card.play, weapon/self.attack, minion.attack, ability.do,
   }
   nextTurn () {
-    this.players.map(v => {
-      v.activeTurn = false;
-      return v;
+    this.players.forEach(player => {
+      player.activeTurn = false;
     });
     if (this.isOver) return this;
 
     this.turn += 1;
-    let player = this.players[this.turn % 2];
-    if (player.manaCrystals < 10) {
-      player.manaCrystals += 1;
+    let activePlayer = this.players[this.turn % 2];
+    this.activePlayer = activePlayer;
+    if (activePlayer.manaCrystals < 10) {
+      activePlayer.manaCrystals += 1;
     }
-    player.mana = player.manaCrystals;
-    player.draw(1);
-    player.activeTurn = true; // maybe rename
+    activePlayer.mana = activePlayer.manaCrystals;
+    activePlayer.draw(1);
+    activePlayer.activeTurn = true; // maybe rename
 
     return this;
   }
   view () {
-    console.log(`turn # ${this.turn}`);
+    console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
       console.log(`
 player:${player.name} hp:${player.hero.hp} mana:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
-      console.log('minions on board', this.board.listOwn(player).minions.map(v=>v.name));
+      console.log('minions on board', this.board.listOwn(player).minions.map(v=>`(${v.attackPower}/${v.health})`));
     });
     
     return this;

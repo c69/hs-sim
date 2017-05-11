@@ -13,7 +13,6 @@ const Minion = require('./classes/minion.js');
 class FireballCard {
   constructor () {
     this.type = "spell";
-    // cannot pick a good name :(
     this.price = 4;
     this.name = 'Fireball';
   }
@@ -30,17 +29,17 @@ class JunkCard {
     this.type = "spell";
     this.price = price;
     this.name = name;
+
+    this.action = this.action.bind(this); // ES6 caveman bind
   }
   action () {
-    //console.log(`nothing happens [${this.price} mana wasted..]`)
-    console.log(`nothing happens, -some- mana wasted..]`)
-  }//o_O you cannot bind(this) es6 methods ??? // .bind(this);// becoz we return action fn from hand.play()
+    console.log(`nothing happens [${this.price} mana wasted..]`)
+  }
 }
 
 class MinionCard {
   constructor (minion, price) {
     this.type = "minion";
-    // cannot pick a good name :(
     this.price = price;
     this.name = minion.name;
     this.health = minion.health;
@@ -56,10 +55,13 @@ class MinionCard {
     player.board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
   }
-  isPlayable (player) { // this could become a god function :/
+  isPlayable (player) { // this could become a _God_ function :/, consider using target: []
     if (player.board.listOwn(p1).minions.length > 6) return false;
     if (player.mana < this.price) return false;
     return true;
+  }
+  toString () {
+    return [`Object Card: ${this.name}`];
   }
 }
 
@@ -69,11 +71,11 @@ for (let i = 0; i < 30; i++) {
   fireballs.push(
     //new Card('Fireball')
     dice === 4 ? new FireballCard() :
-      //new JunkCard('x'.repeat(dice), dice)
+      //new JunkCard('x' + dice, dice)
       new MinionCard(new Minion({
-        name: 'Elf' + dice, //'*'.repeat(dice),
+        name: 'Elf' + dice,
         attackPower: dice + 1,
-        health: dice,
+        health: dice + 1,
         price: dice
       }), dice)
   );
@@ -85,8 +87,8 @@ for (let i = 0; i < 30; i++) {
   let dice = (Math.floor(1 + Math.random()*5));
   zombies.push(
     new MinionCard(new Minion({
-        name: 'Zomb' + dice, //'*'.repeat(dice),
-        attackPower: dice + 2,
+        name: 'Zomb' + dice,
+        attackPower: dice + 0,
         health: dice,
         price: dice
       }), dice)
@@ -103,33 +105,51 @@ var p2 = new Player(deck_prime2, 'Bob');
 // actual play
 var g = new Game([p1, p2]);
 g.start();
-g.view();
 
-for(let i = 0; i < 1; i++) {
-  g.nextTurn().view();
-}
+// for(let i = 0; i < 1; i++) {
+//   g.nextTurn().view();
+// }
 
 //AI - Artificial stupIdity
 for(let i = 0; i < 42 && !g.isOver; i++) {
+  g.view();
+
+
+
+  let pActive = g.activePlayer;
+
+  let minions = pActive.board.listOwn(pActive).minions; // this is super redundand and ugly
+  //let enemy = pActive.board.listEnemy(pActive).hero;
+  let enemy;
+  if (Math.random()*3 > 1) {
+     enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
+  } else {
+     enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
+  }
   
-  // attack face with all you have !
-  let minions = p1.board.listOwn(p1).minions;
-  let enemy = p1.board.listOwn(p2).hero;
-  minions.forEach(minion => minion.attack(enemy));
+  console.log(`${pActive.name} wants to attack ${enemy && enemy.name} with ${minions}`);
+  minions.length && minions.forEach(minion => minion.attack(enemy));
+ 
+  // // Alice: attack face with all you have !
+  // let minions = p1.board.listOwn(p1).minions;
+  // let enemy = p1.board.listOwn(p2).hero;
+  // console.log(`${p1.name} wants to attack ${enemy.name} with ${minions}`);
+  // minions.length && minions.forEach(minion => minion.attack(enemy));
 
 
-  // attack minions with all Bob has ..
-  let bobsMinions = p2.board.listOwn(p2).minions;
-  let bobsEnemy = p2.board.listOwn(p1).minions[0];
-  bobsMinions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
+  // // Bob: attack minions with all you have !
+  // let bobsMinions = p2.board.listOwn(p2).minions;
+  // let bobsEnemy = p2.board.listOwn(p1).minions[0];
+  // console.log(`${p2.name} wants to attack ${(bobsEnemy || {}).name} with ${bobsMinions}`);
+  // bobsMinions.length && bobsMinions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
 
   p1.hand.view();
   let fireball = p1.hand.list().find(({name}) => name === 'Fireball');
   if (fireball) {
-    //console.log(fireball, p1.hand.play);
     p1.hand.play(fireball.id)(p2.hero);
   } else {
     let whatever = p1.hand.listPlayable()[0];
+    console.log(`x Alice has no fireball, so she want to play ${whatever}`);
     //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
     whatever && p1.hand.play(whatever.id)(p1); // minion - owner is player: Alice  
   }
@@ -144,5 +164,6 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
   }
    
 
-  g.nextTurn().view();
+  console.log('___________________');
+  g.nextTurn();
 }

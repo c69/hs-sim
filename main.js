@@ -114,38 +114,23 @@ g.start();
 for(let i = 0; i < 42 && !g.isOver; i++) {
   g.view();
 
-
-
   let pActive = g.activePlayer;
 
-  let minions = pActive.board.listOwn(pActive).minions; // this is super redundand and ugly
-  //let enemy = pActive.board.listEnemy(pActive).hero;
+  let minions = g.board.listOwn(pActive).minions;
+  //let enemy = g.board.listEnemy(pActive).hero;
   let enemy;
   if (Math.random()*4 > 3) {
-    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
+    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
   } else {
-    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
+    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
   }
   if (!enemy) { // just attack face, if no enemey minions
-    enemy = pActive.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
+    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
   }
 
   console.log(`${pActive.name} wants to attack ${enemy && enemy.name} with ${minions}`);
   minions.length && minions.forEach(minion => minion.attack(enemy));
  
-  // // Alice: attack face with all you have !
-  // let minions = p1.board.listOwn(p1).minions;
-  // let enemy = p1.board.listOwn(p2).hero;
-  // console.log(`${p1.name} wants to attack ${enemy.name} with ${minions}`);
-  // minions.length && minions.forEach(minion => minion.attack(enemy));
-
-
-  // // Bob: attack minions with all you have !
-  // let bobsMinions = p2.board.listOwn(p2).minions;
-  // let bobsEnemy = p2.board.listOwn(p1).minions[0];
-  // console.log(`${p2.name} wants to attack ${(bobsEnemy || {}).name} with ${bobsMinions}`);
-  // bobsMinions.length && bobsMinions.forEach(minion => bobsEnemy && minion.attack(bobsEnemy));
-
   if (pActive === p1) {
     pActive.hand.view();
     let fireball = pActive.hand.listPlayable().find(({name}) => name === 'Fireball');

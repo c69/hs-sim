@@ -1,18 +1,27 @@
 'use strict';
 // @ts-check
-
+/*
+http://hearthstone.gamepedia.com/Mana_cost
+*/
 const Minion = require('./minion.js');
 
 const Tribe = {
-    BEAST: 'beast',
-    DEMON: 'demon',
-    MURLOC: 'murloc',
-    PIRATE: 'pirate'
+    BEAST: 'Beast',
+    DEMON: 'Demon',
+    DRAGON: 'Dragon',
+    ELEMENTAL: 'Elemental',
+    MECH: 'Mech',
+    MURLOC: 'Murloc',
+    PIRATE: 'Pirate',
+    TOTEM: 'Totem'
 };
 
 const Rarity = {
+    BASIC: 'basic',
     COMMON: 'common',
-    RARE: 'rare'
+    RARE: 'rare',
+    EPIC: 'epic',
+    LEGENDARY: 'legendary'
 };
 
 const Trait = {
@@ -20,6 +29,60 @@ const Trait = {
     TAUNT: 'taunt',
     WINDFURY: 'windfury'
 };
+
+/*
+Adapt
+Auto-Attack
+Auto-cast
+Battlecry
+Cast spell
+Charge
+Choose One
+Combo
+Copy
+Deal damage
+Deathrattle
+Destroy
+Discard
+Discover
+Divine Shield
+Draw cards
+Elusive
+Enrage
+Equip
+Forgetful
+Freeze
+Gain Armor
+Generate
+Immune
+Inspire
+Joust
+Mega-Windfury
+Modify cost
+Overload
+Permanent
+Poisonous
+Put into battlefield
+Put into hand
+Quest
+Refresh Mana
+Remove from deck
+Replace
+Restore Health
+Return to hand
+Secret
+Shuffle into deck
+Silence
+Spell Damage
+Spend mana
+Stealth
+Summon
+Taunt
+Take control
+Transform
+Unlimited attacks
+Windfury 
+*/
 
 // milestone 3 wishlist:
 
@@ -91,7 +154,29 @@ new Minion(3, 'Acolyte of Pain', 1, 3, Rarity.COMMON, [{
 }]);
 // 2) Knife Juggler 2/2 Whenever you summon minion, deal 1 dmg to random enemy
 new Minion(2, 'Knife Juggler', 2, 2, Rarity.RARE, [{
-    trigger: target('own minion').condition('is summoned').action(Spell.to('random enemy').dealDamage(1)) 
+    trigger: target('own minion').condition('is summoned').action(Spell.to('random enemy').dealDamage(1)),
+    z: {
+        target: 'own minion',
+        event: 'minionSummoned', // characterTookDamage, minionWasHealed
+        condition: function () {return true},
+        action: Spell.to('random enemy').dealDamage(1)
+    },
+    react: when('own minion', 'minionSummoned', Spell.to('random enemy').dealDamage(1)),
+    react: when(character('own minion').wasSummoned, Spell.to('random enemy').dealDamage(1))
+}]);
+
+// 1) Mana Wyrm 1/3 Whenever owner casts a spell, gain +1 attack
+new Minion(1, 'Mana Wyrm', 1, 3, Rarity.BASIC, [{
+    trigger: target('own minion').condition('is summoned').action(Spell.to('random enemy').dealDamage(1)),
+    z: {
+        target: 'own player',
+        event: 'spellCast', // characterTookDamage, minionWasHealed
+        condition: function (evt) {return evt.player === _this.owner},
+        action: Spell.to('self').buff(might(1,0))
+    },
+    react: when(php.spellWasCastByOwnPlayer, Buff('self', 1, 0)),
+    react: when('own player', 'spellCast', Spell.to('self').give(1,0)),
+    react: when(player('own').castSpell, Spell.to('self').buff([might(1,0)]))
 }]);
 // 3) Raging Worgen 3/2 Enrage: Windfury and +2 attack
 new Minion(3, 'Raging Worgen', 3, 2, Rarity.COMMON, [{

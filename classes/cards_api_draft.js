@@ -116,14 +116,15 @@ new Minion(1, 'Archer', 1, 1, Rarity.COMMON, [{
 }]);
 // 2) Novice Engineer 2/1 B: Draw a card
 new Minion(2, 'Novice Engineer', 2, 1, Rarity.COMMON, [{
-    battlecry: Ability.drawCard(1)
+    battlecry: Ability.drawCard(1) //owner drawCard(1)
 }]);
 // 2) Murloc Raider B: Summon 1/1 murloc |Murloc
 new Minion(2, 'Murloc Raider', 2, 1, Tribe.MURLOC, Rarity.COMMON, [{
+    //summon for Owner
     battlecry: Ability.summonMinion(new Minion(1, 'Just a Murloc', 1, 1, Tribe.MURLOC, Rarity.COMMON))
 }]);
 // 1) Argent Lancer 1/1 Divine Shield
-new Minion(1, 'Argent Lancer', 1, 1, Rarity.COMMON, [Trait.DIVINE_SHIELD]);
+new Minion(1, 'Argent Squire', 1, 1, Rarity.COMMON, [Trait.DIVINE_SHIELD]);
 // 1) Leper Gnome 1/1 D: 2dmg to enemy hero
 new Minion(1, 'Leper Gnome', 1, 1, Rarity.COMMON, [{
     deathrattle: Spell.to('enemy hero').dealDamage(2)

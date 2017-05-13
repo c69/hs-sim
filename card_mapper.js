@@ -1,5 +1,9 @@
 /**
  * Allows to compact/convert raw cards from HearstoneJSON into more usable JSONs 
+ * https://api.hearthstonejson.com/v1/18336/enUS/cards.collectible.json
+ * https://api.hearthstonejson.com/v1/latest/enUS/cards.collectible.json
+ * https://api.hearthstonejson.com/v1/18336/enUS/cards.json
+ * https://api.hearthstonejson.com/v1/latest/enUS/cards.json
  */
 const fs = require("fs");
 
@@ -32,7 +36,7 @@ fs.readFile('cards.json', function (err, data) {
     throw err;
   } 
   let unwanted_props = [  
-    'collectible', // cards.json is ONLY collectible
+    //'collectible', // cards.json is ONLY collectible
     'elite', // duplicates rarity:LEGENDARY
     'cardClass', // duplicate of playerClass
     'artist', // text
@@ -51,12 +55,19 @@ fs.readFile('cards.json', function (err, data) {
   });
   console.log(`Found ${jmin.length} cards, compacting ..`);
   let jnano = jmin.map((card) => {
-    let {id, type, cost, name, attack=undefined, health=undefined, text, race, playerClass} = card;
-    return type === 'HERO' ? card : {
+    let {id, type, cost, name, attack, health, durability, text, race, playerClass, collectible} = card;
+    return {
       id,
       //cost,
       //type,
-      _info: `(${cost}) ${type==='MINION'?`${attack}/${health}`:`${type}`} [${playerClass}]: ${name}${race?` |${race}`:''}`,
+      _info: ({
+          'MINION':`(${cost}) ${attack}/${health}`,
+          'HERO':`${attack||0}/${health} ${type}`,
+          'WEAPON':`(${cost}) ${attack}/${durability} ${type}`,
+          'SPELL':`(${cost}) ${type}`,
+          'HERO_POWER':`(${cost}) ${type}`,
+          'ENCHANTMENT': `${type}`
+        }[type]||`${type}`) + ` [${collectible ? '' : '*'}${playerClass}]: ${name}${race?` |${race}`:''}`,
       //attack,
       //health,
       text

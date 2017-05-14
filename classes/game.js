@@ -28,6 +28,22 @@ class Game {
   move () {
     // an action by player - card.play, weapon/self.attack, minion.attack, ability.do,
   }
+  
+  attack (attacker, target) {
+    if (!target) return;
+    if (target.health < 1) return;
+    if (attacker.health < 1) return;
+    if (!attacker.owner.activeTurn) return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
+    if (target.owner === attacker.owner) return; // will fail for Hunter:Misdirection secret, and Ogres
+    console.log(`⚔️ ${attacker.name}(${attacker.attackPower}/${attacker.health}) attacks ${target.name}(${target.attackPower}/${target.health})`);
+    //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attackPower}/${target.health})`);
+    //ignore shields, etc for now
+    target.health -= attacker.attackPower;
+    attacker.health -= target.attackPower;  
+    target.isStillAlive();
+    attacker.isStillAlive();  
+  }
+
   nextTurn () {
     this.players.forEach(player => {
       player.activeTurn = false;

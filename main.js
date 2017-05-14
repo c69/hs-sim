@@ -84,7 +84,7 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
   }
 
   console.log(`${pActive.name} wants to attack ${enemy && enemy.name} with ${minions}`);
-  minions.length && minions.forEach(minion => minion.attack(enemy));
+  minions.length && minions.forEach(minion => g.attack(minion, enemy));
  
   if (pActive === p1) {
     pActive.hand.view();

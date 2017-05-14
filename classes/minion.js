@@ -35,24 +35,6 @@ class Minion { //will extend Character
     
     // this.isSilenced = false;
   } 
-  attack (target) {
-    if (!target) return;
-    if (target.health < 1) return;
-    if (this.health < 1) return;
-    if (!this.owner.activeTurn) return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
-    if (target.owner === this.owner) return; // will fail for Hunter:Misdirection secret, and Ogres
-    console.log(`⚔️ ${this.name}(${this.attackPower}/${this.health}) attacks ${target.name}`);
-
-    target.defend(this);
-  }
-  defend (attacker) {
-    console.log(`🛡️ ${attacker.name} attacks ${this.name}(${this.attackPower}/${this.health})`);
-    //ignore shields, etc for now
-    this.health -= attacker.attackPower;
-    attacker.damage -= this.attackPower;  
-    this.isStillAlive();
-    attacker.isStillAlive();  
-  }
   damage (n) {
     this.health -= n;
     this.isStillAlive();

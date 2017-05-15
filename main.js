@@ -15,13 +15,16 @@ for (let i = 0; i < 30; i++) {
   let dice = (Math.floor(1 + Math.random()*5));
   fireballs.push(
     //new Card('Fireball')
-    dice !== 4 ? new FireballCard() :
+    dice === 4 ? new FireballCard() :
       //new JunkCard('x' + dice, dice)
       new MinionCard(new Minion({
-        name: 'Elf' + dice,
+        name: 'Bear' + dice,
         attackPower: dice,
         health: dice,
-        price: dice
+        price: dice,
+        buffs: [
+          'TAUNT'
+        ]
       }), dice)
   );
 }

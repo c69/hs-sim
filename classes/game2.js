@@ -191,7 +191,14 @@ class Game {
     let sheeps = [].concat(aubergines.hero, aubergines.minions).filter(v => {
       return v.health > 0;
     });
-    //scan for taunt, scan for spell shield
+
+    //scan for taunt
+    // todo: separate bags for meelee, spell, etc targets - GOD OBJECT CHECKER ORACLE !!!1111
+    let hasTaunt = sheeps.some(v => v.buffs.includes('TAUNT'));
+    if (hasTaunt) sheeps = sheeps.filter(v => v.buffs.includes('TAUNT'));
+    
+    // scan for spell shield
+    // ..
 
     let attack = warriors.map(v => {
       return {
@@ -210,7 +217,7 @@ class Game {
         type: 'C', //'card',
         name: v.name,
         //cost: v.price,
-        targetList: [this.activePlayer.hero] // humor: let only attack own hero with Fireball. Refactor with selectors. 
+        targetList: [this.passivePlayer.hero] // your face!!! //todo: Refactor with selectors. 
       } : {
         id: v.id,
         type: 'C', //'card',
@@ -259,7 +266,9 @@ class Game {
       console.log(`
 player:${player.name} hp❤️:${player.hero.hp} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
-      console.log('minions on board', this.board.listOwn(player).minions.map(v=>`(${v.attackPower}/${v.health})`));
+      console.log('minions on board', this.board.listOwn(player).minions.map(v=>
+      `(${v.buffs.includes('TAUNT') ? '🛡️' : ''}${v.attackPower}/${v.health})`
+      ));
     });
     
     return this;

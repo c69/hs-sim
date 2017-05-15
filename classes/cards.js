@@ -54,6 +54,7 @@ class MinionCard {
     this.attackPower = minion.attackPower;
     this.minion = minion;
     this.owner = null; // is it ??? should the owner of card be the owner of hand ?!
+    this.buffs = [];
 
     this.play = this.play.bind(this); // ES6 caveman bind
   }
@@ -67,6 +68,7 @@ class MinionCard {
     board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
   }
+  /** @deprecated */
   x_isPlayable (player) { // this could become a _God_ function :/, consider using target: []
     // cards should encapsulate THEIR RULES for valid targets, not the world rules
     if (player.board.listOwn(p1).minions.length > 6) return false;

@@ -13,6 +13,7 @@ class Hero {
     this.name = player.name; // yes, technically - "Guldan" != "CutePumkin312"
     this.health = 30;
     this.attackPower = 0;
+    this.buffs = [];
     this.owner = player;
   }
   get hp () {

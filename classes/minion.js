@@ -4,13 +4,14 @@
 let id = 1;
 
 class Minion { //will extend Character
-  constructor ({name, attackPower, health, price}) {
+  constructor ({name, attackPower, health, price, buffs}) {
     this._id = id++;
     this.name = name;
     this.health = health;
     this.attackPower = attackPower;
     this.isWaiting = true; // initial ZZZ / sleep
     this.attackedThisTurn = 0; // this is getting convoluted =/
+    this.buffs = buffs || [];
     this.owner = null; // maybe init Minion with owner upon creation ?
 
     // this.tribe = "";
@@ -39,6 +40,9 @@ class Minion { //will extend Character
     console.log(`🔥 ${this.name} takes ${n} damage!`);
     this.health -= n;
     this.isStillAlive();
+  }
+  buff (enchantment) {
+    this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
   }
   isStillAlive() {
     if (this.health < 1) this.die();

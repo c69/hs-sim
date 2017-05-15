@@ -4,7 +4,7 @@
 let id = 1;
 
 class Minion { //will extend Character
-  constructor ({name, attackPower, health, price, buffs}) {
+  constructor ({name, attackPower, health, price, buffs, battleCry}) {
     this._id = id++;
     this.name = name;
     this.health = health;
@@ -13,7 +13,7 @@ class Minion { //will extend Character
     this.attackedThisTurn = 0; // this is getting convoluted =/
     this.buffs = buffs || [];
     this.owner = null; // maybe init Minion with owner upon creation ?
-
+    this.battleCry = battleCry || null;
     // this.tribe = "";
 
     //TODO: move all silenceable stuff to Buff object

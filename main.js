@@ -35,10 +35,15 @@ for (let i = 0; i < 30; i++) {
   let dice = (Math.floor(1 + Math.random()*5));
   zombies.push(
     new MinionCard(new Minion({
-        name: 'Zomb' + dice,
+        name: 'Elf' + dice,
         attackPower: dice + 0,
         health: dice,
-        price: dice
+        price: dice,
+        battleCry: function (t) {
+          console.log('battlecry: Elf shoots his arrow!');
+          t && t.dealDamage(1);
+        },
+        targetSelector: 'enemy'
       }), dice)
   );
 }

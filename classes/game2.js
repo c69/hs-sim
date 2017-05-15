@@ -130,15 +130,15 @@ class Game {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
     let c = this.options.actions[card_idx];
     
+    if (c.targetList) { // spell-fireball OR battlecry
+      var target = c.targetList[target_idx];  // if c.t      
+    }
     if (c.positionList) { // minion
       var position = c.positionList[position_idx]; // if c.p
-      this.activePlayer.hand.play(c.id)(this.activePlayer, this.board);    
+      this.activePlayer.hand.play(c.id)(this.activePlayer, this.board, position, target);    
+    } else {
+      this.activePlayer.hand.play(c.id)(target);
     }
-    if (c.targetList) { // spell-fireball
-      let target = c.targetList[target_idx];  // if c.t
-      this.activePlayer.hand.play(c.id)(target);    
-    }
-    
     //this._onBeforeMinionSummoned(c); //  no no no ...
     //this._summon(c.minion, p); // if minion ? or equip if weapon ?
     //c.play.call(this, c, t); // %-)
@@ -224,8 +224,8 @@ class Game {
         type: 'C', //'card',
         name: v.name,
         //cost: v.price,
-        positionList: [0] //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
-        //targetList: [this.activePlayer.hero] // required for Archer
+        positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
+        targetList: sheeps.reverse() // for battlecry - starts from minions, to help Bob kill taunter Bears )
       };
     });
 

@@ -55,18 +55,21 @@ class MinionCard {
     this.minion = minion;
     this.owner = null; // is it ??? should the owner of card be the owner of hand ?!
     this.buffs = [];
+    this.battleCry = minion.battleCry || null; // lets start with API slowly ..
 
     this.play = this.play.bind(this); // ES6 caveman bind
   }
-  play (player, board) {
-    //if (hasBattleCry) ;
-    
+  play (player, board, positionForSummoning = 0, targetForBattleCry) {
     //game.summon(minion, player);
     
     //player.board.choosePosition(); ??
     this.minion.owner = player;
     board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
+
+    if (this.battleCry) {
+      this.battleCry(targetForBattleCry);
+    };
   }
   /** @deprecated */
   x_isPlayable (player) { // this could become a _God_ function :/, consider using target: []

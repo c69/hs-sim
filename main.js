@@ -75,13 +75,11 @@ for(let i = 0; i < 17 && !g.isOver; i++) {
   //g.viewState();
   //g.viewAvailableOptions();
 
-  let opts = g.viewAvailableOptions();
-  console.log(`${g.activePlayer.name}'s options:`, opts);
-  if (opts.play && opts.play.length) {
-    g.playCard();
-  }
-  if (opts.attack && opts.attack.length) {
-    g.attack(0,0);
+  for (let i = 0; i < 10; i++) {
+    let opts = g.viewAvailableOptions();
+    //console.log(`${g.activePlayer.name}'s options:`, opts);
+    if (!opts.actions.length) break;
+    g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }
   
   console.log('___________________');

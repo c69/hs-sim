@@ -64,6 +64,9 @@ class Game {
     if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     activePlayer.mana = activePlayer.manaCrystals;
 
+    this.board.listOwn(this.activePlayer).minions.forEach(v => {
+      v.attackedThisTurn = 0; // invasively reset attack counters 
+    });
     //execute triggers: "At the beginning of ... turn"
   }
   _attemptToDrawCard () { // wrappers inside of wrappers ...
@@ -111,8 +114,8 @@ class Game {
     return this;  
   }
   attack (attacker_idx, target_idx) {//(1,1) Elf2 -> Zomb1
-    let o = this.options.attack[attacker_idx];
-    let a = o.id;
+    let o = this.options.actions[attacker_idx];
+    let a = o.unit;
     let t = o.targetList[target_idx];
     // if Ogre retarget - choose new target :)
     //this._onBeforeAttack(a, t);
@@ -123,8 +126,9 @@ class Game {
     return this;
   }  
   playCard (card_idx = 0, position_idx = 0, target_idx = 0) {
-    console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let c = this.options.play[card_idx];
+    //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
+    let c = this.options.actions[card_idx];
+    
     if (c.positionList) { // minion
       var position = c.positionList[position_idx]; // if c.p
       this.activePlayer.hand.play(c.id)(this.activePlayer, this.board);    
@@ -140,68 +144,90 @@ class Game {
     
     //this._onAfterCardPlayed(c);
 
-    console.log(`${this.activePlayer.name} PLAYED ${card_idx}`);
+    //console.log(`${this.activePlayer.name} chosen OPTION ${card_idx}`);
 
     this._refreshAvailableOptions(); // cancer
     return this;
   }
   _example_viewAvailableOptions () {
     return {
-      attack: [
-        {aggressor: Elf1, targets: [Bob, Zomb1, Zomb2]},
-        {a: Elf2, t: [Bob, Zomb1, Zomb2]}
-      ],
-      power: [Alice, Bob, Elf1, Elf2, Zomb1, Zomb2],
-      play: [
-        {a: Firebal, t: [Alice, Bob, Elf1, Elf2, Zomb1, Zomb2]},
-        {a: Elf3, p: [0,1,2]},
-        {a: Archer, p: [0,1,2], t: [Alice, Bob, Elf1, Elf2, Zomb1, Zomb2]},
+      actions: [
+          {id: 'minion1', type: 'ATTACK', name: 'Elf1', targetList: []},
+          {id: 'card1', type: 'CARD', name: 'Phyreball', targetList: []},
+          {id: 'card2', type: 'CARD', name: 'Elf', positionList: [0,1], targetsList: []}
       ]  
     }    
   }
   viewAvailableOptions () { // why not just access prop directly ? 
     return this.options;  
   } 
+  chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
+    if (!this.options.actions.length) throw 'options.actions are empty' //return;
+    let o = this.options.actions[options_idx];
+    if (!o) throw new RangeError('Invalid option index provided.');
+    //console.log(o.type);
+    if (o.type === 'A') this.attack(options_idx, target_idx);
+    if (o.type === 'C') this.playCard(options_idx, position_idx, target_idx);
+
+    this._refreshAvailableOptions(); // cancer
+    return this;
+  }
   /**
    *  A nice GOD method
    */
   _refreshAvailableOptions () {
-    if (!this.isStarted || this.isOver) this.options = {};
-    
-    // board does not proide a way to simply list all (own)units, yet.
+    //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
+    if (!this.isStarted || this.isOver) {
+      this.options = {actions:[]};
+      return;
+    } 
+    // board does not provide a way to simply list all (own)units, yet.
     let pawns = this.board.listOwn(this.activePlayer);
     let warriors = [].concat(pawns.hero, pawns.minions).filter(v => {
-      return v.attackPower > 0;// && !v.attackedThisTurn;
+      return v.attackPower > 0 && v.attackedThisTurn < 1;
     });
 
     let aubergines = this.board.listOwn(this.passivePlayer);
     let sheeps = [].concat(aubergines.hero, aubergines.minions).filter(v => {
-      return true;
+      return v.health > 0;
     });
     //scan for taunt, scan for spell shield
 
     let attack = warriors.map(v => {
       return {
-        id: v._id, 
+        id: v._id,
+        unit: v,
+        type: 'A', //'attack',
+        name: v.name,
+        //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-) 
         targetList: sheeps  
       };
-    });
+    }).filter(v => v.targetList.length > 0);
     //let mana = this.mana; // hand.listPlayable already checks for mana cost
     let cards = this.activePlayer.hand.listPlayable().map(v=>{
       return v.name === 'Fireball' ? {
         id: v.id,
+        type: 'C', //'card',
+        name: v.name,
+        //cost: v.price,
         targetList: [this.activePlayer.hero] // humor: let only attack own hero with Fireball. Refactor with selectors. 
       } : {
         id: v.id,
+        type: 'C', //'card',
+        name: v.name,
+        //cost: v.price,
         positionList: [0] //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
-        //targetList: [this.activePlayer.hero]
+        //targetList: [this.activePlayer.hero] // required for Archer
       };
     });
 
+    // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
     this.options = {
-      attack,
-      play: cards,
-      aubergines
+      actions : [
+        ...attack,
+        ...cards
+      ]
+      //, aubergines
     };
   }
   /** 
@@ -210,17 +236,20 @@ class Game {
    * @param {Character} target
    */
   _attack (attacker, target) {
-    if (!target) return;
-    if (target.health < 1) return;
-    if (attacker.health < 1) return;
-    if (attacker.owner !== this.activePlayer) return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
-    if (target.owner === attacker.owner) return; // will fail for Hunter:Misdirection secret, and Ogres
+    //console.log(`Attacking ${attacker} -> ${target}`);  
+    if (!target) throw 'no target'; //return;
+    if (target.health < 1) throw 'dead target'; //return;
+    if (attacker.health < 1) throw 'dead attacker'; //return;
+    if (attacker.owner !== this.activePlayer) throw 'wrong turn'; //return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
+    if (target.owner === attacker.owner) throw 'own unit'; //return; // will fail for Hunter:Misdirection secret, and Ogres
+    if (attacker.attackedThisTurn > 0) throw 'already attacked this turn'; //return
 
     console.log(`⚔️ ${attacker.name}(${attacker.attackPower}/${attacker.health}) attacks ${target.name}(${target.attackPower}/${target.health})`);
     //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attackPower}/${target.health})`);
     //ignore shields, etc for now
     target.health -= attacker.attackPower;
-    attacker.health -= target.attackPower;  
+    attacker.health -= target.attackPower;
+    attacker.attackedThisTurn += 1;  
     target.isStillAlive();
     attacker.isStillAlive();  
   }

@@ -3,8 +3,9 @@
 
 class Board {
   constructor (player1, player2) {
-    //this.player1 = player1;
-    //this.player2 = player2;
+    this.player1 = player1;
+    this.player2 = player2;
+    
     this._board = new Map(
       [player1, player2].map(player => ([player, {
         hero: player.hero,
@@ -25,11 +26,8 @@ class Board {
     }
   }
   listEnemy (player) {
-    let {hero, minions} = this._board.get(player);
-    return {
-      hero,
-      minions: minions.filter(v => v.health > 0)
-    }
+    var enemy = player === this.player1 ? this.player2 : this.player1; 
+    return this.listOwn(enemy);
   }
   addOwn (player, minion) {
     let idx = 0;

@@ -23,7 +23,23 @@ for (let i = 0; i < 30; i++) {
         health: dice,
         price: dice,
         buffs: [
-          'TAUNT'
+          'TAUNT',
+          {
+            //also consider binding "this" to minion for deathrattle and similar functions
+            deathrattle: function (self, board, game) { // giving game to ability is KINDA dangerous, as it can .concede(), for example or modify game state =) 
+              console.log(`deathrattle: ${self.name} gives last hug to his hero! +2hp`);
+              self.owner.hero.dealDamage(-2)// heeeeal :P
+            }
+          },
+          {
+            //also consider binding "this" to minion for deathrattle and similar functions
+            deathrattle: function (self, board, game) { // giving game to ability is KINDA dangerous, as it can .concede(), for example or modify game state =) 
+              console.log(`deathrattle: ${self.name} splashes acid blood around him!`);
+              var a = board.listOwn(self.owner);
+              var b = board.listEnemy(self.owner);
+              [b.hero, ...b.minions, ...a.minions].forEach(v => v.dealDamage(1)); //everyone but own hero
+            }
+          }
         ]
       }), dice)
   );
@@ -40,7 +56,7 @@ for (let i = 0; i < 30; i++) {
         health: dice,
         price: dice,
         battleCry: function (t) {
-          console.log('battlecry: Elf shoots his arrow!');
+          console.log(`battlecry: ${this.name} shoots his arrow!`);
           t && t.dealDamage(1);
         },
         targetSelector: 'enemy'

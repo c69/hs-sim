@@ -259,7 +259,17 @@ class Game {
     attacker.health -= target.attackPower;
     attacker.attackedThisTurn += 1;  
     target.isStillAlive();
-    attacker.isStillAlive();  
+    attacker.isStillAlive();
+
+    let dethrattle_list = []; // this should be moved to deathsweep (so deathrattles trigger left-to-right ?)
+    if(target.health < 0) dethrattle_list.push(target);
+    if(attacker.health < 0) dethrattle_list.push(attacker);
+    
+    let board = this.board;
+    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O
+      character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
+    });   
+    
   }
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);

@@ -1,7 +1,7 @@
 "use strict";
 // @ts-check
 
-const Game = require('./classes/game.js');
+const Game = require('./classes/game2.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 
@@ -15,7 +15,7 @@ for (let i = 0; i < 30; i++) {
   let dice = (Math.floor(1 + Math.random()*5));
   fireballs.push(
     //new Card('Fireball')
-    dice === 4 ? new FireballCard() :
+    dice !== 4 ? new FireballCard() :
       //new JunkCard('x' + dice, dice)
       new MinionCard(new Minion({
         name: 'Elf' + dice,
@@ -47,8 +47,8 @@ var g_fatigue = new Game([
 ]);
 g_fatigue.start();
 
-for(let i = 0; i < 42 && !g_fatigue.isOver; i++) {
-  g_fatigue.nextTurn();
+for(let i = 0; i < 66 && !g_fatigue.isOver; i++) {
+  g_fatigue.endTurn();
 }
 g_fatigue.view();
 
@@ -66,48 +66,24 @@ var g = new Game([p1, p2]);
 g.start();
 
 //AI - Artificial stupIdity
-for(let i = 0; i < 42 && !g.isOver; i++) {
+for(let i = 0; i < 17 && !g.isOver; i++) {
   g.view();
 
-  let pActive = g.activePlayer;
+  //g.usePower(0); // hero power first suggested target
+  //g.playCard(0,0); // play first possible card at first target
+  //g.attack(0,0); // attack with first suggested character first suggested target
+  //g.viewState();
+  //g.viewAvailableOptions();
 
-  let minions = g.board.listOwn(pActive).minions;
-  //let enemy = g.board.listEnemy(pActive).hero;
-  let enemy;
-  if (Math.random()*4 > 3) {
-    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
-  } else {
-    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).minions[0];
+  let opts = g.viewAvailableOptions();
+  console.log(`${g.activePlayer.name}'s options:`, opts);
+  if (opts.play && opts.play.length) {
+    g.playCard();
   }
-  if (!enemy) { // just attack face, if no enemey minions
-    enemy = g.board.listOwn(pActive === p1 ? p2 : p1).hero; // hack until listEnemy is implemented
-  }
-
-  console.log(`${pActive.name} wants to attack ${enemy && enemy.name} with ${minions}`);
-  minions.length && minions.forEach(minion => g.attack(minion, enemy));
- 
-  if (pActive === p1) {
-    pActive.hand.view();
-    let fireball = pActive.hand.listPlayable().find(({name}) => name === 'Fireball');
-    if (fireball) {
-      p1.hand.play(fireball.id)(p2.hero); // hardcode :(
-    } else {
-      let whatever = pActive.hand.listPlayable()[0];
-      console.log(`x Alice has no fireball, so she want to play ${whatever}`);
-      //whatever && p1.hand.play(whatever.id)(p2.hero); // spell - target is enemy hero: Bob
-      whatever && pActive.hand.play(whatever.id)(pActive); // minion - owner is player: Alice  
-    }
-  } else {
-    pActive.hand.view();
-    let aMinion = pActive.hand.listPlayable().filter(({type}) => type === 'minion').sort((a,b)=>b.price-a.price)[0];
-    if (aMinion) {
-      pActive.hand.play(aMinion.id)(pActive); // minion - owner is player: Bob  
-    } else {
-      // do we even check whether the turn is active ?
-      console.warn('Bob only has fireballs ?');
-    }
+  if (opts.attack && opts.attack.length) {
+    g.attack(0,0);
   }
   
   console.log('___________________');
-  g.nextTurn();
+  g.endTurn();
 }

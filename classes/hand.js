@@ -33,10 +33,10 @@ class Hand {
    */
   play (card_id) {
     if (!card_id) throw new RangeError('Card ID expected');
-    if (!this.owner.activeTurn) {
-      console.warn(`HH ${this.owner.name} cannot play card on other player's turn`);
-      return () => {};
-    }
+    //if (!this.owner.activeTurn) { <--------- move this to game.play or smwhere..
+      //console.warn(`HH ${this.owner.name} cannot play card on other player's turn`);
+      //return () => {};
+    //}
     // add sanity check for if mana/cost changed but ID remains the same, etc
     let card_idx = this._hand.findIndex(v=>v.hand_id === card_id);
     if (card_idx < 0) return; 
@@ -47,8 +47,8 @@ class Hand {
     let card = this._hand.splice(card_idx, 1)[0];
     this.owner.mana -= card.price;
     
-    console.log(`HH ${this.owner.name} played `, card.name);
-    return card.action;
+    console.log(`hand.js::play ${this.owner.name} played `, card.name);
+    return card.play;
 
     // what about targeting ?!
     // if card.isNeedTarget ? isNeedOptionalTarget ? isNeedTargetIfConditionMet ??? (-__-)

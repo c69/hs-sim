@@ -8,12 +8,14 @@ const Minion = require('./minion.js');
  */
 class FireballCard {
   constructor () {
-    this.type = "spell";
+    this.type = 'spell';
     this.price = 4;
     this.name = 'Fireball';
+  
+    this.play = this.play.bind(this); // ES6 caveman bind
   }
-  action (fireballTarget) {
-    fireballTarget.damage(3);
+  play (fireballTarget) {
+    fireballTarget.dealDamage(3);
     //return chooseTarget(['minion', 'hero']).damage(6);
     //return chooseTarget(['minion', 'hero'], spell.dealDamage(6));
     //return dealDamageToSingleTarget(6, ['minion', 'hero']);
@@ -22,20 +24,30 @@ class FireballCard {
 
 class JunkCard {
   constructor (name, price) {
-    this.type = "spell";
+    this.type = 'spell';
     this.price = price;
     this.name = name;
 
-    this.action = this.action.bind(this); // ES6 caveman bind
+    this.play = this.play.bind(this); // ES6 caveman bind
   }
-  action () {
+  play () {
     console.log(`nothing happens [${this.price} mana wasted..]`)
+  }
+}
+
+class HellFireCard {
+  constructor () {}
+  target () {
+    
+  }
+  play () {
+    $('characters').dealDamage(3);
   }
 }
 
 class MinionCard {
   constructor (minion, price) {
-    this.type = "minion";
+    this.type = 'minion';
     this.price = price;
     this.name = minion.name;
     this.health = minion.health;
@@ -43,15 +55,20 @@ class MinionCard {
     this.minion = minion;
     this.owner = null; // is it ??? should the owner of card be the owner of hand ?!
 
-    this.action = this.action.bind(this); // ES6 caveman bind
+    this.play = this.play.bind(this); // ES6 caveman bind
   }
-  action (player) {
+  play (player, board) {
+    //if (hasBattleCry) ;
+    
+    //game.summon(minion, player);
+    
     //player.board.choosePosition(); ??
     this.minion.owner = player;
-    player.board.addOwn(player, this.minion);
+    board.addOwn(player, this.minion);
     //player.summonMinion(this.minion);
   }
-  isPlayable (player) { // this could become a _God_ function :/, consider using target: []
+  x_isPlayable (player) { // this could become a _God_ function :/, consider using target: []
+    // cards should encapsulate THEIR RULES for valid targets, not the world rules
     if (player.board.listOwn(p1).minions.length > 6) return false;
     if (player.mana < this.price) return false;
     return true;

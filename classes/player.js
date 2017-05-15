@@ -14,14 +14,13 @@ class Player {
   }
   draw (n) {
     var newCards = this.deck.draw(n);
-    if (!newCards.length) this.hero.damage(this.fatigue++);
+    if (!newCards.length) this.hero.dealDamage(this.fatigue++);
     newCards.forEach(card => (
       this.hand.add(card)
     ), this);
   }
   loose () {
     console.warn(`player ${this.name} LOST the game`);
-    this._onLoose(); // looks convoluted..
   }
   _onLoose () {}
 }

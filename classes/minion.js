@@ -35,7 +35,8 @@ class Minion { //will extend Character
     
     // this.isSilenced = false;
   } 
-  damage (n) {
+  dealDamage (n) {
+    console.log(`🔥 ${this.name} takes ${n} damage!`);
     this.health -= n;
     this.isStillAlive();
   }

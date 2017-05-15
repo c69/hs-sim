@@ -12,11 +12,6 @@ class Board {
       }]))
     );
   }
-  /** @deprecated */
-  x_list () { // ??
-    //return [this._board.get(this.player1), this._board.get(this.player2)];
-    return this._board.values();
-  }
   listOwnAll (player) {
     return this._board.get(player);
   }
@@ -41,13 +36,6 @@ class Board {
     let m = this._board.get(player).minions;
     if (m.length > 6) return;
     m.splice(idx, 0, minion);
-  }
-  showAlive () {
-    // silently remove dead minions
-    //console.log(this.list());
-    // [...this.list()].forEach(v => {
-    //   v.minions = v.minions.filter(m => m.hp > 0) 
-    // });
   }
 } 
 

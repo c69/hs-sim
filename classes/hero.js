@@ -1,8 +1,15 @@
 'use strict';
 // @ts-check
 
+let id = -1;
+
 class Hero {
   constructor (player) {
+    // hack: just random ID guaranteed not to collide with auto-increment on minions
+    // does not matter because heroes cannot attack just yet
+    // and this will all be refactored anyway 
+    this._id = id--;
+    
     this.name = player.name; // yes, technically - "Guldan" != "CutePumkin312"
     this.health = 30;
     this.attackPower = 0;
@@ -11,8 +18,8 @@ class Hero {
   get hp () {
     return this.health;
   }
-  damage (n) {
-    console.log(`🔥 hero of ${this.owner.name} takes ${n} damage!`);
+  dealDamage (n) {
+    console.log(`🔥 ${this.name} takes ${n} damage!`);
     this.health -= n;
     this.isStillAlive();
   }

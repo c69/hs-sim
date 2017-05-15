@@ -9,7 +9,7 @@ class Minion { //will extend Character
     this.name = name;
     this.health = health;
     this.attackPower = attackPower;
-    this.isWaiting = true; // initial ZZZ / sleep
+    this.isReady = false; // initial ZZZ / sleep
     this.attackedThisTurn = 0; // this is getting convoluted =/
     this.buffs = buffs || [];
     this.owner = null; // maybe init Minion with owner upon creation ?

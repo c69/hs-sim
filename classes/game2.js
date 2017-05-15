@@ -66,6 +66,7 @@ class Game {
 
     this.board.listOwn(this.activePlayer).minions.forEach(v => {
       v.attackedThisTurn = 0; // invasively reset attack counters 
+      v.isReady = true;
     });
     //execute triggers: "At the beginning of ... turn"
   }
@@ -184,7 +185,7 @@ class Game {
     // board does not provide a way to simply list all (own)units, yet.
     let pawns = this.board.listOwn(this.activePlayer);
     let warriors = [].concat(pawns.hero, pawns.minions).filter(v => {
-      return v.attackPower > 0 && v.attackedThisTurn < 1;
+      return v.attackPower > 0 && v.isReady && v.attackedThisTurn < 1;
     });
 
     let aubergines = this.board.listOwn(this.passivePlayer);

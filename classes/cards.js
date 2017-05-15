@@ -37,11 +37,15 @@ class JunkCard {
 
 class HellFireCard {
   constructor () {}
-  target () {
+  _hasValidTargets_arePreconditionsMet () {
     
   }
-  play () {
-    $('characters').dealDamage(3);
+  play (self, board) { //arcane blast
+    board.listEnemy(self.owner).minions.forEach(v=>v.dealDamage(1));
+  }
+  play2 (self, board) { //hellfire
+    //lol.
+    board.listAll_TargetableBySpells_AsArray(self.owner).forEach(v=>v.dealDamage(1));
   }
 }
 

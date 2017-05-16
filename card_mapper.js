@@ -45,8 +45,8 @@ fs.readFile('cards.json', function (err, data) {
     'howToEarnGolden', // text help
     'referencedTags', // ?
     'mechanics', // incomplete and useless
-    'playRequirements', // weird..
-    'rarity', //
+    'playRequirements', // need to read doc for this ..
+    //'rarity', //
     'set', //
     'dbfId' //
   ];   
@@ -55,11 +55,13 @@ fs.readFile('cards.json', function (err, data) {
   });
   console.log(`Found ${jmin.length} cards, compacting ..`);
   let jnano = jmin.map((card) => {
-    let {id, type, cost, name, attack, health, durability, text, race, playerClass, collectible} = card;
+    let {
+      id, type, cost, name, attack, health, durability, text, race, playerClass, collectible,
+      rarity
+    } = card;
     return {
       id,
-      //cost,
-      //type,
+      //dfId,
       _info: ({
           'MINION':`(${cost}) ${attack}/${health}`,
           'HERO':`${attack||0}/${health} ${type}`,
@@ -68,16 +70,26 @@ fs.readFile('cards.json', function (err, data) {
           'HERO_POWER':`(${cost}) ${type}`,
           'ENCHANTMENT': `${type}`
         }[type]||`${type}`) + ` [${collectible ? '' : '*'}${playerClass}]: ${name}${race?` |${race}`:''}`,
-      //attack,
-      //health,
-      text
+      text,
+      type,
+      name,
+      //targetingArrowText,
+      playerClass,
+      //.multiclass
+      rarity,
+      collectible,
+      cost,
+      attack,
+      health,
+      durability
     };
   });
   
   let min = JSON.stringify(jmin, null, "  ");
   let min2 = JSON.stringify(jnano, null, "  ");
 
-  fs.writeFile('cards.min.json', min2, (err) => {
-      if (err) throw err;
+  //fs.writeFile('cards.min.json', min2, (err) => {
+  fs.writeFile('cards.generated.json', min2, (err) => {
+    if (err) throw err;
   });
 });

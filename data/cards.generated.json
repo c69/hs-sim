@@ -55,7 +55,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "LOEA15_2",
@@ -83,7 +84,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "EX1_155b",
@@ -152,7 +154,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "DEMON"
   },
   {
     "id": "CS2_034_H1",
@@ -266,7 +269,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 1,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "BRMA_01",
@@ -311,7 +315,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "MURLOC"
   },
   {
     "id": "OG_152",
@@ -324,7 +329,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "BRMA09_2H",
@@ -484,7 +490,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_946",
@@ -599,7 +606,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "XXX_111",
@@ -619,7 +627,8 @@
     "playerClass": "DREAM",
     "cost": 4,
     "attack": 7,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "OG_202a",
@@ -698,7 +707,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "CS2_181e",
@@ -926,7 +936,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CS2_041e",
@@ -1043,7 +1054,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "BRM_033e",
@@ -1130,7 +1142,8 @@
     "rarity": "LEGENDARY",
     "cost": 1,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_937",
@@ -1143,7 +1156,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "CFM_338",
@@ -1258,7 +1272,8 @@
     "playerClass": "SHAMAN",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CS2_011",
@@ -1392,7 +1407,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_020",
@@ -1418,7 +1434,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "EX1_584e",
@@ -1570,7 +1587,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "EX1_131t",
@@ -1640,7 +1658,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 5,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "CFM_639e",
@@ -1659,7 +1678,8 @@
     "rarity": "LEGENDARY",
     "cost": 3,
     "attack": 8,
-    "health": 4
+    "health": 4,
+    "race": "DRAGON"
   },
   {
     "id": "TB_Coopv3_105",
@@ -1756,7 +1776,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "AT_070",
@@ -1769,7 +1790,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 4,
-    "health": 6
+    "health": 6,
+    "race": "PIRATE"
   },
   {
     "id": "NAX5_01",
@@ -2075,7 +2097,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "CS2_073e",
@@ -2103,7 +2126,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "BRM_027pH",
@@ -2167,7 +2191,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "ELEMENTAL"
   },
   {
     "id": "UNG_111t1",
@@ -2255,7 +2280,8 @@
     "playerClass": "SHAMAN",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "UNG_963",
@@ -2268,7 +2294,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "AT_099t",
@@ -2278,7 +2305,8 @@
     "playerClass": "NEUTRAL",
     "cost": 5,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "BRMA12_4",
@@ -2482,7 +2510,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 6,
-    "health": 9
+    "health": 9,
+    "race": "MECHANICAL"
   },
   {
     "id": "CFM_621t4",
@@ -2546,7 +2575,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 5,
-    "health": 2
+    "health": 2,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CFM_853e",
@@ -2578,7 +2608,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "NAX1_05",
@@ -2630,7 +2661,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "KAR_062",
@@ -2721,7 +2753,8 @@
     "collectible": true,
     "cost": 10,
     "attack": 12,
-    "health": 12
+    "health": 12,
+    "race": "BEAST"
   },
   {
     "id": "EX1_023",
@@ -2791,7 +2824,8 @@
     "playerClass": "NEUTRAL",
     "cost": 4,
     "attack": 7,
-    "health": 3
+    "health": 3,
+    "race": "DRAGON"
   },
   {
     "id": "KARA_09_08",
@@ -2802,7 +2836,8 @@
     "playerClass": "WARLOCK",
     "cost": 4,
     "attack": 2,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "GVG_090",
@@ -2828,7 +2863,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "TU4c_004",
@@ -2906,7 +2942,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "NEW1_025e",
@@ -3058,7 +3095,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "OG_222",
@@ -3173,7 +3211,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_402",
@@ -3242,7 +3281,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 3,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "TBA01_1",
@@ -3291,7 +3331,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "UNG_065",
@@ -3390,7 +3431,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "EX1_105",
@@ -3415,7 +3457,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "KAR_A10_07",
@@ -3460,7 +3503,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "CFM_621t3",
@@ -3511,7 +3555,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_844",
@@ -3573,7 +3618,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "OG_249",
@@ -3647,7 +3693,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "EX1_005",
@@ -3736,7 +3783,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "LOE_009t",
@@ -3747,7 +3795,8 @@
     "playerClass": "WARRIOR",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "AT_132_ROGUE",
@@ -3778,7 +3827,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "CFM_712_t07",
@@ -4014,7 +4064,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CS2_022e",
@@ -4177,7 +4228,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 1,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_810",
@@ -4190,7 +4242,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "AT_063",
@@ -4203,7 +4256,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CFM_621_m3",
@@ -4213,7 +4267,8 @@
     "playerClass": "NEUTRAL",
     "cost": 8,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DEMON"
   },
   {
     "id": "CRED_75",
@@ -4237,7 +4292,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 5,
-    "health": 9
+    "health": 9,
+    "race": "BEAST"
   },
   {
     "id": "EX1_543",
@@ -4250,7 +4306,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "EX1_366e",
@@ -4389,7 +4446,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "XXX_112",
@@ -4411,7 +4469,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 6,
-    "health": 8
+    "health": 8,
+    "race": "DEMON"
   },
   {
     "id": "UNG_999t10",
@@ -4471,7 +4530,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "AT_132_SHAMANd",
@@ -4511,7 +4571,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 8,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "GVG_123e",
@@ -4532,7 +4593,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CFM_670",
@@ -4587,7 +4649,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "DEMON"
   },
   {
     "id": "CRED_76",
@@ -4612,7 +4675,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "PIRATE"
   },
   {
     "id": "KARA_05_01hp",
@@ -4729,7 +4793,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "MURLOC"
   },
   {
     "id": "EX1_587",
@@ -4851,7 +4916,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 4,
-    "health": 3
+    "health": 3,
+    "race": "DEMON"
   },
   {
     "id": "TB_CoOpv3_201",
@@ -4947,7 +5013,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "XXX_017",
@@ -4976,7 +5043,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "MECHANICAL"
   },
   {
     "id": "AT_061e",
@@ -5019,7 +5087,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "GVG_043e",
@@ -5129,7 +5198,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "CS2_146",
@@ -5142,7 +5212,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "UNG_999t13",
@@ -5216,7 +5287,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 6,
-    "health": 10
+    "health": 10,
+    "race": "BEAST"
   },
   {
     "id": "EX1_032",
@@ -5284,7 +5356,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "CRED_23",
@@ -5309,7 +5382,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "MECHANICAL"
   },
   {
     "id": "AT_017e",
@@ -5330,7 +5404,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_025",
@@ -5411,7 +5486,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "PIRATE"
   },
   {
     "id": "AT_130",
@@ -5698,7 +5774,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "LOEA16_1H",
@@ -5793,7 +5870,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "KARA_04_01",
@@ -5859,7 +5937,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "UNG_832",
@@ -5883,7 +5962,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "ELEMENTAL"
   },
   {
     "id": "UNG_925",
@@ -5896,7 +5976,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "NAX15_05",
@@ -5908,7 +5989,8 @@
     "rarity": "LEGENDARY",
     "cost": 0,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_SPT_DPromoSecret5",
@@ -5938,7 +6020,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "LOEA09_2e",
@@ -6136,7 +6219,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 4,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "UNG_832e",
@@ -6157,7 +6241,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "NAX8_05t",
@@ -6179,7 +6264,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "GVG_032a",
@@ -6353,7 +6439,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "UNG_818",
@@ -6366,7 +6453,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "LOE_086",
@@ -6399,7 +6487,8 @@
     "rarity": "LEGENDARY",
     "cost": 6,
     "attack": 4,
-    "health": 12
+    "health": 12,
+    "race": "DRAGON"
   },
   {
     "id": "OG_145",
@@ -6412,7 +6501,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_335",
@@ -6425,7 +6515,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 0,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "TB_KTRAF_2",
@@ -6448,7 +6539,8 @@
     "playerClass": "HUNTER",
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "GVG_030ae",
@@ -6477,7 +6569,8 @@
     "rarity": "LEGENDARY",
     "cost": 10,
     "attack": 10,
-    "health": 10
+    "health": 10,
+    "race": "MURLOC"
   },
   {
     "id": "NAX8_04t",
@@ -6531,7 +6624,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "NAX13_04H",
@@ -6576,7 +6670,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "EX1_033",
@@ -6614,7 +6709,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "EX1_095",
@@ -6637,7 +6733,8 @@
     "playerClass": "HUNTER",
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "GVG_061",
@@ -6760,7 +6857,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "CRED_53",
@@ -6811,7 +6909,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "KAR_A10_10",
@@ -7005,7 +7104,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "KAR_006",
@@ -7031,7 +7131,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 3,
-    "health": 15
+    "health": 15,
+    "race": "DEMON"
   },
   {
     "id": "PRO_001at",
@@ -7041,7 +7142,8 @@
     "playerClass": "NEUTRAL",
     "cost": 0,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "BRMA12_8",
@@ -7397,7 +7499,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CS2_024",
@@ -7436,7 +7539,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "DRAGON"
   },
   {
     "id": "CS2_034",
@@ -7470,7 +7574,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_066",
@@ -7539,7 +7644,8 @@
     "rarity": "COMMON",
     "cost": 0,
     "attack": 7,
-    "health": 5
+    "health": 5,
+    "race": "DEMON"
   },
   {
     "id": "UNG_010",
@@ -7552,7 +7658,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 5,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "TB_PickYourFate_8",
@@ -7681,7 +7788,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "GVG_060",
@@ -7738,7 +7846,8 @@
     "playerClass": "NEUTRAL",
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "DEMON"
   },
   {
     "id": "NEW1_033",
@@ -7750,7 +7859,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "CFM_621t",
@@ -7785,7 +7895,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "KARA_09_06",
@@ -7820,7 +7931,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 6,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_851",
@@ -7857,7 +7969,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "BRMA14_4",
@@ -7941,7 +8054,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "BRMA02_2t",
@@ -8153,7 +8267,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "DRAGON"
   },
   {
     "id": "LOEA10_1",
@@ -8182,7 +8297,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "AT_041",
@@ -8441,7 +8557,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_MammothParty_m001",
@@ -8465,7 +8582,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "CS2_237",
@@ -8478,7 +8596,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "TBST_005",
@@ -8514,7 +8633,8 @@
     "rarity": "LEGENDARY",
     "cost": 10,
     "attack": 0,
-    "health": 200
+    "health": 200,
+    "race": "DRAGON"
   },
   {
     "id": "NAX12_03H",
@@ -8605,7 +8725,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "TB_SPT_DPromoMinion",
@@ -8616,7 +8737,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "LOEA09_13",
@@ -8706,7 +8828,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "NAX15_02",
@@ -8834,7 +8957,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "TB_EndlessMinions01",
@@ -8866,7 +8990,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "LOEA09_10",
@@ -8900,7 +9025,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 1,
-    "health": 11
+    "health": 11,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_609",
@@ -8922,7 +9048,8 @@
     "playerClass": "WARLOCK",
     "cost": 4,
     "attack": 4,
-    "health": 8
+    "health": 8,
+    "race": "DEMON"
   },
   {
     "id": "EX1_612",
@@ -9065,7 +9192,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "TB_PickYourFate_10_EnchMinion",
@@ -9107,7 +9235,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 8
+    "health": 8,
+    "race": "DEMON"
   },
   {
     "id": "HERO_04",
@@ -9171,7 +9300,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_301",
@@ -9184,7 +9314,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "DEMON"
   },
   {
     "id": "OG_100",
@@ -9218,7 +9349,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "PIRATE"
   },
   {
     "id": "EX1_247",
@@ -9256,7 +9388,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 3,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "NAX9_03H",
@@ -9312,7 +9445,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "CFM_636",
@@ -9397,7 +9531,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_13_15",
@@ -9422,7 +9557,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "CFM_617",
@@ -9682,7 +9818,8 @@
     "playerClass": "NEUTRAL",
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "EX1_586",
@@ -9735,7 +9872,8 @@
     "rarity": "EPIC",
     "cost": 3,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "ELEMENTAL"
   },
   {
     "id": "BRMA08_2H",
@@ -9790,7 +9928,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 0,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOE_017",
@@ -9959,7 +10098,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "NEW1_026",
@@ -10050,7 +10190,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "OG_256",
@@ -10131,7 +10272,8 @@
     "playerClass": "NEUTRAL",
     "cost": 4,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "DRAGON"
   },
   {
     "id": "PRO_001b",
@@ -10287,7 +10429,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 4,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "CFM_712_t09",
@@ -10328,7 +10471,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "EX1_067",
@@ -10376,7 +10520,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "DEMON"
   },
   {
     "id": "OG_325",
@@ -10388,7 +10533,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "KAR_A02_04H",
@@ -10529,7 +10675,8 @@
     "collectible": true,
     "cost": 10,
     "attack": 12,
-    "health": 12
+    "health": 12,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_809",
@@ -10542,7 +10689,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "ELEMENTAL"
   },
   {
     "id": "UNG_846",
@@ -10555,7 +10703,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_581",
@@ -10585,7 +10734,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "GVG_076",
@@ -10598,7 +10748,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_116",
@@ -10697,7 +10848,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "BRMA15_2He",
@@ -10718,7 +10870,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "TOTEM"
   },
   {
     "id": "AT_015",
@@ -10825,7 +10978,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_522",
@@ -10884,7 +11038,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "TB_KTRAF_104",
@@ -10917,7 +11072,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "OG_195b",
@@ -10957,7 +11113,8 @@
     "playerClass": "NEUTRAL",
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "OG_044c",
@@ -10969,7 +11126,8 @@
     "rarity": "COMMON",
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "EX1_129",
@@ -11006,7 +11164,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "GVG_030be",
@@ -11141,7 +11300,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "DRAGON"
   },
   {
     "id": "GVG_028",
@@ -11241,7 +11401,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "OG_080",
@@ -11414,7 +11575,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 9,
-    "health": 7
+    "health": 7,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_002",
@@ -11544,7 +11706,8 @@
     "collectible": true,
     "cost": 10,
     "attack": 12,
-    "health": 12
+    "health": 12,
+    "race": "DRAGON"
   },
   {
     "id": "OG_309",
@@ -11557,7 +11720,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 6,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "LOE_079",
@@ -11583,7 +11747,8 @@
     "collectible": true,
     "cost": 0,
     "attack": 0,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "GVG_099",
@@ -11679,7 +11844,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "BRMA15_1",
@@ -11719,7 +11885,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "KAR_004",
@@ -11751,7 +11918,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "PIRATE"
   },
   {
     "id": "BRMA01_2H_2_TB",
@@ -11826,7 +11994,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "EX1_556",
@@ -11839,7 +12008,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_028",
@@ -11904,7 +12074,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "GVG_022b",
@@ -11991,7 +12162,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "BRMA17_4",
@@ -12125,7 +12297,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "XXX_105",
@@ -12165,7 +12338,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "TB_SPT_DPromoCrate1",
@@ -12202,7 +12376,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "AT_065e",
@@ -12283,7 +12458,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MURLOC"
   },
   {
     "id": "TB_SPT_DPromoSecre8",
@@ -12313,7 +12489,8 @@
     "rarity": "LEGENDARY",
     "cost": 8,
     "attack": 4,
-    "health": 8
+    "health": 8,
+    "race": "MECHANICAL"
   },
   {
     "id": "GVG_005",
@@ -12444,7 +12621,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 2,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "LOEA04_30",
@@ -12493,7 +12671,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 7,
-    "health": 4
+    "health": 4,
+    "race": "PIRATE"
   },
   {
     "id": "NEW1_020",
@@ -12578,7 +12757,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "OG_138",
@@ -12623,7 +12803,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "TB_KTRAF_08w",
@@ -12696,7 +12877,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "BRMA09_2t",
@@ -12706,7 +12888,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "NAX15_02H",
@@ -12853,7 +13036,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 9,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "AT_081",
@@ -12972,7 +13156,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "AT_029",
@@ -12985,7 +13170,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "BRMA06_1H",
@@ -13003,7 +13189,8 @@
     "playerClass": "WARLOCK",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_PickYourFate",
@@ -13022,7 +13209,8 @@
     "rarity": "LEGENDARY",
     "cost": 3,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "AT_042t",
@@ -13034,7 +13222,8 @@
     "rarity": "COMMON",
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "CS2_073",
@@ -13097,7 +13286,8 @@
     "rarity": "COMMON",
     "cost": 10,
     "attack": 10,
-    "health": 10
+    "health": 10,
+    "race": "MECHANICAL"
   },
   {
     "id": "TB_MechWar_Minion1",
@@ -13272,7 +13462,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "NAX3_01",
@@ -13566,7 +13757,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 4,
-    "health": 3
+    "health": 3,
+    "race": "DEMON"
   },
   {
     "id": "OG_045a",
@@ -13610,7 +13802,8 @@
     "rarity": "LEGENDARY",
     "cost": 10,
     "attack": 0,
-    "health": 200
+    "health": 200,
+    "race": "DRAGON"
   },
   {
     "id": "EX1_531e",
@@ -13648,7 +13841,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "NEW1_018",
@@ -13661,7 +13855,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "PIRATE"
   },
   {
     "id": "FP1_017",
@@ -13760,7 +13955,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_13_12",
@@ -13821,7 +14017,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "CS2_038",
@@ -13907,7 +14104,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "PIRATE"
   },
   {
     "id": "CFM_312",
@@ -13953,7 +14151,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "ELEMENTAL"
   },
   {
     "id": "GVG_019e",
@@ -13989,7 +14188,8 @@
     "playerClass": "WARLOCK",
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "XXX_029",
@@ -14064,7 +14264,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "BRMA17_5_TB",
@@ -14093,7 +14294,8 @@
     "rarity": "COMMON",
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CS2_050",
@@ -14104,7 +14306,8 @@
     "rarity": "FREE",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "TOTEM"
   },
   {
     "id": "NAX10_02",
@@ -14382,7 +14585,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "NEW1_036e2",
@@ -14502,7 +14706,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOEA02_06",
@@ -14543,7 +14748,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 4,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "KARA_00_05",
@@ -14607,7 +14813,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_948",
@@ -14748,7 +14955,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "KAR_097",
@@ -14804,7 +15012,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 7,
-    "health": 5
+    "health": 5,
+    "race": "DEMON"
   },
   {
     "id": "NAX4_01",
@@ -14836,7 +15045,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "AT_006e",
@@ -14856,7 +15066,8 @@
     "rarity": "RARE",
     "cost": 4,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "LOEA08_01h",
@@ -14907,7 +15118,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "KARA_04_05",
@@ -14950,7 +15162,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "AT_111",
@@ -14976,7 +15189,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "GVG_080",
@@ -15066,7 +15280,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_KTRAF_8",
@@ -15098,7 +15313,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "CFM_063e",
@@ -15347,7 +15563,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "TU4d_001",
@@ -15386,7 +15603,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "NAX7_01H",
@@ -15406,7 +15624,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "LOEA01_02",
@@ -15491,7 +15710,8 @@
     "rarity": "FREE",
     "cost": 1,
     "attack": 0,
-    "health": 2
+    "health": 2,
+    "race": "TOTEM"
   },
   {
     "id": "CFM_650e",
@@ -15519,7 +15739,8 @@
     "playerClass": "NEUTRAL",
     "cost": 5,
     "attack": 4,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_907",
@@ -15532,7 +15753,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "TB_MammothParty_303",
@@ -15609,7 +15831,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOEA16_27H",
@@ -15651,7 +15874,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "OG_006a",
@@ -15661,7 +15885,8 @@
     "playerClass": "PALADIN",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "EX1_084",
@@ -15805,7 +16030,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 2,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "GVG_055e",
@@ -15853,7 +16079,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "KAR_A01_01H",
@@ -15903,7 +16130,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "MURLOC"
   },
   {
     "id": "LOE_002",
@@ -15927,7 +16155,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_00_04H",
@@ -15949,7 +16178,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "KAR_073",
@@ -16019,7 +16249,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "AT_116e",
@@ -16118,7 +16349,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 9,
-    "health": 7
+    "health": 7,
+    "race": "DEMON"
   },
   {
     "id": "NAX6_03te",
@@ -16160,7 +16392,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "BRMA02_2_2_TB",
@@ -16243,7 +16476,8 @@
     "rarity": "LEGENDARY",
     "cost": 3,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "NAX5_03",
@@ -16307,7 +16541,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "BRMA07_2H",
@@ -16369,7 +16604,8 @@
     "rarity": "LEGENDARY",
     "cost": 6,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "DRAGON"
   },
   {
     "id": "TB_CoOpv3_008",
@@ -16505,7 +16741,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "NAX8_02H_TB",
@@ -16628,7 +16865,8 @@
     "rarity": "LEGENDARY",
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "LOE_115",
@@ -16790,7 +17028,8 @@
     "rarity": "COMMON",
     "cost": 5,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "UNG_047",
@@ -16803,7 +17042,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "AT_037t",
@@ -16831,7 +17071,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_926",
@@ -16943,7 +17184,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 5,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "XXX_058",
@@ -16963,7 +17205,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "BRMA16_1H",
@@ -17121,7 +17364,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "EX1_578",
@@ -17188,7 +17432,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "CS2_026",
@@ -17268,7 +17513,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOE_018",
@@ -17411,7 +17657,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "LOEA10_3",
@@ -17423,7 +17670,8 @@
     "collectible": true,
     "cost": 0,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "PRO_001c",
@@ -17520,7 +17768,8 @@
     "playerClass": "WARLOCK",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "UNG_211d",
@@ -17552,7 +17801,8 @@
     "rarity": "COMMON",
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "EX1_058",
@@ -17575,7 +17825,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "BRMA16_5e",
@@ -17868,7 +18119,8 @@
     "playerClass": "NEUTRAL",
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "NEW1_012o",
@@ -18024,7 +18276,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "OG_195",
@@ -18384,7 +18637,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "TB_Pilot1",
@@ -18458,7 +18712,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "UNG_078",
@@ -18514,7 +18769,8 @@
     "rarity": "COMMON",
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "AT_069",
@@ -18540,7 +18796,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "OG_158",
@@ -18699,7 +18956,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "GVG_036e",
@@ -18737,7 +18995,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "ELEMENTAL"
   },
   {
     "id": "BRMA14_5",
@@ -18749,7 +19008,8 @@
     "rarity": "LEGENDARY",
     "cost": 1,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "CFM_621t5",
@@ -18770,7 +19030,8 @@
     "rarity": "FREE",
     "cost": 1,
     "attack": 0,
-    "health": 2
+    "health": 2,
+    "race": "TOTEM"
   },
   {
     "id": "KARA_09_03a",
@@ -18781,7 +19042,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "CRED_42",
@@ -18806,7 +19068,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CS2_102_H1_AT_132",
@@ -18915,7 +19178,8 @@
     "rarity": "LEGENDARY",
     "cost": 4,
     "attack": 2,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "OG_293f",
@@ -18960,7 +19224,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "OG_044",
@@ -18994,7 +19259,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "GVG_066",
@@ -19110,7 +19376,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "EX1_506",
@@ -19123,7 +19390,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "LOEA09_2H",
@@ -19240,7 +19508,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "EX1_019e",
@@ -19395,7 +19664,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOE_027",
@@ -19483,7 +19753,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "UNG_920t1",
@@ -19495,7 +19766,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "CS2_082_H1",
@@ -19546,7 +19818,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "TOTEM"
   },
   {
     "id": "TB_Coopv3_101",
@@ -19583,7 +19856,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "PIRATE"
   },
   {
     "id": "AT_115e",
@@ -19612,7 +19886,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "MECHANICAL"
   },
   {
     "id": "OG_048e",
@@ -19699,7 +19974,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 4,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "OG_339e",
@@ -19720,7 +19996,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CRED_19",
@@ -19768,7 +20045,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_563",
@@ -19781,7 +20059,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 4,
-    "health": 12
+    "health": 12,
+    "race": "DRAGON"
   },
   {
     "id": "CFM_621t27",
@@ -19827,7 +20106,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CRED_04",
@@ -19883,7 +20163,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 9,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "KARA_00_02H",
@@ -19921,7 +20202,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "XXX_018",
@@ -19973,7 +20255,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "UNG_070",
@@ -20019,7 +20302,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 7,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "BRMA09_1H",
@@ -20064,7 +20348,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 1,
-    "health": 7
+    "health": 7,
+    "race": "ELEMENTAL"
   },
   {
     "id": "AT_093",
@@ -20158,7 +20443,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "KARA_08_05H",
@@ -20251,7 +20537,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "DEMON"
   },
   {
     "id": "BRMA12_6H",
@@ -20271,7 +20558,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_CoOpv3_200",
@@ -20533,7 +20821,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "LOEA_01H",
@@ -20563,7 +20852,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 8,
-    "health": 6
+    "health": 6,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CFM_905",
@@ -20620,7 +20910,8 @@
     "playerClass": "WARLOCK",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "XXX_021",
@@ -20780,7 +21071,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "BRMA04_1H",
@@ -20823,7 +21115,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 4,
-    "health": 12
+    "health": 12,
+    "race": "DRAGON"
   },
   {
     "id": "UNG_941e",
@@ -20916,7 +21209,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "GVG_053",
@@ -20977,7 +21271,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 5,
-    "health": 7
+    "health": 7,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_573ae",
@@ -21151,7 +21446,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "KAR_A02_12H",
@@ -21170,7 +21466,8 @@
     "rarity": "COMMON",
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "CFM_634",
@@ -21191,7 +21488,8 @@
     "type": "HERO",
     "name": "Prince Malchezaar",
     "playerClass": "NEUTRAL",
-    "health": 30
+    "health": 30,
+    "race": "DEMON"
   },
   {
     "id": "KARA_08_03H",
@@ -21313,7 +21611,8 @@
     "playerClass": "WARLOCK",
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "BRMA02_2",
@@ -21344,7 +21643,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "TU4e_004",
@@ -21368,7 +21668,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "BRMA14_3",
@@ -21380,7 +21681,8 @@
     "rarity": "LEGENDARY",
     "cost": 0,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "CRED_32",
@@ -21464,7 +21766,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "TB_SPT_DPromoSecret4",
@@ -21511,7 +21814,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "LOEA16_22",
@@ -21542,7 +21846,8 @@
     "rarity": "COMMON",
     "cost": 3,
     "attack": 5,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CFM_621t33",
@@ -21672,7 +21977,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "KAR_A10_22",
@@ -21734,7 +22040,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "UNG_086",
@@ -21747,7 +22054,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 5,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "LOEA07_28",
@@ -22025,7 +22333,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "LOEA07_24",
@@ -22036,7 +22345,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_06_02heroic",
@@ -22113,7 +22423,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "DREAM_01",
@@ -22158,7 +22469,8 @@
     "playerClass": "PALADIN",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DRAGON"
   },
   {
     "id": "XXX_047",
@@ -22283,7 +22595,8 @@
     "rarity": "COMMON",
     "cost": 5,
     "attack": 4,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "UNG_829t1",
@@ -22598,7 +22911,8 @@
     "collectible": true,
     "cost": 10,
     "attack": 7,
-    "health": 14
+    "health": 14,
+    "race": "BEAST"
   },
   {
     "id": "TB_001",
@@ -22656,7 +22970,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "KARA_04_01h",
@@ -22759,7 +23074,8 @@
     "playerClass": "NEUTRAL",
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "TB_CoOpv3_BOSS4e",
@@ -22797,7 +23113,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "CS2_124",
@@ -23049,7 +23366,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "AT_045",
@@ -23221,7 +23539,8 @@
     "rarity": "LEGENDARY",
     "cost": 3,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "EX1_596e",
@@ -23276,7 +23595,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CRED_44",
@@ -23490,7 +23810,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "AT_132_PRIEST",
@@ -23607,7 +23928,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "TU4c_003",
@@ -23678,7 +24000,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 7
+    "health": 7,
+    "race": "DEMON"
   },
   {
     "id": "KARA_06_02",
@@ -23723,7 +24046,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "TB_PickYourFate_9_Ench",
@@ -23783,7 +24107,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 9,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "UNG_999t14",
@@ -23805,7 +24130,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 9,
-    "health": 9
+    "health": 9,
+    "race": "MECHANICAL"
   },
   {
     "id": "NEW1_021",
@@ -23900,7 +24226,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CS2_046e",
@@ -24019,7 +24346,8 @@
     "name": "Lord Jaraxxus",
     "playerClass": "WARLOCK",
     "rarity": "LEGENDARY",
-    "health": 15
+    "health": 15,
+    "race": "DEMON"
   },
   {
     "id": "TB_KTRAF_2s",
@@ -24110,7 +24438,8 @@
     "rarity": "FREE",
     "cost": 1,
     "attack": 0,
-    "health": 2
+    "health": 2,
+    "race": "TOTEM"
   },
   {
     "id": "GAME_001",
@@ -24130,7 +24459,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 0,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "NAX1_03",
@@ -24248,7 +24578,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "PIRATE"
   },
   {
     "id": "XXX_048",
@@ -24282,7 +24613,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "EX1_536",
@@ -24308,7 +24640,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "GVG_104",
@@ -24528,7 +24861,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "KAR_711",
@@ -24598,7 +24932,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "AT_011",
@@ -24632,7 +24967,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "TU4c_008e",
@@ -24694,7 +25030,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "GVG_028t",
@@ -24836,7 +25173,8 @@
     "rarity": "LEGENDARY",
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DEMON"
   },
   {
     "id": "NAX2_05H",
@@ -24870,7 +25208,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 6,
-    "health": 9
+    "health": 9,
+    "race": "BEAST"
   },
   {
     "id": "TB_CoOpv3_010",
@@ -25140,7 +25479,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_MammothParty_s101",
@@ -25206,7 +25546,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "AT_030",
@@ -25232,7 +25573,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOEA09_6H",
@@ -25295,7 +25637,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "NEW1_005",
@@ -25330,7 +25673,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "TB_CoOpv3_013",
@@ -25490,7 +25834,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 2
+    "health": 2,
+    "race": "MURLOC"
   },
   {
     "id": "CS2_049",
@@ -25513,7 +25858,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "LOE_008H",
@@ -25730,7 +26076,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CFM_606",
@@ -25756,7 +26103,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "OG_234",
@@ -25816,7 +26164,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "PIRATE"
   },
   {
     "id": "CS1_112",
@@ -25851,7 +26200,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "GVG_101e",
@@ -25882,7 +26232,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "AT_037",
@@ -25923,7 +26274,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "GVG_121",
@@ -25936,7 +26288,8 @@
     "collectible": true,
     "cost": 12,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "MECHANICAL"
   },
   {
     "id": "CS2_227",
@@ -25962,7 +26315,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "LOE_073e",
@@ -26035,7 +26389,8 @@
     "playerClass": "NEUTRAL",
     "cost": 5,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "CS2_031",
@@ -26057,7 +26412,8 @@
     "rarity": "RARE",
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "OG_042",
@@ -26168,7 +26524,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "AT_082e",
@@ -26219,7 +26576,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_582",
@@ -26308,7 +26666,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 6,
-    "health": 4
+    "health": 4,
+    "race": "DRAGON"
   },
   {
     "id": "BRMA11_2H",
@@ -26457,7 +26816,8 @@
     "playerClass": "DRUID",
     "cost": 5,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "UNG_919",
@@ -26470,7 +26830,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 9,
-    "health": 9
+    "health": 9,
+    "race": "BEAST"
   },
   {
     "id": "BRMA02_2_2c_TB",
@@ -26512,7 +26873,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "ELEMENTAL"
   },
   {
     "id": "XXX_051",
@@ -26556,7 +26918,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "NAX15_03n",
@@ -26673,7 +27036,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 4
+    "health": 4,
+    "race": "PIRATE"
   },
   {
     "id": "CRED_49",
@@ -26813,7 +27177,8 @@
     "rarity": "LEGENDARY",
     "cost": 10,
     "attack": 0,
-    "health": 200
+    "health": 200,
+    "race": "DRAGON"
   },
   {
     "id": "XXX_003",
@@ -26844,7 +27209,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 2
+    "health": 2,
+    "race": "ELEMENTAL"
   },
   {
     "id": "KARA_00_01H",
@@ -27084,7 +27450,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "CS2_091",
@@ -27205,7 +27572,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "DEMON"
   },
   {
     "id": "NAX2_05",
@@ -27272,7 +27640,8 @@
     "collectible": true,
     "cost": 8,
     "attack": 4,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "EX1_334e",
@@ -27410,7 +27779,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "MECHANICAL"
   },
   {
     "id": "CFM_605",
@@ -27423,7 +27793,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 5,
-    "health": 6
+    "health": 6,
+    "race": "DRAGON"
   },
   {
     "id": "TP_Bling_HP2",
@@ -27479,7 +27850,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "BEAST"
   },
   {
     "id": "AT_108",
@@ -27492,7 +27864,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 5,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "KARA_07_01",
@@ -27532,7 +27905,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 0,
-    "health": 7
+    "health": 7,
+    "race": "DEMON"
   },
   {
     "id": "GVG_039",
@@ -27545,7 +27919,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "TOTEM"
   },
   {
     "id": "TB_PickYourFate_2_Ench",
@@ -27638,7 +28013,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "TB_SPT_DPromoSecret2",
@@ -27734,7 +28110,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "TB_PickYourFate_10",
@@ -27794,7 +28171,8 @@
     "playerClass": "NEUTRAL",
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "DRAGON"
   },
   {
     "id": "CRED_10",
@@ -27900,7 +28278,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "PIRATE"
   },
   {
     "id": "BRMA12_8te",
@@ -28161,7 +28540,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "DRAGON"
   },
   {
     "id": "OG_239",
@@ -28290,7 +28670,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_164a",
@@ -28355,7 +28736,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 4,
-    "health": 8
+    "health": 8,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CFM_064e",
@@ -28374,7 +28756,8 @@
     "playerClass": "NEUTRAL",
     "cost": 4,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "GVG_021e",
@@ -28527,7 +28910,8 @@
     "rarity": "COMMON",
     "cost": 0,
     "attack": 0,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "AT_084e",
@@ -28633,7 +29017,8 @@
     "playerClass": "WARRIOR",
     "cost": 5,
     "attack": 6,
-    "health": 9
+    "health": 9,
+    "race": "BEAST"
   },
   {
     "id": "AT_119e",
@@ -28685,7 +29070,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "EX1_059",
@@ -28736,7 +29122,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "ELEMENTAL"
   },
   {
     "id": "LOEA16_17",
@@ -28797,7 +29184,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_00_01",
@@ -28869,7 +29257,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_11_01heroic",
@@ -29001,7 +29390,8 @@
     "playerClass": "SHAMAN",
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "ELEMENTAL"
   },
   {
     "id": "TB_BossRumble_003",
@@ -29260,7 +29650,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 7,
-    "health": 9
+    "health": 9,
+    "race": "DEMON"
   },
   {
     "id": "LOE_017e",
@@ -29375,7 +29766,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 1
+    "health": 1,
+    "race": "MURLOC"
   },
   {
     "id": "TB_KTRAF_4",
@@ -29412,7 +29804,8 @@
     "rarity": "COMMON",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "EX1_155a",
@@ -29514,7 +29907,8 @@
     "rarity": "RARE",
     "cost": 4,
     "attack": 5,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "TB_ClassRandom_Priest",
@@ -29553,7 +29947,8 @@
     "playerClass": "HUNTER",
     "cost": 0,
     "attack": 4,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "TB_CoOpv3_002",
@@ -29600,7 +29995,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 7,
-    "health": 8
+    "health": 8,
+    "race": "ELEMENTAL"
   },
   {
     "id": "NAX10_03",
@@ -29650,7 +30046,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 2,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "BRM_002",
@@ -29676,7 +30073,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "CS2_108",
@@ -29709,7 +30107,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 9,
-    "health": 7
+    "health": 7,
+    "race": "BEAST"
   },
   {
     "id": "KARA_08_02e",
@@ -29821,7 +30220,8 @@
     "collectible": true,
     "cost": 9,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "DRAGON"
   },
   {
     "id": "LOEA07_03h",
@@ -29902,7 +30302,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "AT_019",
@@ -29915,7 +30316,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "AT_099",
@@ -29993,7 +30395,8 @@
     "rarity": "COMMON",
     "cost": 5,
     "attack": 4,
-    "health": 6
+    "health": 6,
+    "race": "BEAST"
   },
   {
     "id": "GVG_084",
@@ -30006,7 +30409,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 1,
-    "health": 4
+    "health": 4,
+    "race": "MECHANICAL"
   },
   {
     "id": "XXX_016",
@@ -30179,7 +30583,8 @@
     "playerClass": "NEUTRAL",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "CFM_630",
@@ -30280,7 +30685,8 @@
     "rarity": "RARE",
     "cost": 4,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "OG_195c",
@@ -30304,7 +30710,8 @@
     "collectible": true,
     "cost": 6,
     "attack": 5,
-    "health": 5
+    "health": 5,
+    "race": "MECHANICAL"
   },
   {
     "id": "KARA_08_04",
@@ -30561,7 +30968,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "DEMON"
   },
   {
     "id": "KARA_07_08",
@@ -30583,7 +30991,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 3
+    "health": 3,
+    "race": "MURLOC"
   },
   {
     "id": "TB_MammothParty_hp002",
@@ -30692,7 +31101,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "EX1_009",
@@ -30705,7 +31115,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "XXX_108",
@@ -30913,7 +31324,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_565",
@@ -30926,7 +31338,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "TOTEM"
   },
   {
     "id": "TB_SPT_DPromoCrate3",
@@ -30976,7 +31389,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "TOTEM"
   },
   {
     "id": "BRMC_83",
@@ -31032,7 +31446,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 0,
-    "health": 1
+    "health": 1,
+    "race": "DEMON"
   },
   {
     "id": "NEW1_004",
@@ -31087,7 +31502,8 @@
     "rarity": "LEGENDARY",
     "cost": 5,
     "attack": 8,
-    "health": 8
+    "health": 8,
+    "race": "MURLOC"
   },
   {
     "id": "CS2_142",
@@ -31110,7 +31526,8 @@
     "playerClass": "NEUTRAL",
     "cost": 2,
     "attack": 2,
-    "health": 3
+    "health": 3,
+    "race": "PIRATE"
   },
   {
     "id": "KAR_095e",
@@ -31150,7 +31567,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "MURLOC"
   },
   {
     "id": "CFM_707",
@@ -31285,7 +31703,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 7,
-    "health": 5
+    "health": 5,
+    "race": "ELEMENTAL"
   },
   {
     "id": "KARA_08_01H",
@@ -31431,7 +31850,8 @@
     "rarity": "LEGENDARY",
     "cost": 10,
     "attack": 10,
-    "health": 10
+    "health": 10,
+    "race": "ELEMENTAL"
   },
   {
     "id": "CRED_65",
@@ -31568,7 +31988,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 0,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "CRED_06",
@@ -31624,7 +32045,8 @@
     "type": "HERO",
     "name": "Prince Malchezaar",
     "playerClass": "NEUTRAL",
-    "health": 30
+    "health": 30,
+    "race": "DEMON"
   },
   {
     "id": "GVG_009",
@@ -31682,7 +32104,8 @@
     "collectible": true,
     "cost": 7,
     "attack": 4,
-    "health": 6
+    "health": 6,
+    "race": "MECHANICAL"
   },
   {
     "id": "DS1_178",
@@ -31695,7 +32118,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 2,
-    "health": 5
+    "health": 5,
+    "race": "BEAST"
   },
   {
     "id": "GVG_092",
@@ -31721,7 +32145,8 @@
     "collectible": true,
     "cost": 2,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "MECHANICAL"
   },
   {
     "id": "EX1_finkle",
@@ -31940,7 +32365,8 @@
     "collectible": true,
     "cost": 5,
     "attack": 6,
-    "health": 3
+    "health": 3,
+    "race": "MECHANICAL"
   },
   {
     "id": "UNG_084",
@@ -31953,7 +32379,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "ELEMENTAL"
   },
   {
     "id": "EX1_398t",
@@ -32024,7 +32451,8 @@
     "collectible": true,
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "HERO_08b",
@@ -32199,7 +32627,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 2,
-    "health": 2
+    "health": 2,
+    "race": "BEAST"
   },
   {
     "id": "CS2_004",
@@ -32255,7 +32684,8 @@
     "collectible": true,
     "cost": 3,
     "attack": 3,
-    "health": 3
+    "health": 3,
+    "race": "BEAST"
   },
   {
     "id": "LOEA02_10a",
@@ -32266,7 +32696,8 @@
     "playerClass": "HUNTER",
     "cost": 0,
     "attack": 2,
-    "health": 4
+    "health": 4,
+    "race": "BEAST"
   },
   {
     "id": "TB_PickYourFate_9",
@@ -32286,7 +32717,8 @@
     "playerClass": "NEUTRAL",
     "cost": 0,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "TB_MnkWf01",
@@ -32298,7 +32730,8 @@
     "rarity": "LEGENDARY",
     "cost": 2,
     "attack": 7,
-    "health": 7
+    "health": 7,
+    "race": "ORC"
   },
   {
     "id": "BRM_020",
@@ -32311,7 +32744,8 @@
     "collectible": true,
     "cost": 4,
     "attack": 3,
-    "health": 5
+    "health": 5,
+    "race": "DRAGON"
   },
   {
     "id": "LOEA16_23",
@@ -32453,7 +32887,8 @@
     "playerClass": "HUNTER",
     "cost": 1,
     "attack": 1,
-    "health": 1
+    "health": 1,
+    "race": "BEAST"
   },
   {
     "id": "OG_094",

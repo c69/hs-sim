@@ -81,7 +81,8 @@ fs.readFile('cards.json', function (err, data) {
       cost,
       attack,
       health,
-      durability
+      durability,
+      race
     };
   });
   
@@ -89,7 +90,7 @@ fs.readFile('cards.json', function (err, data) {
   let min2 = JSON.stringify(jnano, null, "  ");
 
   //fs.writeFile('cards.min.json', min2, (err) => {
-  fs.writeFile('cards.generated.json', min2, (err) => {
+  fs.writeFile('data/cards.generated.json', min2, (err) => {
     if (err) throw err;
   });
 });

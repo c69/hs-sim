@@ -77,20 +77,22 @@ fs.readFile('cards.json', function (err, data) {
       playerClass,
       //.multiclass
       rarity,
-      collectible,
+      collectible: !!collectible,
       cost,
       attack,
       health,
       durability,
       race
     };
-  });
+  })
+  .filter(v => v.collectible) // filter: collectibles only 
+  .map(({id, _info, text}) => {return {id, _info, text};}); //output: compact
   
   let min = JSON.stringify(jmin, null, "  ");
   let min2 = JSON.stringify(jnano, null, "  ");
 
-  //fs.writeFile('cards.min.json', min2, (err) => {
-  fs.writeFile('data/cards.generated.json', min2, (err) => {
+  fs.writeFile('data/cards.collectible.compact.json', min2, (err) => {
+  //fs.writeFile('data/cards.all.generated.json', min2, (err) => {
     if (err) throw err;
   });
 });

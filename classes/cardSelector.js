@@ -94,7 +94,8 @@ class Minion extends Card {
           `Card definition has type: ${this.type}, expected: ${TYPES.minion}`);
       
       this.attack = cardDef.attack || 0;
-      this.health = cardDef.health || 0;   
+      this.health = cardDef.health || 0;
+      this.race = cardDef.race; // or undefined   
     }
 }
 class Spell extends Card {

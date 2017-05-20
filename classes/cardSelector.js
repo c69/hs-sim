@@ -280,6 +280,30 @@ class Board2 {
 
     var zoneSelectors = tokens.filter(v => /^@[a-z]+/i.test(v));
     console.log('zoneSelectors', zoneSelectors);
+    let allowed_zones = [ZONES.play];
+    if (zoneSelectors.length) {
+      allowed_zones = [];
+      if (zoneSelectors.includes('@deck')) {
+        allowed_zones.push(ZONES.deck);  
+      }
+      if (zoneSelectors.includes('@hand')) {
+        allowed_zones.push(ZONES.hand);  
+      }
+      if (zoneSelectors.includes('@play')) {
+        allowed_zones.push(ZONES.play);  
+      }
+      if (zoneSelectors.includes('@grave')) {
+        allowed_zones.push(ZONES.grave);  
+      }
+      if (zoneSelectors.includes('@aside')) {
+        allowed_zones.push(ZONES.aside);  
+      }
+      if (zoneSelectors.includes('@secret')) {
+        allowed_zones.push(ZONES.secret);  
+      }
+    }
+    console.log('zones', allowed_zones);
+    filters.push(v => allowed_zones.includes(v.zone));
 
     //property selectors only NARROW the search, so its AND
     let propRegexp = /^\.[0-9a-z]+((=|!=|<|>|<=|>=)[0-9a-z]+){0,1}$/i;

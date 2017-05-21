@@ -2,6 +2,7 @@
 // @ts-check
 
 const Board = require('./board.js');
+const Board2 = require('./board2.js');
 
 /**
 // g.start();
@@ -25,6 +26,7 @@ class Game {
     if (players.length !== 2) throw new RangeError("Game expects two players");
     this.players = players;
     this.board = new Board(players[0], players[1]);
+    //this.board = new Board2(player[0].deck, player[1].deck, players[0], players[1]);
     this.turn = 0;
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste

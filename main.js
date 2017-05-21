@@ -10,6 +10,58 @@ const MinionCard = require('./classes/cards.js').MinionCard;
 const FireballCard = require('./classes/cards.js').FireballCard;
 const JunkCard = require('./classes/cards.js').JunkCard;
 
+// from CardSelector
+const CardJSON = require('./data/cards.all.generated.json');
+const abilitiesMixin = require('./data/actions.collectible.js');
+const Card = require('./classes/card.js');
+//const Board2 = require('./classes/board2.js');
+const TYPES = require('./data/constants.js').CARD_TYPES;
+
+let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
+//console.log(1999);
+const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
+  a[v.id] = v;
+  return a;
+}, {});
+//console.log(2001);
+abilitiesMixin.forEach(({id, tags, target, play, death}) => {
+  //console.log(id);
+  try {
+    if (play) CardDefinitionsIndex[id].play = play;
+    if (target) CardDefinitionsIndex[id].target = target;
+    if (death) CardDefinitionsIndex[id].death = death;
+    if (tags) CardDefinitionsIndex[id].tags = tags; 
+  } catch (err) {
+    console.warn(err, CardDefinitionsIndex[id]);
+  }
+});
+
+//---Deck2.js sketch------------------
+let card_defs = CardDefinitions.filter(v => v.collectible === true);
+let deck1 = [], deck2 = [];
+let dude1 = new Player(new Deck(deck1), 'Alicia');
+let dude2 = new Player(new Deck(deck2), 'Bobulion');
+[[deck1, dude1], [deck2, dude2]].forEach(([deck, player]) => {
+    try {
+      for (let i = 0; i < 30; i++) {
+          let dice = Math.floor(Math.random()*(card_defs.length - 1));
+          let card = card_defs[dice];
+          
+          let structor = {
+              [TYPES.minion]: Card.Minion,
+              [TYPES.hero]: Card.Hero,
+              [TYPES.weapon]: Card.Weapon,
+              [TYPES.spell]: Card.Spell,
+              [TYPES.power]: Card.Power,
+              [TYPES.enchantment]: Card.Enchantment,
+          }[card.type];
+          deck.push(new structor(card, player)); // do we really need to couple deck & player ?
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+});
+
 var fireballs = [];
 for (let i = 0; i < 30; i++) {
   let dice = (Math.floor(1 + Math.random()*5));
@@ -109,3 +161,33 @@ for(let i = 0; i < 17 && !g.isOver; i++) {
   console.log('___________________');
   g.endTurn();
 }
+
+//----------
+try {
+
+
+// actual play
+var g = new Game([dude1, dude2]);
+g.start();
+
+//AI - Artificial stupIdity
+for(let i = 0; i < 42 && !g.isOver; i++) {
+  g.view();
+
+  //g.usePower(0); // hero power first suggested target
+  //g.playCard(0,0); // play first possible card at first target
+  //g.attack(0,0); // attack with first suggested character first suggested target
+  //g.viewState();
+  //g.viewAvailableOptions();
+
+  for (let i = 0; i < 10; i++) {
+    let opts = g.viewAvailableOptions();
+    //console.log(`${g.activePlayer.name}'s options:`, opts);
+    if (!opts.actions.length) break;
+    g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+  }
+  
+  console.log('___________________');
+  g.endTurn();
+}
+} catch (err) {console.warn(err)}

@@ -8,7 +8,7 @@ const {
     PLAYERCLASS
 } = require('../data/constants.js');
 
-let deck_id = 1;
+let card_id = 1;
 
 class Card {
     constructor (cardDef, owner) {
@@ -37,17 +37,14 @@ class Card {
       //this.joust = ???
       
       this.death = cardDef.death; 
-      // this.tags.push(cardDef.death)
+      // this.tags.push(cardDef.death) // this.buffs.push(cardDef.death)
       this.trigger = cardDef.trigger;
       this.aura = cardDef.aura;
-      // this.secret = cardDef.secret;
-      // this.quest = cardDef.quest;
-
 
       this.zone = ZONES.deck;
       this.owner = owner;
 
-      this.deck_id = deck_id++;  
+      this.card_id = card_id++;  
     }
     _draw () {
         if (this.zone !== ZONES.deck) throw 'Attempt to draw NOT from deck';
@@ -78,6 +75,7 @@ class Card {
         this.zone = ZONES.grave;
     }
     _die () {
+        console.log(`☠️ ${this.type.toLowerCase()} died: ${this.owner.name}'s ${this.name}`);
         this.death && this.death({self, $, game}); // deathrattle
         this.zone = ZONES.grave;
     }
@@ -85,6 +83,26 @@ class Card {
         let copy = new this.prototype.constructor(this, this.owner);
         // copy.tags[] are DIRTY !
         copy.zone = ZONES.aside; 
+    }
+    // public API
+    dealDamage (n) {
+        console.log(`🔥 ${this.name} takes ${n} damage!`);
+        this.health -= n; // replace with damage buff
+        this.isStillAlive();
+    }
+    dealDamageSpell (n) {
+        console.log(`🔥 ${this.name} takes ${n} spell damage!`);
+        this.health -= n; // replace with damage buff
+        this.isStillAlive();
+    }
+    buff (enchantment) {
+        this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
+    }
+    isStillAlive() { // replace with death sweep in game
+        if (this.health < 1) this.die();
+    }
+    toString () {
+        return `[Object Card: ${this.name}#${this.card_id}]`;
     }
 }
 
@@ -97,6 +115,9 @@ class Minion extends Card {
       this.attack = cardDef.attack || 0;
       this.health = cardDef.health || 0;
       this.race = cardDef.race; // or undefined   
+   
+      this.isReady = false; //applies only to minion - initial ZZZ / sleep
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Weapon, Power
     }
 }
 class Spell extends Card {
@@ -104,9 +125,9 @@ class Spell extends Card {
       super(cardDef, ...args);
       if (this.type !== TYPES.spell) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.spell}`);
-      
-      //this.isSecret = false; // impement
-      //this.isQuest = false; // implement   
+            
+      //this.secret = cardDef.secret; //must be a function
+      //this.quest = cardDef.quest; //must be a function
     }
 }
 class Weapon extends Card {

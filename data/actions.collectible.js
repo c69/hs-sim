@@ -1,42 +1,20 @@
 const TAGS = {
-    taunt: 'TAUNT'
+  taunt: 'TAUNT',
+  divineShield: 'DIVINE_SHIELD',
+  charge: 'CHARGE',
+  stealth: 'STEALTH'
 };
 
-let x = [{
-    id: 'CS2_125',
-    tags: [TAGS.taunt]
-},{
-    id: 'CFM_646',
-    deathrattle: function (self, deck) {
-      //self.owner --> player
-      deck.$('enemy hero', self).dealDamage(2);
-    }
-}];
-
-module.exports = [
+const actions = [
   {
     "id": "AT_121",
     "_info": "(4) 4/4 [NEUTRAL]: Crowd Favorite",
-    "text": "Whenever you play a card with <b>Battlecry</b>, gain +1/+1.",
-    effect () {
-      on(Card.wasPlayed, e => e.target.owner === controller.owner, controller.gain(1,1) );
-    },
-    tags: [
-      'AT_121e'
-    ]
+    "text": "Whenever you play a card with <b>Battlecry</b>, gain +1/+1."
   },
-  {
-    id: 'AT_121e', type: 'ENCHANTMENT',
-    //buffs: [{trigger: function () { on('card.played', 'own #battlecry', self.gain(1,1))} }]
-    buffs: [{trigger: function () { on('card.played', 'own #battlecry', self.gain('AT_121e1'))} }] // JOIN, JOIN, JOIN :(((
- },
   {
     "id": "CFM_755",
     "_info": "(3) 3/3 [WARRIOR]: Grimestreet Pawnbroker",
-    "text": "<b>Battlecry:</b> Give a random weapon in your hand +1/+1.",
-    play () {
-      random($('weapon own @hand')).give(1,1);  
-    }
+    "text": "<b>Battlecry:</b> Give a random weapon in your hand +1/+1."
   },
   {
     "id": "CS2_119",
@@ -45,10 +23,7 @@ module.exports = [
   {
     "id": "EX1_622",
     "_info": "(3) SPELL [PRIEST]: Shadow Word: Death",
-    "text": "Destroy a minion with 5 or more Attack.",
-    play () {
-        choose(1, 'minion .attack>5').destroy()
-    }
+    "text": "Destroy a minion with 5 or more Attack."
   },
   {
     "id": "AT_095",
@@ -59,27 +34,22 @@ module.exports = [
   {
     "id": "CFM_900",
     "_info": "(3) 5/5 [WARLOCK]: Unlicensed Apothecary |DEMON",
-    "text": "Whenever you summon a minion, deal 5 damage to your hero.",
-    effect () {
-        //on(Card.minionSummoned, null, $('own hero').dealDamage(5))
-        on('summoned', 'own minion', $('own hero').dealDamageSpell(5));
-    }
+    "text": "Whenever you summon a minion, deal 5 damage to your hero."
   },
   {
     "id": "UNG_817",
     "_info": "(4) SPELL [SHAMAN]: Tidal Surge",
-    "text": "Deal $4 damage to a minion. Restore #4 Health to your hero.",
-    play () {
-        choose(1, 'minion').dealDamageSpell(4);
-        $('own hero').heal(4);
-    }
+    "text": "Deal $4 damage to a minion. Restore #4 Health to your hero."
   },
   {
     "id": "AT_103",
     "_info": "(9) 9/7 [NEUTRAL]: North Sea Kraken",
     "text": "<b>Battlecry:</b> Deal 4 damage.",
-    play () {
-        choose(0, 'character').dealDamage(4);
+    target: 'character',
+    play ({self, $, position, target, game}) {
+      //$.dealDamage(target, 4);
+      //$(target).dealDamage(4);
+      target.dealDamage(4);
     }
   },
   {
@@ -89,38 +59,22 @@ module.exports = [
   {
     "id": "UNG_058",
     "_info": "(2) 2/2 [ROGUE]: Razorpetal Lasher",
-    "text": "[x]<b>Battlecry:</b> Add a\nRazorpetal to your hand\nthat deals 1 damage.",
-    play () {
-      addCardTo('owner @hand', 'ID_123');  
-    }
+    "text": "[x]<b>Battlecry:</b> Add a\nRazorpetal to your hand\nthat deals 1 damage."
   },
   {
     "id": "UNG_928",
     "_info": "(3) 1/5 [NEUTRAL]: Tar Creeper |ELEMENTAL",
-    "text": "<b>Taunt</b>\nHas +2 Attack during your opponent's turn.",
-    tags: [TAGS.taunt],
-    effect () {
-      on(Game.newTurn, v => v.target.activePlayer !== controller.owner, v=>controller.shortBuff(gain(2,0)))
-    }
+    "text": "<b>Taunt</b>\nHas +2 Attack during your opponent's turn."
   },
   {
     "id": "EX1_334",
     "_info": "(4) SPELL [PRIEST]: Shadow Madness",
-    "text": "Gain control of an enemy minion with 3 or less Attack until end of turn.",
-    play (self, game) {
-      game.choose('enemy minion .attack<=3').stealForOneTurn()
-      //choose('enemy minion .attack<=3').buff('EX1_334e');  
-    }
+    "text": "Gain control of an enemy minion with 3 or less Attack until end of turn."
   },
   {
     "id": "EX1_062",
     "_info": "(4) 2/4 [NEUTRAL]: Old Murk-Eye |MURLOC",
-    "text": "<b>Charge</b>. Has +1 Attack for each other Murloc on the battlefield.",
-    tags: [TAGS.charge],
-    aura (self, game) {
-      //controller.attack = $('minion .race=murloc').length;
-      self.attack += game.$('own minion .race=murloc').length; // is executed in context of game.activePlayer  
-    }
+    "text": "<b>Charge</b>. Has +1 Attack for each other Murloc on the battlefield."
   },
   {
     "id": "OG_152",
@@ -130,19 +84,12 @@ module.exports = [
   {
     "id": "CFM_305",
     "_info": "(1) SPELL [PALADIN]: Smuggler's Run",
-    "text": "Give all minions in your hand +1/+1.",
-    play () {
-      $('minion own @hand').give(1,1)
-    }
+    "text": "Give all minions in your hand +1/+1."
   },
   {
     "id": "AT_073",
     "_info": "(1) SPELL [PALADIN]: Competitive Spirit",
-    "text": "<b>Secret:</b> When your turn starts, give your minions +1/+1.",
-    secret () {
-        //on(Game.TurnStart, e=>e.activePlayer === controller.owner, $('minions').give(1,1));
-        on('turn_start', 'own', $('minions').give(1,1))
-    }
+    "text": "<b>Secret:</b> When your turn starts, give your minions +1/+1."
   },
   {
     "id": "CS2_187",
@@ -152,75 +99,38 @@ module.exports = [
   {
     "id": "BRM_001",
     "_info": "(5) SPELL [PALADIN]: Solemn Vigil",
-    "text": "Draw 2 cards. Costs (1) less for each minion that died this turn.",
-    cost (self, game) {
-      let turn = game.turn;
-      let m = game.log.$(`minion died .turn=${turn}`).length;
-      self.modifyCost(-m, 0);  // but not less that 0 ..
-    },
-    buffs: [
-      {costModify: function (cost, game) {self.cost = cost - game.minionsdiedthisturn} } 
-    ],    play () {
-      draw(2);
-    }
+    "text": "Draw 2 cards. Costs (1) less for each minion that died this turn."
   },
   {
     "id": "OG_085",
     "_info": "(4) 2/4 [MAGE]: Demented Frostcaller",
-    "text": "After you cast a spell, <b>Freeze</b> a random enemy.",
-    effect () {
-        on(Card.played, e=>e.target.type === 'spell', random(1, 'enemy').freeze());
-        on('card_played', 'own spell', random(1, 'enemy').freeze()); 
-    }
+    "text": "After you cast a spell, <b>Freeze</b> a random enemy."
   },
   {
-    "id": "EX1_057",y ()
+    "id": "EX1_057",
     "_info": "(4) 5/4 [NEUTRAL]: Ancient Brewmaster",
-    "text": "<b>Battlecry:</b> Return a friendly minion from the battlefield to your hand.",
-    play () {
-        choose(1, 'own minion').returnToHand();
-    }
+    "text": "<b>Battlecry:</b> Return a friendly minion from the battlefield to your hand."
   },
   {
     "id": "BRM_010",
     "_info": "(3) 2/2 [DRUID]: Druid of the Flame",
-    "text": "<b>Choose One -</b> Transform into a 5/2 minion; or a 2/5 minion.",
-    chooseOne: [
-self.tranform(ID_234), 
-
-self.tranform(ID_12134), 
-    ]
+    "text": "<b>Choose One -</b> Transform into a 5/2 minion; or a 2/5 minion."
   },
   {
     "id": "EX1_583",
     "_info": "(6) 5/4 [NEUTRAL]: Priestess of Elune",
-    "text": "<b>Battlecry:</b> Restore 4 Health to your hero.",
-    play () {
-        $('own hero').heal(4);
-    }
+    "text": "<b>Battlecry:</b> Restore 4 Health to your hero."
   },
   {
     "id": "GVG_056",
     "_info": "(6) 6/5 [WARRIOR]: Iron Juggernaut |MECHANICAL",
-    "text": "<b>Battlecry:</b> Shuffle a Mine into your opponent's deck. When drawn, it explodes for 10 damage.",
-    play () {
-        game.enemy_deck.shuffle(ID_394);
-        game.shuffleIntoDeck('enemy', 1234);
-    }
-
+    "text": "<b>Battlecry:</b> Shuffle a Mine into your opponent's deck. When drawn, it explodes for 10 damage."
   },
   {
     "id": "UNG_946",
     "_info": "(3) 3/3 [NEUTRAL]: Gluttonous Ooze",
-    "text": "<b>Battlecry:</b> Destroy your opponent's weapon and gain Armor equal to its Attack.",
-    play () {
-        let w = $('enemy weapon');
-        let a = w.attack;
-        w.Destroy();
-        $('own hero').gain(0,0,a);
-    }
+    "text": "<b>Battlecry:</b> Destroy your opponent's weapon and gain Armor equal to its Attack."
   },
-  // http://hearthstone.gamepedia.com/Ongoing_effect
   {
     "id": "AT_080",
     "_info": "(2) 2/3 [NEUTRAL]: Garrison Commander",
@@ -234,70 +144,42 @@ self.tranform(ID_12134),
   {
     "id": "AT_132",
     "_info": "(6) 6/3 [NEUTRAL]: Justicar Trueheart",
-    "text": "<b>Battlecry:</b> Replace your starting Hero Power with a better one.",
-    play () {
-      // takoe ...
-      g.activePlayer.class()
-      let p = $('power @play');
-      if (p.id === '13_123' && p) play('113_123a2');
-        
+    "text": "<b>Battlecry:</b> Replace your starting Hero Power with a better one."
   },
   {
     "id": "AT_049",
     "_info": "(5) 3/6 [SHAMAN]: Thunder Bluff Valiant",
-    "text": "<b>Inspire:</b> Give your Totems +2 Attack.",
-    trigger () {
-       on('inspire', $('own .race=totem')).give(2,0);
-    }
+    "text": "<b>Inspire:</b> Give your Totems +2 Attack."
   },
   {
     "id": "UNG_915",
     "_info": "(2) 3/2 [HUNTER]: Crackling Razormaw |BEAST",
-    "text": "<b>Battlecry:</b> <b>Adapt</b> a friendly Beast.",
-    play ({$, self, game}) {
-      $('own .race=beast').adapt();
-    }
+    "text": "<b>Battlecry:</b> <b>Adapt</b> a friendly Beast."
   },
   {
     "id": "CFM_662",
     "_info": "(6) SPELL [PRIEST]: Dragonfire Potion",
-    "text": "[x]Deal $5 damage to all\nminions except Dragons.",
-    play ({$}) {
-      $('minion race!=dragon').dealDamageSpell(5);
-    }
+    "text": "[x]Deal $5 damage to all\nminions except Dragons."
   },
   {
     "id": "AT_115",
     "_info": "(3) 2/2 [NEUTRAL]: Fencing Coach",
-    "text": "<b>Battlecry:</b> The next time you use your Hero Power, it costs (2) less.",
-    play () {
-      $('own @play power').modifyCost(2); // BUT ITS ONCE ? or limited usage ? :/
-    }
+    "text": "<b>Battlecry:</b> The next time you use your Hero Power, it costs (2) less."
   },
   {
     "id": "GVG_072",
     "_info": "(2) 2/3 [PRIEST]: Shadowboxer |MECHANICAL",
-    "text": "Whenever a character is healed, deal 1 damage to a random enemy.",
-    trigger ({$, random, on}) {
-      $.on('heal', 'character', $.random('enemy').dealDamage(1));
-      on('heal', 'character', random('enemy').dealDamage(1));
-    }  
+    "text": "Whenever a character is healed, deal 1 damage to a random enemy."
   },
   {
     "id": "AT_043",
     "_info": "(4) SPELL [DRUID]: Astral Communion",
-    "text": "Gain 10 Mana Crystals. Discard your hand.",
-    play ({game}) {
-      game.activePlayer.manaCrystals = 10;
-      game.activePlayer.mana = 10;
-      $('own @hand').discard();
-    }
+    "text": "Gain 10 Mana Crystals. Discard your hand."
   },
   {
     "id": "AT_067",
     "_info": "(4) 5/3 [WARRIOR]: Magnataur Alpha",
-    "text": "Also damages the minions next to whomever\nhe attacks.",
-    tags: [TAGS.cleave]
+    "text": "Also damages the minions next to whomever\nhe attacks."
   },
   {
     "id": "EX1_080",
@@ -312,14 +194,7 @@ self.tranform(ID_12134),
   {
     "id": "EX1_154",
     "_info": "(2) SPELL [DRUID]: Wrath",
-    "text": "<b>Choose One -</b> Deal $3 damage to a minion; or $1 damage and draw a card.",
-    chooseOne: [function ({$}) {
-      $.choose('minion').dealDamageSpell(3);
-    }, function ({$}) {
-      $.choose('minion').dealDamageSpell(1);
-      game.activePlayer.drawCard();
-      game.drawCard(game.activePlayer); // unsafe API 
-    }]
+    "text": "<b>Choose One -</b> Deal $3 damage to a minion; or $1 damage and draw a card."
   },
   {
     "id": "DS1_233",
@@ -329,13 +204,7 @@ self.tranform(ID_12134),
   {
     "id": "UNG_208",
     "_info": "(7) 4/4 [SHAMAN]: Stone Sentinel |ELEMENTAL",
-    "text": "<b>Battlecry:</b> If you played an Elemental last turn, summon two 2/3 Elementals with <b>Taunt</b>.",
-    play () {
-      let turn = game.turn;
-      let powered up$.onlyIf(playedLastTurn())
-      if(!playedLastTurn('.race=elemental')) return;
-      summon(12345);
-    }
+    "text": "<b>Battlecry:</b> If you played an Elemental last turn, summon two 2/3 Elementals with <b>Taunt</b>."
   },
   {
     "id": "CS2_121",
@@ -345,20 +214,12 @@ self.tranform(ID_12134),
   {
     "id": "KAR_702",
     "_info": "(5) 4/4 [NEUTRAL]: Menagerie Magician",
-    "text": "<b>Battlecry:</b> Give a random friendly Beast, Dragon, and Murloc +2/+2.",
-    play () {
-      random('own .race=beast').give(2,2);
-      random('own .race=murloc').give(2,2);
-      random('own .race=dragon').give(2,2);
-    }
+    "text": "<b>Battlecry:</b> Give a random friendly Beast, Dragon, and Murloc +2/+2."
   },
   {
     "id": "LOE_107",
     "_info": "(4) 7/7 [NEUTRAL]: Eerie Statue",
-    "text": "Can’t attack unless it’s the only minion in the battlefield.",
-    aura ({$, self}) {
-      if ($('minion @play').length > 1) self.give(TAGS.cantAttack);
-    }
+    "text": "Can’t attack unless it’s the only minion in the battlefield."
   },
   {
     "id": "EX1_354",
@@ -403,7 +264,10 @@ self.tranform(ID_12134),
   {
     "id": "CS2_032",
     "_info": "(7) SPELL [MAGE]: Flamestrike",
-    "text": "Deal $4 damage to all enemy minions."
+    "text": "Deal $4 damage to all enemy minions.",
+    play ({$}) {
+      $('enemy minion').dealDamageSpell(4);
+    }
   },
   {
     "id": "CS2_011",
@@ -422,50 +286,33 @@ self.tranform(ID_12134),
   {
     "id": "CS2_141",
     "_info": "(3) 2/2 [NEUTRAL]: Ironforge Rifleman",
-    "text": "<b>Battlecry:</b> Deal 1 damage.",
-    target: 'character',
-    play ({target}) {
-      target.dealDamage(1);
-    }
+    "text": "<b>Battlecry:</b> Deal 1 damage."
   },
   {
     "id": "EX1_626",
     "_info": "(4) SPELL [PRIEST]: Mass Dispel",
-    "text": "<b>Silence</b> all enemy minions. Draw a card.",
-    play ({$}) {
-      $('enemy minion').silence();
-      game.drawCard(); // 1
-    }
+    "text": "<b>Silence</b> all enemy minions. Draw a card."
   },
   {
     "id": "KAR_033",
     "_info": "(6) 3/6 [NEUTRAL]: Book Wyrm |DRAGON",
-    "text": "<b>Battlecry:</b> If you're holding a Dragon, destroy an enemy minion with 3 or less Attack.",
-    play ({$}) {
-      if ($('own @hand .race=dragon').length = 0) return;
-      $('enemy minion .attack<=3').destroy();
-    }
+    "text": "<b>Battlecry:</b> If you're holding a Dragon, destroy an enemy minion with 3 or less Attack."
   },
   {
     "id": "UNG_020",
     "_info": "(2) 2/3 [MAGE]: Arcanologist",
-    "text": "<b>Battlecry:</b> Draw a <b>Secret</b> from your deck.",
-    play ({$}) {
-      $('#secret spell own @deck').draw();
-    }
+    "text": "<b>Battlecry:</b> Draw a <b>Secret</b> from your deck."
   },
   {
     "id": "CS2_173",
     "_info": "(2) 2/1 [NEUTRAL]: Bluegill Warrior |MURLOC",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CFM_655",
     "_info": "(3) 4/3 [NEUTRAL]: Toxic Sewer Ooze",
-    "text": "<b>Battlecry:</b> Remove 1 Durability from your opponent's weapon.",
-    play () {
-      $('enemy weapon @play').dealDamage(1);
-    }
+    "text": "<b>Battlecry:</b> Remove 1 Durability from your opponent's weapon."
   },
   {
     "id": "AT_084",
@@ -485,45 +332,27 @@ self.tranform(ID_12134),
   {
     "id": "CFM_614",
     "_info": "(1) SPELL [DRUID]: Mark of the Lotus",
-    "text": "Give your minions +1/+1.",
-    play () {
-      $('own minion').give(1,1);
-    }
+    "text": "Give your minions +1/+1."
   },
   {
     "id": "FP1_004",
     "_info": "(2) 2/2 [NEUTRAL]: Mad Scientist",
-    "text": "<b>Deathrattle:</b> Put a <b>Secret</b> from your deck into the battlefield.",
-    death () {
-      $('#secret @deck own').play(); // hmmm
-    }
+    "text": "<b>Deathrattle:</b> Put a <b>Secret</b> from your deck into the battlefield."
   },
   {
     "id": "FP1_028",
     "_info": "(1) 1/2 [NEUTRAL]: Undertaker",
-    "text": "Whenever you summon a minion with <b>Deathrattle</b>, gain +1 Attack.",
-    trigger () {
-      on('summon', 'own #deathrattle', self.gain(1,0));
-      on('summon', 'own #deathrattle', self.give(1,0));
-    }
+    "text": "Whenever you summon a minion with <b>Deathrattle</b>, gain +1 Attack."
   },
   {
     "id": "CS2_064",
     "_info": "(6) 6/6 [WARLOCK]: Dread Infernal |DEMON",
-    "text": "<b>Battlecry:</b> Deal 1 damage to ALL other characters.",
-    play() {
-      $('characters, exclude self').dealDamage(1);
-    }
+    "text": "<b>Battlecry:</b> Deal 1 damage to ALL other characters."
   },
   {
     "id": "EX1_251",
     "_info": "(1) SPELL [SHAMAN]: Forked Lightning",
-    "text": "Deal $2 damage to 2 random enemy minions. <b>Overload:</b> (2)",
-    overload: 2,
-    play () {
-      $('2 random enemy minion').dealDamageSpell(2);
-      $.random('enemy minion', 2).dealDamageSpell(2);
-    }
+    "text": "Deal $2 damage to 2 random enemy minions. <b>Overload:</b> (2)"
   },
   {
     "id": "UNG_109",
@@ -717,7 +546,10 @@ self.tranform(ID_12134),
   {
     "id": "CS2_062",
     "_info": "(4) SPELL [WARLOCK]: Hellfire",
-    "text": "Deal $3 damage to ALL characters."
+    "text": "Deal $3 damage to ALL characters.",
+    play ({$}) {
+      $('character').dealDamageSpell(3);
+    }
   },
   {
     "id": "OG_028",
@@ -985,7 +817,8 @@ self.tranform(ID_12134),
   {
     "id": "CS2_131",
     "_info": "(4) 2/5 [NEUTRAL]: Stormwind Knight",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "OG_081",
@@ -1024,7 +857,8 @@ self.tranform(ID_12134),
   {
     "id": "EX1_543",
     "_info": "(9) 8/8 [HUNTER]: King Krush |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "EX1_055",
@@ -1390,14 +1224,7 @@ self.tranform(ID_12134),
   {
     "id": "LOE_086",
     "_info": "(5) 0/6 [NEUTRAL]: Summoning Stone",
-    "text": "Whenever you cast a spell, summon a random minion of the same Cost.",
-    trigger () {
-      on('spell_cast', 'own', (evt) => {
-         let cost = evt.target.cost;
-         summon(`@collection minion .cost=${cost}`);
-         summon(randomMinion(`.cost=${cost}`));
-      } )
-    }
+    "text": "Whenever you cast a spell, summon a random minion of the same Cost."
   },
   {
     "id": "OG_145",
@@ -1407,18 +1234,12 @@ self.tranform(ID_12134),
   {
     "id": "EX1_335",
     "_info": "(4) 0/5 [PRIEST]: Lightspawn |ELEMENTAL",
-    "text": "This minion's Attack is always equal to its Health.",
-    aura () {
-      self.attack = self.health;
-    }
+    "text": "This minion's Attack is always equal to its Health."
   },
   {
     "id": "EX1_508",
     "_info": "(1) 1/1 [NEUTRAL]: Grimscale Oracle |MURLOC",
-    "text": "Your other Murlocs have +1 Attack.",
-    aura () {
-      $('own minion .race=murloc @play').give(1,0, 'Becoz MURLOC POWAH !!!');
-    }
+    "text": "Your other Murlocs have +1 Attack."
   },
   {
     "id": "EX1_033",
@@ -1433,11 +1254,7 @@ self.tranform(ID_12134),
   {
     "id": "EX1_095",
     "_info": "(6) 4/4 [NEUTRAL]: Gadgetzan Auctioneer",
-    "text": "Whenever you cast a spell, draw a card.",
-    trigger () {
-      on('play', 'own spell', game.drawCard());
-      on('spell_cast', 'own', game.drawCard());
-    }
+    "text": "Whenever you cast a spell, draw a card."
   },
   {
     "id": "GVG_061",
@@ -1447,59 +1264,32 @@ self.tranform(ID_12134),
   {
     "id": "CFM_646",
     "_info": "(3) 3/1 [NEUTRAL]: Backstreet Leper",
-    "text": "[x]<b>Deathrattle:</b> Deal 2 damage\nto the enemy hero.",
-    deathrattle: function (self, deck) {
-      //self.owner --> player
-      deck.$('enemy hero', self).dealDamage(2);
-    }
+    "text": "[x]<b>Deathrattle:</b> Deal 2 damage\nto the enemy hero."
   },
   {
     "id": "EX1_137",
     "_info": "(3) SPELL [ROGUE]: Headcrack",
-    "text": "Deal $2 damage to the enemy hero. <b>Combo:</b> Return this to your hand next turn.",
-    tags: [TAGS.combo],
-    play () {
-      $('enemy hero').dealDamageSpell(2);
-      if (!combo) return;
-      $.once('new_turn_start', 'own', self.owner.giveCard(self.copy());
-    }
+    "text": "Deal $2 damage to the enemy hero. <b>Combo:</b> Return this to your hand next turn."
   },
   {
     "id": "EX1_544",
     "_info": "(2) SPELL [HUNTER]: Flare",
-    "text": "All minions lose <b>Stealth</b>. Destroy all enemy <b>Secrets</b>. Draw a card.",
-    play () {
-      $('minions').remove(TAG.stealth);// ?
-      $('minions').give(TAG.visible);//^_^
-
-    }
+    "text": "All minions lose <b>Stealth</b>. Destroy all enemy <b>Secrets</b>. Draw a card."
   },
   {
     "id": "GVG_103",
     "_info": "(2) 1/2 [NEUTRAL]: Micro Machine |MECHANICAL",
-    "text": "At the start of each turn, gain +1 Attack.",
-    trigger() {
-      on('turn_start', '', self.gain(1,0));
-      on('turn_start', '', self.gain(TAGS.attack(1)));
-        
-    }  
+    "text": "At the start of each turn, gain +1 Attack."
   },
   {
     "id": "EX1_414",
     "_info": "(8) 4/9 [WARRIOR]: Grommash Hellscream",
-    "text": "<b>Charge</b>\n<b>Enrage:</b> +6 Attack",
-    enrage () {
-      self.give(TAGS.attack(6));
-      self.give(6,0)
-    }
+    "text": "<b>Charge</b>\n<b>Enrage:</b> +6 Attack"
   },
   {
     "id": "CFM_715",
     "_info": "(4) 2/3 [NEUTRAL]: Jade Spirit",
-    "text": "<b>Battlecry:</b> Summon a{1} {0} <b>Jade Golem</b>.",
-    play () {
-      summonJadeGolem(); // jade golem is "card with global state" ?
-    }
+    "text": "<b>Battlecry:</b> Summon a{1} {0} <b>Jade Golem</b>."
   },
   {
     "id": "EX1_160",
@@ -1509,11 +1299,7 @@ self.tranform(ID_12134),
   {
     "id": "CS2_236",
     "_info": "(2) SPELL [PRIEST]: Divine Spirit",
-    "text": "Double a minion's Health.",
-    target: 'minion',
-    play () {
-      target.give(health(target.health))
-    }
+    "text": "Double a minion's Health."
   },
   {
     "id": "AT_088",
@@ -1757,7 +1543,8 @@ self.tranform(ID_12134),
   {
     "id": "AT_087",
     "_info": "(3) 2/1 [NEUTRAL]: Argent Horserider",
-    "text": "<b>Charge</b>\n<b>Divine Shield</b>"
+    "text": "<b>Charge</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.charge, TAGS.divineShield]
   },
   {
     "id": "GVG_047",
@@ -1782,7 +1569,8 @@ self.tranform(ID_12134),
   {
     "id": "CS2_171",
     "_info": "(1) 1/1 [NEUTRAL]: Stonetusk Boar |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_237",
@@ -1996,7 +1784,11 @@ self.tranform(ID_12134),
   {
     "id": "FP1_024",
     "_info": "(2) 1/3 [NEUTRAL]: Unstable Ghoul",
-    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions."
+    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+    tags: [TAGS.taunt],
+    death ({$}) {
+      $('minions').dealDamage(1);
+    }
   },
   {
     "id": "OG_330",
@@ -2425,12 +2217,14 @@ self.tranform(ID_12134),
   {
     "id": "CS2_125",
     "_info": "(3) 3/3 [NEUTRAL]: Ironfur Grizzly |BEAST",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "GVG_058",
     "_info": "(2) 2/2 [PALADIN]: Shielded Minibot |MECHANICAL",
-    "text": "<b>Divine Shield</b>"
+    "text": "<b>Divine Shield</b>",
+    tags: [TAGS.divineShield]
   },
   {
     "id": "KAR_004",
@@ -2450,7 +2244,10 @@ self.tranform(ID_12134),
   {
     "id": "OG_161",
     "_info": "(6) 2/3 [NEUTRAL]: Corrupted Seer |MURLOC",
-    "text": "<b>Battlecry:</b> Deal 2 damage to all non-Murloc minions."
+    "text": "<b>Battlecry:</b> Deal 2 damage to all non-Murloc minions.",
+    play ({$}) {
+      $('minion .race!=murloc').dealDamage(2);
+    }
   },
   {
     "id": "EX1_556",
@@ -2466,9 +2263,8 @@ self.tranform(ID_12134),
     "id": "EX1_029",
     "_info": "(1) 1/1 [NEUTRAL]: Leper Gnome",
     "text": "<b>Deathrattle:</b> Deal 2 damage to the enemy hero.",
-    deathrattle: function (self, deck) {
-      //self.owner --> player
-      deck.$('enemy hero', self).dealDamage(2);
+    death ({$}) {
+      $('enemy hero').dealDamage(2);
     }
   },
   {
@@ -2675,26 +2471,17 @@ self.tranform(ID_12134),
   {
     "id": "OG_254",
     "_info": "(4) 2/4 [NEUTRAL]: Eater of Secrets",
-    "text": "<b>Battlecry:</b> Destroy all enemy <b>Secrets</b>. Gain +1/+1 for each.",
-    play: function (self, deck) {
-       deck.$('enemy #secret @play').Destroy().count().gain(might)
-    }
+    "text": "<b>Battlecry:</b> Destroy all enemy <b>Secrets</b>. Gain +1/+1 for each."
   },
   {
     "id": "UNG_035",
     "_info": "(3) 3/3 [PRIEST]: Curious Glimmerroot",
-    "text": "[x]<b>Battlecry:</b> Look at 3 cards.\nGuess which one started\nin your opponent's deck\nto get a copy of it.",
-    play: function (self, deck) {
-       let c = deck.$('enemy @anywhere').random(1); 
-       let ab = world.$('*').random(2);
-       show([...ab, c].shuffle()).choose(1) // omg seriosuly ???? 
-    }
+    "text": "[x]<b>Battlecry:</b> Look at 3 cards.\nGuess which one started\nin your opponent's deck\nto get a copy of it."
   },
   {
     "id": "AT_114",
     "_info": "(4) 5/4 [NEUTRAL]: Evil Heckler",
-    "text": "<b>Taunt</b>",
-    tags: [TAG.Taunt]
+    "text": "<b>Taunt</b>"
   },
   {
     "id": "HERO_08",
@@ -2703,16 +2490,12 @@ self.tranform(ID_12134),
   {
     "id": "EX1_028",
     "_info": "(5) 5/5 [NEUTRAL]: Stranglethorn Tiger |BEAST",
-    "text": "<b>Stealth</b>",
-    tags: [TAG.Stealth]
+    "text": "<b>Stealth</b>"
   },
   {
     "id": "AT_029",
     "_info": "(1) 2/1 [ROGUE]: Buccaneer |PIRATE",
-    "text": "Whenever you equip a weapon, give it +1 Attack.",
-    effect: function (self, deck) {
-        deck.on('weapon_was_equipped', function (evt) {evt.target.buff(might(1,0))});
-    }
+    "text": "Whenever you equip a weapon, give it +1 Attack."
   },
   {
     "id": "CS2_073",
@@ -2722,11 +2505,7 @@ self.tranform(ID_12134),
   {
     "id": "OG_101",
     "_info": "(0) SPELL [PRIEST]: Forbidden Shaping",
-    "text": "Spend all your Mana. Summon a random minion that costs that much.",
-    play: function (self, deck, position) {
-       // @world SUDDENLY looks for cards OUTSIDE of deck
-       deck.$('minion @world').random(1); // this asks for lazy evaluation ..  
-    }
+    "text": "Spend all your Mana. Summon a random minion that costs that much."
   },
   {
     "id": "AT_071",
@@ -2737,10 +2516,9 @@ self.tranform(ID_12134),
     "id": "CS2_029",
     "_info": "(4) SPELL [MAGE]: Fireball",
     "text": "Deal $6 damage.",
-    needs_target: 'character',
-    play: function (self, deck, target) {
-      //self.owner --> player
-      target.dealDamage(6);
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(6);
     }
   },
   {
@@ -3497,12 +3275,7 @@ self.tranform(ID_12134),
   {
     "id": "GVG_073",
     "_info": "(5) SPELL [HUNTER]: Cobra Shot",
-    "text": "Deal $3 damage to a minion and the enemy hero.",
-    target: 'enemy minion',
-    play () {
-      target.dealDamageSpell(3);
-      $('enemy hero').dealDamageSpell(3);
-    }
+    "text": "Deal $3 damage to a minion and the enemy hero."
   },
   {
     "id": "EX1_091",
@@ -3646,7 +3419,10 @@ self.tranform(ID_12134),
   {
     "id": "CS2_025",
     "_info": "(2) SPELL [MAGE]: Arcane Explosion",
-    "text": "Deal $1 damage to all enemy minions."
+    "text": "Deal $1 damage to all enemy minions.",
+    play ({$}) {
+      $('enemy minion').dealDamageSpell(1);
+    }
   },
   {
     "id": "HERO_02a",
@@ -3815,7 +3591,10 @@ self.tranform(ID_12134),
   {
     "id": "UNG_803",
     "_info": "(1) 2/1 [NEUTRAL]: Emerald Reaver |BEAST",
-    "text": "<b>Battlecry:</b> Deal 1 damage to each hero."
+    "text": "<b>Battlecry:</b> Deal 1 damage to each hero.",
+    play ({$}) {
+      $('hero').dealDamage(1);
+    }
   },
   {
     "id": "OG_158",
@@ -4235,7 +4014,13 @@ self.tranform(ID_12134),
   {
     "id": "CS2_189",
     "_info": "(1) 1/1 [NEUTRAL]: Elven Archer",
-    "text": "<b>Battlecry:</b> Deal 1 damage."
+    "text": "<b>Battlecry:</b> Deal 1 damage.",
+    target: 'character',
+    play ({self, $, position, target, game}) {
+      //$.dealDamage(target, 1);
+      //$(target).dealDamage(1);
+      target.dealDamage(1);
+    }
   },
   {
     "id": "CS2_042",
@@ -4513,22 +4298,29 @@ self.tranform(ID_12134),
   {
     "id": "CS1_069",
     "_info": "(5) 3/6 [NEUTRAL]: Fen Creeper",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "GVG_098",
     "_info": "(3) 1/4 [NEUTRAL]: Gnomeregan Infantry",
-    "text": "<b>Charge</b>\n<b>Taunt</b>"
+    "text": "<b>Charge</b>\n<b>Taunt</b>",
+    tags: [TAGS.taunt, TAGS.charge]
   },
   {
     "id": "CFM_647",
     "_info": "(2) 2/1 [NEUTRAL]: Blowgill Sniper |MURLOC",
-    "text": "<b>Battlecry:</b> Deal 1 damage."
+    "text": "<b>Battlecry:</b> Deal 1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(1);
+    }
   },
   {
     "id": "CS2_213",
     "_info": "(6) 5/2 [NEUTRAL]: Reckless Rocketeer",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CFM_658",
@@ -4553,7 +4345,8 @@ self.tranform(ID_12134),
   {
     "id": "CS2_124",
     "_info": "(3) 3/1 [NEUTRAL]: Wolfrider",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "EX1_241",
@@ -4568,7 +4361,11 @@ self.tranform(ID_12134),
   {
     "id": "EX1_097",
     "_info": "(5) 4/4 [NEUTRAL]: Abomination",
-    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 2\ndamage to ALL characters."
+    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 2\ndamage to ALL characters.",
+    tags: [TAGS.taunt],
+    play ({$}) {
+      $('characters').dealDamage(2);
+    }
   },
   {
     "id": "EX1_161",
@@ -4765,7 +4562,10 @@ self.tranform(ID_12134),
   {
     "id": "AT_094",
     "_info": "(2) 2/3 [NEUTRAL]: Flame Juggler",
-    "text": "<b>Battlecry:</b> Deal 1 damage to a random enemy."
+    "text": "<b>Battlecry:</b> Deal 1 damage to a random enemy.",
+    play ({$}) {
+      $('enemy character').dealDamage(1);
+    }
   },
   {
     "id": "UNG_018",
@@ -5446,12 +5246,19 @@ self.tranform(ID_12134),
   {
     "id": "CS2_008",
     "_info": "(0) SPELL [DRUID]: Moonfire",
-    "text": "Deal $1 damage."
+    "text": "Deal $1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(1);
+    }
   },
   {
     "id": "GVG_069",
     "_info": "(5) 3/3 [NEUTRAL]: Antique Healbot |MECHANICAL",
-    "text": "<b>Battlecry:</b> Restore 8 Health to your hero."
+    "text": "<b>Battlecry:</b> Restore 8 Health to your hero.",
+    play ({$}) {
+      $('own hero').heal(8);
+    }
   },
   {
     "id": "OG_047",
@@ -5878,7 +5685,11 @@ self.tranform(ID_12134),
   {
     "id": "EX1_319",
     "_info": "(1) 3/2 [WARLOCK]: Flame Imp |DEMON",
-    "text": "<b>Battlecry:</b> Deal 3 damage to your hero."
+    "text": "<b>Battlecry:</b> Deal 3 damage to your hero.",
+    play ({self, $, position, game}) {
+      //$.dealDamage('own hero', 3);
+       $('own hero').dealDamage(3);
+    }
   },
   {
     "id": "OG_006",
@@ -6250,3 +6061,5 @@ self.tranform(ID_12134),
     "text": "Whenever your opponent casts a spell, summon a Burly Rockjaw Trogg."
   }
 ];
+
+module.exports = actions;

@@ -1,6 +1,29 @@
 const Player = require('./player.js');
 const CardJSON = require('../data/cards.all.generated.json');
+const abilitiesMixin = require('../data/actions.collectible.js');
 
+console.log(111);
+
+let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
+//console.log(1999);
+const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
+  a[v.id] = v;
+  return a;
+}, {});
+//console.log(2001);
+abilitiesMixin.forEach(({id, tags, target, play, death}) => {
+  //console.log(id);
+  try {
+    if (play) CardDefinitionsIndex[id].play = play;
+    if (target) CardDefinitionsIndex[id].target = target;
+    if (death) CardDefinitionsIndex[id].death = death;
+    if (tags) CardDefinitionsIndex[id].tags = tags; 
+  } catch (err) {
+    console.warn(err, CardDefinitionsIndex[id]);
+  }
+});
+
+console.log(222);
 
 const ZONES = {
   deck: 'DECK',
@@ -37,6 +60,11 @@ const PLAYERCLASS = {
   dream: 'DREAM'
 };
 
+const TAGS = {
+  taunt: 'TAUNT',
+  charge: 'CHARGE',
+  divineShield: 'DIVINE_SHIELD'
+};
 
 let deck_id = 1;
 
@@ -194,7 +222,7 @@ let arr2 = [
   //new Power('Life Tap')
 ];
 
-let card_defs = CardJSON.filter(v => v.collectible === true);
+let card_defs = CardDefinitions.filter(v => v.collectible === true);
 [[arr1, p1], [arr2, p2]].forEach(([deck, player]) => {
     for (let i = 0; i < 30; i++) {
         let dice = Math.floor(Math.random()*(card_defs.length - 1));
@@ -274,10 +302,6 @@ class Board2 {
       filters.push(v => allowed_types.includes(v.type));
     }
 
-
-    var tagSelectors = tokens.filter(v => /^#[a-z]+/i.test(v));
-    console.log('tagSelectors', tagSelectors);
-
     var zoneSelectors = tokens.filter(v => /^@[a-z]+/i.test(v));
     console.log('zoneSelectors', zoneSelectors);
     let allowed_zones = [ZONES.play];
@@ -305,6 +329,28 @@ class Board2 {
     console.log('zones', allowed_zones);
     filters.push(v => allowed_zones.includes(v.zone));
 
+    //tag selectors only NARROW the search, so its AND
+    var tagSelectors = tokens.filter(v => /^#[a-z]+/i.test(v));
+    console.log('tagSelectors', tagSelectors);
+    let tagFilters = tagSelectors.map(selector => {
+       let tagName = selector.slice(1);
+       switch(tagName) {
+         case 'battlecry':
+         return (v) => typeof(v.play) === 'function';
+         case 'deathratle':
+         return (v) => typeof(v.death) === 'function' || v.tags.some(v1=>!!v1.death);
+         case 'aura':
+         return (v) => typeof(v.aura) === 'function';
+         case 'trigger':
+         return (v) => typeof(v.trigger) === 'function';
+         case 'overload':
+         return (v) => !!v.overload;
+         
+         default:
+         return (v) => v.tags.includes(TAGS[tagName]);
+       }
+    });
+ 
     //property selectors only NARROW the search, so its AND
     let propRegexp = /^\.[0-9a-z]+((=|!=|<|>|<=|>=)[0-9a-z]+){0,1}$/i;
     //.test('.prop<42')
@@ -339,11 +385,11 @@ class Board2 {
     let all_cards = [...this.deck1, ...this.deck2];
     console.log(allowed_types, filters[0].toString());
     //console.log(all_cards.map(v=>v.type));
-    return [...filters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
+    return [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
   }
 }
 
 let s = new Board2(arr1, arr2, p1, p2);
 
 //console.log(s.$('any card @deck .cost #taunt #divineShield', p2).map(v=>v.name));
-console.log(s.$(p2, 'any @deck minion .race=beast').map(v=>v.cost + ' ' + v.name));
+console.log(s.$(p2, 'any @deck minion #battlecry').map(v=>v.cost + ' ' + v.name));

@@ -33,7 +33,9 @@ class Board {
    * @param {Player} player Could (and should) be curried for card helper function (player is self.owner)
    * @param {string} selector Refer to syntax above 
    */
-  $ (player, selector_string) {
+  $ (player, selector_string) {try{
+    //console.log(`---SELECTING ${selector_string} for ${player.name}`);
+      
     let [ownPlayer, enemyPlayer] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 
     let tokens = selector_string.split(/\s+/);
@@ -42,9 +44,9 @@ class Board {
     //card owner: choose one - XOR 
     if (!tokens.includes('any')) {
       if (tokens.includes('enemy')) {
-        filters.push(v = v.owner !== ownPlayer);  
+        filters.push(v => v.owner !== ownPlayer);  
       } else if (tokens.includes('own')) {
-        filters.push(v = v.owner === ownPlayer);
+        filters.push(v => v.owner === ownPlayer);
       }
     }
 
@@ -67,12 +69,12 @@ class Board {
       if (tokens.includes('spell')) {
         allowed_types.push(TYPES.spell);  
       }
-      console.log('types', allowed_types);
+      //console.log('types', allowed_types);
       filters.push(v => allowed_types.includes(v.type));
     }
 
     var zoneSelectors = tokens.filter(v => /^@[a-z]+/i.test(v));
-    console.log('zoneSelectors', zoneSelectors);
+    //console.log('zoneSelectors', zoneSelectors);
     let allowed_zones = [ZONES.play];
     if (zoneSelectors.length) {
       allowed_zones = [];
@@ -95,12 +97,12 @@ class Board {
         allowed_zones.push(ZONES.secret);  
       }
     }
-    console.log('zones', allowed_zones);
+    //console.log('zones', allowed_zones);
     filters.push(v => allowed_zones.includes(v.zone));
 
     //tag selectors only NARROW the search, so its AND
     var tagSelectors = tokens.filter(v => /^#[a-z]+/i.test(v));
-    console.log('tagSelectors', tagSelectors);
+    //console.log('tagSelectors', tagSelectors);
     let tagFilters = tagSelectors.map(selector => {
        let tagName = selector.slice(1);
        switch(tagName) {
@@ -124,7 +126,7 @@ class Board {
     let propRegexp = /^\.[0-9a-z]+((=|!=|<|>|<=|>=)[0-9a-z]+){0,1}$/i;
     //.test('.prop<42')
     var propSelectors = tokens.filter(v => propRegexp.test(v));
-    console.log('propSelectors', propSelectors);
+    //console.log('propSelectors', propSelectors);
     let propFilters = propSelectors.map(selector => {
         let [
           _match, // destructuring will throw, if regex match fails
@@ -147,15 +149,31 @@ class Board {
          '!=': (v) => v[propertyName] != comparisonValue,
        };       
        return ops[operator];
-       //return new Function('v', `v.${propertyName} ${operator} ${comparisonValue}`);
     });
     //return tokens;  
     
     let all_cards = [...this.deck1, ...this.deck2];
-    console.log(allowed_types, filters[0].toString());
-    //console.log(all_cards.map(v=>v.type));
-    return [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
-  }
+    //console.log(allowed_types, filters[0].toString());
+    ////console.log(all_cards.map(v=>v.type));
+    //console.log(all_cards.map(v=>v.zone+' '+v.name));
+    //console.log(all_cards.length)
+    let result = [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
+    //console.log(selector_string, result);
+    //return result;
+    return (new ArrayOfCards()).concat(result);
+  }catch(err){console.warn(err)}}
+}
+
+class ArrayOfCards extends Array {
+    constructor () {
+      super();
+    }
+    dealDamage (n) {
+        this.forEach(v => v.dealDamage(n));
+    }
+    dealDamageSpell (n) {
+        this.forEach(v => v.dealDamageSpell(n));
+    }
 }
 
 module.exports = Board;

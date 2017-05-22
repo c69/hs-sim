@@ -11,7 +11,7 @@ const {
 let card_id = 1;
 
 class Card {
-    constructor (cardDef, owner) {
+    constructor (cardDef, owner) { 
       if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
       if (!owner) throw new RangeError('Owner player required');
 
@@ -71,12 +71,16 @@ class Card {
         this.play({self, $, game, target, position}); // battlecry !
 
     }
+    summon () {  
+      this.zone = ZONES.play;  
+      //console.log(`card.js :: summoned ${this.name} for ${this.owner.name}`);
+    }
     _mill () {
         this.zone = ZONES.grave;
     }
     _die () {
         console.log(`☠️ ${this.type.toLowerCase()} died: ${this.owner.name}'s ${this.name}`);
-        this.death && this.death({self, $, game}); // deathrattle
+        //this.death && this.death({self: this, $: game.board.$, game}); // deathrattle
         this.zone = ZONES.grave;
     }
     _copy () {
@@ -99,7 +103,7 @@ class Card {
         this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
     }
     isStillAlive() { // replace with death sweep in game
-        if (this.health < 1) this.die();
+        if (this.health < 1) this._die();
     }
     toString () {
         return `[Object Card: ${this.name}#${this.card_id}]`;
@@ -150,6 +154,10 @@ class Hero extends Card {
       this.health = cardDef.health || 0;
       this.armor = cardDef.armor || 0;
       //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
+    }
+    _die () {
+        super._die();
+        this.owner.loose();
     }
 }
 class Power extends Card {

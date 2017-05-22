@@ -1,6 +1,9 @@
 'use strict';
 // @ts-check
 
+const CARD_TYPES = require('../data/constants.js').CARD_TYPES;
+
+
 const MAX_HAND_SIZE = 10;
 
 class Hand {
@@ -11,11 +14,11 @@ class Hand {
     this.card_guid = () => (_card_id++);
   }
   view () {
-    console.log(this._hand.map(({price, name}) => `(${price}) ${name}`).join(', '))
+    console.log(this._hand.map(({cost, name}) => `(${cost}) ${name}`).join(', '))
   }
   listPlayable () {
     //should also account for available targets.
-    return this.list().filter(({price}) => price <= this.owner.mana);
+    return this.list().filter(({cost}) => cost <= this.owner.mana);
   }
   list () {
     return this._hand.map((v) => {
@@ -23,7 +26,8 @@ class Hand {
         id: v.hand_id,
         name: v.name,
         type: v.type,
-        price: v.price
+        cost: v.cost,
+        target: v.target
       }
     });
   }
@@ -40,15 +44,25 @@ class Hand {
     // add sanity check for if mana/cost changed but ID remains the same, etc
     let card_idx = this._hand.findIndex(v=>v.hand_id === card_id);
     if (card_idx < 0) return; 
-    if (this._hand[card_idx].price > this.owner.mana) {
+    if (this._hand[card_idx].cost > this.owner.mana) {
       console.warn(`hand.js ${this.owner.name} cannot play card ${this._hand[card_idx].name} - not enough mana`);
       return () => {};
     }
     let card = this._hand.splice(card_idx, 1)[0];
-    this.owner.mana -= card.price;
+    this.owner.mana -= card.cost;
     
     console.log(`hand.js::play ${this.owner.name} played `, card.name);
-    return card.play;
+    
+    if (card.type === CARD_TYPES.minion) {
+      // this.board.$('own minions').forEach((v,i) => {
+      //   v.position = i;
+      // });
+      //console.log(c);
+      //console.log(card);
+      card.summon();//({position}); // position is IGNORED for now
+    }
+    
+    return card.play || function () {};
 
     // what about targeting ?!
     // if card.isNeedTarget ? isNeedOptionalTarget ? isNeedTargetIfConditionMet ??? (-__-)

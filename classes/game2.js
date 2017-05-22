@@ -1,7 +1,6 @@
 'use strict';
 // @ts-check
 
-const Board = require('./board.js');
 const Board2 = require('./board2.js');
 
 /**
@@ -25,8 +24,10 @@ class Game {
   constructor (players) {
     if (players.length !== 2) throw new RangeError("Game expects two players");
     this.players = players;
-    this.board = new Board(players[0], players[1]);
-    //this.board = new Board2(player[0].deck, player[1].deck, players[0], players[1]);
+    try {
+      //console.log(players[0]) ;
+      this.board = new Board2(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
+    } catch (err) {console.warn(err)}
     this.turn = 0;
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
@@ -36,6 +37,7 @@ class Game {
     //this.fullState = {}; // ??? 
   }
   _init () {
+    //console.log('starting the game...');
     this.players.forEach(player => {
       player.draw(5);
       player.manaCrystals = 1;
@@ -66,7 +68,7 @@ class Game {
     if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     activePlayer.mana = activePlayer.manaCrystals;
 
-    this.board.listOwn(this.activePlayer).minions.forEach(v => {
+    this.board.$(this.activePlayer, 'own minion').forEach(v => {
       v.attackedThisTurn = 0; // invasively reset attack counters 
       v.isReady = true;
     });
@@ -107,7 +109,7 @@ class Game {
     this._onTurnEnd();
     this._onTurnStart();
     this._attemptToDrawCard();
-
+    
     this._refreshAvailableOptions(); // cancer 
     return this;        
   }
@@ -132,15 +134,20 @@ class Game {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
     let c = this.options.actions[card_idx];
     
+    //console.log('play card', c);
     if (c.targetList) { // spell-fireball OR battlecry
       var target = c.targetList[target_idx];  // if c.t      
     }
     if (c.positionList) { // minion
       var position = c.positionList[position_idx]; // if c.p
-      this.activePlayer.hand.play(c.id)(this.activePlayer, this.board, position, target);    
-    } else {
-      this.activePlayer.hand.play(c.id)(target);
-    }
+    } 
+    //console.log('play card', c.name, target, position);
+    this.activePlayer.hand.play(c.id)({
+      target,
+      position,
+      $: this.board.$.bind(this.board, this.activePlayer)
+    });
+    
     //this._onBeforeMinionSummoned(c); //  no no no ...
     //this._summon(c.minion, p); // if minion ? or equip if weapon ?
     //c.play.call(this, c, t); // %-)
@@ -178,31 +185,39 @@ class Game {
   /**
    *  A nice GOD method
    */
-  _refreshAvailableOptions () {
+  _refreshAvailableOptions () { try {
     //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
     if (!this.isStarted || this.isOver) {
+      console.log('No options are available - game state is wrong.');
       this.options = {actions:[]};
       return;
     } 
-    // board does not provide a way to simply list all (own)units, yet.
-    let pawns = this.board.listOwn(this.activePlayer);
-    let warriors = [].concat(pawns.hero, pawns.minions).filter(v => {
-      return v.attackPower > 0 && v.isReady && v.attackedThisTurn < 1;
+    // board STILL(!) does not provide a way to simply list all (own)units, yet.
+    // PROBLEM - hero is not in BOARD yet. because he is legacy class, insted of card 
+    let pawns = this.board.$(this.activePlayer, 'own character');
+    let warriors = pawns.filter(v => {
+      return v.attack > 0 && v.isReady && v.attackedThisTurn < 1;
     });
-
-    let aubergines = this.board.listOwn(this.passivePlayer);
-    let sheeps = [].concat(aubergines.hero, aubergines.minions).filter(v => {
+    
+    let aubergines = this.board.$(this.activePlayer, 'enemy character');
+    let sheeps = aubergines
+      .concat(this.passivePlayer.hero) // temporary hack, until hero is refactored to be a Card
+      .filter(v => {
       return v.health > 0;
     });
 
     //scan for taunt
     // todo: separate bags for meelee, spell, etc targets - GOD OBJECT CHECKER ORACLE !!!1111
-    let hasTaunt = sheeps.some(v => v.buffs.includes('TAUNT'));
-    if (hasTaunt) sheeps = sheeps.filter(v => v.buffs.includes('TAUNT'));
+    //let hasTaunt = sheeps.some(v => v.buffs.includes('TAUNT'));
+    //if (hasTaunt) sheeps = sheeps.filter(v => v.buffs.includes('TAUNT'));
+    let hasTaunt = sheeps.some(v => v.tags && v.tags.includes('TAUNT'));
+    if (hasTaunt) sheeps = sheeps.filter(v => v.tags.includes('TAUNT'));
     
     // scan for spell shield
     // ..
 
+    //console.log('warriors', warriors);
+    //console.log('sheeps', sheeps);
     let attack = warriors.map(v => {
       return {
         id: v._id,
@@ -214,20 +229,18 @@ class Game {
       };
     }).filter(v => v.targetList.length > 0);
     //let mana = this.mana; // hand.listPlayable already checks for mana cost
-    let cards = this.activePlayer.hand.listPlayable().map(v=>{
-      return v.name === 'Fireball' ? {
+
+    let canSummonMore = (pawns.length < 8); // with hero
+    
+    let cards = this.activePlayer.hand.listPlayable().filter(v => v.type !== 'MINION' || canSummonMore).map(v=>{
+      return {
         id: v.id,
         type: 'C', //'card',
         name: v.name,
-        //cost: v.price,
-        targetList: [this.passivePlayer.hero] // your face!!! //todo: Refactor with selectors. 
-      } : {
-        id: v.id,
-        type: 'C', //'card',
-        name: v.name,
-        //cost: v.price,
+        cost: v.cost,
         positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
-        targetList: sheeps.reverse() // for battlecry - starts from minions, to help Bob kill taunter Bears )
+        targetList: v.target && this.board.$(this.activePlayer, v.target), 
+        //targetList: sheeps.reverse() // for battlecry - starts from minions, to help Bob kill taunter Bears )
       };
     });
 
@@ -239,7 +252,7 @@ class Game {
       ]
       //, aubergines
     };
-  }
+  } catch(err) {console.warn.err}}
   /** 
    * Execute combat action
    * @param {Character} attacker
@@ -254,33 +267,45 @@ class Game {
     if (target.owner === attacker.owner) throw 'own unit'; //return; // will fail for Hunter:Misdirection secret, and Ogres
     if (attacker.attackedThisTurn > 0) throw 'already attacked this turn'; //return
 
-    console.log(`⚔️ ${attacker.name}(${attacker.attackPower}/${attacker.health}) attacks ${target.name}(${target.attackPower}/${target.health})`);
-    //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attackPower}/${target.health})`);
+    console.log(`⚔️ ${attacker.name}(${attacker.attack}/${attacker.health}) attacks ${target.name}(${target.attack}/${target.health})`);
+    //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attack}/${target.health})`);
     //ignore shields, etc for now
-    target.health -= attacker.attackPower;
-    attacker.health -= target.attackPower;
+    target.health -= attacker.attack;
+    attacker.health -= target.attack;
     attacker.attackedThisTurn += 1;  
+    
+    //death logic onwards
     target.isStillAlive();
     attacker.isStillAlive();
 
     let dethrattle_list = []; // this should be moved to deathsweep (so deathrattles trigger left-to-right ?)
-    if(target.health < 0) dethrattle_list.push(target);
-    if(attacker.health < 0) dethrattle_list.push(attacker);
+    if(target.health <= 0) dethrattle_list.push(target);
+    if(attacker.health <= 0) dethrattle_list.push(attacker);
     
     let board = this.board;
-    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O
-      character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
+    //console.log(dethrattle_list);
+    //BUG: currently only melee attack triggers deathrattles
+    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
+      //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
+      //console.log`deathrattle ${character}`;
+      character.death && character.death({
+        self: character,
+        $: this.board.$.bind(this.board, this.activePlayer),
+        game: this
+      });   
     });   
     
+    //console.log(`⚔️ end----`);
   }
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
       console.log(`
-player:${player.name} hp❤️:${player.hero.hp} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
+player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
-      console.log('minions on board', this.board.listOwn(player).minions.map(v=>
-      `(${v.buffs.includes('TAUNT') ? '🛡️' : ''}${v.attackPower}/${v.health})`
+      //console.log(this.board.$(player, 'own minion').map(v => v.name));
+      console.log('minions on board', this.board.$(player, 'own minion').map(v=>
+      `(${v.tags && v.tags.includes('TAUNT') ? '🛡️' : ''}${v.attack}/${v.health})`
       ));
     });
     

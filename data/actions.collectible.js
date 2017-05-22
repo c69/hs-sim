@@ -2264,6 +2264,7 @@ const actions = [
     "_info": "(1) 1/1 [NEUTRAL]: Leper Gnome",
     "text": "<b>Deathrattle:</b> Deal 2 damage to the enemy hero.",
     death ({$}) {
+      console.log('deathrattle - leper - 2dmg to enemy hero');
       $('enemy hero').dealDamage(2);
     }
   },
@@ -2518,6 +2519,7 @@ const actions = [
     "text": "Deal $6 damage.",
     target: 'character',
     play ({target}) {
+      //console.log('actions.collectible.js :: fireball target', target);
       target.dealDamageSpell(6);
     }
   },
@@ -4050,7 +4052,12 @@ const actions = [
   {
     "id": "EX1_277",
     "_info": "(1) SPELL [MAGE]: Arcane Missiles",
-    "text": "Deal $3 damage randomly split among all enemies."
+    "text": "Deal $3 damage randomly split among all enemies.",
+    play ({$}) {
+      for(let i = 0; i < 3; i++) { // how to interact with spell damage?
+        $('enemy character').dealDamage(1); //BUG: must be 1 random.. but we attack ALL matching the query
+      }
+    }
   },
   {
     "id": "AT_117",
@@ -4363,8 +4370,9 @@ const actions = [
     "_info": "(5) 4/4 [NEUTRAL]: Abomination",
     "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 2\ndamage to ALL characters.",
     tags: [TAGS.taunt],
-    play ({$}) {
-      $('characters').dealDamage(2);
+    death ({$}) {
+      console.log('deathrattle -- abom. 2dmg to ALL');
+      $('character').dealDamage(2);
     }
   },
   {

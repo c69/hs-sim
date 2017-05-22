@@ -5,11 +5,6 @@ const Game = require('./classes/game2.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 
-const Minion = require('./classes/minion.js');
-const MinionCard = require('./classes/cards.js').MinionCard;
-const FireballCard = require('./classes/cards.js').FireballCard;
-const JunkCard = require('./classes/cards.js').JunkCard;
-
 // from CardSelector
 const CardJSON = require('./data/cards.all.generated.json');
 const abilitiesMixin = require('./data/actions.collectible.js');
@@ -37,14 +32,43 @@ abilitiesMixin.forEach(({id, tags, target, play, death}) => {
 });
 
 //---Deck2.js sketch------------------
-let card_defs = CardDefinitions.filter(v => v.collectible === true);
-let deck1 = [], deck2 = [];
-let dude1 = new Player(new Deck(deck1), 'Alicia');
-let dude2 = new Player(new Deck(deck2), 'Bobulion');
-[[deck1, dude1], [deck2, dude2]].forEach(([deck, player]) => {
+let card_defs = CardDefinitions.filter(v => v.collectible === true)
+    .filter(v => [TYPES.minion, TYPES.spell].includes(v.type))
+    .filter(v => [
+      //'Chillwind Yeti',
+      //'River Crocolisk',
+      //'Bloodfen Raptor',
+      'Fireball',
+      'Arcane Explosion',
+      //'Hellfire',
+      //'Flame Imp',
+      //'Ironfur Grizzly',
+      'Leper Gnome',
+      'Abomination',
+      'Elven Archer'
+    ].includes(v.name))
+    ;
+    
+
+console.log('initializing players');
+
+//facepalm - quantum entanglement =_=    
+// - atm - player depends on deck depends on list of cards depends on owner = player (!) cirular
+//todo: split
+let deck1 = [];
+let deck2 = [];
+let dude1 = new Player('Alice');
+let dude2 = new Player('Bob');
+dude1.deck = new Deck(deck1);
+dude2.deck = new Deck(deck2);
+
+[[deck1, dude1, 'HERO_08'], [deck2, dude2, 'HERO_01']].forEach(([deck, player, hero_id]) => {
+    //console.log(deck, player);
     try {
+      deck.push(new Card.Hero(CardDefinitionsIndex[hero_id], player));
+      deck[0].zone = 'PLAY';
       for (let i = 0; i < 30; i++) {
-          let dice = Math.floor(Math.random()*(card_defs.length - 1));
+          let dice = Math.floor(Math.random()*(card_defs.length));
           let card = card_defs[dice];
           
           let structor = {
@@ -61,118 +85,46 @@ let dude2 = new Player(new Deck(deck2), 'Bobulion');
       console.warn(err);
     }
 });
-
-var fireballs = [];
-for (let i = 0; i < 30; i++) {
-  let dice = (Math.floor(1 + Math.random()*5));
-  fireballs.push(
-    //new Card('Fireball')
-    dice === 4 ? new FireballCard() :
-      //new JunkCard('x' + dice, dice)
-      new MinionCard(new Minion({
-        name: 'Bear' + dice,
-        attackPower: dice,
-        health: dice,
-        price: dice,
-        buffs: [
-          'TAUNT',
-          {
-            //also consider binding "this" to minion for deathrattle and similar functions
-            deathrattle: function (self, board, game) { // giving game to ability is KINDA dangerous, as it can .concede(), for example or modify game state =) 
-              console.log(`deathrattle: ${self.name} gives last hug to his hero! +2hp`);
-              self.owner.hero.dealDamage(-2)// heeeeal :P
-            }
-          },
-          {
-            //also consider binding "this" to minion for deathrattle and similar functions
-            deathrattle: function (self, board, game) { // giving game to ability is KINDA dangerous, as it can .concede(), for example or modify game state =) 
-              console.log(`deathrattle: ${self.name} splashes acid blood around him!`);
-              var a = board.listOwn(self.owner);
-              var b = board.listEnemy(self.owner);
-              [b.hero, ...b.minions, ...a.minions].forEach(v => v.dealDamage(1)); //everyone but own hero
-            }
-          }
-        ]
-      }), dice)
-  );
-}
-
-
-var zombies = [];
-for (let i = 0; i < 30; i++) {
-  let dice = (Math.floor(1 + Math.random()*5));
-  zombies.push(
-    new MinionCard(new Minion({
-        name: 'Elf' + dice,
-        attackPower: dice + 0,
-        health: dice,
-        price: dice,
-        battleCry: function (t) {
-          console.log(`battlecry: ${this.name} shoots his arrow!`);
-          t && t.dealDamage(1);
-        },
-        targetSelector: 'enemy'
-      }), dice)
-  );
-}
+console.log('bootstrap finished');
 
 //e2e test for Fatigue
+let lazy1 = new Player('Lazy1');
+let lazy2 = new Player('Lazy2');
+lazy1.deck = new Deck([
+  new Card.Hero(CardDefinitionsIndex['HERO_08'], lazy1)
+]);
+lazy2.deck = new Deck([
+  new Card.Hero(CardDefinitionsIndex['HERO_08'], lazy2)  
+]);
+lazy1.deck._arr[0].zone = 'PLAY';
+lazy2.deck._arr[0].zone = 'PLAY';
+
 var g_fatigue = new Game([
-  new Player(new Deck(zombies), 'Lazy1'), 
-  new Player(new Deck(zombies), 'Lazy2')
+  lazy1,
+  lazy2  
 ]);
 g_fatigue.start();
+try {
 
 for(let i = 0; i < 66 && !g_fatigue.isOver; i++) {
   g_fatigue.endTurn();
 }
 g_fatigue.view();
 
+} catch(err) {console.log(err)}
 console.log('==================');
 
 // bootstrap / init
-var deck_prime = new Deck(fireballs);
-var deck_prime2 = new Deck(zombies);
-
-var p1 = new Player(deck_prime, 'Alice');
-var p2 = new Player(deck_prime2, 'Bob');
-
-// actual play
-var g = new Game([p1, p2]);
-g.start();
-
-//AI - Artificial stupIdity
-for(let i = 0; i < 17 && !g.isOver; i++) {
-  g.view();
-
-  //g.usePower(0); // hero power first suggested target
-  //g.playCard(0,0); // play first possible card at first target
-  //g.attack(0,0); // attack with first suggested character first suggested target
-  //g.viewState();
-  //g.viewAvailableOptions();
-
-  for (let i = 0; i < 10; i++) {
-    let opts = g.viewAvailableOptions();
-    //console.log(`${g.activePlayer.name}'s options:`, opts);
-    if (!opts.actions.length) break;
-    g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
-  }
-  
-  console.log('___________________');
-  g.endTurn();
-}
-
-//----------
 try {
 
-
 // actual play
-var g = new Game([dude1, dude2]);
-g.start();
+let g2 = new Game([dude1, dude2]);
+g2.start();
 
+    //console.log('starting the game...333');
 //AI - Artificial stupIdity
-for(let i = 0; i < 42 && !g.isOver; i++) {
-  g.view();
+for(let i = 0; i < 13 && !g2.isOver; i++) {
+  g2.view();
 
   //g.usePower(0); // hero power first suggested target
   //g.playCard(0,0); // play first possible card at first target
@@ -180,14 +132,15 @@ for(let i = 0; i < 42 && !g.isOver; i++) {
   //g.viewState();
   //g.viewAvailableOptions();
 
-  for (let i = 0; i < 10; i++) {
-    let opts = g.viewAvailableOptions();
-    //console.log(`${g.activePlayer.name}'s options:`, opts);
+  let max_actions_per_turn = 10;
+  for (let i = 0; i < max_actions_per_turn; i++) {
+    let opts = g2.viewAvailableOptions();
+    //console.log(`${g2.activePlayer.name}'s options:`, opts);
     if (!opts.actions.length) break;
-    g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+    g2.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }
   
   console.log('___________________');
-  g.endTurn();
+  g2.endTurn();
 }
 } catch (err) {console.warn(err)}

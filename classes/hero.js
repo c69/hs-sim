@@ -12,7 +12,8 @@ class Hero {
     
     this.name = player.name; // yes, technically - "Guldan" != "CutePumkin312"
     this.health = 30;
-    this.attackPower = 0;
+    this.attack = 0;
+    this.tags = [];
     this.buffs = [];
     this.owner = player;
   }
@@ -20,9 +21,14 @@ class Hero {
     return this.health;
   }
   dealDamage (n) {
-    console.log(`🔥 ${this.name} takes ${n} damage!`);
-    this.health -= n;
-    this.isStillAlive();
+      console.log(`🔥 ${this.name} takes ${n} damage!`);
+      this.health -= n; // replace with damage buff
+      this.isStillAlive();
+  }
+  dealDamageSpell (n) {
+      console.log(`🔥 ${this.name} takes ${n} spell damage!`);
+      this.health -= n; // replace with damage buff
+      this.isStillAlive();
   }
   isStillAlive() {
     if (this.health < 1) this.die();

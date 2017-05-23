@@ -35,6 +35,7 @@ class Board {
    */
   $ (player, selector_string) {try{
     //console.log(`---SELECTING ${selector_string} for ${player.name}`);
+    if (typeof selector_string !== 'string') throw new TypeError('String expected');
       
     let [ownPlayer, enemyPlayer] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 

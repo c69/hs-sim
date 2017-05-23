@@ -179,8 +179,28 @@ class Game {
     if (o.type === 'A') this.attack(options_idx, target_idx);
     if (o.type === 'C') this.playCard(options_idx, position_idx, target_idx);
 
+    this._nextTick();
     this._refreshAvailableOptions(); // cancer
     return this;
+  }
+  _nextTick () {
+    let $ = this.board.$.bind(this.board, this.activePlayer);
+    //death logic onwards
+    let dethrattle_list = [];
+    $('character').forEach(character => {
+      character.isStillAlive();
+      if(character.health <= 0) dethrattle_list.push(character);
+    });
+    //console.log(dethrattle_list);
+    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
+      //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
+      //console.log`deathrattle ${character}`;
+      character.death && character.death({
+        self: character,
+        $,
+        game: this
+      });   
+    });
   }
   /**
    *  A nice GOD method
@@ -273,28 +293,7 @@ class Game {
     target.health -= attacker.attack;
     attacker.health -= target.attack;
     attacker.attackedThisTurn += 1;  
-    
-    //death logic onwards
-    target.isStillAlive();
-    attacker.isStillAlive();
-
-    let dethrattle_list = []; // this should be moved to deathsweep (so deathrattles trigger left-to-right ?)
-    if(target.health <= 0) dethrattle_list.push(target);
-    if(attacker.health <= 0) dethrattle_list.push(attacker);
-    
-    let board = this.board;
-    //console.log(dethrattle_list);
-    //BUG: currently only melee attack triggers deathrattles
-    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
-      //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
-      //console.log`deathrattle ${character}`;
-      character.death && character.death({
-        self: character,
-        $: this.board.$.bind(this.board, this.activePlayer),
-        game: this
-      });   
-    });   
-    
+        
     //console.log(`⚔️ end----`);
   }
   view () {

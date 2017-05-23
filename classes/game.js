@@ -32,7 +32,9 @@ class Game {
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
     
-    this.options = {};
+    this.options = {
+      actions: []
+    };
     //this.observableState = {}; // ?
     //this.fullState = {}; // ??? 
   }
@@ -209,7 +211,9 @@ class Game {
     //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
     if (!this.isStarted || this.isOver) {
       console.log('No options are available - game state is wrong.');
-      this.options = {actions:[]};
+      this.options = {
+        actions: []
+      };
       return;
     } 
     // board STILL(!) does not provide a way to simply list all (own)units, yet.
@@ -249,24 +253,35 @@ class Game {
       };
     }).filter(v => v.targetList.length > 0);
     //let mana = this.mana; // hand.listPlayable already checks for mana cost
+    let $ = this.board.$.bind(this.board, this.activePlayer);
 
     let canSummonMore = (pawns.length < 8); // with hero
     
-    let cards = this.activePlayer.hand.listPlayable().filter(v => v.type !== 'MINION' || canSummonMore).map(v=>{
+    let cards = this.activePlayer.hand.listPlayable().filter((v) =>{
+      if (v.type === 'MINION') {
+        return canSummonMore;
+      } 
+      if (v.type === 'SPELL' && !!v.target) {
+        //console.log('v.target', v.target);
+        return $(v.target).length;
+      }       
+      return true;
+    } ).map(v=>{
       return {
         id: v.id,
         type: 'C', //'card',
         name: v.name,
         cost: v.cost,
         positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
-        targetList: v.target && this.board.$(this.activePlayer, v.target), 
+        targetList: v.target && $(v.target), 
         //targetList: sheeps.reverse() // for battlecry - starts from minions, to help Bob kill taunter Bears )
       };
     });
 
     // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
+    //console.log('actions --', attack, cards);
     this.options = {
-      actions : [
+      actions: [
         ...attack,
         ...cards
       ]

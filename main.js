@@ -1,7 +1,7 @@
 "use strict";
 // @ts-check
 
-const Game = require('./classes/game2.js');
+const Game = require('./classes/game.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 
@@ -9,7 +9,7 @@ const Player = require('./classes/player.js');
 const CardJSON = require('./data/cards.all.generated.json');
 const abilitiesMixin = require('./data/actions.collectible.js');
 const Card = require('./classes/card.js');
-//const Board2 = require('./classes/board2.js');
+//const Board = require('./classes/board.js');
 const TYPES = require('./data/constants.js').CARD_TYPES;
 
 let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
@@ -44,8 +44,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Flame Imp',
       //'Ironfur Grizzly',
       'Leper Gnome',
-      'Abomination',
-      'Elven Archer'
+      //'Abomination',
+      //'Elven Archer'
     ].includes(v.name))
     ;
     

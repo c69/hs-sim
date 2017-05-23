@@ -1,7 +1,7 @@
 'use strict';
 // @ts-check
 
-const Board2 = require('./board2.js');
+const Board = require('./board.js');
 
 /**
 // g.start();
@@ -26,7 +26,7 @@ class Game {
     this.players = players;
     try {
       //console.log(players[0]) ;
-      this.board = new Board2(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
+      this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
     } catch (err) {console.warn(err)}
     this.turn = 0;
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste

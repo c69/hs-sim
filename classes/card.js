@@ -90,13 +90,27 @@ class Card {
     }
     // public API
     dealDamage (n) {
-        console.log(`🔥 ${this.name} takes ${n} damage!`);
-        this.health -= n; // replace with damage buff
+        let was = this.health; 
+        if (this.tags.includes(TAGS.divineShield)) {
+          this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
+          console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
+        } else {
+          this.health -= n; // replace with damage buff
+        }
+        console.log(`🔥 ${this.name} takes ${was - this.health} damage!`);
+        
         this.isStillAlive();
     }
     dealDamageSpell (n) {
-        console.log(`🔥 ${this.name} takes ${n} spell damage!`);
-        this.health -= n; // replace with damage buff
+        let was = this.health; 
+        if (this.tags.includes(TAGS.divineShield)) {
+          this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
+          console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
+        } else {
+          this.health -= n; // replace with damage buff
+        }
+        console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
+        
         this.isStillAlive();
     }
     buff (enchantment) {

@@ -2,6 +2,7 @@
 // @ts-check
 
 const Board = require('./board.js');
+const TAGS = require('../data/constants.js').TAGS;
 
 /**
  * 
@@ -245,7 +246,14 @@ class Game {
     // PROBLEM - hero is not in BOARD yet. because he is legacy class, insted of card 
     let pawns = this.board.$(this.activePlayer, 'own character');
     let warriors = pawns.filter(v => {
-      return v.attack > 0 && v.isReady && v.attackedThisTurn < 1;
+      if (v.attack < 1) return false;
+      if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
+      
+      let MAX_ATTACK_ALLOWED_PER_TURN = 1;
+      if (v.tags.includes(TAGS.windFury)) {
+         MAX_ATTACK_ALLOWED_PER_TURN = 2;
+      } 
+      return v.attackedThisTurn < MAX_ATTACK_ALLOWED_PER_TURN;
     });
     
     let aubergines = this.board.$(this.activePlayer, 'enemy character');
@@ -329,9 +337,21 @@ class Game {
 
     console.log(`⚔️ ${attacker.name}(${attacker.attack}/${attacker.health}) attacks ${target.name}(${target.attack}/${target.health})`);
     //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attack}/${target.health})`);
-    //ignore shields, etc for now
-    target.health -= attacker.attack;
-    attacker.health -= target.attack;
+    
+    // this looks like generic Card._damageApply(n)
+    [[attacker, target.attack], [target, attacker.attack]].forEach(([character, dmg]) => {
+      let was = character.health;
+      
+      if (character.tags.includes(TAGS.divineShield)) {
+        character.tags = character.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
+        console.log(`(!) ${character.name} loses ${TAGS.divineShield} !`);
+      } else {
+        character.health -= dmg; // replace with damage buff
+      }
+      console.log(`${character.name} takes ${was - character.health} damage!`);  
+    });
+    
+    
     attacker.attackedThisTurn += 1;  
         
     //console.log(`⚔️ end----`);

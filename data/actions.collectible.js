@@ -1,9 +1,6 @@
-const TAGS = {
-  taunt: 'TAUNT',
-  divineShield: 'DIVINE_SHIELD',
-  charge: 'CHARGE',
-  stealth: 'STEALTH'
-};
+'use strict';
+
+const TAGS = require('./constants.js').TAGS;
 
 const actions = [
   {
@@ -2008,7 +2005,13 @@ const actions = [
   {
     "id": "EX1_116",
     "_info": "(5) 6/2 [NEUTRAL]: Leeroy Jenkins",
-    "text": "<b>Charge</b>. <b>Battlecry:</b> Summon two 1/1 Whelps for your opponent."
+    "text": "<b>Charge</b>. <b>Battlecry:</b> Summon two 1/1 Whelps for your opponent.",
+    tags: [TAGS.charge],
+    play ({summonEnemy}) {
+      console.log('leeeeeeeroy!!!!!!!');
+      summonEnemy('LOEA10_3'); //murloc tinyfin
+      summonEnemy('LOEA10_3'); //murloc tinyfin
+    }
   },
   {
     "id": "CFM_663",
@@ -2670,7 +2673,13 @@ const actions = [
   {
     "id": "CS2_027",
     "_info": "(1) SPELL [MAGE]: Mirror Image",
-    "text": "Summon two 0/2 minions with <b>Taunt</b>."
+    "text": "Summon two 0/2 minions with <b>Taunt</b>.",
+    play ({summon}) {
+      console.log('MirrorImage: summon two NON-COLLECTIBLE 0/2 minions (from cards.all.json');
+      summon('AT_097'); // tournament attendee
+      summon('AT_097'); // tournament attendee
+      //  summon('CS2_mirror');
+    }
   },
   {
     "id": "AT_001",
@@ -2848,7 +2857,13 @@ const actions = [
   {
     "id": "CS2_012",
     "_info": "(4) SPELL [DRUID]: Swipe",
-    "text": "Deal $4 damage to an enemy and $1 damage to all other enemies."
+    "text": "Deal $4 damage to an enemy and $1 damage to all other enemies.",
+    target: 'enemy character',
+    play ({target, $}) {
+      //console.log(`swipe ${target} ${$}`);
+      target.dealDamageSpell(4); // =_= - i want "exclude" selector
+      $('enemy character').filter(v => v !== target).dealDamageSpell(1);
+    }
   },
   {
     "id": "OG_313",
@@ -3109,7 +3124,11 @@ const actions = [
   {
     "id": "CS2_203",
     "_info": "(3) 2/1 [NEUTRAL]: Ironbeak Owl |BEAST",
-    "text": "<b>Battlecry:</b> <b>Silence</b> a minion."
+    "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.silence();   
+    }
   },
   {
     "id": "OG_134",
@@ -3711,7 +3730,10 @@ const actions = [
   {
     "id": "EX1_506",
     "_info": "(2) 2/1 [NEUTRAL]: Murloc Tidehunter |MURLOC",
-    "text": "<b>Battlecry:</b> Summon a 1/1 Murloc Scout."
+    "text": "<b>Battlecry:</b> Summon a 1/1 Murloc Scout.",
+    play ({summon}) {
+      summon('CS2_168'); // murloc raider
+    }
   },
   {
     "id": "GVG_031",
@@ -4623,7 +4645,8 @@ const actions = [
   {
     "id": "EX1_021",
     "_info": "(3) 2/3 [NEUTRAL]: Thrallmar Farseer",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "AT_077",
@@ -5051,7 +5074,8 @@ const actions = [
   {
     "id": "GVG_085",
     "_info": "(2) 1/2 [NEUTRAL]: Annoy-o-Tron |MECHANICAL",
-    "text": "<b>Taunt</b>\n<b>Divine Shield</b>"
+    "text": "<b>Taunt</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.taunt, TAGS.divineShield]
   },
   {
     "id": "UNG_840",
@@ -5952,7 +5976,8 @@ const actions = [
   {
     "id": "CS2_169",
     "_info": "(1) 1/1 [NEUTRAL]: Young Dragonhawk |BEAST",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "HERO_08b",

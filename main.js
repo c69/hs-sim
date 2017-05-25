@@ -38,14 +38,26 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Chillwind Yeti',
       //'River Crocolisk',
       //'Bloodfen Raptor',
-      'Fireball',
+      //'Fireball',
       'Arcane Explosion',
       //'Hellfire',
       //'Flame Imp',
-      //'Ironfur Grizzly',
-      'Leper Gnome',
-      //'Abomination',
-      //'Elven Archer'
+      'Ironfur Grizzly',
+      //'Leper Gnome',
+      'Abomination',
+      'Elven Archer',
+      //'Silent Knight', //-- stealth
+      'Annoy-o-Tron',
+      'Shielded Minibot',
+      'Argent Horseraider',
+      'Young Dragonhawk',
+      'Thrallmar Farseer',
+      
+      //'Murloc Tidehunter',
+      //'Leeroy Jenkins',
+      //'Mirror Image',
+      'Swipe',
+
     ].includes(v.name))
     ;
     
@@ -91,10 +103,10 @@ console.log('bootstrap finished');
 let lazy1 = new Player('Lazy1');
 let lazy2 = new Player('Lazy2');
 lazy1.deck = new Deck([
-  new Card.Hero(CardDefinitionsIndex['HERO_08'], lazy1)
+  new Card.Hero(CardDefinitionsIndex['HERO_09'], lazy1)
 ]);
 lazy2.deck = new Deck([
-  new Card.Hero(CardDefinitionsIndex['HERO_08'], lazy2)  
+  new Card.Hero(CardDefinitionsIndex['HERO_07'], lazy2)  
 ]);
 lazy1.deck._arr[0].zone = 'PLAY';
 lazy2.deck._arr[0].zone = 'PLAY';
@@ -135,7 +147,7 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   let max_actions_per_turn = 10;
   for (let i = 0; i < max_actions_per_turn; i++) {
     let opts = g2.viewAvailableOptions();
-    //console.log(`${g2.activePlayer.name}'s options:`, opts);
+    //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
     if (!opts.actions.length) break;
     g2.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }

@@ -1,13 +1,20 @@
 'use strict';
 // @ts-check
 
+// refer to http://hearthstone.gamepedia.com/Advanced_rulebook
+
+// http://hearthstone.gamepedia.com/Zone_enumeration
 const ZONES = {
   deck: 'DECK',
   hand: 'HAND',
   play: 'PLAY',
   grave: 'GRAVE',
-  aside: 'ASIDE',
-  secret: 'SECRET'
+  aside: 'ASIDE', //setaside
+  secret: 'SECRET',
+  //
+  //invalid: 'INVALID',
+  //discard: 'DISCARD'
+  //removedFromGame: 'REMOVEDFROMGAME' // o_O
 };
 
 const CARD_TYPES = {
@@ -37,8 +44,10 @@ const PLAYERCLASS = {
 
 const TAGS = {
   taunt: 'TAUNT',
+  divineShield: 'DIVINE_SHIELD',
   charge: 'CHARGE',
-  divineShield: 'DIVINE_SHIELD'
+  windfury: 'WINDFURY',
+  stealth: 'STEALTH'
 };
 
 module.exports = {

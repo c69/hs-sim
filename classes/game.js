@@ -152,7 +152,7 @@ class Game {
     let t = o.targetList[target_idx];
     // if Ogre retarget - choose new target :)
     //this._onBeforeAttack(a, t);
-    this._attack(a, t);
+    this.combat(a, t);
 
     //this._deathSweep(); // can only happen after action or tirggers
     this._refreshAvailableOptions(); // cancer
@@ -249,11 +249,12 @@ class Game {
       if (v.attack < 1) return false;
       if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
       
-      let MAX_ATTACK_ALLOWED_PER_TURN = 1;
-      if (v.tags.includes(TAGS.windFury)) {
-         MAX_ATTACK_ALLOWED_PER_TURN = 2;
+      let MAX_ATTACKS_ALLOWED_PER_TURN = 1;
+      if (v.tags.includes(TAGS.windfury)) {
+         MAX_ATTACKS_ALLOWED_PER_TURN = 2;
       } 
-      return v.attackedThisTurn < MAX_ATTACK_ALLOWED_PER_TURN;
+      //console.log(`${v.name}: atacked ${v.attackedThisTurn} times of ${MAX_ATTACKS_ALLOWED_PER_TURN}`);
+      return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
     });
     
     let aubergines = this.board.$(this.activePlayer, 'enemy character');
@@ -326,15 +327,18 @@ class Game {
    * @param {Character} attacker
    * @param {Character} target
    */
-  _attack (attacker, target) {
+  combat (attacker, target) {
     //console.log(`Attacking ${attacker} -> ${target}`);  
     if (!target) throw 'no target'; //return;
     if (target.health < 1) throw 'dead target'; //return;
     if (attacker.health < 1) throw 'dead attacker'; //return;
     if (attacker.owner !== this.activePlayer) throw 'wrong turn'; //return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
     if (target.owner === attacker.owner) throw 'own unit'; //return; // will fail for Hunter:Misdirection secret, and Ogres
-    if (attacker.attackedThisTurn > 0) throw 'already attacked this turn'; //return
-
+    if (attacker.tags.includes(TAGS.windfury)) {
+      if (attacker.attackedThisTurn > 1) throw 'already attacked too many times this turn'; //return
+    } else {
+      if (attacker.attackedThisTurn > 0) throw 'already attacked this turn'; //return
+    }
     console.log(`⚔️ ${attacker.name}(${attacker.attack}/${attacker.health}) attacks ${target.name}(${target.attack}/${target.health})`);
     //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attack}/${target.health})`);
     

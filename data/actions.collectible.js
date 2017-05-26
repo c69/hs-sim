@@ -1572,7 +1572,15 @@ const actions = [
   {
     "id": "CS2_237",
     "_info": "(5) 3/2 [HUNTER]: Starving Buzzard |BEAST",
-    "text": "Whenever you summon a Beast, draw a card."
+    "text": "Whenever you summon a Beast, draw a card.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'summon',
+        condition: 'own minion .race=beast',
+        action: ({draw}) => draw(1) // sketch is sketch, lala lalala         
+      }
+    ]
   },
   {
     "id": "FP1_003",
@@ -2613,7 +2621,16 @@ const actions = [
   {
     "id": "CFM_637",
     "_info": "(1) 1/1 [NEUTRAL]: Patches the Pirate |PIRATE",
-    "text": "[x]<b>Charge</b>\nAfter you play a Pirate,\nsummon this minion\nfrom your deck."
+    "text": "[x]<b>Charge</b>\nAfter you play a Pirate,\nsummon this minion\nfrom your deck.",
+    tags: [TAGS.charge],
+    _triggers_v1: [
+      {
+        activeZone: 'deck',
+        eventName: 'summon',
+        condition: 'own minion .race=pirate',
+        action: ({summon, self}) => summon(self)         
+      }
+    ]
   },
   {
     "id": "NEW1_018",
@@ -4144,7 +4161,15 @@ const actions = [
   {
     "id": "NEW1_019",
     "_info": "(2) 2/2 [NEUTRAL]: Knife Juggler",
-    "text": "[x]After you summon a\nminion, deal 1 damage\nto a random enemy."
+    "text": "[x]After you summon a\nminion, deal 1 damage\nto a random enemy.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'summon',
+        condition: 'own minion',
+        action: ({$}) => $('enemy character .health>0') //should be :alive (aka hp>0 and NOT pending destroy)         
+      }
+    ]
   },
   {
     "id": "FP1_030",
@@ -4455,7 +4480,15 @@ const actions = [
   {
     "id": "BRM_019",
     "_info": "(5) 3/3 [NEUTRAL]: Grim Patron",
-    "text": "Whenever this minion survives damage, summon another Grim Patron."
+    "text": "Whenever this minion survives damage, summon another Grim Patron.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'damage',
+        condition: ({target, self}) => target === self && !self.isMortallyWounded,
+        action: ({summon}) => summon('BRM_019') // ~another self         
+      }
+    ]
   },
   {
     "id": "CS2_076",
@@ -4547,7 +4580,15 @@ const actions = [
   {
     "id": "NEW1_021",
     "_info": "(2) 0/7 [NEUTRAL]: Doomsayer",
-    "text": "At the start of your turn, destroy ALL minions."
+    "text": "At the start of your turn, destroy ALL minions.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'own_turn_start',
+        condition: null,
+        action: ({$}) => $('minion').destroy() // not implemented         
+      }
+    ] 
   },
   {
     "id": "UNG_019",
@@ -5178,7 +5219,15 @@ const actions = [
   {
     "id": "BRM_006",
     "_info": "(3) 2/4 [WARLOCK]: Imp Gang Boss |DEMON",
-    "text": "Whenever this minion takes damage, summon a 1/1 Imp."
+    "text": "Whenever this minion takes damage, summon a 1/1 Imp.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'damage',
+        condition: 'self',
+        action: ({summon}) => summon('EX1_009') // angry chicken - should be ('BRM_006t') imp_gang token imp         
+      }
+    ]
   },
   {
     "id": "UNG_116",
@@ -5563,7 +5612,15 @@ const actions = [
   {
     "id": "EX1_007",
     "_info": "(3) 1/3 [NEUTRAL]: Acolyte of Pain",
-    "text": "Whenever this minion takes damage, draw a card."
+    "text": "Whenever this minion takes damage, draw a card.",
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: 'damage',
+        condition: 'self',
+        action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)         
+      }
+    ] 
   },
   {
     "id": "CFM_337",

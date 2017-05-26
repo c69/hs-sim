@@ -38,25 +38,38 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Chillwind Yeti',
       //'River Crocolisk',
       //'Bloodfen Raptor',
+//--spells:damage
       //'Fireball',
-      'Arcane Explosion',
+      // 'Arcane Explosion',
       //'Hellfire',
+      //'Swipe',
+
+//--basic minions with tags or battlecries
       //'Flame Imp',
-      'Ironfur Grizzly',
+      // 'Ironfur Grizzly',
       //'Leper Gnome',
-      'Abomination',
-      'Elven Archer',
+      // 'Abomination',
+      // 'Elven Archer',
       //'Silent Knight', //-- stealth
-      'Annoy-o-Tron',
-      'Shielded Minibot',
-      'Argent Horseraider',
-      'Young Dragonhawk',
-      'Thrallmar Farseer',
+      // 'Annoy-o-Tron',
+      // 'Shielded Minibot',
+      // 'Argent Horseraider',
+      // 'Young Dragonhawk',
+      // 'Thrallmar Farseer',
       
+//--summon
       //'Murloc Tidehunter',
       //'Leeroy Jenkins',
       //'Mirror Image',
-      'Swipe',
+
+//--trigger, MVP minions
+      'Knife Juggler',
+      'Acolyte of Pain',
+      'Imp Gang Boss',
+      'Starving Buzzard',
+      'Patches the Pirate',
+      //'Doomsayer',
+      //'Grim Patron',
 
     ].includes(v.name))
     ;

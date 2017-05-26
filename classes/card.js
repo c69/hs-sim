@@ -88,30 +88,30 @@ class Card {
         // copy.tags[] are DIRTY !
         copy.zone = ZONES.aside; 
     }
+    _damageApply (n, type = '') {
+      let was = this.health;
+      
+      if (this.tags.includes(TAGS.divineShield)) {
+        this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
+        console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
+      } else {
+        this.health -= n; // replace with damage buff
+      }
+      let received_damage = was - this.health;
+      received_damage > 0 && console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`); 
+
+      this.isStillAlive();
+      
+      return this; // or return received_damage; ?
+    }
     // public API
     dealDamage (n) {
-        let was = this.health; 
-        if (this.tags.includes(TAGS.divineShield)) {
-          this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
-          console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
-        } else {
-          this.health -= n; // replace with damage buff
-        }
-        console.log(`🔥 ${this.name} takes ${was - this.health} damage!`);
-        
-        this.isStillAlive();
+        this._damageApply(n);
+        //console.log(`🔥 ${this.name} takes ${was - this.health} damage!`);
     }
     dealDamageSpell (n) {
-        let was = this.health; 
-        if (this.tags.includes(TAGS.divineShield)) {
-          this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
-          console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
-        } else {
-          this.health -= n; // replace with damage buff
-        }
-        console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
-        
-        this.isStillAlive();
+        this._damageApply(n, 'spell');
+        //console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
     }
     buff (enchantment) {
         this.buffs.push(enchantment); // todo: check for duplicate buffs, etc

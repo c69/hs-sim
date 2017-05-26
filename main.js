@@ -39,10 +39,10 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'River Crocolisk',
       //'Bloodfen Raptor',
 //--spells:damage
-      //'Fireball',
-      // 'Arcane Explosion',
-      //'Hellfire',
-      //'Swipe',
+      'Fireball',
+      'Arcane Explosion',
+      'Hellfire',
+      'Swipe',
 
 //--basic minions with tags or battlecries
       //'Flame Imp',

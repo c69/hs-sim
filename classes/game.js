@@ -343,18 +343,10 @@ class Game {
     //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attack}/${target.health})`);
     
     // this looks like generic Card._damageApply(n)
-    [[attacker, target.attack], [target, attacker.attack]].forEach(([character, dmg]) => {
-      let was = character.health;
-      
-      if (character.tags.includes(TAGS.divineShield)) {
-        character.tags = character.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
-        console.log(`(!) ${character.name} loses ${TAGS.divineShield} !`);
-      } else {
-        character.health -= dmg; // replace with damage buff
-      }
-      console.log(`${character.name} takes ${was - character.health} damage!`);  
-    });
-    
+    [
+      [attacker, target.attack],
+      [target, attacker.attack]
+    ].forEach(([character, dmg]) => character._damageApply(dmg));
     
     attacker.attackedThisTurn += 1;  
         

@@ -57,10 +57,18 @@ const EVENTS = {
   turn_started: 'TURN_STARTED'
 };
 
+const ACTION_TYPES = {
+  playCard: 'PLAY_CARD',
+  attack: 'ATTACK',
+  usePower: 'USE_POWER',
+  //concede, endTurn, etc ?
+};
+
 module.exports = {
     ZONES,
     CARD_TYPES,
     TAGS,
     PLAYERCLASS,
+    ACTION_TYPES,
     EVENTS
 };

@@ -6,6 +6,8 @@ const combat = require('./combat.js');
 const Board = require('./board.js');
 const {
   TAGS,
+  CARD_TYPES,
+  ACTION_TYPES,
   EVENTS
 } = require('../data/constants.js');
 
@@ -214,7 +216,22 @@ class Game {
       }
     });
   }
-  /** @todo convert to documentation / TS definition */
+  chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
+    let opts = this.viewAvailableOptions().actions;
+    if (!opts.length) throw 'options.actions[] are empty' //return;
+    
+    let o = opts[options_idx];
+    if (!o) throw new RangeError('Invalid option index provided.');
+    //console.log(o.type);
+    if (o.type === ACTION_TYPES.attack) this.attack(options_idx, target_idx);
+    if (o.type === ACTION_TYPES.playCard) this.playCard(options_idx, position_idx, target_idx);
+    //if (o.type === ACTION_TYPES.usePower) this.usePower(options_idx, target_idx);
+
+    this._cleanup();
+
+    return this;
+  }
+  /** @deprecated @todo convert to documentation / TS definition */
   _example_viewAvailableOptions () {
     return {
       actions: [
@@ -224,26 +241,10 @@ class Game {
       ]  
     }    
   }
-  chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
-    let opts = this.viewAvailableOptions().actions;
-    if (!opts.length) throw 'options.actions are empty' //return;
-    
-    let o = opts[options_idx];
-    if (!o) throw new RangeError('Invalid option index provided.');
-    //console.log(o.type);
-    if (o.type === 'A') this.attack(options_idx, target_idx);
-    if (o.type === 'C') this.playCard(options_idx, position_idx, target_idx);
-    //if (o.type === 'UP') this.usePower(options_idx, target_idx);
-
-    this._cleanup();
-
-    return this;
-  }
   /**
-   *  A nice GOD method
+   * A nice GOD method
+   * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
    */
-
-
   viewAvailableOptions () { try {
     //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
     if (!this.isStarted || this.isOver) {
@@ -273,8 +274,8 @@ class Game {
     });
 
     //scan for taunt
-    let hasTaunt = sheeps.some(v => v.tags && v.tags.includes('TAUNT'));
-    if (hasTaunt) sheeps = sheeps.filter(v => v.tags.includes('TAUNT'));
+    let hasTaunt = sheeps.some(v => v.tags && v.tags.includes(TAGS.taunt));
+    if (hasTaunt) sheeps = sheeps.filter(v => v.tags.includes(TAGS.taunt));
     
     // scan for spell shield
     // ..
@@ -285,7 +286,7 @@ class Game {
       return {
         id: v._id,
         unit: v,
-        type: 'A', //'attack',
+        type: ACTION_TYPES.attack,
         name: v.name,
         //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-) 
         targetList: sheeps  
@@ -295,10 +296,10 @@ class Game {
     let canSummonMore = (pawns.length <= 7); // with hero
     
     let cards = this.activePlayer.hand.listPlayable().filter((v) =>{
-      if (v.type === 'MINION') {
+      if (v.type === CARD_TYPES.minion) {
         return canSummonMore;
       } 
-      if (v.type === 'SPELL' && !!v.target) {
+      if (v.type === CARD_TYPES.spell && !!v.target) {
         //console.log('v.target', v.target);
         return $(v.target).length;
       }       
@@ -306,7 +307,7 @@ class Game {
     } ).map(v=>{
       return {
         id: v.id,
-        type: 'C', //'card',
+        type: ACTION_TYPES.playCard,
         name: v.name,
         cost: v.cost,
         positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
@@ -335,7 +336,7 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       );
       //console.log(this.board.$(player, 'own minion').map(v => v.name));
       console.log('minions on board', this.board.$(player, 'own minion').map(v=>
-      `(${v.tags && v.tags.includes('TAUNT') ? '🛡️' : ''}${v.attack}/${v.health})`
+      `(${v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : ''}${v.attack}/${v.health})`
       ));
     });
     

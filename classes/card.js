@@ -5,13 +5,17 @@ const {
     ZONES,
     CARD_TYPES: TYPES,
     TAGS,
-    PLAYERCLASS
+    PLAYERCLASS,
+    EVENTS
 } = require('../data/constants.js');
 
 let card_id = 1;
 
 class Card {
-    constructor (cardDef, owner) { 
+    constructor (cardDef, owner, eventBus) {
+      if (!eventBus) throw new RangeError('EventBus required');
+      this.eventBus = eventBus;
+
       if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
       if (!owner) throw new RangeError('Owner player required');
 
@@ -39,6 +43,7 @@ class Card {
       this.death = cardDef.death; 
       // this.tags.push(cardDef.death) // this.buffs.push(cardDef.death)
       this.trigger = cardDef.trigger;
+      this._trigger_v1 = cardDef._trigger_v1;
       this.aura = cardDef.aura;
 
       this.zone = ZONES.deck;
@@ -100,7 +105,12 @@ class Card {
       let received_damage = was - this.health;
       received_damage > 0 && console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`); 
 
-      this.isStillAlive();
+      if (received_damage) {
+        this.eventBus.emit(EVENTS.character_damaged, {
+          target: this,
+          amount: received_damage  
+        });  
+      }
       
       return this; // or return received_damage; ?
     }
@@ -113,6 +123,10 @@ class Card {
         this._damageApply(n, 'spell');
         //console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
     }
+    destroy (n) {
+        this._die();
+        //console.log(`🔥 ${this.name} is being destroyed!`);
+    }
     buff (enchantment) {
         this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
     }
@@ -120,7 +134,7 @@ class Card {
         if (this.health < 1) this._die();
     }
     toString () {
-        return `[Object Card: ${this.name}#${this.card_id}]`;
+        return `[Object Card: ${this.name} #${this.card_id}]`;
     }
 }
 

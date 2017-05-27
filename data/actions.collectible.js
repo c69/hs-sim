@@ -1,6 +1,9 @@
 'use strict';
 
-const TAGS = require('./constants.js').TAGS;
+const {
+  TAGS,
+  EVENTS
+} = require('./constants.js');
 
 const actions = [
   {
@@ -1576,7 +1579,7 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'summon',
+        eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=beast',
         action: ({draw}) => draw(1) // sketch is sketch, lala lalala         
       }
@@ -2626,7 +2629,7 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'deck',
-        eventName: 'summon',
+        eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=pirate',
         action: ({summon, self}) => summon(self)         
       }
@@ -4093,8 +4096,8 @@ const actions = [
     "_info": "(1) SPELL [MAGE]: Arcane Missiles",
     "text": "Deal $3 damage randomly split among all enemies.",
     play ({$}) {
-      for(let i = 0; i < 3; i++) { // how to interact with spell damage?
-        $('enemy character').dealDamage(1); //BUG: must be 1 random.. but we attack ALL matching the query
+      for(let i = 0; i < 3; i++) { // how to interact with +spell damage buff?
+        $('enemy character').getRandom().dealDamageSpell(1);
       }
     }
   },
@@ -4165,9 +4168,12 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'summon',
+        eventName: EVENTS.minion_summoned,
         condition: 'own minion',
-        action: ({$}) => $('enemy character .health>0') //should be :alive (aka hp>0 and NOT pending destroy)         
+        action: ({$, self}) => {
+          console.log(`${self.owner.name}'s KNIFE JUGGLER: Hey, catch !`);
+          $('enemy character .health>0').getRandom().dealDamage(1) //should be :alive (aka hp>0 and NOT pending destroy)         
+        } 
       }
     ]
   },
@@ -4484,7 +4490,7 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'damage',
+        eventName: EVENTS.character_damaged,
         condition: ({target, self}) => target === self && !self.isMortallyWounded,
         action: ({summon}) => summon('BRM_019') // ~another self         
       }
@@ -4584,7 +4590,7 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'own_turn_start',
+        eventName: EVENTS.turn_started,
         condition: null,
         action: ({$}) => $('minion').destroy() // not implemented         
       }
@@ -5223,7 +5229,7 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'damage',
+        eventName: EVENTS.character_damaged,
         condition: 'self',
         action: ({summon}) => summon('EX1_009') // angry chicken - should be ('BRM_006t') imp_gang token imp         
       }
@@ -5616,8 +5622,8 @@ const actions = [
     _triggers_v1: [
       {
         activeZone: 'play',
-        eventName: 'damage',
-        condition: 'self',
+        eventName: EVENTS.character_damaged,
+        condition: ({self, target}) => target === self, // 'self'
         action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)         
       }
     ] 

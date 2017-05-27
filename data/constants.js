@@ -50,9 +50,17 @@ const TAGS = {
   stealth: 'STEALTH'
 };
 
+const EVENTS = {
+  character_damaged: 'CHARACTER_DAMAGED',
+  minion_summoned: 'MINION_SUMMONED',
+  card_played: 'CARD_PLAYED',
+  turn_started: 'TURN_STARTED'
+};
+
 module.exports = {
     ZONES,
     CARD_TYPES,
     TAGS,
-    PLAYERCLASS
+    PLAYERCLASS,
+    EVENTS
 };

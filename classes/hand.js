@@ -1,7 +1,10 @@
 'use strict';
 // @ts-check
 
-const CARD_TYPES = require('../data/constants.js').CARD_TYPES;
+const {
+  CARD_TYPES,
+  EVENTS
+} = require('../data/constants.js');
 
 
 const MAX_HAND_SIZE = 10;
@@ -35,7 +38,7 @@ class Hand {
    * @param {number} card_id ID inside of this Hand
    * @returns {Function} actual card action
    */
-  play (card_id) {
+  play (card_id, game) {
     if (!card_id) throw new RangeError('Card ID expected');
     //if (!this.owner.activeTurn) { <--------- move this to game.play or smwhere..
       //console.warn(`HH ${this.owner.name} cannot play card on other player's turn`);
@@ -60,6 +63,51 @@ class Hand {
       //console.log(c);
       //console.log(card);
       card.summon();//({position}); // position is IGNORED for now
+      game.eventBus.emit(EVENTS.minion_summoned, {
+        target: card
+      });
+  
+      if(card._trigger_v1 && card._trigger_v1.activeZone === 'play') {
+        console.log(`${card.name} trigger ...`);
+        // {
+        //   activeZone: 'deck',
+        //   eventName: 'summon',
+        //   condition: 'own minion .race=pirate',
+        //   action: ({summon, self}) => summon(self)         
+        // }
+        let event_name = card._trigger_v1.eventName;
+        let listener = function (evt) {
+          let $ = game.board.$.bind(game.board, card.owner);
+          let condition = card._trigger_v1.condition;
+          if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
+            return;
+          } else if (typeof condition === 'function' && !condition({
+            target: evt.target,
+            self: card,
+            $
+          })) {
+            return;
+          }  
+          console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
+          card._trigger_v1.action({
+            target: evt.target,
+            $,
+            self: card,
+            summon: function (ref_or_id) {
+              console.log('TRIGGER: try to summon ', ref_or_id);
+            },
+            draw: function (n) {
+              console.log(`TRIGGER: try to draw ${n}cards`);
+              card.owner.draw(1);
+            }
+          });
+        }.bind(game);
+        game.eventBus.on(event_name, listener);
+        console.log(`${card.name} is now listening to ${event_name}`);
+        card._listener = [event_name, listener];
+      } else {
+        //console.log('Hand.js NO TRIGGERS in ', Reflect.ownKeys(card));
+      }
     }
     
     return card.play || function () {};

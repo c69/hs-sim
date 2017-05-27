@@ -2,7 +2,10 @@
 // @ts-check
 
 const Board = require('./board.js');
-const TAGS = require('../data/constants.js').TAGS;
+const {
+  TAGS,
+  EVENTS
+} = require('../data/constants.js');
 
 /**
  * 
@@ -47,7 +50,9 @@ MAIN_START_TRIGGERS 17
 // g.viewAvailableOptions();
  */
 class Game {
-  constructor (players) {
+  constructor (players, eventBus) {
+    this.eventBus = eventBus;
+
     if (players.length !== 2) throw new RangeError("Game expects two players");
     this.players = players;
     try {
@@ -160,22 +165,25 @@ class Game {
   }  
   playCard (card_idx = 0, position_idx = 0, target_idx = 0) {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let c = this.options.actions[card_idx];
+    let card = this.options.actions[card_idx];
     
     //console.log('play card', c);
-    if (c.targetList) { // spell-fireball OR battlecry
-      var target = c.targetList[target_idx];  // if c.t      
+    if (card.targetList) { // spell-fireball OR battlecry
+      var target = card.targetList[target_idx];  // if c.t      
     }
-    if (c.positionList) { // minion
-      var position = c.positionList[position_idx]; // if c.p
+    if (card.positionList) { // minion
+      var position = card.positionList[position_idx]; // if c.p
     } 
     //console.log('play card', c.name, target, position);
-    this.activePlayer.hand.play(c.id)({
+    this.activePlayer.hand.play(card.id, this) ({
       target,
       position,
-      $: this.board.$.bind(this.board, this.activePlayer)
+      $: this.board.$.bind(this.board, this.activePlayer),
+      game: this
     });
     
+    this.eventBus.emit(EVENTS.card_played, card);
+
     //this._onBeforeMinionSummoned(c); //  no no no ...
     //this._summon(c.minion, p); // if minion ? or equip if weapon ?
     //c.play.call(this, c, t); // %-)
@@ -212,22 +220,27 @@ class Game {
     return this;
   }
   _nextTick () {
-    let $ = this.board.$.bind(this.board, this.activePlayer);
     //death logic onwards
-    let dethrattle_list = [];
-    $('character').forEach(character => {
+    let deathrattle_list = [];
+    this.board.$(this.activePlayer, 'character').forEach(character => {
       character.isStillAlive();
-      if(character.health <= 0) dethrattle_list.push(character);
+      if(character.health <= 0) deathrattle_list.push(character);
     });
-    //console.log(dethrattle_list);
-    dethrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
+    
+    //console.log('death list', deathrattle_list); // was always empty :(( because minions _die() before the sweep
+    deathrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       character.death && character.death({
         self: character,
-        $,
+        $: this.board.$.bind(this.board, character.owner),
         game: this
       });   
+      if (character._listener) { // remove triggers - super dirty solution...
+        console.log(`removed triggers for ${character.card_id}`);
+        this.eventBus.removeListener(character._listener[0], character._listener[1]);
+        delete character._listener; 
+      }
     });
   }
   /**

@@ -35,7 +35,7 @@ class Board {
    */
   $ (player, selector_string) {try{
     //console.log(`---SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
-    if (typeof selector_string !== 'string') throw new TypeError('String expected, instead got: ' + selector_string);
+    if (typeof selector_string !== 'string') throw new TypeError(`String expected, instead got: ${selector_string}. Full list of arguments: this: ${this}, ${player}, ${selector_string}`);
       
     let [ownPlayer, enemyPlayer] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 
@@ -169,11 +169,18 @@ class ArrayOfCards extends Array {
     constructor () {
       super();
     }
+    getRandom () { // i'd like signature to be getRandom(n) where n is number of distinct random members
+      let random_idx = Math.floor(Math.random() * this.length);
+      return this[random_idx];
+    }
     dealDamage (n) {
         this.forEach(v => v.dealDamage(n));
     }
     dealDamageSpell (n) {
         this.forEach(v => v.dealDamageSpell(n));
+    }
+    destroy (n) {
+        this.forEach(v => v.destroy(n));
     }
 }
 

@@ -603,7 +603,11 @@ const actions = [
   {
     "id": "CS2_092",
     "_info": "(4) SPELL [PALADIN]: Blessing of Kings",
-    "text": "Give a minion +4/+4. <i>(+4 Attack/+4 Health)</i>"
+    "text": "Give a minion +4/+4. <i>(+4 Attack/+4 Health)</i>",
+    target: 'minion',
+    play ({target}) {
+      target.give([{attack: 4}, {health: 4}]);
+    }
   },
   {
     "id": "UNG_835",
@@ -2141,7 +2145,11 @@ const actions = [
   {
     "id": "DS1_070",
     "_info": "(4) 4/3 [HUNTER]: Houndmaster",
-    "text": "<b>Battlecry:</b> Give a friendly Beast +2/+2 and <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Give a friendly Beast +2/+2 and <b>Taunt</b>.",
+    target: 'own minion .race=beast',
+    play ({target}) {
+      target.give([{attack: 2}, {health: 2}, TAGS.taunt]);
+    }
   },
   {
     "id": "OG_122",
@@ -3145,7 +3153,7 @@ const actions = [
     "id": "CS2_203",
     "_info": "(3) 2/1 [NEUTRAL]: Ironbeak Owl |BEAST",
     "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
-    target: 'minion',
+    target: 'minion #taunt',
     play ({target}) {
       target.silence();   
     }
@@ -3903,7 +3911,11 @@ const actions = [
   {
     "id": "CS2_188",
     "_info": "(1) 1/1 [NEUTRAL]: Abusive Sergeant",
-    "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn."
+    "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn.",
+    target: 'minion',
+    play ({target}) {
+      target.giveThisTurn([{attack: 1}]);
+    }
   },
   {
     "id": "UNG_049",
@@ -4245,7 +4257,11 @@ const actions = [
   {
     "id": "EX1_019",
     "_info": "(3) 3/2 [NEUTRAL]: Shattered Sun Cleric",
-    "text": "<b>Battlecry:</b> Give a friendly minion +1/+1."
+    "text": "<b>Battlecry:</b> Give a friendly minion +1/+1.",
+    target: 'own minion',
+    play () {
+      target.give([{attack: 1}, {health: 1}]);
+    }
   },
   {
     "id": "CS2_200",

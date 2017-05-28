@@ -168,13 +168,16 @@ class Game {
       var position = card.positionList[position_idx]; // if c.p
     } 
     //console.log('play card', c.name, target, position);
-    this.activePlayer.hand.play(card.id, this) ({
-      target,
-      position,
-      $: this.board.$.bind(this.board, this.activePlayer),
-      game: this
-    });
-    
+    let battlecry = this.activePlayer.hand.play(card.id, this);
+    if ((target && card.targetList) || !target && !card.targetList) {
+      //only execute battlecry/spell_text if there is a valid target, or it does not require a target
+      battlecry({
+        target,
+        position,
+        $: this.board.$.bind(this.board, this.activePlayer),
+        game: this
+      });
+    }
     this.eventBus.emit(EVENTS.card_played, card);
 
     //this._onBeforeMinionSummoned(c); //  no no no ...
@@ -204,11 +207,15 @@ class Game {
     deathrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
-      character.death && character.death({
-        self: character,
-        $: this.board.$.bind(this.board, character.owner),
-        game: this
-      });   
+      //console.log(character.tags);
+      character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
+        //console.log('DIE, INSECT!', character.name, tag, i);
+        tag.death({
+          self: character,
+          $: this.board.$.bind(this.board, character.owner),
+          game: this
+        });
+      }, this);   
       if (character._listener) { // remove triggers - super dirty solution...
         console.log(`removed triggers for ${character.card_id}`);
         this.eventBus.removeListener(character._listener[0], character._listener[1]);
@@ -336,7 +343,10 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       );
       //console.log(this.board.$(player, 'own minion').map(v => v.name));
       console.log('minions on board', this.board.$(player, 'own minion').map(v=>
-      `(${v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : ''}${v.attack}/${v.health})`
+      (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
+      (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
+      (v.tags.find(v => v.death) ? '☠️' : '') +
+      `${v.attack}/${v.health}`
       ));
     });
     

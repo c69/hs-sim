@@ -47,7 +47,8 @@ const TAGS = {
   divineShield: 'DIVINE_SHIELD',
   charge: 'CHARGE',
   windfury: 'WINDFURY',
-  stealth: 'STEALTH'
+  stealth: 'STEALTH',
+  silence: 'SILENCE'
 };
 
 const EVENTS = {

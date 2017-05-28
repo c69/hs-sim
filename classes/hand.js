@@ -67,18 +67,22 @@ class Hand {
         target: card
       });
   
-      if(card._trigger_v1 && card._trigger_v1.activeZone === 'play') {
-        console.log(`${card.name} trigger ...`);
+      let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
+      _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
+      //if (card.name === 'Knife Juggler') console.log(card.buffs, _trigger_v1);
+
+      if(_trigger_v1 && _trigger_v1.activeZone === 'play') {
+        console.log(`hand.js: ${card.name} trigger ...`);
         // {
         //   activeZone: 'deck',
         //   eventName: 'summon',
         //   condition: 'own minion .race=pirate',
         //   action: ({summon, self}) => summon(self)         
         // }
-        let event_name = card._trigger_v1.eventName;
+        let event_name = _trigger_v1.eventName;
         let listener = function (evt) {
           let $ = game.board.$.bind(game.board, card.owner);
-          let condition = card._trigger_v1.condition;
+          let condition = _trigger_v1.condition;
           if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
             return;
           } else if (typeof condition === 'function' && !condition({
@@ -89,7 +93,7 @@ class Hand {
             return;
           }  
           console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
-          card._trigger_v1.action({
+          _trigger_v1.action({
             target: evt.target,
             $,
             self: card,

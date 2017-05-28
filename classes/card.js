@@ -33,23 +33,38 @@ class Card {
       this.cost = cardDef.cost;
       this.overload = cardDef.overload;
 
-      this.tags = cardDef.tags || [];
-
       this.play = cardDef.play;
       this.target = cardDef.target;
       //this.chooseOne = ???
       //this.joust = ???
+
+      this.buffs = (cardDef.tags || []).slice(0);
+      //this.tags is getter
       
-      this.death = cardDef.death; 
-      // this.tags.push(cardDef.death) // this.buffs.push(cardDef.death)
-      this.trigger = cardDef.trigger;
-      this._trigger_v1 = cardDef._trigger_v1;
+      if (cardDef.death) {
+        this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
+          death: cardDef.death  
+        });
+      } 
+      if (cardDef._trigger_v1) {
+        this.buffs.push({ //potentially shuld be .concat, as potentially card can have multiple triggers
+          trigger: cardDef._trigger_v1  
+        });
+      }
       this.aura = cardDef.aura;
 
       this.zone = ZONES.deck;
       this.owner = owner;
 
       this.card_id = card_id++;  
+    }
+    get tags () {
+      let real_store = this.buffs;  
+      //console.log(`card.tags: #${this.card_id}`);
+      if (real_store.find(v => v === TAGS.silence)) return [TAGS.silence];
+      
+      //console.log(`card.tags returned: ${this.buffs}`);
+      return this.buffs;  
     }
     _draw () {
         if (this.zone !== ZONES.deck) throw 'Attempt to draw NOT from deck';
@@ -97,7 +112,7 @@ class Card {
       let was = this.health;
       
       if (this.tags.includes(TAGS.divineShield)) {
-        this.tags = this.tags.filter(v => v !== TAGS.divineShield); // = "removeTag"
+        this.buffs = this.buffs.filter(v => v !== TAGS.divineShield); // = "removeTag"
         console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
       } else {
         this.health -= n; // replace with damage buff
@@ -127,8 +142,23 @@ class Card {
         this._die();
         //console.log(`🔥 ${this.name} is being destroyed!`);
     }
-    buff (enchantment) {
+    x_buff (enchantment) {
         this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
+    }
+    x_give (args, descr) {
+      if (!Array.isArray(args)) throw new RangeError('Array expected');
+      var card = this;
+      card.buffs.concat(args);
+    }
+    silence () {
+      console.log(`${this.name} got SILENCED!`);  
+      this.buffs.push(TAGS.silence);
+
+      // super dirty solution for silencing triggers (copy paste from game.js deathsweep) 
+      if (this._listener) {
+        this.eventBus.removeListener(this._listener[0], this._listener[1]);
+        delete this._listener;
+      }  
     }
     isStillAlive() { // replace with death sweep in game
         if (this.health < 1) this._die();
@@ -146,6 +176,7 @@ class Minion extends Card {
       
       this.attack = cardDef.attack || 0;
       this.health = cardDef.health || 0;
+      this.healthMax = this.health; // in the beginning, all characters are at full health
       this.race = cardDef.race; // or undefined   
    
       this.isReady = false; //applies only to minion - initial ZZZ / sleep
@@ -169,7 +200,7 @@ class Weapon extends Card {
           `Card definition has type: ${this.type}, expected: ${TYPES.weapon}`);
       
       this.attack = cardDef.attack || 0;
-      this.health = cardDef.durability || 0;   
+      this.durability = cardDef.durability || 0;   
     }
 }
 class Hero extends Card {
@@ -180,6 +211,8 @@ class Hero extends Card {
       
       this.attack = cardDef.attack || 0;
       this.health = cardDef.health || 0;
+      this.healthMax = this.health; // in the beginning, all characters are at full health
+
       this.armor = cardDef.armor || 0;
       //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
     }

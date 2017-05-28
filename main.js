@@ -53,16 +53,18 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Swipe',
 
 //--basic minions with tags or battlecries
-      'Flame Imp',
-      'Ironfur Grizzly',
+      //'Flame Imp',
+      //'Ironfur Grizzly',
+      'Ironbeak Owl',
       //'Leper Gnome',
-      // 'Abomination',
+      'Unstable Ghoul',
+      //'Abomination',
       // 'Elven Archer',
       //'Silent Knight', //-- stealth
-      'Annoy-o-Tron',
-      'Shielded Minibot',
+      //'Annoy-o-Tron',
+      //'Shielded Minibot',
       // 'Argent Horseraider',
-      'Young Dragonhawk',
+      //'Young Dragonhawk',
       // 'Thrallmar Farseer',
       
 //--summon

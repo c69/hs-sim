@@ -73,7 +73,7 @@ class Card {
             throw `Played card of unplayable type:${this.type}`;
         }
         
-        this.play({self, $, game, target, position}); // battlecry !
+        //this.play({self, $, game, target, position}); // battlecry !
 
     }
     summon () {  
@@ -123,7 +123,7 @@ class Card {
         this._damageApply(n, 'spell');
         //console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
     }
-    destroy (n) {
+    destroy () {
         this._die();
         //console.log(`🔥 ${this.name} is being destroyed!`);
     }

@@ -1,5 +1,6 @@
 'use strict';
-// @ts-check
+/* eslint-disable */
+
 /*
 http://hearthstone.gamepedia.com/Mana_cost
 */

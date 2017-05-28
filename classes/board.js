@@ -37,7 +37,10 @@ class Board {
     //console.log(`---SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
     if (typeof selector_string !== 'string') throw new TypeError(`String expected, instead got: ${selector_string}. Full list of arguments: this: ${this}, ${player}, ${selector_string}`);
       
-    let [ownPlayer, enemyPlayer] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
+    let [
+      ownPlayer,
+      enemyPlayer
+    ] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 
     let tokens = selector_string.split(/\s+/);
     let filters = [];
@@ -45,7 +48,7 @@ class Board {
     //card owner: choose one - XOR 
     if (!tokens.includes('any')) {
       if (tokens.includes('enemy')) {
-        filters.push(v => v.owner !== ownPlayer);  
+        filters.push(v => v.owner === enemyPlayer);  
       } else if (tokens.includes('own')) {
         filters.push(v => v.owner === ownPlayer);
       }

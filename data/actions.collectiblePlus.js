@@ -674,7 +674,8 @@ const actions = [
   {
     "id": "AT_087",
     "_info": "(3) 2/1 [NEUTRAL]: Argent Horserider",
-    "text": "<b>Charge</b>\n<b>Divine Shield</b>"
+    "text": "<b>Charge</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.charge, TAGS.divineShield]
   },
   {
     "id": "AT_088",
@@ -723,7 +724,8 @@ const actions = [
   {
     "id": "AT_095",
     "_info": "(3) 2/2 [NEUTRAL]: Silent Knight",
-    "text": "<b>Stealth</b>\n<b>Divine Shield</b>"
+    "text": "<b>Stealth</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.stealth, TAGS.divineShield]
   },
   {
     "id": "AT_096",
@@ -770,7 +772,11 @@ const actions = [
   {
     "id": "AT_103",
     "_info": "(9) 9/7 [NEUTRAL]: North Sea Kraken",
-    "text": "<b>Battlecry:</b> Deal 4 damage."
+    "text": "<b>Battlecry:</b> Deal 4 damage.",
+    target: 'character',
+    play ({$}) {
+      target.dealDamage(4);
+    }
   },
   {
     "id": "AT_104",
@@ -1076,7 +1082,16 @@ const actions = [
   {
     "id": "BRM_006",
     "_info": "(3) 2/4 [WARLOCK]: Imp Gang Boss |DEMON",
-    "text": "Whenever this minion takes damage, summon a 1/1 Imp."
+    "text": "Whenever this minion takes damage, summon a 1/1 Imp.",
+    xxx: 'summon ..',
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.character_damaged,
+        condition: 'self',
+        action: ({summon}) => summon('BRM_0006t')         
+      }
+    ]
   },
   {
     "id": "BRM_006t",
@@ -1183,7 +1198,16 @@ const actions = [
   {
     "id": "BRM_019",
     "_info": "(5) 3/3 [NEUTRAL]: Grim Patron",
-    "text": "Whenever this minion survives damage, summon another Grim Patron."
+    "text": "Whenever this minion survives damage, summon another Grim Patron.",
+    xxx: 'just a SKECH',
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.character_damaged,
+        condition: ({target, self}) => target === self && !self.isMortallyWounded,
+        action: ({summon}) => summon('BRM_019') // ~another self         
+      }
+    ]
   },
   {
     "id": "BRM_020",
@@ -1932,7 +1956,17 @@ const actions = [
   {
     "id": "CFM_637",
     "_info": "(1) 1/1 [NEUTRAL]: Patches the Pirate |PIRATE",
-    "text": "[x]<b>Charge</b>\nAfter you play a Pirate,\nsummon this minion\nfrom your deck."
+    "text": "[x]<b>Charge</b>\nAfter you play a Pirate,\nsummon this minion\nfrom your deck.",
+    xxx: 1,
+    tags: [TAGS.charge],
+    _triggers_v1: [
+      {
+        activeZone: 'deck',
+        eventName: EVENTS.minion_summoned,
+        condition: 'own minion .race=pirate',
+        action: ({summon, self}) => summon(self)         
+      }
+    ]
   },
   {
     "id": "CFM_639",
@@ -1962,12 +1996,19 @@ const actions = [
   {
     "id": "CFM_646",
     "_info": "(3) 3/1 [NEUTRAL]: Backstreet Leper",
-    "text": "[x]<b>Deathrattle:</b> Deal 2 damage\nto the enemy hero."
+    "text": "[x]<b>Deathrattle:</b> Deal 2 damage\nto the enemy hero.",
+    death ({$}) {
+      $('enemy hero').dealDamage(2);
+    }
   },
   {
     "id": "CFM_647",
     "_info": "(2) 2/1 [NEUTRAL]: Blowgill Sniper |MURLOC",
-    "text": "<b>Battlecry:</b> Deal 1 damage."
+    "text": "<b>Battlecry:</b> Deal 1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(1);
+    }
   },
   {
     "id": "CFM_648",
@@ -2409,7 +2450,8 @@ const actions = [
   {
     "id": "CS1_069",
     "_info": "(5) 3/6 [NEUTRAL]: Fen Creeper",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS1_112",
@@ -2469,7 +2511,11 @@ const actions = [
   {
     "id": "CS2_008",
     "_info": "(0) SPELL [DRUID]: Moonfire",
-    "text": "Deal $1 damage."
+    "text": "Deal $1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(1);
+    }
   },
   {
     "id": "CS2_009",
@@ -2494,7 +2540,14 @@ const actions = [
   {
     "id": "CS2_012",
     "_info": "(4) SPELL [DRUID]: Swipe",
-    "text": "Deal $4 damage to an enemy and $1 damage to all other enemies."
+    "text": "Deal $4 damage to an enemy and $1 damage to all other enemies.",
+    xxx: 'real swipe works in ONE frame, my is TWO frames',
+    target: 'enemy character',
+    play ({target, $}) {
+      //console.log(`swipe ${target} ${$}`);
+      target.dealDamageSpell(4); // =_= - i want "exclude" selector
+      $('enemy character').filter(v => v !== target).dealDamageSpell(1);
+    }
   },
   {
     "id": "CS2_013",
@@ -2529,7 +2582,10 @@ const actions = [
   {
     "id": "CS2_025",
     "_info": "(2) SPELL [MAGE]: Arcane Explosion",
-    "text": "Deal $1 damage to all enemy minions."
+    "text": "Deal $1 damage to all enemy minions.",
+    play ({$}) {
+      $('enemy minion').dealDamageSpell(1);
+    }
   },
   {
     "id": "CS2_026",
@@ -2539,7 +2595,15 @@ const actions = [
   {
     "id": "CS2_027",
     "_info": "(1) SPELL [MAGE]: Mirror Image",
-    "text": "Summon two 0/2 minions with <b>Taunt</b>."
+    "text": "Summon two 0/2 minions with <b>Taunt</b>.",
+    xxx: 1,
+    play ({summon}) {
+      //todo: CS_mirror token was not generated :( 
+      // because id is not substring ...
+      console.log('MirrorImage: summon two NON-COLLECTIBLE 0/2 minions (from cards.all.json');
+      summon('CS2_mirror');
+      summon('CS2_mirror');
+    }
   },
   {
     "id": "CS2_028",
@@ -2549,7 +2613,11 @@ const actions = [
   {
     "id": "CS2_029",
     "_info": "(4) SPELL [MAGE]: Fireball",
-    "text": "Deal $6 damage."
+    "text": "Deal $6 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(6);
+    }
   },
   {
     "id": "CS2_031",
@@ -2559,7 +2627,10 @@ const actions = [
   {
     "id": "CS2_032",
     "_info": "(7) SPELL [MAGE]: Flamestrike",
-    "text": "Deal $4 damage to all enemy minions."
+    "text": "Deal $4 damage to all enemy minions.",
+    play ({$}) {
+      $('enemy minion').dealDamageSpell(4);
+    }
   },
   {
     "id": "CS2_033",
@@ -2654,7 +2725,10 @@ const actions = [
   {
     "id": "CS2_062",
     "_info": "(4) SPELL [WARLOCK]: Hellfire",
-    "text": "Deal $3 damage to ALL characters."
+    "text": "Deal $3 damage to ALL characters.",
+    play ({$}) {
+      $('character').dealDamageSpell(3);
+    }
   },
   {
     "id": "CS2_063",
@@ -2867,12 +2941,14 @@ const actions = [
   {
     "id": "CS2_124",
     "_info": "(3) 3/1 [NEUTRAL]: Wolfrider",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_125",
     "_info": "(3) 3/3 [NEUTRAL]: Ironfur Grizzly |BEAST",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_127",
@@ -2882,7 +2958,8 @@ const actions = [
   {
     "id": "CS2_131",
     "_info": "(4) 2/5 [NEUTRAL]: Stormwind Knight",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_141",
@@ -2936,12 +3013,14 @@ const actions = [
   {
     "id": "CS2_169",
     "_info": "(1) 1/1 [NEUTRAL]: Young Dragonhawk |BEAST",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "CS2_171",
     "_info": "(1) 1/1 [NEUTRAL]: Stonetusk Boar |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_172",
@@ -2950,7 +3029,8 @@ const actions = [
   {
     "id": "CS2_173",
     "_info": "(2) 2/1 [NEUTRAL]: Bluegill Warrior |MURLOC",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_179",
@@ -2983,17 +3063,26 @@ const actions = [
   {
     "id": "CS2_188",
     "_info": "(1) 1/1 [NEUTRAL]: Abusive Sergeant",
-    "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn."
+    "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn.",
+    target: 'minion',
+    play ({target}) {
+      target.give('CS2_188o');
+    }
   },
   {
     "id": "CS2_188o",
     "_info": "ENCHANTMENT [*NEUTRAL]: 'Inspired'",
-    "text": "This minion has +2 Attack this turn."
+    "text": "This minion has +2 Attack this turn.",
+    xxx: 1
   },
   {
     "id": "CS2_189",
     "_info": "(1) 1/1 [NEUTRAL]: Elven Archer",
-    "text": "<b>Battlecry:</b> Deal 1 damage."
+    "text": "<b>Battlecry:</b> Deal 1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(1);
+    }
   },
   {
     "id": "CS2_196",
@@ -3016,12 +3105,17 @@ const actions = [
   {
     "id": "CS2_203",
     "_info": "(3) 2/1 [NEUTRAL]: Ironbeak Owl |BEAST",
-    "text": "<b>Battlecry:</b> <b>Silence</b> a minion."
+    "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.silence();   
+    }
   },
   {
     "id": "CS2_213",
     "_info": "(6) 5/2 [NEUTRAL]: Reckless Rocketeer",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "CS2_221",
@@ -3095,7 +3189,16 @@ const actions = [
   {
     "id": "CS2_237",
     "_info": "(5) 3/2 [HUNTER]: Starving Buzzard |BEAST",
-    "text": "Whenever you summon a Beast, draw a card."
+    "text": "Whenever you summon a Beast, draw a card.",
+    xxx: 1,
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.minion_summoned,
+        condition: 'own minion .race=beast',
+        action: ({draw}) => draw(1) // sketch is sketch, lala lalala         
+      }
+    ]
   },
   {
     "id": "DS1_055",
@@ -3105,12 +3208,18 @@ const actions = [
   {
     "id": "DS1_070",
     "_info": "(4) 4/3 [HUNTER]: Houndmaster",
-    "text": "<b>Battlecry:</b> Give a friendly Beast +2/+2 and <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Give a friendly Beast +2/+2 and <b>Taunt</b>.",
+    xxx: 1,
+    target: 'own minion .race=beast',
+    play ({target}) {
+      target.give('DS1_070o');
+    }
   },
   {
     "id": "DS1_070o",
     "_info": "ENCHANTMENT [*HUNTER]: Master's Presence",
-    "text": "+2/+2 and <b>Taunt</b>."
+    "text": "+2/+2 and <b>Taunt</b>.",
+    xxx: 1
   },
   {
     "id": "DS1_175",
@@ -3199,7 +3308,16 @@ const actions = [
   {
     "id": "EX1_007",
     "_info": "(3) 1/3 [NEUTRAL]: Acolyte of Pain",
-    "text": "Whenever this minion takes damage, draw a card."
+    "text": "Whenever this minion takes damage, draw a card.",
+    xxx: 0,
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.character_damaged,
+        condition: ({self, target}) => target === self, // 'self'
+        action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)         
+      }
+    ] 
   },
   {
     "id": "EX1_008",
@@ -3264,12 +3382,17 @@ const actions = [
   {
     "id": "EX1_019",
     "_info": "(3) 3/2 [NEUTRAL]: Shattered Sun Cleric",
-    "text": "<b>Battlecry:</b> Give a friendly minion +1/+1."
+    "text": "<b>Battlecry:</b> Give a friendly minion +1/+1.",
+    target: 'own minion',
+    play ({target}) {
+      target.give('EX1_019e');
+    }
   },
   {
     "id": "EX1_019e",
     "_info": "ENCHANTMENT [*PRIEST]: Cleric's Blessing",
-    "text": "+1/+1."
+    "text": "+1/+1.",
+    xxx: 1
   },
   {
     "id": "EX1_020",
@@ -3279,7 +3402,8 @@ const actions = [
   {
     "id": "EX1_021",
     "_info": "(3) 2/3 [NEUTRAL]: Thrallmar Farseer",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "EX1_023",
@@ -3303,17 +3427,22 @@ const actions = [
   {
     "id": "EX1_029",
     "_info": "(1) 1/1 [NEUTRAL]: Leper Gnome",
-    "text": "<b>Deathrattle:</b> Deal 2 damage to the enemy hero."
+    "text": "<b>Deathrattle:</b> Deal 2 damage to the enemy hero.",
+    death ({$}) {
+      $('enemy hero').dealDamage(2);
+    }
   },
   {
     "id": "EX1_032",
     "_info": "(6) 4/5 [NEUTRAL]: Sunwalker",
-    "text": "<b>Taunt</b>\n<b>Divine Shield</b>"
+    "text": "<b>Taunt</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.taunt, TAGS.divineShield]
   },
   {
     "id": "EX1_033",
     "_info": "(6) 4/5 [NEUTRAL]: Windfury Harpy",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "EX1_043",
@@ -3353,7 +3482,11 @@ const actions = [
   {
     "id": "EX1_048",
     "_info": "(4) 4/3 [NEUTRAL]: Spellbreaker",
-    "text": "<b>Battlecry:</b> <b>Silence</b> a minion."
+    "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.silence();
+    }
   },
   {
     "id": "EX1_049",
@@ -3408,7 +3541,8 @@ const actions = [
   {
     "id": "EX1_067",
     "_info": "(6) 4/2 [NEUTRAL]: Argent Commander",
-    "text": "<b>Charge</b>\n<b>Divine Shield</b>"
+    "text": "<b>Charge</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.charge, TAGS.divineShield]
   },
   {
     "id": "EX1_076",
@@ -3428,7 +3562,12 @@ const actions = [
   {
     "id": "EX1_082",
     "_info": "(2) 3/2 [NEUTRAL]: Mad Bomber",
-    "text": "<b>Battlecry:</b> Deal 3 damage randomly split between all other characters."
+    "text": "<b>Battlecry:</b> Deal 3 damage randomly split between all other characters.",
+    xxx: 1,
+    play ({$}) {
+      //3x
+      $('character').random().dealDamage(1); //OTHER
+    }
   },
   {
     "id": "EX1_083",
@@ -3483,7 +3622,11 @@ const actions = [
   {
     "id": "EX1_097",
     "_info": "(5) 4/4 [NEUTRAL]: Abomination",
-    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 2\ndamage to ALL characters."
+    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 2\ndamage to ALL characters.",
+    tags: [TAGS.taunt],
+    death ({$}) {
+      $('character').dealDamage(2);
+    }
   },
   {
     "id": "EX1_100",
@@ -3527,7 +3670,14 @@ const actions = [
   {
     "id": "EX1_116",
     "_info": "(5) 6/2 [NEUTRAL]: Leeroy Jenkins",
-    "text": "<b>Charge</b>. <b>Battlecry:</b> Summon two 1/1 Whelps for your opponent."
+    "text": "<b>Charge</b>. <b>Battlecry:</b> Summon two 1/1 Whelps for your opponent.",
+    xxx: 1,
+    tags: [TAGS.charge],
+    play ({summonEnemy}) {
+      console.log('leeeeeeeroy!!!!!!!');
+      summonEnemy('LOEA10_3'); //murloc tinyfin
+      summonEnemy('LOEA10_3'); //murloc tinyfin
+    }
   },
   {
     "id": "EX1_116t",
@@ -3902,7 +4052,14 @@ const actions = [
   {
     "id": "EX1_277",
     "_info": "(1) SPELL [MAGE]: Arcane Missiles",
-    "text": "Deal $3 damage randomly split among all enemies."
+    "text": "Deal $3 damage randomly split among all enemies.",
+    xxx: 1,
+    play ({$}) {
+      for(let i = 0; i < 3; i++) {
+        //must be :alive i.e not-mortally-wounded
+        $('enemy character .health>0').getRandom().dealDamageSpell(1);
+      }
+    }
   },
   {
     "id": "EX1_278",
@@ -4037,7 +4194,10 @@ const actions = [
   {
     "id": "EX1_319",
     "_info": "(1) 3/2 [WARLOCK]: Flame Imp |DEMON",
-    "text": "<b>Battlecry:</b> Deal 3 damage to your hero."
+    "text": "<b>Battlecry:</b> Deal 3 damage to your hero.",
+    play ({$}) {
+      $('own hero').dealDamage(3);
+    }
   },
   {
     "id": "EX1_320",
@@ -4342,7 +4502,11 @@ const actions = [
   {
     "id": "EX1_506",
     "_info": "(2) 2/1 [NEUTRAL]: Murloc Tidehunter |MURLOC",
-    "text": "<b>Battlecry:</b> Summon a 1/1 Murloc Scout."
+    "text": "<b>Battlecry:</b> Summon a 1/1 Murloc Scout.",
+    xxx: 'summon does not work )',
+    play ({summon}) {
+      summon('EX1_506a');
+    }
   },
   {
     "id": "EX1_506a",
@@ -4440,7 +4604,8 @@ const actions = [
   {
     "id": "EX1_543",
     "_info": "(9) 8/8 [HUNTER]: King Krush |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "EX1_544",
@@ -4979,7 +5144,11 @@ const actions = [
   {
     "id": "FP1_024",
     "_info": "(2) 1/3 [NEUTRAL]: Unstable Ghoul",
-    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions."
+    "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+    tags: [TAGS.taunt],
+    death ({$}) {
+      $('minion').dealDamage(1);
+    }
   },
   {
     "id": "FP1_025",
@@ -5457,7 +5626,8 @@ const actions = [
   {
     "id": "GVG_058",
     "_info": "(2) 2/2 [PALADIN]: Shielded Minibot |MECHANICAL",
-    "text": "<b>Divine Shield</b>"
+    "text": "<b>Divine Shield</b>",
+    tags: [TAGS.divineShield]
   },
   {
     "id": "GVG_059",
@@ -5531,12 +5701,17 @@ const actions = [
   {
     "id": "GVG_069",
     "_info": "(5) 3/3 [NEUTRAL]: Antique Healbot |MECHANICAL",
-    "text": "<b>Battlecry:</b> Restore 8 Health to your hero."
+    "text": "<b>Battlecry:</b> Restore 8 Health to your hero.",
+    xxx: 'wtf BUFF ? o_O',
+    play ({$}) {
+      $('own hero').heal(8);
+    }
   },
   {
     "id": "GVG_069a",
     "_info": "ENCHANTMENT [*PRIEST]: Repairs!",
-    "text": "+4 Health."
+    "text": "+4 Health.",
+    xxx: 'this does not seem to be in the game ?'
   },
   {
     "id": "GVG_070",
@@ -5618,12 +5793,14 @@ const actions = [
   {
     "id": "GVG_084",
     "_info": "(3) 1/4 [NEUTRAL]: Flying Machine |MECHANICAL",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    tags: [TAGS.windfury]
   },
   {
     "id": "GVG_085",
     "_info": "(2) 1/2 [NEUTRAL]: Annoy-o-Tron |MECHANICAL",
-    "text": "<b>Taunt</b>\n<b>Divine Shield</b>"
+    "text": "<b>Taunt</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.taunt, TAGS.divineShield]
   },
   {
     "id": "GVG_086",
@@ -5697,7 +5874,8 @@ const actions = [
   {
     "id": "GVG_098",
     "_info": "(3) 1/4 [NEUTRAL]: Gnomeregan Infantry",
-    "text": "<b>Charge</b>\n<b>Taunt</b>"
+    "text": "<b>Charge</b>\n<b>Taunt</b>",
+    tags: [TAGS.charge, TAGS.taunt]
   },
   {
     "id": "GVG_099",
@@ -6666,7 +6844,19 @@ const actions = [
   {
     "id": "NEW1_019",
     "_info": "(2) 2/2 [NEUTRAL]: Knife Juggler",
-    "text": "[x]After you summon a\nminion, deal 1 damage\nto a random enemy."
+    "text": "[x]After you summon a\nminion, deal 1 damage\nto a random enemy.",
+    xxx: 0,
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.minion_summoned,
+        condition: 'own minion',
+        action: ({$, self}) => {
+          console.log(`${self.owner.name}'s KNIFE JUGGLER: Hey, catch !`);
+          $('enemy character .health>0').getRandom().dealDamage(1) //should be :alive (aka hp>0 and NOT pending destroy)         
+        } 
+      }
+    ]
   },
   {
     "id": "NEW1_020",
@@ -6676,7 +6866,16 @@ const actions = [
   {
     "id": "NEW1_021",
     "_info": "(2) 0/7 [NEUTRAL]: Doomsayer",
-    "text": "At the start of your turn, destroy ALL minions."
+    "text": "At the start of your turn, destroy ALL minions.",
+    xxx: 'untested',
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.turn_started,
+        condition: null,
+        action: ({$}) => $('minion').destroy() // not implemented         
+      }
+    ] 
   },
   {
     "id": "NEW1_022",
@@ -7257,7 +7456,10 @@ const actions = [
   {
     "id": "OG_161",
     "_info": "(6) 2/3 [NEUTRAL]: Corrupted Seer |MURLOC",
-    "text": "<b>Battlecry:</b> Deal 2 damage to all non-Murloc minions."
+    "text": "<b>Battlecry:</b> Deal 2 damage to all non-Murloc minions.",
+    play ({$}) {
+      $('minion .race!=murloc').dealDamage(2);
+    }
   },
   {
     "id": "OG_162",
@@ -8370,7 +8572,14 @@ const actions = [
   {
     "id": "UNG_803",
     "_info": "(1) 2/1 [NEUTRAL]: Emerald Reaver |BEAST",
-    "text": "<b>Battlecry:</b> Deal 1 damage to each hero."
+    "text": "<b>Battlecry:</b> Deal 1 damage to each hero.",
+    xxx: 'should it be one frame or two ?',
+    play ({$}) {
+      $('hero').dealDamage(1);
+      //-- vs 
+      //$('own hero').dealDamage(1);
+      //$('enemy hero').dealDamage(1);
+    }
   },
   {
     "id": "UNG_806",

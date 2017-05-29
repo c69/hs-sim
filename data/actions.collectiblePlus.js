@@ -9,7 +9,11 @@ const actions = [
   {
     "id": "AT_001",
     "_info": "(5) SPELL [MAGE]: Flame Lance",
-    "text": "Deal $8 damage to a minion."
+    "text": "Deal $8 damage to a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.dealDamageSpell(8);
+    }
   },
   {
     "id": "AT_002",
@@ -34,7 +38,8 @@ const actions = [
   {
     "id": "AT_005t",
     "_info": "(3) 4/2 [*NEUTRAL]: Boar |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "AT_006",
@@ -134,7 +139,11 @@ const actions = [
   {
     "id": "AT_019",
     "_info": "(4) 1/1 [WARLOCK]: Dreadsteed |DEMON",
-    "text": "<b>Deathrattle:</b> Summon a Dreadsteed."
+    "text": "<b>Deathrattle:</b> Summon a Dreadsteed.",
+    xxx: 'summon',
+    death ({summon}) {
+      summon('AT_019');
+    }
   },
   {
     "id": "AT_020",
@@ -272,7 +281,10 @@ const actions = [
   {
     "id": "AT_037a",
     "_info": "(0) SPELL [*DRUID]: Living Roots",
-    "text": "Deal $2 damage."
+    "text": "Deal $2 damage.",
+    play ({$}) {
+      $('character').dealDamageSpell(2);
+    }
   },
   {
     "id": "AT_037b",
@@ -336,12 +348,14 @@ const actions = [
   {
     "id": "AT_042t",
     "_info": "(2) 2/1 [*DRUID]: Sabertooth Lion |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "AT_042t2",
     "_info": "(2) 3/2 [*DRUID]: Sabertooth Panther |BEAST",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "AT_043",

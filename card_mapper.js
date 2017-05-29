@@ -50,11 +50,12 @@ fs.readFile('cards.json', function (err, data) {
     'set', //
     'dbfId' //
   ];   
-  let jmin = JSON.parse(data, (k,v) => {
+  let all_cards_withoutJunkProps = JSON.parse(data, (k,v) => {
     return unwanted_props.indexOf(k) === -1 ? v : undefined;
   });
-  console.log(`Found ${jmin.length} cards, compacting ..`);
-  let jnano = jmin.map((card) => {
+  console.log(`Found ${all_cards_withoutJunkProps.length} cards, compacting ..`);
+  
+  let out_cards = all_cards_withoutJunkProps.map((card) => {
     let {
       id, type, cost, name, attack, health, durability, text, race, playerClass, collectible,
       rarity
@@ -84,15 +85,29 @@ fs.readFile('cards.json', function (err, data) {
       durability,
       race
     };
-  })
-  .filter(v => v.collectible) // filter: collectibles only 
-  .map(({id, _info, text}) => {return {id, _info, text};}); //output: compact
-  
-  let min = JSON.stringify(jmin, null, "  ");
-  let min2 = JSON.stringify(jnano, null, "  ");
+  });
 
-  fs.writeFile('data/cards.collectible.compact.json', min2, (err) => {
-  //fs.writeFile('data/cards.all.generated.json', min2, (err) => {
+  let _onlyCollectible = (v) => v.collectible; // filter: collectibles only 
+  let _asCompact = ({id, _info, text}) => {return {id, _info, text};}; //output: compact
+  
+  // outputAsJSON('data/cards.all.cleaned.json', all_cards_withoutJunkProps); 
+
+  // outputAsJSON('data/cards.all.generated.json', out_cards); 
+  // outputAsJSON('data/cards.all.compact.json', out_cards.map(_asCompact));
+  // outputAsJSON('data/cards.collectible.generated.json', out_cards.filter(v => v.collectible));
+  // outputAsJSON('data/cards.collectible.compact.json', out_cards.filter(v => v.collectible).map(_asCompact));
+
+  let collectible_id = out_cards.filter(v => v.collectible).map(({id}) => id);
+  outputAsJSON('data/actions.collectiblePlus.compact.json',
+    out_cards.filter(v => {
+      return collectible_id.some(id => (v.id.indexOf(id) === 0 || id.indexOf(v.id) === 0) );
+    }).sort((a,b) => a.id < b.id ? -1 : 1).map(_asCompact));
+
+});
+
+function outputAsJSON(out_file, out_cards) {
+  console.log(`Writing ${out_cards.length} cards, to ${out_file} ..`);
+  fs.writeFile(out_file, JSON.stringify(out_cards, null, "  "), (err) => {
     if (err) throw err;
   });
-});
+}

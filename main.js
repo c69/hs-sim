@@ -12,7 +12,7 @@ const Player = require('./classes/player.js');
 
 // from CardSelector
 const CardJSON = require('./data/cards.all.generated.json');
-const abilitiesMixin = require('./data/actions.collectible.js');
+const abilitiesMixin = require('./data/actions.collectiblePlus.js');
 const Card = require('./classes/card.js');
 //const Board = require('./classes/board.js');
 const {
@@ -187,4 +187,49 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   console.log('___________________');
   g2.endTurn();
 }
+
+let coolCards = abilitiesMixin.filter(v => {
+  let keys = Reflect.ownKeys(v);
+
+  let [id, _info] = keys;
+  if (keys.length === 2 && id === 'id' && _info === '_info') {
+    return false;
+  }
+  return true;
+});
+
+let progressOfCards = coolCards.reduce((a,v) => {
+  let keys = Reflect.ownKeys(v);
+  
+  let [id, _info, text] = keys;
+  if (keys.length === 3 && id === 'id' && _info === '_info' && text === 'text') {
+    a.not_started += 1;
+    return a;
+  }
+
+  let hasWeirdProps = keys.some(k => ![
+    'id',
+    '_info',
+    'text',
+    'play',
+    'death',
+    'target',
+    'tags',
+    'trigger'
+  ].includes(k));
+  if (hasWeirdProps) {
+    a.in_progress += 1;
+    return a;
+  }
+
+  a.done += 1;
+  return a;
+}, {
+  done: 0,
+  in_progress: 0,
+  not_started: 0
+});
+  
+console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);  
+//card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 } catch (err) {console.warn(err)}

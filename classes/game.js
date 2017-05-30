@@ -171,21 +171,14 @@ class Game {
     let $ = this.board.$.bind(this.board, this.activePlayer);
     let card = c.card;
     //console.log('play card', c.name, target, position);
-    let battlecry = playCard(card, {
-      game:this,
+    playCard(card, {
+      game: this,
       $,
+      target,
       position
     });
-    if ((target && c.targetList) || !target && !c.targetList) {
-      //only execute battlecry/spell_text if there is a valid target, or it does not require a target
-      battlecry({
-        target,
-        position,
-        $: $,
-        game: this
-      });
-    }
-    this.eventBus.emit(EVENTS.card_played, c);
+
+    this.eventBus.emit(EVENTS.card_played, card);
 
     return this;
   }

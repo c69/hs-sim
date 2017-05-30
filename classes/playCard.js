@@ -9,7 +9,7 @@ const {
 function playFromHand (card, {game, $, target, position}) {
     if (!card) throw new RangeError('Card must be provided');
     //console.log(card);
-    
+
     if (!card.owner === game.activePlayer) { 
         console.warn(`playCard: ${card.owner.name} cannot play card on other player's turn`);
         return () => {};
@@ -66,13 +66,14 @@ function playFromHand (card, {game, $, target, position}) {
                 }  
                 console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
                 _trigger_v1.action({
+                    self: card,
                     target: evt.target,
                     $,
-                    self: card,
-                    summon: function (ref_or_id) {
+                    game,
+                    summon (ref_or_id) {
                         console.log('TRIGGER: try to summon ', ref_or_id);
                     },
-                    draw: function (n) {
+                    draw (n) {
                         console.log(`TRIGGER: try to draw ${n}cards`);
                         card.owner.draw(1);
                     }
@@ -86,9 +87,34 @@ function playFromHand (card, {game, $, target, position}) {
         }
     }
 
-    let r = card.play || function () {};
-    //console.log('playCARD:', r);
-    return r;
+    //console.log('playCARD:', card.play
+    if (!card.play) {
+        if (card.type === CARD_TYPES.spell) {
+          throw `Spell ${card.name} has no action!`
+        } 
+        //console.log('no battlecry. no problem :)')  
+        return;
+    }
+    //only execute battlecry/spell_text if there is a valid target, or it does not require a target
+    if (!!target !== !!card.target) {     
+      console.log('no battle, no cry...', target, card.target);  
+      throw 'unexpected state combination';
+    }
+    card.play({
+        self: card,  
+        target,
+        position,
+        $: $,
+        game: this,
+        summon (id) {
+            console.log(`LIE ^_^: You just summoned something! ${id}`);
+            //~~ board._deckX.push(new Card.Minion(CardDefinitionsIndex[id], player, eventBus2));
+        },
+        draw (n) {
+            console.log(`PLAY: try to draw ${n}cards`);
+            card.owner.draw(n);
+        }
+    });
 }
 
 module.exports = playFromHand;

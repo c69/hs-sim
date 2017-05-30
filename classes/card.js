@@ -67,7 +67,7 @@ class Card {
       return this.buffs;  
     }
     _draw () {
-        if (this.zone !== ZONES.deck) throw 'Attempt to draw NOT from deck';
+        if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
         this.zone = ZONES.hand;
     }
     _play () {

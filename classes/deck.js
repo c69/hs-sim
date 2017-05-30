@@ -1,6 +1,10 @@
 'use strict';
 // @ts-check
 
+const {
+  ZONES
+} = require('../data/constants.js');
+
 class Deck {
   constructor (arr) {
     this._arr = arr; // direct mutable reference +_+ !
@@ -11,8 +15,7 @@ class Deck {
       var card = this._deck[0];
       
       if (card) {
-       //console.log('card drawn from', card.zone, card);
-       card.zone = 'HAND';
+       card._draw();
        result.push(card);
       }
       n--;
@@ -20,7 +23,7 @@ class Deck {
     return result;
   }
   get _deck () {
-    return this._arr.filter(v => v.zone === 'DECK');
+    return this._arr.filter(v => v.zone === ZONES.deck);
   }
   get size () {
     return this._deck.length;

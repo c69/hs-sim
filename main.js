@@ -17,7 +17,8 @@ const Card = require('./classes/card.js');
 //const Board = require('./classes/board.js');
 const {
   CARD_TYPES: TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
-  EVENTS
+  EVENTS,
+  ZONES
 } = require('./data/constants.js');
 
 let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
@@ -47,19 +48,19 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Bloodfen Raptor',
 //--spells:damage
 //      'Fireball',
-      //'Arcane Explosion',
+      'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
-      //'Swipe',
+      'Swipe',
 
 //--basic minions with tags or battlecries
-      //'Flame Imp',
+      'Flame Imp',
       //'Ironfur Grizzly',
       'Ironbeak Owl',
       //'Leper Gnome',
       'Unstable Ghoul',
       //'Abomination',
-      // 'Elven Archer',
+      'Elven Archer',
       //'Silent Knight', //-- stealth
       //'Annoy-o-Tron',
       //'Shielded Minibot',
@@ -68,9 +69,9 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       // 'Thrallmar Farseer',
       
 //--summon
-      //'Murloc Tidehunter',
+      'Murloc Tidehunter',
       //'Leeroy Jenkins',
-      //'Mirror Image',
+      'Mirror Image',
 
 //--trigger, MVP minions
       'Knife Juggler',
@@ -109,7 +110,7 @@ eventBus2.on(EVENTS.character_damaged, function ({target, amount}) {
     //console.log(deck, player);
     try {
       deck.push(new Card.Hero(CardDefinitionsIndex[hero_id], player, eventBus2));
-      deck[0].zone = 'PLAY';
+      deck[0].zone = ZONES.play;
       for (let i = 0; i < 30; i++) {
           let dice = Math.floor(Math.random()*(card_defs.length));
           let card = card_defs[dice];
@@ -140,8 +141,8 @@ lazy1.deck = new Deck([
 lazy2.deck = new Deck([
   new Card.Hero(CardDefinitionsIndex['HERO_07'], lazy2, eb1)  
 ]);
-lazy1.deck._arr[0].zone = 'PLAY';
-lazy2.deck._arr[0].zone = 'PLAY';
+lazy1.deck._arr[0].zone = ZONES.play;
+lazy2.deck._arr[0].zone = ZONES.play;
 
 var g_fatigue = new Game([
   lazy1,

@@ -10,10 +10,7 @@ const Game = require('./classes/game.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 
-// from CardSelector
-const CardJSON = require('./data/cards.all.generated.json');
-const abilitiesMixin = require('./data/actions.collectiblePlus.js');
-const Card = require('./classes/card.js');
+ const Card = require('./classes/card.js');
 //const Board = require('./classes/board.js');
 const {
   CARD_TYPES: TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
@@ -21,82 +18,57 @@ const {
   ZONES
 } = require('./data/constants.js');
 
-let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
-const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
-  a[v.id] = v;
-  return a;
-}, {});
-abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1}) => {
-  //console.log(id);
-  try {
-    if (play) CardDefinitionsIndex[id].play = play;
-    if (target) CardDefinitionsIndex[id].target = target;
-    if (death) CardDefinitionsIndex[id].death = death;
-    if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
-    if (tags) CardDefinitionsIndex[id].tags = tags; 
-  } catch (err) {
-    console.warn(err, CardDefinitionsIndex[id]);
-  }
-});
+let {
+  bootstrap,
+  CardDefinitionsIndex,
+  _progress
+} = require('./classes/cardUniverse.js');
 
 //---Deck2.js sketch------------------
-let card_defs = CardDefinitions.filter(v => v.collectible === true)
-    .filter(v => [TYPES.minion, TYPES.spell].includes(v.type))
-    .filter(v => [
-      //'Chillwind Yeti',
-      //'River Crocolisk',
-      //'Bloodfen Raptor',
-//--spells:damage
-//      'Fireball',
-      'Arcane Explosion',
-      //'Arcane Missiles',
-//      'Hellfire',
-      'Swipe',
+// let card_defs = CardDefinitions.filter(v => v.collectible === true)
+//     .filter(v => [TYPES.minion, TYPES.spell].includes(v.type))
+//     .filter(v => [
+//       //'Chillwind Yeti',
+//       //'River Crocolisk',
+//       //'Bloodfen Raptor',
+// //--spells:damage
+// //      'Fireball',
+//       'Arcane Explosion',
+//       //'Arcane Missiles',
+// //      'Hellfire',
+//       'Swipe',
 
-//--basic minions with tags or battlecries
-      'Flame Imp',
-      //'Ironfur Grizzly',
-      'Ironbeak Owl',
-      //'Leper Gnome',
-      'Unstable Ghoul',
-      //'Abomination',
-      'Elven Archer',
-      //'Silent Knight', //-- stealth
-      //'Annoy-o-Tron',
-      //'Shielded Minibot',
-      // 'Argent Horseraider',
-      //'Young Dragonhawk',
-      // 'Thrallmar Farseer',
+// //--basic minions with tags or battlecries
+//       'Flame Imp',
+//       //'Ironfur Grizzly',
+//       'Ironbeak Owl',
+//       //'Leper Gnome',
+//       'Unstable Ghoul',
+//       //'Abomination',
+//       'Elven Archer',
+//       //'Silent Knight', //-- stealth
+//       //'Annoy-o-Tron',
+//       //'Shielded Minibot',
+//       // 'Argent Horseraider',
+//       //'Young Dragonhawk',
+//       // 'Thrallmar Farseer',
       
-//--summon
-      'Murloc Tidehunter',
-      //'Leeroy Jenkins',
-      'Mirror Image',
+// //--summon
+//       'Murloc Tidehunter',
+//       //'Leeroy Jenkins',
+//       'Mirror Image',
 
-//--trigger, MVP minions
-      'Knife Juggler',
-      'Acolyte of Pain',
-      //'Imp Gang Boss',
-      'Starving Buzzard',
-      //'Patches the Pirate',
-      //'Doomsayer',
-      //'Grim Patron',
+// //--trigger, MVP minions
+//       'Knife Juggler',
+//       'Acolyte of Pain',
+//       //'Imp Gang Boss',
+//       'Starving Buzzard',
+//       //'Patches the Pirate',
+//       //'Doomsayer',
+//       //'Grim Patron',
 
-    ].includes(v.name))
-    ;
-    
-
-console.log('initializing players');
-
-//facepalm - quantum entanglement =_=    
-// - atm - player depends on deck depends on list of cards depends on owner = player (!) cirular
-//todo: split
-let deck1 = [];
-let deck2 = [];
-let dude1 = new Player('Alice');
-let dude2 = new Player('Bob');
-dude1.deck = new Deck(deck1);
-dude2.deck = new Deck(deck2);
+//     ].includes(v.name))
+//     ;
 
 let eventBus2 = new EventBus();
 eventBus2.on(EVENTS.card_played, function (card) {
@@ -105,45 +77,28 @@ eventBus2.on(EVENTS.card_played, function (card) {
 eventBus2.on(EVENTS.character_damaged, function ({target, amount}) {
   //console.log(`EVT: ${target.name} was damaged for ${amount}`);
 });
-
-[[deck1, dude1, 'HERO_08'], [deck2, dude2, 'HERO_01']].forEach(([deck, player, hero_id]) => {
-    //console.log(deck, player);
-    try {
-      deck.push(new Card.Hero(CardDefinitionsIndex[hero_id], player, eventBus2));
-      deck[0].zone = ZONES.play;
-      for (let i = 0; i < 30; i++) {
-          let dice = Math.floor(Math.random()*(card_defs.length));
-          let card = card_defs[dice];
-          
-          let structor = {
-              [TYPES.minion]: Card.Minion,
-              [TYPES.hero]: Card.Hero,
-              [TYPES.weapon]: Card.Weapon,
-              [TYPES.spell]: Card.Spell,
-              [TYPES.power]: Card.Power,
-              [TYPES.enchantment]: Card.Enchantment,
-          }[card.type];
-          deck.push(new structor(card, player, eventBus2)); // do we really need to couple deck & player ?
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-});
-console.log('bootstrap finished');
+console.log('initializing players');
+let dude1 = new Player('Alice');
+let dude2 = new Player('Bob');
+bootstrap(
+  //[new Player('Alice'), 'HERO_08', [1,2,3]],
+  //[new Player('Bob'), 'HERO_01', []],
+  [dude1, 'HERO_08', []],
+  [dude2, 'HERO_01', []],
+  eventBus2
+);
+console.log('bootstrap for game 2 finished');
 
 //e2e test for Fatigue
 let eb1 = new EventBus();
 let lazy1 = new Player('Lazy1');
 let lazy2 = new Player('Lazy2');
-lazy1.deck = new Deck([
-  new Card.Hero(CardDefinitionsIndex['HERO_09'], lazy1, eb1)
-]);
-lazy2.deck = new Deck([
-  new Card.Hero(CardDefinitionsIndex['HERO_07'], lazy2, eb1)  
-]);
-lazy1.deck._arr[0].zone = ZONES.play;
-lazy2.deck._arr[0].zone = ZONES.play;
 
+bootstrap(
+  [lazy1, 'HERO_09', []],
+  [lazy2, 'HERO_07', []],
+  eb1
+);
 var g_fatigue = new Game([
   lazy1,
   lazy2  
@@ -189,48 +144,6 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   g2.endTurn();
 }
 
-let coolCards = abilitiesMixin.filter(v => {
-  let keys = Reflect.ownKeys(v);
-
-  let [id, _info] = keys;
-  if (keys.length === 2 && id === 'id' && _info === '_info') {
-    return false;
-  }
-  return true;
-});
-
-let progressOfCards = coolCards.reduce((a,v) => {
-  let keys = Reflect.ownKeys(v);
-  
-  let [id, _info, text] = keys;
-  if (keys.length === 3 && id === 'id' && _info === '_info' && text === 'text') {
-    a.not_started += 1;
-    return a;
-  }
-
-  let hasWeirdProps = keys.some(k => ![
-    'id',
-    '_info',
-    'text',
-    'play',
-    'death',
-    'target',
-    'tags',
-    'trigger'
-  ].includes(k));
-  if (hasWeirdProps) {
-    a.in_progress += 1;
-    return a;
-  }
-
-  a.done += 1;
-  return a;
-}, {
-  done: 0,
-  in_progress: 0,
-  not_started: 0
-});
-  
-console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);  
+_progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 } catch (err) {console.warn(err)}

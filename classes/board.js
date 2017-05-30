@@ -173,8 +173,10 @@ class ArrayOfCards extends Array {
       super();
     }
     getRandom () { // i'd like signature to be getRandom(n) where n is number of distinct random members
+      if (!this.length) return this;
       let random_idx = Math.floor(Math.random() * this.length);
-      return this[random_idx];
+      let v = this[random_idx];
+      return (new this.constructor()).concat(v);
     }
     dealDamage (n) {
         this.forEach(v => v.dealDamage(n));

@@ -195,6 +195,9 @@ class Game {
       if(character.health <= 0) deathrattle_list.push(character);
     });
     
+    if (!deathrattle_list.length) {
+      return;
+    }
     //console.log('death list', deathrattle_list); // was always empty :(( because minions _die() before the sweep
     deathrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
@@ -214,8 +217,10 @@ class Game {
         delete character._listener; 
       }
     });
+    this._cleanup(); //recursion !
   }
   chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
+    console.log('-- frame ---');
     let opts = this.viewAvailableOptions().actions;
     if (!opts.length) throw 'options.actions[] are empty' //return;
     

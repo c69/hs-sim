@@ -96,9 +96,18 @@ function playFromHand (card, {game, $, target, position}) {
         return;
     }
     //only execute battlecry/spell_text if there is a valid target, or it does not require a target
-    if (!!target !== !!card.target) {     
+    if (target && !card.target) {     
       console.log('no battle, no cry...', target, card.target);  
-      throw 'unexpected state combination';
+      throw 'unexpected target for card which does not need it';
+    }
+    if (!target && card.target) {
+        if (card.type === CARD_TYPES.spell) {
+            console.log('no battle, no cry...', target, card.target);  
+            throw 'spell which require target, MUST have target';
+        } else {
+            //console.log('no valid target for battlecry. no problem :)')
+            return;
+        }
     }
     card.play({
         self: card,  

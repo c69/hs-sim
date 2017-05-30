@@ -6,16 +6,19 @@ const {
   EVENTS
 } = require('../data/constants.js');
 
-
 const MAX_HAND_SIZE = 10;
 
 class Hand {
   constructor (player) {
     this._hand = [];
     this.owner = player;
+    
     let _card_id = 1;
     this.card_guid = () => (_card_id++);
   }
+  // get _hand () {
+  //   return this._arr.filter(v => v.zone === ZONES.hand);
+  // }
   view () {
     console.log(this._hand.map(({cost, name}) => `(${cost}) ${name}`).join(', '))
   }
@@ -24,21 +27,14 @@ class Hand {
     return this.list().filter(({cost}) => cost <= this.owner.mana);
   }
   list () {
-    return this._hand.map((v) => {
-      return {
-        id: v.hand_id,
-        name: v.name,
-        type: v.type,
-        cost: v.cost,
-        target: v.target
-      }
-    });
+    return this._hand.map(v => v);
   }
   /**
+   * @deprecated
    * @param {number} card_id ID inside of this Hand
    * @returns {Function} actual card action
    */
-  play (card_id, game) {
+  x_play (card_id, game) {
     if (!card_id) throw new RangeError('Card ID expected');
     //if (!this.owner.activeTurn) { <--------- move this to game.play or smwhere..
       //console.warn(`HH ${this.owner.name} cannot play card on other player's turn`);

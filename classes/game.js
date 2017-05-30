@@ -2,7 +2,7 @@
 // @ts-check
 
 const combat = require('./combat.js');
-
+const playCard = require('./playCard.js');
 const Board = require('./board.js');
 const {
   TAGS,
@@ -159,34 +159,33 @@ class Game {
   }  
   playCard (card_idx = 0, position_idx = 0, target_idx = 0) {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let card = this.viewAvailableOptions().actions[card_idx];
+    let c = this.viewAvailableOptions().actions[card_idx];
     
-    if (card.targetList) { // spell-fireball OR battlecry
-      var target = card.targetList[target_idx];  // if c.t      
+    if (c.targetList) { // spell:fireball OR minion:battlecry
+      var target = c.targetList[target_idx];      
     }
-    if (card.positionList) { // minion
-      var position = card.positionList[position_idx]; // if c.p
+    if (c.positionList) { // minion
+      var position = c.positionList[position_idx];
     } 
+
+    let $ = this.board.$.bind(this.board, this.activePlayer);
+    let card = c.card;
     //console.log('play card', c.name, target, position);
-    let battlecry = this.activePlayer.hand.play(card.id, this);
-    if ((target && card.targetList) || !target && !card.targetList) {
+    let battlecry = playCard(card, {
+      game:this,
+      $,
+      position
+    });
+    if ((target && c.targetList) || !target && !c.targetList) {
       //only execute battlecry/spell_text if there is a valid target, or it does not require a target
       battlecry({
         target,
         position,
-        $: this.board.$.bind(this.board, this.activePlayer),
+        $: $,
         game: this
       });
     }
-    this.eventBus.emit(EVENTS.card_played, card);
-
-    //this._onBeforeMinionSummoned(c); //  no no no ...
-    //this._summon(c.minion, p); // if minion ? or equip if weapon ?
-    //c.play.call(this, c, t); // %-)
-    
-    //this._onAfterCardPlayed(c);
-
-    //console.log(`${this.activePlayer.name} chosen OPTION ${card_idx}`);
+    this.eventBus.emit(EVENTS.card_played, c);
 
     return this;
   }
@@ -311,9 +310,10 @@ class Game {
         return $(v.target).length;
       }       
       return true;
-    } ).map(v=>{
+    }).map(v => {
       return {
-        id: v.id,
+        id: v._id,
+        card: v,
         type: ACTION_TYPES.playCard,
         name: v.name,
         cost: v.cost,

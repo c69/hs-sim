@@ -3025,7 +3025,15 @@ const actions = [
   {
     "id": "CS2_151",
     "_info": "(5) 4/4 [NEUTRAL]: Silver Hand Knight",
-    "text": "<b>Battlecry:</b> Summon a 2/2 Squire."
+    "text": "<b>Battlecry:</b> Summon a 2/2 Squire.",
+    play ({summon}) {
+      summon('CS2_152');
+    }
+  },
+  {
+    // added manually
+    "id": "CS2_152",
+    "_info": "(1) 2/2 [*NEUTRAL]: Squire"
   },
   {
     "id": "CS2_155",
@@ -3123,7 +3131,15 @@ const actions = [
   {
     "id": "CS2_196",
     "_info": "(3) 2/3 [NEUTRAL]: Razorfen Hunter",
-    "text": "<b>Battlecry:</b> Summon a 1/1 Boar."
+    "text": "<b>Battlecry:</b> Summon a 1/1 Boar.",
+    play ({summon}) {
+      summon('CS2_boar');
+    }
+  },
+  {
+    //added manually
+    "id": "CS2_boar",
+    "_info": "(1) 1/1 [*NEUTRAL]: Boar |BEAST"
   },
   {
     "id": "CS2_197",
@@ -3444,12 +3460,16 @@ const actions = [
   {
     "id": "EX1_023",
     "_info": "(4) 3/3 [NEUTRAL]: Silvermoon Guardian",
-    "text": "<b>Divine Shield</b>"
+    "text": "<b>Divine Shield</b>",
+    tags: [TAGS.divineShield]
   },
   {
     "id": "EX1_025",
     "_info": "(4) 2/4 [NEUTRAL]: Dragonling Mechanic",
-    "text": "<b>Battlecry:</b> Summon a 2/1 Mechanical Dragonling."
+    "text": "<b>Battlecry:</b> Summon a 2/1 Mechanical Dragonling.",
+    play ({summon}) {
+      summon('EX1_025t');
+    }
   },
   {
     "id": "EX1_025t",
@@ -3458,7 +3478,8 @@ const actions = [
   {
     "id": "EX1_028",
     "_info": "(5) 5/5 [NEUTRAL]: Stranglethorn Tiger |BEAST",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "EX1_029",
@@ -3527,7 +3548,12 @@ const actions = [
   {
     "id": "EX1_049",
     "_info": "(2) 3/2 [NEUTRAL]: Youthful Brewmaster",
-    "text": "<b>Battlecry:</b> Return a friendly minion from the battlefield to your hand."
+    "text": "<b>Battlecry:</b> Return a friendly minion from the battlefield to your hand.",
+    xxx: 'sketch',
+    target: 'own minion',
+    play ({target}) {
+      target.returnToHand()
+    }
   },
   {
     "id": "EX1_050",
@@ -3692,7 +3718,10 @@ const actions = [
   {
     "id": "EX1_110",
     "_info": "(6) 4/5 [NEUTRAL]: Cairne Bloodhoof",
-    "text": "<b>Deathrattle:</b> Summon a 4/5 Baine Bloodhoof."
+    "text": "<b>Deathrattle:</b> Summon a 4/5 Baine Bloodhoof.",
+    death ({summon}) {
+      summon('EX1_110t');
+    }
   },
   {
     "id": "EX1_110t",
@@ -3850,7 +3879,10 @@ const actions = [
   {
     "id": "EX1_158e",
     "_info": "ENCHANTMENT [*DRUID]: Soul of the Forest",
-    "text": "Deathrattle: Summon a 2/2 Treant."
+    "text": "Deathrattle: Summon a 2/2 Treant.",
+    death ({summon}) {
+      summon('EX1_158t');
+    }
   },
   {
     "id": "EX1_158t",
@@ -3864,7 +3896,10 @@ const actions = [
   {
     "id": "EX1_160a",
     "_info": "(0) SPELL [*DRUID]: Summon a Panther",
-    "text": "Summon a 3/2 Panther."
+    "text": "Summon a 3/2 Panther.",
+    play ({summon}) {
+      summon('EX1_160t');
+    }
   },
   {
     "id": "EX1_160b",
@@ -4038,7 +4073,20 @@ const actions = [
   {
     "id": "EX1_248",
     "_info": "(3) SPELL [SHAMAN]: Feral Spirit",
-    "text": "Summon two 2/3 Spirit Wolves with <b>Taunt</b>. <b>Overload:</b> (2)"
+    "text": "Summon two 2/3 Spirit Wolves with <b>Taunt</b>. <b>Overload:</b> (2)",
+    xxx: 0,
+    overload: 2,
+    play ({summon}) {
+      summon('');
+      summon('');
+    }
+  },
+  {
+    // added manually
+    "id": "EX1_tk11",
+    "_info": "(2) 2/3 [*SHAMAN]: Spirit Wolf",
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "EX1_249",
@@ -4600,7 +4648,11 @@ const actions = [
   {
     "id": "EX1_534",
     "_info": "(6) 6/5 [HUNTER]: Savannah Highmane |BEAST",
-    "text": "<b>Deathrattle:</b> Summon two 2/2 Hyenas."
+    "text": "<b>Deathrattle:</b> Summon two 2/2 Hyenas.",
+    death ({summon}) {
+      summon('EX1_534t');
+      summon('EX1_534t');
+    }
   },
   {
     "id": "EX1_534t",
@@ -4673,7 +4725,15 @@ const actions = [
   {
     "id": "EX1_556",
     "_info": "(3) 2/3 [NEUTRAL]: Harvest Golem |MECHANICAL",
-    "text": "<b>Deathrattle:</b> Summon a 2/1 Damaged Golem."
+    "text": "<b>Deathrattle:</b> Summon a 2/1 Damaged Golem.",
+    death ({summon}) {
+      summon('skele21');
+    }
+  },
+  {
+    // added manually
+    "id": "skele21",
+    "_info": "(1) 2/1 [*NEUTRAL]: Damaged Golem |MECHANICAL"
   },
   {
     "id": "EX1_557",
@@ -4708,7 +4768,13 @@ const actions = [
   {
     "id": "EX1_562",
     "_info": "(9) 8/8 [NEUTRAL]: Onyxia |DRAGON",
-    "text": "<b>Battlecry:</b> Summon 1/1 Whelps until your side of the battlefield is full."
+    "text": "<b>Battlecry:</b> Summon 1/1 Whelps until your side of the battlefield is full.",
+    play ({summon}) {
+      for(let i = 0; i < 7; i++) {
+        //if the board is full - minion will just not summon
+        summon('ds1_whelptoken');
+      }
+    }
   },
   {
     "id": "EX1_563",
@@ -4748,7 +4814,18 @@ const actions = [
   {
     "id": "EX1_571",
     "_info": "(5) SPELL [DRUID]: Force of Nature",
-    "text": "Summon three 2/2 Treants."
+    "text": "Summon three 2/2 Treants.",
+    xxx: ' maybe i use incorrect treant ID, as there are several of them',
+    play ({summon}) {
+      summon('EX1_tk9');
+      summon('EX1_tk9');
+      summon('EX1_tk9');
+    }
+  },
+  {
+    // added manually
+    "id": "EX1_tk9",
+    "_info": "(2) 2/2 [*DRUID]: Treant"
   },
   {
     "id": "EX1_572",
@@ -4773,12 +4850,17 @@ const actions = [
   {
     "id": "EX1_573b",
     "_info": "(0) SPELL [*DRUID]: Shan'do's Lesson",
-    "text": "Summon two 2/2 Treants with <b>Taunt</b>."
+    "text": "Summon two 2/2 Treants with <b>Taunt</b>.",
+    play ({summon}) {
+      summon('EX1_573t');
+      summon('EX1_573t');
+    }
   },
   {
     "id": "EX1_573t",
     "_info": "(2) 2/2 [*DRUID]: Treant",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "EX1_575",
@@ -4793,7 +4875,12 @@ const actions = [
   {
     "id": "EX1_578",
     "_info": "(1) SPELL [DRUID]: Savagery",
-    "text": "Deal damage equal to your hero's Attack to a minion."
+    "text": "Deal damage equal to your hero's Attack to a minion.",
+    target: 'minion',
+    play ({target, $}) {
+      let damage = $('own hero')[0].attack;
+      target.dealDamageSpell(damage);
+    }
   },
   {
     "id": "EX1_581",
@@ -4828,7 +4915,12 @@ const actions = [
   {
     "id": "EX1_587",
     "_info": "(4) 3/3 [SHAMAN]: Windspeaker",
-    "text": "<b>Battlecry:</b> Give a friendly minion <b>Windfury</b>."
+    "text": "<b>Battlecry:</b> Give a friendly minion <b>Windfury</b>.",
+    xxx: 'test .give()',
+    target: 'own minion',
+    play({target}) {
+      target.give(TAGS.windfury);
+    }
   },
   {
     "id": "EX1_590",
@@ -5075,7 +5167,10 @@ const actions = [
   {
     "id": "FP1_007",
     "_info": "(2) 0/2 [NEUTRAL]: Nerubian Egg",
-    "text": "<b>Deathrattle:</b> Summon a 4/4 Nerubian."
+    "text": "<b>Deathrattle:</b> Summon a 4/4 Nerubian.",
+    death ({summon}) {
+      summon('FP1_007t');
+    }
   },
   {
     "id": "FP1_007t",
@@ -6007,12 +6102,22 @@ const actions = [
   {
     "id": "GVG_110",
     "_info": "(7) 7/7 [NEUTRAL]: Dr. Boom",
-    "text": "<b>Battlecry:</b> Summon two 1/1 Boom Bots. <i>WARNING: Bots may explode.</i>"
+    "text": "<b>Battlecry:</b> Summon two 1/1 Boom Bots. <i>WARNING: Bots may explode.</i>",
+    xxx: 'i think Dr.Boom summons bots to the SIDES of himself ?',
+    play ({summon}) {
+      summon('GVG_110t');
+      summon('GVG_110t');
+    }
   },
   {
     "id": "GVG_110t",
     "_info": "(1) 1/1 [*NEUTRAL]: Boom Bot |MECHANICAL",
-    "text": "<b>Deathrattle:</b> Deal 1-4 damage to a random enemy."
+    "text": "<b>Deathrattle:</b> Deal 1-4 damage to a random enemy.",
+    xxx: 'needs PRNG',
+    death ({$}) {
+      let damage = 3; // PRNG.random(1 to 4);
+      $('enemy character').getRandom().dealDamage(damage);
+    }
   },
   {
     "id": "GVG_111",
@@ -6067,7 +6172,11 @@ const actions = [
   {
     "id": "GVG_120",
     "_info": "(5) 6/3 [NEUTRAL]: Hemet Nesingwary",
-    "text": "<b>Battlecry:</b> Destroy a Beast."
+    "text": "<b>Battlecry:</b> Destroy a Beast.",
+    target: 'character .race=beast',
+    play ({target}) {
+      target.destroy();
+    }
   },
   {
     "id": "GVG_121",
@@ -6192,7 +6301,15 @@ const actions = [
   {
     "id": "KAR_010",
     "_info": "(3) 2/3 [PALADIN]: Nightbane Templar",
-    "text": "<b>Battlecry:</b> If you're holding a Dragon, summon two 1/1 Whelps."
+    "text": "<b>Battlecry:</b> If you're holding a Dragon, summon two 1/1 Whelps.",
+    xxx: 'powered-up yellow outline is not designed yet',
+    play ({$, summon}) {
+      let holding_dragon = $('@hand character .race=dragon').length > 0;
+      if (holding_dragon) {
+        summon('KAR_010a');
+        summon('KAR_010a');
+       }
+    }
   },
   {
     "id": "KAR_010a",
@@ -6201,12 +6318,18 @@ const actions = [
   {
     "id": "KAR_011",
     "_info": "(2) 3/2 [NEUTRAL]: Pompous Thespian",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "KAR_013",
     "_info": "(2) SPELL [PRIEST]: Purify",
-    "text": "<b>Silence</b> a friendly minion. Draw a card."
+    "text": "<b>Silence</b> a friendly minion. Draw a card.",
+    target: 'own minion',
+    play ({target, draw}) {
+      target.silence();
+      draw(1);
+    }
   },
   {
     "id": "KAR_021",
@@ -6216,7 +6339,12 @@ const actions = [
   {
     "id": "KAR_025",
     "_info": "(5) SPELL [WARLOCK]: Kara Kazham!",
-    "text": "Summon a 1/1 Candle, 2/2 Broom, and 3/3 Teapot."
+    "text": "Summon a 1/1 Candle, 2/2 Broom, and 3/3 Teapot.",
+    play ({summon}) {
+      summon('KAR_025a');
+      summon('KAR_025b');
+      summon('KAR_025c');
+    }
   },
   {
     "id": "KAR_025a",
@@ -6233,12 +6361,16 @@ const actions = [
   {
     "id": "KAR_026",
     "_info": "(3) SPELL [WARRIOR]: Protect the King!",
-    "text": "For each enemy minion, summon a 1/1 Pawn with <b>Taunt</b>."
+    "text": "For each enemy minion, summon a 1/1 Pawn with <b>Taunt</b>.",
+    play ({summon, $}) {
+      $('enemy minion').forEach(v => summon('KAR_026t'));
+    }
   },
   {
     "id": "KAR_026t",
     "_info": "(1) 1/1 [*WARRIOR]: Pawn",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "KAR_028",
@@ -6248,7 +6380,10 @@ const actions = [
   {
     "id": "KAR_029",
     "_info": "(1) 0/2 [NEUTRAL]: Runic Egg",
-    "text": "<b>Deathrattle:</b> Draw a card."
+    "text": "<b>Deathrattle:</b> Draw a card.",
+    death ({draw}) {
+      draw(1);
+    }
   },
   {
     "id": "KAR_030",
@@ -6257,12 +6392,22 @@ const actions = [
   {
     "id": "KAR_030a",
     "_info": "(3) 1/3 [NEUTRAL]: Pantry Spider |BEAST",
-    "text": "<b>Battlecry:</b> Summon a\n1/3 Spider."
+    "text": "<b>Battlecry:</b> Summon a\n1/3 Spider.",
+    play ({summon}) {
+      summon('KAR_030');
+    }
   },
   {
     "id": "KAR_033",
     "_info": "(6) 3/6 [NEUTRAL]: Book Wyrm |DRAGON",
-    "text": "<b>Battlecry:</b> If you're holding a Dragon, destroy an enemy minion with 3 or less Attack."
+    "text": "<b>Battlecry:</b> If you're holding a Dragon, destroy an enemy minion with 3 or less Attack.",
+    xxx: 'powered-up not implemented',
+    play ({$}) {
+      let holding_dragon = $('own @hand character .race=dragon').length > 0;
+      if (holding_dragon) {
+        $('enemy minion .attack<=3').destroy();
+      }
+    }
   },
   {
     "id": "KAR_035",
@@ -6449,12 +6594,16 @@ const actions = [
   {
     "id": "KAR_710",
     "_info": "(4) 3/2 [NEUTRAL]: Arcanosmith",
-    "text": "<b>Battlecry:</b> Summon a 0/5 minion with <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Summon a 0/5 minion with <b>Taunt</b>.",
+    play ({summon}) {
+      summon('KAR_710m');
+    }
   },
   {
     "id": "KAR_710m",
     "_info": "(2) 0/5 [*NEUTRAL]: Animated Shield",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "KAR_711",
@@ -6999,7 +7148,8 @@ const actions = [
   {
     "id": "NEW1_031",
     "_info": "(3) SPELL [HUNTER]: Animal Companion",
-    "text": "Summon a random Beast Companion."
+    "text": "Summon a random Beast Companion.",
+    xxx: 'need PRGN and 3 token IDs'
   },
   {
     "id": "NEW1_036",
@@ -7049,7 +7199,10 @@ const actions = [
   {
     "id": "NEW1_041",
     "_info": "(5) 3/5 [NEUTRAL]: Stampeding Kodo |BEAST",
-    "text": "<b>Battlecry:</b> Destroy a random enemy minion with 2 or less Attack."
+    "text": "<b>Battlecry:</b> Destroy a random enemy minion with 2 or less Attack.",
+    play ({$}) {
+      $('enemy minion .attack<=2').getRandom().destroy();
+    }
   },
   {
     "id": "OG_006",
@@ -7194,7 +7347,13 @@ const actions = [
   {
     "id": "OG_061",
     "_info": "(1) SPELL [HUNTER]: On the Hunt",
-    "text": "Deal $1 damage.\nSummon a 1/1 Mastiff."
+    "text": "Deal $1 damage.\nSummon a 1/1 Mastiff.",
+    xxx: 'test this with empty board',
+    target: 'character',
+    play ({summon, target}) {
+      target.dealDamageSpell(1);
+      summon('OG_061t');
+    }
   },
   {
     "id": "OG_061t",
@@ -7421,7 +7580,20 @@ const actions = [
   {
     "id": "OG_131",
     "_info": "(7) 4/6 [NEUTRAL]: Twin Emperor Vek'lor",
-    "text": "[x]<b><b>Taunt</b>\nBattlecry:</b> If your C'Thun has\nat least 10 Attack, summon\nanother Emperor."
+    "text": "[x]<b><b>Taunt</b>\nBattlecry:</b> If your C'Thun has\nat least 10 Attack, summon\nanother Emperor.",
+    play ({$, summon}) {
+      let cthun_is_strong = $('own character .id=OG_279 .attack>=10').length > 0;
+      if (cthun_is_strong) {
+        summon('OG_319');
+      }
+    }
+  },
+  {
+    // added manually
+    "id": "OG_319",
+    "_info": "(7) 4/6 [*NEUTRAL]: Twin Emperor Vek'nilash",
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "OG_133",
@@ -7454,7 +7626,8 @@ const actions = [
   {
     "id": "OG_145",
     "_info": "(5) 3/4 [NEUTRAL]: Psych-o-Tron |MECHANICAL",
-    "text": "<b>Taunt</b>\n<b>Divine Shield</b>"
+    "text": "<b>Taunt</b>\n<b>Divine Shield</b>",
+    tags: [TAGS.taunt, TAGS.divineShield]
   },
   {
     "id": "OG_147",
@@ -7464,7 +7637,11 @@ const actions = [
   {
     "id": "OG_149",
     "_info": "(3) 3/3 [WARRIOR]: Ravaging Ghoul",
-    "text": "<b>Battlecry:</b> Deal 1 damage to all other minions."
+    "text": "<b>Battlecry:</b> Deal 1 damage to all other minions.",
+    xxx: 'OTHER MINiONS!!!!',
+    play ({$}) {
+      $('minion').dealDamage(1);// OTHER
+    }
   },
   {
     "id": "OG_150",
@@ -7479,27 +7656,36 @@ const actions = [
   {
     "id": "OG_151",
     "_info": "(1) 1/1 [NEUTRAL]: Tentacle of N'Zoth",
-    "text": "<b>Deathrattle:</b> Deal 1 damage to all minions."
+    "text": "<b>Deathrattle:</b> Deal 1 damage to all minions.",
+    death ({$}) {
+      $('minion').dealDamage(1);
+    }
   },
   {
     "id": "OG_152",
     "_info": "(7) 5/5 [NEUTRAL]: Grotesque Dragonhawk |BEAST",
-    "text": "<b>Windfury</b>"
+    "text": "<b>Windfury</b>",
+    TAGS: [TAGS.windfury]
   },
   {
     "id": "OG_153",
     "_info": "(7) 6/8 [NEUTRAL]: Bog Creeper",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    TAGS: [TAGS.taunt]
   },
   {
     "id": "OG_156",
     "_info": "(2) 2/1 [NEUTRAL]: Bilefin Tidehunter |MURLOC",
-    "text": "<b>Battlecry:</b> Summon a 1/1 Ooze with <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Summon a 1/1 Ooze with <b>Taunt</b>.",
+    play ({summon}) {
+      summon('OG_156a');
+    }
   },
   {
     "id": "OG_156a",
     "_info": "(1) 1/1 [*NEUTRAL]: Ooze",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    TAGS: [TAGS.taunt]
   },
   {
     "id": "OG_158",
@@ -7551,7 +7737,10 @@ const actions = [
   {
     "id": "OG_179",
     "_info": "(1) 2/1 [HUNTER]: Fiery Bat |BEAST",
-    "text": "<b>Deathrattle:</b> Deal 1 damage to a random enemy."
+    "text": "<b>Deathrattle:</b> Deal 1 damage to a random enemy.",
+    death ({$}) {
+      $('enemy character').getRandom().dealDamage(1);
+    }
   },
   {
     "id": "OG_188",
@@ -7644,12 +7833,16 @@ const actions = [
   {
     "id": "OG_211",
     "_info": "(9) SPELL [HUNTER]: Call of the Wild",
-    "text": "Summon all three Animal Companions."
+    "text": "Summon all three Animal Companions.",
+    xxx: 'need tokens'
   },
   {
     "id": "OG_216",
     "_info": "(4) 3/3 [HUNTER]: Infested Wolf |BEAST",
-    "text": "<b>Deathrattle:</b> Summon two 1/1 Spiders."
+    "text": "<b>Deathrattle:</b> Summon two 1/1 Spiders.",
+    death({summon}) {
+      summon('OG_216a');
+    }
   },
   {
     "id": "OG_216a",
@@ -7713,7 +7906,10 @@ const actions = [
   {
     "id": "OG_241",
     "_info": "(1) 1/1 [WARLOCK]: Possessed Villager",
-    "text": "<b>Deathrattle:</b> Summon a 1/1 Shadowbeast."
+    "text": "<b>Deathrattle:</b> Summon a 1/1 Shadowbeast.",
+    death ({summon}) {
+      summon('OG_241a');
+    }
   },
   {
     "id": "OG_241a",
@@ -7722,7 +7918,8 @@ const actions = [
   {
     "id": "OG_247",
     "_info": "(2) 3/1 [NEUTRAL]: Twisted Worgen",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "OG_248",
@@ -7731,7 +7928,11 @@ const actions = [
   {
     "id": "OG_249",
     "_info": "(4) 2/3 [NEUTRAL]: Infested Tauren",
-    "text": "<b>Taunt</b>\n<b>Deathrattle:</b> Summon a 2/2 Slime."
+    "text": "<b>Taunt</b>\n<b>Deathrattle:</b> Summon a 2/2 Slime.",
+    tags: [TAGS.taunt],
+    death ({summon}) {
+      summon('OG_249a');
+    }
   },
   {
     "id": "OG_249a",
@@ -7785,7 +7986,10 @@ const actions = [
   {
     "id": "OG_272",
     "_info": "(4) 1/1 [NEUTRAL]: Twilight Summoner",
-    "text": "<b>Deathrattle:</b> Summon a 5/5 Faceless Destroyer."
+    "text": "<b>Deathrattle:</b> Summon a 5/5 Faceless Destroyer.",
+    death ({summon}) {
+      summon('OG_272t');
+    }
   },
   {
     "id": "OG_272t",
@@ -7794,7 +7998,14 @@ const actions = [
   {
     "id": "OG_273",
     "_info": "(5) SPELL [PALADIN]: Stand Against Darkness",
-    "text": "Summon five 1/1 Silver Hand Recruits."
+    "text": "Summon five 1/1 Silver Hand Recruits.",
+    play ({summon}) {
+      summon('CS2_101t'); // same token as ability
+      summon('CS2_101t');
+      summon('CS2_101t');
+      summon('CS2_101t');
+      summon('CS2_101t');
+    }
   },
   {
     "id": "OG_276",
@@ -7804,7 +8015,16 @@ const actions = [
   {
     "id": "OG_280",
     "_info": "(10) 6/6 [NEUTRAL]: C'Thun",
-    "text": "<b>Battlecry:</b> Deal damage equal to this minion's Attack randomly split among all enemies."
+    "text": "<b>Battlecry:</b> Deal damage equal to this minion's Attack randomly split among all enemies.",
+    xxx: 1,
+    play ({self, $}) {
+      let cthun_strong = self.attack;
+      for(let i = 0; i < cthun_strong; i++) {
+        //must be :alive i.e not-mortally-wounded
+        $('enemy character .health>0').getRandom().dealDamage(1);
+      }
+    }
+
   },
   {
     "id": "OG_281",
@@ -7979,7 +8199,15 @@ const actions = [
   {
     "id": "OG_314",
     "_info": "(1) SPELL [WARRIOR]: Blood To Ichor",
-    "text": "Deal $1 damage to a minion. If it survives, summon a 2/2 Slime."
+    "text": "Deal $1 damage to a minion. If it survives, summon a 2/2 Slime.",
+    xxx: 'test this',
+    target: 'minion',
+    play ({target, summon}) {
+      target.dealDamage(1); //check damage frames, etc ..
+      if (target.health > 0) {
+        summon('OG_314b');
+      }
+    }
   },
   {
     "id": "OG_314b",
@@ -8165,7 +8393,13 @@ const actions = [
   {
     "id": "UNG_010",
     "_info": "(7) 5/7 [NEUTRAL]: Sated Threshadon |BEAST",
-    "text": "<b>Deathrattle:</b> Summon three 1/1 Murlocs."
+    "text": "<b>Deathrattle:</b> Summon three 1/1 Murlocs.",
+    death ({$}) {
+      // token ID is from ETC murlocs - can be wrong
+      summon('PRO_001at');
+      summon('PRO_001at');
+      summon('PRO_001at');
+    }
   },
   {
     "id": "UNG_011",
@@ -8304,7 +8538,11 @@ const actions = [
   {
     "id": "UNG_057t1",
     "_info": "(1) SPELL [*ROGUE]: Razorpetal",
-    "text": "Deal $1 damage."
+    "text": "Deal $1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(1);
+    }
   },
   {
     "id": "UNG_058",
@@ -8374,12 +8612,15 @@ const actions = [
   {
     "id": "UNG_070e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Stonewall",
-    "text": "<b>Divine Shield</b> and <b>Taunt</b>."
+    "text": "<b>Divine Shield</b> and <b>Taunt</b>.",
+    xxx: 'for test',
+    tags: [TAGS.divineShield, TAGS.taunt]
   },
   {
     "id": "UNG_071",
     "_info": "(9) 6/10 [NEUTRAL]: Giant Mastodon |BEAST",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "UNG_072",
@@ -8404,7 +8645,11 @@ const actions = [
   {
     "id": "UNG_076",
     "_info": "(3) 3/1 [NEUTRAL]: Eggnapper",
-    "text": "<b>Deathrattle:</b> Summon two 1/1 Raptors."
+    "text": "<b>Deathrattle:</b> Summon two 1/1 Raptors.",
+    death ({summon}) {
+      summon('UNG_076t1');
+      summon('UNG_076t1');
+    }
   },
   {
     "id": "UNG_076t1",
@@ -8428,7 +8673,10 @@ const actions = [
   {
     "id": "UNG_083",
     "_info": "(3) 0/3 [NEUTRAL]: Devilsaur Egg",
-    "text": "<b>Deathrattle:</b> Summon a 5/5 Devilsaur."
+    "text": "<b>Deathrattle:</b> Summon a 5/5 Devilsaur.",
+    death ({summon}) {
+      summon('UNG_083t1');
+    }
   },
   {
     "id": "UNG_083t1",
@@ -8437,7 +8685,11 @@ const actions = [
   {
     "id": "UNG_084",
     "_info": "(4) 3/3 [NEUTRAL]: Fire Plume Phoenix |ELEMENTAL",
-    "text": "<b>Battlecry:</b> Deal 2 damage."
+    "text": "<b>Battlecry:</b> Deal 2 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(2);
+    }
   },
   {
     "id": "UNG_085",
@@ -8759,7 +9011,14 @@ const actions = [
   {
     "id": "UNG_834",
     "_info": "(5) SPELL [WARLOCK]: Feeding Time",
-    "text": "Deal $3 damage to a minion. Summon three 1/1 Pterrordaxes."
+    "text": "Deal $3 damage to a minion. Summon three 1/1 Pterrordaxes.",
+    target: 'minion',
+    play ({target, summon}) {
+      target.dealDamageSpell(3);
+      summon('UNG_834t1');
+      summon('UNG_834t1');
+      summon('UNG_834t1');
+    }
   },
   {
     "id": "UNG_834t1",
@@ -9111,7 +9370,11 @@ const actions = [
   {
     "id": "UNG_960",
     "_info": "(1) SPELL [PALADIN]: Lost in the Jungle",
-    "text": "Summon two 1/1 Silver Hand Recruits."
+    "text": "Summon two 1/1 Silver Hand Recruits.",
+    play ({summon}) {
+      summon('CS2_101t');
+      summon('CS2_101t');
+    }
   },
   {
     "id": "UNG_961",

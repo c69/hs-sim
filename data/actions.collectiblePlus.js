@@ -618,7 +618,18 @@ const actions = [
   {
     "id": "AT_078",
     "_info": "(6) SPELL [PALADIN]: Enter the Coliseum",
-    "text": "Destroy all minions except each player's highest Attack minion."
+    "text": "Destroy all minions except each player's highest Attack minion.",
+    xxx: 'test this',
+    play ({$}) {
+      [
+        $('enemy minion'),
+        $('own minion')
+      ].forEach(minions => {
+        if (minions.length < 2) return;
+        let strongest = minions.reduce((a,v,i) => v.attack > a.attack ? {i, attack: v.attack} : a);
+        minions.splice(strongest.i, 1).destroy();
+      });
+    }
   },
   {
     "id": "AT_079",
@@ -733,7 +744,10 @@ const actions = [
   {
     "id": "AT_094",
     "_info": "(2) 2/3 [NEUTRAL]: Flame Juggler",
-    "text": "<b>Battlecry:</b> Deal 1 damage to a random enemy."
+    "text": "<b>Battlecry:</b> Deal 1 damage to a random enemy.",
+    play ({$}) {
+      $('enemy character').getRandom().dealDamage(1);
+    }
   },
   {
     "id": "AT_095",
@@ -754,7 +768,8 @@ const actions = [
   {
     "id": "AT_097",
     "_info": "(1) 2/1 [NEUTRAL]: Tournament Attendee",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "AT_098",
@@ -800,7 +815,10 @@ const actions = [
   {
     "id": "AT_105",
     "_info": "(1) 2/4 [NEUTRAL]: Injured Kvaldir",
-    "text": "<b>Battlecry:</b> Deal 3 damage to this minion."
+    "text": "<b>Battlecry:</b> Deal 3 damage to this minion.",
+    play ({self}) {
+      self.dealDamage(3);
+    }
   },
   {
     "id": "AT_106",

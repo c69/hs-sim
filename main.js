@@ -18,7 +18,7 @@ const {
   ZONES
 } = require('./data/constants.js');
 
-let {
+const {
   bootstrap,
   CardDefinitionsIndex,
   _progress

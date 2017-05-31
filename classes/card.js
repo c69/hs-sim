@@ -92,7 +92,12 @@ class Card {
 
     }
     summon () {  
-      this.zone = ZONES.play;  
+      this.zone = ZONES.play;
+       
+      this.eventBus.emit(EVENTS.minion_summoned, {
+        target: this
+      });
+  
       //console.log(`card.js :: summoned ${this.name} for ${this.owner.name}`);
     }
     _mill () {

@@ -1,9 +1,16 @@
 'use strict';
 
 const {
-  CARD_TYPES,
-  EVENTS,
-  ZONES
+    createCard,
+    bootstrap,
+    CardDefinitionsIndex,
+    _progress
+} = require('./cardUniverse.js');
+
+const {
+    CARD_TYPES,
+    EVENTS,
+    ZONES
 } = require('../data/constants.js');
 
 function playFromHand (card, {game, $, target, position}) {
@@ -36,9 +43,6 @@ function playFromHand (card, {game, $, target, position}) {
         // });
         card.summon();//({position}); // position is IGNORED for now
         
-        game.eventBus.emit(EVENTS.minion_summoned, {
-            target: card
-        });
 
         let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
         _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
@@ -116,8 +120,13 @@ function playFromHand (card, {game, $, target, position}) {
         $: $,
         game: this,
         summon (id) {
-            console.log(`LIE ^_^: You just summoned something! ${id}`);
-            //~~ board._deckX.push(new Card.Minion(CardDefinitionsIndex[id], player, eventBus2));
+            console.log(`cardPlay.summon: Summonning ${id}`);
+            if ($('own minion').length >= 7) return;
+
+            let MY_CREATION = createCard(id, card.owner, game.eventBus);
+            card.owner.deck._arr.push(MY_CREATION);
+            MY_CREATION.summon();
+            //console.log('its real!!!', MY_CREATION);
         },
         draw (n) {
             console.log(`PLAY: try to draw ${n}cards`);

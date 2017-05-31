@@ -5,6 +5,9 @@ const combat = require('./combat.js');
 const playCard = require('./playCard.js');
 const Board = require('./board.js');
 const {
+  createCard // temporary - test that summoning from Deathratlle works
+} = require('./cardUniverse.js');
+const {
   TAGS,
   CARD_TYPES,
   ACTION_TYPES,
@@ -203,12 +206,28 @@ class Game {
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
+      let $ = this.board.$.bind(this.board, character.owner);
+      let self = character;
+      let game = this;
       character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
         //console.log('DIE, INSECT!', character.name, tag, i);
         tag.death({
-          self: character,
-          $: this.board.$.bind(this.board, character.owner),
-          game: this
+          self,
+          $,
+          game,
+          summon (id) {
+              console.log(`DEATH.summon: Summonning ${id}`);
+              if ($('own minion').length >= 7) return;
+
+              let MY_CREATION = createCard(id, self.owner, game.eventBus);
+              self.owner.deck._arr.push(MY_CREATION);
+              MY_CREATION.summon();
+              //console.log('its real!!!', MY_CREATION);
+          },
+          draw (n) {
+              console.log(`DEATH: try to draw ${n}cards`);
+              self.owner.draw(n);
+          }
         });
       }, this);   
       if (character._listener) { // remove triggers - super dirty solution...
@@ -336,11 +355,14 @@ class Game {
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
+      let own_minions = this.board.$(player, 'own minion');
+      if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
+
       console.log(`
 player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
       );
       //console.log(this.board.$(player, 'own minion').map(v => v.name));
-      console.log('minions on board', this.board.$(player, 'own minion').map(v=>
+      console.log('minions on board', own_minions.map(v=>
       (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
       (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
       (v.tags.find(v => v.death) ? '☠️' : '') +

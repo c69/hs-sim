@@ -40,19 +40,19 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Bloodfen Raptor',
 //--spells:damage
 //      'Fireball',
-      'Arcane Explosion',
+      //'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
-      'Swipe',
+      //'Swipe',
 
 //--basic minions with tags or battlecries
-      'Flame Imp',
+      //'Flame Imp',
       //'Ironfur Grizzly',
-      'Ironbeak Owl',
+      //'Ironbeak Owl',
       //'Leper Gnome',
-      'Unstable Ghoul',
+      //'Unstable Ghoul',
       //'Abomination',
-      'Elven Archer',
+      //'Elven Archer',
       //'Silent Knight', //-- stealth
       //'Annoy-o-Tron',
       //'Shielded Minibot',
@@ -63,13 +63,17 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 //--summon
       'Murloc Tidehunter',
       //'Leeroy Jenkins',
-      'Mirror Image',
+      //'Mirror Image',
+      'Unleash the Hounds',
+      'Dreadsteed',
+      'Sludge Belcher',
+      
 
 //--trigger, MVP minions
       'Knife Juggler',
-      'Acolyte of Pain',
+      //'Acolyte of Pain',
       //'Imp Gang Boss',
-      'Starving Buzzard',
+      //'Starving Buzzard',
       //'Patches the Pirate',
       //'Doomsayer',
       //'Grim Patron',

@@ -4621,12 +4621,17 @@ const actions = [
   {
     "id": "EX1_538",
     "_info": "(3) SPELL [HUNTER]: Unleash the Hounds",
-    "text": "For each enemy minion, summon a 1/1 Hound with <b>Charge</b>."
+    "text": "For each enemy minion, summon a 1/1 Hound with <b>Charge</b>.",
+    xxx: 1,
+    play ({$, summon}) {
+      $('enemy minion').forEach(v => summon('EX1_538t'));
+    }
   },
   {
     "id": "EX1_538t",
     "_info": "(1) 1/1 [*HUNTER]: Hound |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "EX1_539",
@@ -5035,7 +5040,12 @@ const actions = [
   {
     "id": "FP1_002",
     "_info": "(2) 1/2 [NEUTRAL]: Haunted Creeper |BEAST",
-    "text": "<b>Deathrattle:</b> Summon two 1/1 Spectral Spiders."
+    "text": "<b>Deathrattle:</b> Summon two 1/1 Spectral Spiders.",
+    xxx: 1,
+    death ({summon}) {
+      summon('FP1_002t');
+      summon('FP1_002t');
+    }
   },
   {
     "id": "FP1_002t",
@@ -5093,12 +5103,17 @@ const actions = [
   {
     "id": "FP1_012",
     "_info": "(5) 3/5 [NEUTRAL]: Sludge Belcher",
-    "text": "<b>Taunt\nDeathrattle:</b> Summon a 1/2 Slime with <b>Taunt</b>."
+    "text": "<b>Taunt\nDeathrattle:</b> Summon a 1/2 Slime with <b>Taunt</b>.",
+    xxx: 0,
+    death ({summon}) {
+      summon('FP1_012t');
+    }
   },
   {
     "id": "FP1_012t",
     "_info": "(1) 1/2 [*NEUTRAL]: Slime",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "FP1_013",
@@ -6155,7 +6170,11 @@ const actions = [
   {
     "id": "KAR_005",
     "_info": "(2) 1/1 [HUNTER]: Kindly Grandmother |BEAST",
-    "text": "<b>Deathrattle:</b> Summon a 3/2 Big Bad Wolf."
+    "text": "<b>Deathrattle:</b> Summon a 3/2 Big Bad Wolf.",
+    xxx: 0,
+    death ({summon}) {
+      summon('KAR_005a');
+    }
   },
   {
     "id": "KAR_005a",
@@ -6674,7 +6693,13 @@ const actions = [
   {
     "id": "LOE_089",
     "_info": "(6) 2/6 [NEUTRAL]: Wobbling Runts",
-    "text": "<b>Deathrattle:</b> Summon three 2/2 Runts."
+    "text": "<b>Deathrattle:</b> Summon three 2/2 Runts.",
+    xxx: 0,
+    death ({summon}) {
+      summon('LOE_089t');
+      summon('LOE_089t2');
+      summon('LOE_089t3');
+    }
   },
   {
     "id": "LOE_089t",
@@ -7075,7 +7100,11 @@ const actions = [
   {
     "id": "OG_031",
     "_info": "(5) 4/2 WEAPON [SHAMAN]: Hammer of Twilight",
-    "text": "<b>Deathrattle:</b> Summon a 4/2 Elemental."
+    "text": "<b>Deathrattle:</b> Summon a 4/2 Elemental.",
+    xxx: 0,
+    death ({summon}) {
+      summon('OG_031a');
+    }
   },
   {
     "id": "OG_031a",

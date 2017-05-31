@@ -100,35 +100,37 @@ function bootstrap (arr1, arr2, eb) {
  * @param {Object} eventBus 
  */
 function bootstrapPlayer (player, hero_card_id, starting_deck, eventBus) {
-    player.deck = new Deck([
-        new Card.Hero(CardDefinitionsIndex[hero_card_id], player, eventBus)
-    ]);
+    player.deck = new Deck([]);
     let deck = player.deck._arr;
+    
+    //add Hero, and put it in play
+    deck.push(createCard(hero_card_id, player, eventBus));
     deck[0].zone = ZONES.play;
-
-    //deck.push(new Card.Hero(CardDefinitionsIndex[hero_card_id], player, eventBus));
-    //deck[0].zone = ZONES.play;
 
     //add 30 random cards to deck
     for (let i = 0; i < 30; i++) {
         let dice = Math.floor(Math.random()*(card_defs.length));
         let card = card_defs[dice];
-        
-        let structor = {
-            [CARD_TYPES.minion]: Card.Minion,
-            [CARD_TYPES.hero]: Card.Hero,
-            [CARD_TYPES.weapon]: Card.Weapon,
-            [CARD_TYPES.spell]: Card.Spell,
-            [CARD_TYPES.power]: Card.Power,
-            [CARD_TYPES.enchantment]: Card.Enchantment,
-        }[card.type];
-        
-        let new_card = new structor(card, player, eventBus);
-        // do we really need to couple deck & player ?
+     
+        let new_card = createCard(card.id, player, eventBus);
         deck.push(new_card);
     }
-
 }   
+// do we really need to couple card & player & eventBus
+function createCard (id, player, eventBus) {
+    let card = CardDefinitionsIndex[id];
+    let structor = {
+        [CARD_TYPES.minion]: Card.Minion,
+        [CARD_TYPES.hero]: Card.Hero,
+        [CARD_TYPES.weapon]: Card.Weapon,
+        [CARD_TYPES.spell]: Card.Spell,
+        [CARD_TYPES.power]: Card.Power,
+        [CARD_TYPES.enchantment]: Card.Enchantment,
+    }[card.type];
+    
+    let new_card = new structor(card, player, eventBus);
+    return new_card;  
+}
 
 /////
 
@@ -185,5 +187,6 @@ function _progress () {
 module.exports = {
     bootstrap,
     CardDefinitionsIndex,
+    createCard,
     _progress
 };

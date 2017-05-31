@@ -9,6 +9,7 @@ class EventBus extends EventEmitter {
 const Game = require('./classes/game.js');
 const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
+const bootstrap2 = require('./classes/bootstrap.js');
 
  const Card = require('./classes/card.js');
 //const Board = require('./classes/board.js');
@@ -69,6 +70,48 @@ const {
 
 //     ].includes(v.name))
 //     ;
+
+//---------------
+
+function _quick_play (seed) {
+  let _c = console.log;
+  let _w = console.warn;
+  console.log = function () {};
+  console.warn = function () {};
+
+  // actual play
+  let g = bootstrap2(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
+  g.start();
+  for(let i = 0; i < 100 && !g.isOver; i++) {
+    //g2.view();
+
+    //g.usePower(0); // hero power first suggested target
+    //g.playCard(0,0); // play first possible card at first target
+    //g.attack(0,0); // attack with first suggested character first suggested target
+    //g.viewState();
+    //g.viewAvailableOptions();
+
+    let max_actions_per_turn = 10;
+    for (let i = 0; i < max_actions_per_turn; i++) {
+      let opts = g.viewAvailableOptions();
+      //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
+      if (!opts.actions.length) break;
+      g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+    }
+    console.log('___________________');
+    g.endTurn();
+  }
+
+  console.log = _c;
+  console.warn = _w;
+  //g.view();
+  //console.log(`winner: ${g.result.winner.name} @turn #${g.turn}`);
+  return {
+    winner: g.result.winner.name,
+    turn: g.turn
+  };
+}
+//---------------
 
 let eventBus2 = new EventBus();
 eventBus2.on(EVENTS.card_played, function (card) {
@@ -143,6 +186,18 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   console.log('___________________');
   g2.endTurn();
 }
+
+let jjj = [];
+for (let j = 0; j < 10; j++) { 
+  // current speed is 100 games in 15 seconds
+  jjj.push(_quick_play());
+}
+console.log(jjj.reduce((a,v) => {
+  let k = v.winner;
+  if (!a[k]) a[k] = 0;
+  a[k] += 1;
+  return a;
+}, {}));
 
 _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }

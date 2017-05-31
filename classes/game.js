@@ -129,7 +129,10 @@ class Game {
   }
   end () {
     this.isOver = true;
-
+    this.result = {
+      //coulb be a draw, too..
+      winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
+    };
     return this;  
   }
   concede () {

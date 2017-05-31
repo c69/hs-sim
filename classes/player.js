@@ -34,6 +34,7 @@ class Player {
   }
   loose () {
     console.warn(`player ${this.name} LOST the game`);
+    this.lost = true;
   }
 }
 

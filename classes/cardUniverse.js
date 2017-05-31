@@ -67,7 +67,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       'Unleash the Hounds',
       'Dreadsteed',
       'Sludge Belcher',
-      
+
 
 //--trigger, MVP minions
       'Knife Juggler',

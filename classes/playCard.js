@@ -59,7 +59,9 @@ function playFromHand (card, {game, $, target, position}) {
             let listener = function (evt) {
                 let $ = game.board.$.bind(game.board, card.owner);
                 let condition = _trigger_v1.condition;
-                if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
+                if (condition === 'self') {
+                    // proceed
+                } else if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
                     return;
                 } else if (typeof condition === 'function' && !condition({
                     target: evt.target,
@@ -74,13 +76,26 @@ function playFromHand (card, {game, $, target, position}) {
                     target: evt.target,
                     $,
                     game,
-                    summon (ref_or_id) {
-                        console.log('TRIGGER: try to summon ', ref_or_id);
+                    summon (id) {
+                        console.log(`TRIGGER.summon: Summonning ${id}`);
+                        if ($('own minion').length >= 7) return;
+
+                        let MY_CREATION = createCard(id, card.owner, game.eventBus);
+                        card.owner.deck._arr.push(MY_CREATION);
+                        MY_CREATION.summon();
+                        //console.log('its real!!!', MY_CREATION);
                     },
                     draw (n) {
                         console.log(`TRIGGER: try to draw ${n}cards`);
-                        card.owner.draw(1);
+                        card.owner.draw(n);
                     }
+                    // summon (ref_or_id) {
+                    //     console.log('TRIGGER: try to summon ', ref_or_id);
+                    // },
+                    // draw (n) {
+                    //     console.log(`TRIGGER: try to draw ${n}cards`);
+                    //     card.owner.draw(1);
+                    // }
                 });
             }.bind(game);
             game.eventBus.on(event_name, listener);

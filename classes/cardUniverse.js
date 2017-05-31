@@ -40,7 +40,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Bloodfen Raptor',
 //--spells:damage
 //      'Fireball',
-      //'Arcane Explosion',
+      'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
       //'Swipe',
@@ -54,19 +54,19 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Abomination',
       //'Elven Archer',
       //'Silent Knight', //-- stealth
-      //'Annoy-o-Tron',
+      'Annoy-o-Tron',
       //'Shielded Minibot',
       // 'Argent Horseraider',
       //'Young Dragonhawk',
       // 'Thrallmar Farseer',
       
 //--summon
-      'Murloc Tidehunter',
+      //'Murloc Tidehunter',
       //'Leeroy Jenkins',
       //'Mirror Image',
       'Unleash the Hounds',
-      'Dreadsteed',
-      'Sludge Belcher',
+      //'Dreadsteed',
+      //'Sludge Belcher',
 
 
 //--trigger, MVP minions
@@ -76,7 +76,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Starving Buzzard',
       //'Patches the Pirate',
       //'Doomsayer',
-      //'Grim Patron',
+      'Grim Patron',
 
     ].includes(v.name))
     ;
@@ -123,6 +123,8 @@ function bootstrapPlayer (player, hero_card_id, starting_deck, eventBus) {
 // do we really need to couple card & player & eventBus
 function createCard (id, player, eventBus) {
     let card = CardDefinitionsIndex[id];
+    if (!card) throw `Cannot find card with ID ${id}`;
+
     let structor = {
         [CARD_TYPES.minion]: Card.Minion,
         [CARD_TYPES.hero]: Card.Hero,

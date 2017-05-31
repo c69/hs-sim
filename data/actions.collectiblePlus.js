@@ -1121,7 +1121,7 @@ const actions = [
         activeZone: 'play',
         eventName: EVENTS.character_damaged,
         condition: 'self',
-        action: ({summon}) => summon('BRM_0006t')         
+        action: ({summon}) => summon('BRM_006t')         
       }
     ]
   },
@@ -1236,7 +1236,8 @@ const actions = [
       {
         activeZone: 'play',
         eventName: EVENTS.character_damaged,
-        condition: ({target, self}) => target === self && !self.isMortallyWounded,
+        //condition: ({target, self}) => target === self && !self.isMortallyWounded,
+        condition: ({target, self}) => target === self && self.health > 0,
         action: ({summon}) => summon('BRM_019') // ~another self         
       }
     ]

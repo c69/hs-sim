@@ -140,7 +140,6 @@ const actions = [
     "id": "AT_019",
     "_info": "(4) 1/1 [WARLOCK]: Dreadsteed |DEMON",
     "text": "<b>Deathrattle:</b> Summon a Dreadsteed.",
-    xxx: 'summon',
     death ({summon}) {
       summon('AT_019');
     }
@@ -2629,14 +2628,18 @@ const actions = [
     "id": "CS2_027",
     "_info": "(1) SPELL [MAGE]: Mirror Image",
     "text": "Summon two 0/2 minions with <b>Taunt</b>.",
-    xxx: 1,
     play ({summon}) {
-      //todo: CS_mirror token was not generated :( 
-      // because id is not substring ...
-      console.log('MirrorImage: summon two NON-COLLECTIBLE 0/2 minions (from cards.all.json');
       summon('CS2_mirror');
       summon('CS2_mirror');
     }
+  },
+  {
+    // CS_mirror token was added manually
+    // because of the irregular ID ..
+    "id": "CS2_mirror", 
+    "_info": "(0) 0/2 [*MAGE]: Mirror Image",
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_028",
@@ -4536,7 +4539,6 @@ const actions = [
     "id": "EX1_506",
     "_info": "(2) 2/1 [NEUTRAL]: Murloc Tidehunter |MURLOC",
     "text": "<b>Battlecry:</b> Summon a 1/1 Murloc Scout.",
-    xxx: 'summon does not work )',
     play ({summon}) {
       summon('EX1_506a');
     }
@@ -4623,7 +4625,6 @@ const actions = [
     "id": "EX1_538",
     "_info": "(3) SPELL [HUNTER]: Unleash the Hounds",
     "text": "For each enemy minion, summon a 1/1 Hound with <b>Charge</b>.",
-    xxx: 1,
     play ({$, summon}) {
       $('enemy minion').forEach(v => summon('EX1_538t'));
     }
@@ -5042,7 +5043,6 @@ const actions = [
     "id": "FP1_002",
     "_info": "(2) 1/2 [NEUTRAL]: Haunted Creeper |BEAST",
     "text": "<b>Deathrattle:</b> Summon two 1/1 Spectral Spiders.",
-    xxx: 1,
     death ({summon}) {
       summon('FP1_002t');
       summon('FP1_002t');
@@ -5105,7 +5105,6 @@ const actions = [
     "id": "FP1_012",
     "_info": "(5) 3/5 [NEUTRAL]: Sludge Belcher",
     "text": "<b>Taunt\nDeathrattle:</b> Summon a 1/2 Slime with <b>Taunt</b>.",
-    xxx: 0,
     death ({summon}) {
       summon('FP1_012t');
     }
@@ -6172,7 +6171,6 @@ const actions = [
     "id": "KAR_005",
     "_info": "(2) 1/1 [HUNTER]: Kindly Grandmother |BEAST",
     "text": "<b>Deathrattle:</b> Summon a 3/2 Big Bad Wolf.",
-    xxx: 0,
     death ({summon}) {
       summon('KAR_005a');
     }
@@ -6695,7 +6693,6 @@ const actions = [
     "id": "LOE_089",
     "_info": "(6) 2/6 [NEUTRAL]: Wobbling Runts",
     "text": "<b>Deathrattle:</b> Summon three 2/2 Runts.",
-    xxx: 0,
     death ({summon}) {
       summon('LOE_089t');
       summon('LOE_089t2');
@@ -7102,7 +7099,6 @@ const actions = [
     "id": "OG_031",
     "_info": "(5) 4/2 WEAPON [SHAMAN]: Hammer of Twilight",
     "text": "<b>Deathrattle:</b> Summon a 4/2 Elemental.",
-    xxx: 0,
     death ({summon}) {
       summon('OG_031a');
     }

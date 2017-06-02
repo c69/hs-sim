@@ -8,6 +8,10 @@ const {
     PLAYERCLASS
 } = require('../data/constants.js');
 
+//private debug vars
+let _$_count = 0;
+let _$_count_slow_path = 0;
+let _$_slow_selectors = {};
 
 class Board {
   constructor (deck1, deck2, player1, player2) {
@@ -15,6 +19,17 @@ class Board {
     this.deck2 = deck2;
     this.player1 = player1;
     this.player2 = player2;
+  }
+  /**
+   * @private
+   * Debug method which counts total calls to $ during process lifetime.
+   */
+  static _profile () {
+    return {
+      _$_count,
+      _$_count_slow_path,
+      _$_slow_selectors
+    }
   }
   /** 
    * Declarative Array.filter on steroids. Uses DSL for queries:
@@ -27,13 +42,15 @@ class Board {
    *   e.g: 'minion #taunt' or 'minion #battlecry'
    * - Prop: .[propertyName][<|>|=|!=|<=|>=], read any property from card object
    *   and check boolean, string or number value
-   *   e.g.: 'minion .attack<3' or 'minion race=murloc' or 'character .isReady'
+   *   e.g.: 'minion .attack<3' or 'minion .race=murloc' or 'character .isReady'
    * - (NOT IMPLEMENTED) Negation: [!self|!.prop] for the real world cases when you need to exclude something
  
    * @param {Player} player Could (and should) be curried for card helper function (player is self.owner)
-   * @param {string} selector Refer to syntax above 
+   * @param {string} selector_string Refer to syntax above 
    */
-  $ (player, selector_string) {try{
+  $ (player, selector_string) {
+    _$_count += 1;
+    
     //console.log(`---SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
     if (typeof selector_string !== 'string') throw new TypeError(`String expected, instead got: ${selector_string}. Full list of arguments: this: ${this}, ${player}, ${selector_string}`);
       
@@ -42,9 +59,28 @@ class Board {
       enemyPlayer
     ] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 
-    let tokens = selector_string.split(/\s+/);
-    let filters = [];
+    let all_cards = [].concat(this.deck1, this.deck2);
+    // before you ask: Why are you merging two deck, and then searching for owner ?!
+    // - think: minion can be stolen
+    let f = {
+      //try to optimize for most used cases ? and then maybe move this strings to constants
+      'minion': v => v.zone === ZONES.play && v.type === TYPES.minion,
+      'character': v => v.zone === ZONES.play && (v.type === TYPES.minion || v.type === TYPES.hero),
+      'own minion': v => v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.minion,
+      'enemy minion': v => v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.minion,
+      'own character': v => v.zone === ZONES.play && v.owner === ownPlayer && (v.type === TYPES.minion || v.type === TYPES.hero),
+      'enemy character': v => v.zone === ZONES.play && v.owner === enemyPlayer && (v.type === TYPES.minion || v.type === TYPES.hero),
+      //:validTarget for attack or missiles
+      'enemy character .health>0': v => v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero)
+    }[selector_string];
+    if (f) return (new ArrayOfCards()).concat( all_cards.filter(f) );
+    
+    _$_count_slow_path += 1;
+    _$_slow_selectors[selector_string] = 1;
 
+    let tokens = selector_string.split(/\s+/);
+   
+    let filters = [];
     //card owner: choose one - XOR 
     if (!tokens.includes('any')) {
       if (tokens.includes('enemy')) {
@@ -156,7 +192,6 @@ class Board {
     });
     //return tokens;  
     
-    let all_cards = [...this.deck1, ...this.deck2];
     //console.log(allowed_types, filters[0].toString());
     ////console.log(all_cards.map(v=>v.type));
     //console.log(all_cards.map(v=>v.zone+' '+v.name));
@@ -165,7 +200,7 @@ class Board {
     //console.log(selector_string, result);
     //return result;
     return (new ArrayOfCards()).concat(result);
-  }catch(err){console.warn(err)}}
+  }
 }
 
 class ArrayOfCards extends Array {

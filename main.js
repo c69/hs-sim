@@ -11,8 +11,8 @@ const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 const bootstrap2 = require('./classes/bootstrap.js');
 
- const Card = require('./classes/card.js');
-//const Board = require('./classes/board.js');
+const Card = require('./classes/card.js');
+const Board = require('./classes/board.js');
 const {
   CARD_TYPES: TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
   EVENTS,
@@ -83,7 +83,7 @@ function _quick_play (seed) {
   let g = bootstrap2(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
   g.start();
   for(let i = 0; i < 100 && !g.isOver; i++) {
-    //g2.view();
+    //g.view();
 
     //g.usePower(0); // hero power first suggested target
     //g.playCard(0,0); // play first possible card at first target
@@ -105,9 +105,9 @@ function _quick_play (seed) {
   console.log = _c;
   console.warn = _w;
   //g.view();
-  //console.log(`winner: ${g.result.winner.name} @turn #${g.turn}`);
+  //console.log(`winner: ${g.result && g.result.winner.name} @turn #${g.turn}`);
   return {
-    winner: g.result.winner.name,
+    winner: g.result ? g.result.winner.name : 'UNFINISHED',
     turn: g.turn
   };
 }
@@ -147,19 +147,15 @@ var g_fatigue = new Game([
   lazy2  
 ], eb1);
 g_fatigue.start();
-try {
 
 for(let i = 0; i < 66 && !g_fatigue.isOver; i++) {
   g_fatigue.endTurn();
 }
 g_fatigue.view();
 
-} catch(err) {console.log(err)}
 console.log('==================');
 
 // bootstrap / init
-try {
-
 // actual play
 let g2 = new Game([dude1, dude2], eventBus2);
 g2.start();
@@ -188,10 +184,15 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
 }
 
 let jjj = [];
-for (let j = 0; j < 10; j++) { 
+let _timeStart = Date.now();
+let _N_RUNS = 100;
+for (let j = 0; j < _N_RUNS; j++) { 
   // current speed is 100 games in 15 seconds
   jjj.push(_quick_play());
 }
+let duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
+
+console.log(`completed ${_N_RUNS} games in ${duration_of_quick_run}s`);
 console.log(jjj.reduce((a,v) => {
   let k = v.winner;
   if (!a[k]) a[k] = 0;
@@ -201,4 +202,7 @@ console.log(jjj.reduce((a,v) => {
 
 _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
-} catch (err) {console.warn(err)}
+
+//debug output for performance testing 
+console.log(Game._profile());
+console.log(Board._profile());

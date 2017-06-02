@@ -12,43 +12,42 @@ const {
   ZONES
 } = require('../data/constants.js');
 
+const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
 let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
 const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
   a[v.id] = v;
   return a;
 }, {});
-abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1}) => {
+abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx}) => {
   //console.log(id);
-  try {
-    if (play) CardDefinitionsIndex[id].play = play;
-    if (target) CardDefinitionsIndex[id].target = target;
-    if (death) CardDefinitionsIndex[id].death = death;
-    if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
-    if (tags) CardDefinitionsIndex[id].tags = tags; 
-  } catch (err) {
-    console.warn(err, CardDefinitionsIndex[id]);
-  }
+  if (play) CardDefinitionsIndex[id].play = play;
+  if (target) CardDefinitionsIndex[id].target = target;
+  if (death) CardDefinitionsIndex[id].death = death;
+  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
+  if (tags) CardDefinitionsIndex[id].tags = tags;
+  if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true; 
 });
-
 //---Deck2.js sketch------------------
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
     .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
+    .filter(v => v.type ==! CARD_TYPES.spell || v.play)
+    //.filter(v => !v._NOT_IMPLEMENTED_)
     .filter(v => [
       //'Chillwind Yeti',
       //'River Crocolisk',
       //'Bloodfen Raptor',
 //--spells:damage
-//      'Fireball',
-      'Arcane Explosion',
+      //'Fireball',
+      //'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
       //'Swipe',
 
 //--basic minions with tags or battlecries
-      //'Flame Imp',
+      'Flame Imp',
       //'Ironfur Grizzly',
-      //'Ironbeak Owl',
+      'Ironbeak Owl',
       //'Leper Gnome',
       //'Unstable Ghoul',
       //'Abomination',
@@ -59,21 +58,23 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       // 'Argent Horseraider',
       //'Young Dragonhawk',
       // 'Thrallmar Farseer',
-      
+// - give
+      //'Windspeaker',      
+
 //--summon
-      //'Murloc Tidehunter',
+      'Murloc Tidehunter',
       //'Leeroy Jenkins',
       //'Mirror Image',
       'Unleash the Hounds',
       //'Dreadsteed',
-      //'Sludge Belcher',
+      'Sludge Belcher',
 
 
 //--trigger, MVP minions
       'Knife Juggler',
-      //'Acolyte of Pain',
-      //'Imp Gang Boss',
-      //'Starving Buzzard',
+      'Acolyte of Pain',
+      'Imp Gang Boss',
+      'Starving Buzzard',
       //'Patches the Pirate',
       //'Doomsayer',
       'Grim Patron',
@@ -112,7 +113,7 @@ function bootstrapPlayer (player, hero_card_id, starting_deck, eventBus) {
     deck[0].zone = ZONES.play;
 
     //add 30 random cards to deck
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < STARTING_DECK_SIZE; i++) {
         let dice = Math.floor(Math.random()*(card_defs.length));
         let card = card_defs[dice];
      
@@ -189,7 +190,7 @@ let progressOfCards = coolCards.reduce((a,v) => {
 function _progress () {
     console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);  
     //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
-}  
+} 
 module.exports = {
     bootstrap,
     CardDefinitionsIndex,

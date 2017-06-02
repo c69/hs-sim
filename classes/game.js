@@ -14,6 +14,8 @@ const {
   EVENTS
 } = require('../data/constants.js');
 
+var _frame_count_active = 0;
+
 /**
  * 
  
@@ -66,16 +68,20 @@ class Game {
 
     if (players.length !== 2) throw new RangeError("Game expects two players");
     this.players = players;
-    try {
-      //console.log(players[0]) ;
-      this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
-    } catch (err) {console.warn(err)}
+
+    this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
+    
     this.turn = 0;
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
     
     //this.observableState = {}; // ?
     //this.fullState = {}; // ??? 
+  }
+  static _profile () {
+    return {
+      _frame_count_active 
+    };
   }
   _init () {
     //console.log('starting the game...');
@@ -152,8 +158,8 @@ class Game {
     return this;        
   }
   //-- intra turn action --------------
-  attack (attacker_idx, target_idx) {
-    let o = this.viewAvailableOptions().actions[attacker_idx];
+  attack (actions, attacker_idx, target_idx) {
+    let o = actions[attacker_idx];
 
     let a = o.unit;
     let t = o.targetList[target_idx];
@@ -163,9 +169,9 @@ class Game {
 
     return this;
   }  
-  playCard (card_idx = 0, position_idx = 0, target_idx = 0) {
+  playCard (actions, card_idx = 0, position_idx = 0, target_idx = 0) {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let c = this.viewAvailableOptions().actions[card_idx];
+    let c = actions[card_idx];
     
     if (c.targetList) { // spell:fireball OR minion:battlecry
       var target = c.targetList[target_idx];      
@@ -188,7 +194,7 @@ class Game {
 
     return this;
   }
-  usePower (target_idx) {
+  usePower (actions, target_idx) {
     //todo: implement me
 
     return this;  
@@ -242,6 +248,8 @@ class Game {
     this._cleanup(); //recursion !
   }
   chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
+    _frame_count_active += 1;
+
     console.log('-- frame ---');
     let opts = this.viewAvailableOptions().actions;
     if (!opts.length) throw 'options.actions[] are empty' //return;
@@ -249,9 +257,9 @@ class Game {
     let o = opts[options_idx];
     if (!o) throw new RangeError('Invalid option index provided.');
     //console.log(o.type);
-    if (o.type === ACTION_TYPES.attack) this.attack(options_idx, target_idx);
-    if (o.type === ACTION_TYPES.playCard) this.playCard(options_idx, position_idx, target_idx);
-    //if (o.type === ACTION_TYPES.usePower) this.usePower(options_idx, target_idx);
+    if (o.type === ACTION_TYPES.attack) this.attack(opts, options_idx, target_idx);
+    if (o.type === ACTION_TYPES.playCard) this.playCard(opts, options_idx, position_idx, target_idx);
+    //if (o.type === ACTION_TYPES.usePower) this.usePower(opts, options_idx, target_idx);
 
     this._cleanup();
 
@@ -271,7 +279,7 @@ class Game {
    * A nice GOD method
    * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
    */
-  viewAvailableOptions () { try {
+  viewAvailableOptions () {
     //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
     if (!this.isStarted || this.isOver) {
       console.log('No options are available - game state is wrong.');
@@ -352,7 +360,7 @@ class Game {
       ]
       //, aubergines
     };
-  } catch(err) {console.warn.err}}
+  }
 
   //-----------------------------------
   view () {

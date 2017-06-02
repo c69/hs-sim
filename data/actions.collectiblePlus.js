@@ -2447,7 +2447,8 @@ const actions = [
   {
     "id": "CFM_854",
     "_info": "(6) 3/8 [NEUTRAL]: Ancient of Blossoms",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CFM_855",
@@ -2477,7 +2478,8 @@ const actions = [
   {
     "id": "CS1_042",
     "_info": "(1) 1/2 [NEUTRAL]: Goldshire Footman",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS1_069",
@@ -2784,7 +2786,8 @@ const actions = [
   {
     "id": "CS2_065",
     "_info": "(1) 1/3 [WARLOCK]: Voidwalker |DEMON",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_072",
@@ -2962,7 +2965,8 @@ const actions = [
   {
     "id": "CS2_121",
     "_info": "(2) 2/2 [NEUTRAL]: Frostwolf Grunt",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_122",
@@ -2989,7 +2993,8 @@ const actions = [
   {
     "id": "CS2_127",
     "_info": "(3) 1/4 [NEUTRAL]: Silverback Patriarch |BEAST",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_131",
@@ -3000,7 +3005,11 @@ const actions = [
   {
     "id": "CS2_141",
     "_info": "(3) 2/2 [NEUTRAL]: Ironforge Rifleman",
-    "text": "<b>Battlecry:</b> Deal 1 damage."
+    "text": "<b>Battlecry:</b> Deal 1 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(1);
+    }
   },
   {
     "id": "CS2_142",
@@ -3020,7 +3029,11 @@ const actions = [
   {
     "id": "CS2_150",
     "_info": "(5) 4/2 [NEUTRAL]: Stormpike Commando",
-    "text": "<b>Battlecry:</b> Deal 2 damage."
+    "text": "<b>Battlecry:</b> Deal 2 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamage(2);
+    }
   },
   {
     "id": "CS2_151",
@@ -3043,12 +3056,14 @@ const actions = [
   {
     "id": "CS2_161",
     "_info": "(7) 7/5 [NEUTRAL]: Ravenholdt Assassin",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "CS2_162",
     "_info": "(6) 6/5 [NEUTRAL]: Lord of the Arena",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_168",
@@ -3079,14 +3094,19 @@ const actions = [
   {
     "id": "CS2_179",
     "_info": "(4) 3/5 [NEUTRAL]: Sen'jin Shieldmasta",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_181",
     "_info": "(3) 4/7 [NEUTRAL]: Injured Blademaster",
-    "text": "<b>Battlecry:</b> Deal 4 damage to HIMSELF."
+    "text": "<b>Battlecry:</b> Deal 4 damage to HIMSELF.",
+    play ({self}) {
+      self.dealDamage(4);
+    }
   },
   {
+    //unused ?
     "id": "CS2_181e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Full Strength",
     "text": "This minion has +2 Attack."
@@ -3102,15 +3122,17 @@ const actions = [
   {
     "id": "CS2_187",
     "_info": "(5) 5/4 [NEUTRAL]: Booty Bay Bodyguard",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_188",
     "_info": "(1) 1/1 [NEUTRAL]: Abusive Sergeant",
     "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn.",
+    xxx: 'test buff',
     target: 'minion',
     play ({target}) {
-      target.give('CS2_188o');
+      target.buff('CS2_188o');
     }
   },
   {
@@ -3264,7 +3286,7 @@ const actions = [
     xxx: 1,
     target: 'own minion .race=beast',
     play ({target}) {
-      target.give('DS1_070o');
+      target.buff('DS1_070o');
     }
   },
   {
@@ -3437,7 +3459,7 @@ const actions = [
     "text": "<b>Battlecry:</b> Give a friendly minion +1/+1.",
     target: 'own minion',
     play ({target}) {
-      target.give('EX1_019e');
+      target.buff('EX1_019e');
     }
   },
   {
@@ -3948,42 +3970,64 @@ const actions = [
   {
     "id": "EX1_165",
     "_info": "(5) 4/4 [DRUID]: Druid of the Claw",
-    "text": "[x]<b>Choose One -</b> Transform\ninto a 4/4 with <b>Charge</b>;\nor a 4/6 with <b>Taunt</b>."
+    "text": "[x]<b>Choose One -</b> Transform\ninto a 4/4 with <b>Charge</b>;\nor a 4/6 with <b>Taunt</b>.",
+    xxx: 'test',
+    chooseOne: ['EX1_165a', 'EX1_165b']
   },
   {
     "id": "EX1_165a",
     "_info": "(0) SPELL [*DRUID]: Cat Form",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    xxx: 'test',
+    play ({self}) {
+      self.tranform('EX1_165t1');
+    }
   },
   {
     "id": "EX1_165b",
     "_info": "(0) SPELL [*DRUID]: Bear Form",
-    "text": "+2 Health and <b>Taunt</b>."
+    "text": "+2 Health and <b>Taunt</b>.",
+    xxx: 'test',
+    play ({self}) {
+      self.tranform('EX1_165t2');
+    }
   },
   {
     "id": "EX1_165t1",
     "_info": "(5) 4/4 [*DRUID]: Druid of the Claw |BEAST",
-    "text": "<b>Charge</b>"
+    "text": "<b>Charge</b>",
+    tags: [TAGS.charge]
   },
   {
     "id": "EX1_165t2",
     "_info": "(5) 4/6 [*DRUID]: Druid of the Claw |BEAST",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "EX1_166",
     "_info": "(4) 2/2 [DRUID]: Keeper of the Grove",
-    "text": "<b>Choose One -</b> Deal 2 damage; or <b>Silence</b> a minion."
+    "text": "<b>Choose One -</b> Deal 2 damage; or <b>Silence</b> a minion.",
+    xxx: 'test',
+    chooseOne: ['EX1_166a', 'EX1_166b']
   },
   {
     "id": "EX1_166a",
     "_info": "(0) SPELL [*DRUID]: Moonfire",
-    "text": "Deal 2 damage."
+    "text": "Deal 2 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(2);
+    }
   },
   {
     "id": "EX1_166b",
     "_info": "(0) SPELL [*DRUID]: Dispel",
-    "text": "<b>Silence</b> a minion."
+    "text": "<b>Silence</b> a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.silence();
+    }
   },
   {
     "id": "EX1_169",
@@ -4053,7 +4097,12 @@ const actions = [
   {
     "id": "EX1_245",
     "_info": "(1) SPELL [SHAMAN]: Earth Shock",
-    "text": "<b>Silence</b> a minion, then deal $1 damage to it."
+    "text": "<b>Silence</b> a minion, then deal $1 damage to it.",
+    target: 'minion',
+    play ({target}) {
+      target.silence();
+      target.dealDamageSpell(1);
+    }
   },
   {
     "id": "EX1_246",
@@ -4077,8 +4126,8 @@ const actions = [
     xxx: 0,
     overload: 2,
     play ({summon}) {
-      summon('');
-      summon('');
+      summon('EX1_tk11');
+      summon('EX1_tk11');
     }
   },
   {
@@ -4379,19 +4428,31 @@ const actions = [
   {
     "id": "EX1_362",
     "_info": "(2) 2/2 [PALADIN]: Argent Protector",
-    "text": "<b>Battlecry:</b> Give a friendly minion <b>Divine Shield</b>."
+    "text": "<b>Battlecry:</b> Give a friendly minion <b>Divine Shield</b>.",
+    xxx: 'test',
+    target: 'minion',
+    play ({target}) {
+      target.buff(TAGS.divineShield);
+    }
   },
   {
     "id": "EX1_363",
     "_info": "(1) SPELL [PALADIN]: Blessing of Wisdom",
-    "text": "Choose a minion. Whenever it attacks, draw a card."
+    "text": "Choose a minion. Whenever it attacks, draw a card.",
+    xxx: 'test',
+    target: 'minion',
+    play ({target}) {
+      target.buff('EX1_363e');
+    }
   },
   {
     "id": "EX1_363e",
     "_info": "ENCHANTMENT [*PALADIN]: Blessing of Wisdom",
-    "text": "When this minion attacks, the player who blessed it draws a card."
+    "text": "When this minion attacks, the player who blessed it draws a card.",
+    xxx: 'implement'
   },
   {
+    //this looks like crazy brawl version ?
     "id": "EX1_363e2",
     "_info": "ENCHANTMENT [*PALADIN]: Blessing of Wisdom",
     "text": "When this minion attacks, the enemy player draws a card."
@@ -4916,10 +4977,10 @@ const actions = [
     "id": "EX1_587",
     "_info": "(4) 3/3 [SHAMAN]: Windspeaker",
     "text": "<b>Battlecry:</b> Give a friendly minion <b>Windfury</b>.",
-    xxx: 'test .give()',
+    xxx: 'test .buff()',
     target: 'own minion',
     play({target}) {
-      target.give(TAGS.windfury);
+      target.buff(TAGS.windfury);
     }
   },
   {
@@ -5375,12 +5436,18 @@ const actions = [
   {
     "id": "GVG_008",
     "_info": "(6) SPELL [PRIEST]: Lightbomb",
-    "text": "Deal damage to each minion equal to its Attack."
+    "text": "Deal damage to each minion equal to its Attack.",
+    play ({$}) {
+      $('minion').forEach(v => v.dealDamageSpell(v.attack));
+    }
   },
   {
     "id": "GVG_009",
     "_info": "(1) 2/1 [PRIEST]: Shadowbomber",
-    "text": "<b>Battlecry:</b> Deal 3 damage to each hero."
+    "text": "<b>Battlecry:</b> Deal 3 damage to each hero.",
+    play ({$}) {
+      $('hero').dealDamage(3);
+    }
   },
   {
     "id": "GVG_010",

@@ -376,7 +376,9 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       console.log('minions on board', own_minions.map(v=>
       (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
       (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
+      (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
       (v.tags.find(v => v.death) ? '☠️' : '') +
+      (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
       `${v.attack}/${v.health}`
       ));
     });

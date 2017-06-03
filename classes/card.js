@@ -56,7 +56,7 @@ class Card {
       this.zone = ZONES.deck;
       this.owner = owner;
 
-      this.card_id = card_id++;  
+      this.card_id = card_id++; 
     }
     get tags () {
       let real_store = this.buffs;  
@@ -71,25 +71,24 @@ class Card {
         this.zone = ZONES.hand;
     }
     _play () {
-        if (this.zone !== ZONES.hand) throw 'Attempt to play card NOT from hand';
+        if (this.type === TYPES.enchantment) {
+            // no idea from which zone to play it ..
+        } else {
+            if (this.zone !== ZONES.hand) throw `Attempt to play card NOT from hand: ${this.name} #${this.card_id}, but from: ${this.zone}`;
+        }
         this.zone = ZONES.aside;
-
-        // if (this.target) {
-        //   asyncChooseTarget, OR expect it to be provided in arguments ?
-        //   btw, asynctChoosePosition ? - should work the same way ..
-        // };
 
         // todo: consider splitting this IF so proper event could be emitted
         if (this.type === TYPES.minion || this.type === TYPES.weapon) {
             this.zone = ZONES.play;
         } else if (this.type === TYPES.spell) {
+            //todo: implements secrets
             this.zone = this.isSecret ? ZONES.secret : ZONES.grave;
+        } else if (this.type === TYPES.enchantment) {
+            this.zone = ZONES.play;
         } else {
             throw `Played card of unplayable type:${this.type}`;
         }
-        
-        //this.play({self, $, game, target, position}); // battlecry !
-
     }
     summon () {  
       this.zone = ZONES.play;
@@ -114,9 +113,10 @@ class Card {
         copy.zone = ZONES.aside; 
     }
     _damageApply (n, type = '') {
+      if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
       let was = this.health;
       
-      if (this.tags.includes(TAGS.divineShield)) {
+      if (n > 0 && this.tags.includes(TAGS.divineShield)) {
         this.buffs = this.buffs.filter(v => v !== TAGS.divineShield); // = "removeTag"
         console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
       } else {
@@ -147,8 +147,22 @@ class Card {
         this._die();
         //console.log(`🔥 ${this.name} is being destroyed!`);
     }
-    x_buff (enchantment) {
-        this.buffs.push(enchantment); // todo: check for duplicate buffs, etc
+    buff (enchantment) {
+        if (typeof enchantment === 'string') {
+            // if (Reflect.values(TAGS).includes(enchantment)) {
+            //     this.buffs.push(enchantment); // check for duplicates
+            //     return this;
+            // } else if (let x = _getCardById(enchantment)) {
+            //     this.buffs.push(x)
+            //     return this;
+            // };
+        } else if (enchantment && typeof enchantment === 'object') {
+            //this.buffs.push(enchantment);
+            enchantment.apply(this); //why not .play ?
+            return this;
+        } else {
+          throw new RangeError('String or Object expected');
+        }
     }
     x_give (args, descr) {
       if (!Array.isArray(args)) throw new RangeError('Array expected');
@@ -179,13 +193,19 @@ class Minion extends Card {
       if (this.type !== TYPES.minion) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.minion}`);
       
-      this.attack = cardDef.attack || 0;
+      this.baseAttack = cardDef.attack || 0;
       this.health = cardDef.health || 0;
       this.healthMax = this.health; // in the beginning, all characters are at full health
       this.race = cardDef.race; // or undefined   
    
       this.isReady = false; //applies only to minion - initial ZZZ / sleep
-      this.attackedThisTurn = 0; //applies to: Minion, Hero, Weapon, Power
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
+    }
+    get attack () {
+      //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
+      let modifiers = this.buffs.filter(v => v.attack);
+      if (!modifiers) return this.baseAttack;  
+      return this.baseAttack + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
 }
 class Spell extends Card {
@@ -214,12 +234,20 @@ class Hero extends Card {
       if (this.type !== TYPES.hero) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.hero}`);
       
-      this.attack = cardDef.attack || 0;
+      this.baseAttack = cardDef.attack || 0;
       this.health = cardDef.health || 0;
       this.healthMax = this.health; // in the beginning, all characters are at full health
-
+      
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
+      
       this.armor = cardDef.armor || 0;
       //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
+    }
+    get attack () {
+      //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
+      let modifiers = this.buffs.filter(v => v.attack);
+      if (!modifiers) return this.baseAttack;  
+      return this.baseAttack + modifiers.reduce((a,v) => a + v, 0)   
     }
     _die () {
         super._die();
@@ -231,9 +259,8 @@ class Power extends Card {
       super(cardDef, ...args);
       if (this.type !== TYPES.power) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.power}`);
-      
-      this.attack = cardDef.attack || 0;
-      this.health = cardDef.durability || 0;   
+
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power   
     }
 }
 class Enchantment extends Card {
@@ -242,8 +269,28 @@ class Enchantment extends Card {
       if (this.type !== TYPES.enchantment) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.enchantment}`);
       
-      this.attack = cardDef.attack || 0;
-      this.health = cardDef.durability || 0;   
+      //console.log('EXCH', cardDef);
+      //DESIGN BUG: clunky object shape
+      this.effect = {
+          attack: cardDef.attack,
+          health: cardDef.health,
+          durability: cardDef.durability,
+          cost: cardDef.cost,
+          //owner: cardDef.owner --< unclear how to do
+          death: cardDef.death
+      }
+    }
+    apply ({target, $, game}) {
+          //console.log(target);
+          super._play();
+          console.log(this.effect, '_______');
+          let attack_bonus = (typeof this.effect.attack !== 'function') ? this.effect.attack : this.effect.attack({target, $, game});
+          
+          target.buffs.push({
+              attack: attack_bonus,
+              _by: this  
+          });
+          //console.log(target.name, target.buffs);        
     }
 }
 

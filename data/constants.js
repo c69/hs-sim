@@ -51,6 +51,8 @@ const TAGS = {
   silence: 'SILENCE'
 };
 
+const TAGS_LIST = Object.keys(TAGS).reduce((a,v) => a.concat(TAGS[v]),[]);
+
 const EVENTS = {
   character_damaged: 'CHARACTER_DAMAGED',
   minion_summoned: 'MINION_SUMMONED',
@@ -69,6 +71,7 @@ module.exports = {
     ZONES,
     CARD_TYPES,
     TAGS,
+    TAGS_LIST,
     PLAYERCLASS,
     ACTION_TYPES,
     EVENTS

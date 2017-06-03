@@ -9,6 +9,7 @@ const {
 
 const {
     CARD_TYPES,
+    TAGS_LIST,
     EVENTS,
     ZONES
 } = require('../data/constants.js');
@@ -146,6 +147,17 @@ function playFromHand (card, {game, $, target, position}) {
         draw (n) {
             console.log(`PLAY: try to draw ${n}cards`);
             card.owner.draw(n);
+        },
+        _$_card (id) {
+            return createCard(id, card.owner, game.eventBus);
+        },
+        buff (x, id_or_Tag) {
+            if (TAGS_LIST.includes(id_or_Tag)) {
+                x.buffs.push(id_or_Tag); // check for duplicates
+            } else {
+                createCard(id_or_Tag, card.owner, game.eventBus).apply({target: x, $, game});
+            }
+            return x;
         }
     });
 }

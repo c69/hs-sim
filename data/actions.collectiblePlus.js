@@ -2693,7 +2693,14 @@ const actions = [
   {
     "id": "CS2_039",
     "_info": "(2) SPELL [SHAMAN]: Windfury",
-    "text": "Give a minion <b>Windfury</b>."
+    "text": "Give a minion <b>Windfury</b>.",
+    xxx: 1,
+    target: 'minion',
+    play ({target, buff}) {
+      console.log(`WINDFURY: trying to BUFF ${target.name}`);
+      buff(target, TAGS.windfury);
+      console.log(`WINDFURY: done ? buffs: ${target.buffs}`);
+    }
   },
   {
     "id": "CS2_041",
@@ -4475,7 +4482,12 @@ const actions = [
   {
     "id": "EX1_371",
     "_info": "(1) SPELL [PALADIN]: Hand of Protection",
-    "text": "Give a minion <b>Divine Shield</b>."
+    "text": "Give a minion <b>Divine Shield</b>.",
+    xxx: 1,
+    target: 'minion',
+    play ({buff, target}) {
+      buff(target, TAGS.divineShield);
+    }
   },
   {
     "id": "EX1_379",
@@ -7105,12 +7117,51 @@ const actions = [
   {
     "id": "NEW1_018",
     "_info": "(2) 2/3 [NEUTRAL]: Bloodsail Raider |PIRATE",
-    "text": "<b>Battlecry:</b> Gain Attack equal to the Attack\nof your weapon."
+    "text": "<b>Battlecry:</b> Gain Attack equal to the Attack\nof your weapon.",
+    xxx: 'clean this up',
+    play ({self, _$_card, buff}) {
+      //self.buff('NEW1_018e');
+      //self.buff(_$_card('NEW1_018e'));
+      buff(self, 'NEW1_018e');
+      // console.log(self.buffs);
+      // console.log(self.tags);
+      // console.log('a', self.attack);
+    }
   },
   {
     "id": "NEW1_018e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Treasure Crazed",
-    "text": "Increased Attack."
+    "text": "Increased Attack.",
+    xxx: 'weapons are not in game yet',
+    attack ({target, $}) {
+      return 3;
+      // let myWeapon = $('own weapon')[0];
+      // return myWeapon ? myWeapon.attack : 0;  
+    }
+    
+    //attack: ({target, $}) => target.attack + 3 // + $('own weapon')[0].attack
+    
+    
+    // attack_$add: -1,
+    // health_$multiply: 2,
+    // health ({target}) => target.health * 2,
+    // cost_$set: 5, 
+
+    // mutate: [1, 3, -2, TAGS.taunt],
+    // effect: [null, 2, null, TAGS.divineShield],
+
+    // effect ({target, $}) {
+    //   return {
+    //     attack: target.attack + $('own weapon')[0].attack,
+    //     health,
+    //     durability,
+    //     cost,
+    //     tags,
+    //     death,
+    //     trigger,
+    //     owner ~~ controller
+    //   }
+    // }
   },
   {
     "id": "NEW1_019",

@@ -19,8 +19,10 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
   a[v.id] = v;
   return a;
 }, {});
-abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx}) => {
+abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx, attack}) => {
   //console.log(id);
+  if (attack) CardDefinitionsIndex[id].attack = attack;
+  
   if (play) CardDefinitionsIndex[id].play = play;
   if (target) CardDefinitionsIndex[id].target = target;
   if (death) CardDefinitionsIndex[id].death = death;
@@ -45,39 +47,42 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Swipe',
 
 //--basic minions with tags or battlecries
-      'Flame Imp',
+      //'Flame Imp',
       //'Ironfur Grizzly',
-      'Ironbeak Owl',
+      //'Ironbeak Owl',
       //'Leper Gnome',
       //'Unstable Ghoul',
       //'Abomination',
       //'Elven Archer',
       //'Silent Knight', //-- stealth
-      'Annoy-o-Tron',
+      //'Annoy-o-Tron',
       //'Shielded Minibot',
       // 'Argent Horseraider',
       //'Young Dragonhawk',
       // 'Thrallmar Farseer',
 // - give
+      'Bloodsail Raider',
+      'Windfury',
+      'Hand of Protection',
       //'Windspeaker',      
 
 //--summon
-      'Murloc Tidehunter',
+      //'Murloc Tidehunter',
       //'Leeroy Jenkins',
       //'Mirror Image',
-      'Unleash the Hounds',
+      //'Unleash the Hounds',
       //'Dreadsteed',
-      'Sludge Belcher',
+      //'Sludge Belcher',
 
 
 //--trigger, MVP minions
-      'Knife Juggler',
-      'Acolyte of Pain',
-      'Imp Gang Boss',
-      'Starving Buzzard',
+      //'Knife Juggler',
+      //'Acolyte of Pain',
+      //'Imp Gang Boss',
+      //'Starving Buzzard',
       //'Patches the Pirate',
       //'Doomsayer',
-      'Grim Patron',
+      //'Grim Patron',
 
     ].includes(v.name))
     ;

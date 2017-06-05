@@ -144,10 +144,10 @@ class Card {
         //console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
     }
     destroy () {
-        this._die();
-        //console.log(`🔥 ${this.name} is being destroyed!`);
+        this.buffs.push(TAGS._pendingDestruction);
+        //console.log(`🔥 ${this.name} was marked for destroy!`);
     }
-     silence () {
+    silence () {
       console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);  
       this.buffs.push(TAGS.silence);
 
@@ -157,8 +157,11 @@ class Card {
         delete this._listener;
       }  
     }
-    isStillAlive() { // replace with death sweep in game
-        if (this.health < 1) this._die();
+    isDamaged () {
+        return this.health < this.healthMax;     
+    }
+    isAlive () { // replace with death sweep in game
+        return this.health > 0 && !this.tags.includes(TAGS._pendingDestruction);
     }
     toString () {
         return `[Object Card: ${this.name} #${this.card_id}]`;
@@ -171,7 +174,7 @@ class Minion extends Card {
       if (this.type !== TYPES.minion) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.minion}`);
       
-      this.baseAttack = cardDef.attack || 0;
+      this.attackBase = cardDef.attack || 0;
       this.health = cardDef.health || 0;
       this.healthMax = this.health; // in the beginning, all characters are at full health
       this.race = cardDef.race; // or undefined   
@@ -184,8 +187,8 @@ class Minion extends Card {
       let mostRecentSilence = this.buffs.lastIndexOf(TAGS.silence);
       if (mostRecentSilence === -1) mostRecentSilence = 0;
       let modifiers = this.buffs.slice(mostRecentSilence).filter(v => v.attack);
-      if (!modifiers) return this.baseAttack;  
-      return this.baseAttack + modifiers.reduce(((a,v) => a + v.attack), 0)   
+      if (!modifiers) return this.attackBase;  
+      return this.attackBase + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
 }
 class Spell extends Card {
@@ -214,7 +217,7 @@ class Hero extends Card {
       if (this.type !== TYPES.hero) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.hero}`);
       
-      this.baseAttack = cardDef.attack || 0;
+      this.attackBase = cardDef.attack || 0;
       this.health = cardDef.health || 0;
       this.healthMax = this.health; // in the beginning, all characters are at full health
       
@@ -226,7 +229,7 @@ class Hero extends Card {
     get attack () {
       //ARCHITECTURE BUG: currently getter must be copy/pasted bewteen hero and minion
       // for now i'll just ignore buffs for Hero 
-      return this.baseAttack;
+      return this.attackBase;
     }
     _die () {
         super._die();

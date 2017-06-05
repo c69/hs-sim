@@ -2840,7 +2840,7 @@ const actions = [
     "id": "CS2_075",
     "_info": "(1) SPELL [ROGUE]: Sinister Strike",
     "text": "Deal $3 damage to the enemy hero.",
-    play ($) {
+    play ({$}) {
       $('enemy hero').dealDamageSpell(3);
     }
   },
@@ -2849,7 +2849,7 @@ const actions = [
     "_info": "(5) SPELL [ROGUE]: Assassinate",
     "text": "Destroy an enemy minion.",
     target: 'enemy minion',
-    play (target) {
+    play ({target}) {
       target.destroy();
     }
   },
@@ -2910,7 +2910,7 @@ const actions = [
     "id": "CS2_093",
     "_info": "(4) SPELL [PALADIN]: Consecration",
     "text": "Deal $2 damage to all enemies.",
-    play ($) {
+    play ({$}) {
       $('enemy character').dealDamageSpell(2);
     }
   },
@@ -4731,12 +4731,17 @@ const actions = [
   {
     "id": "EX1_412",
     "_info": "(3) 3/3 [NEUTRAL]: Raging Worgen",
-    "text": "<b>Enrage:</b> <b>Windfury</b> and +1 Attack."
+    "text": "<b>Enrage:</b> <b>Windfury</b> and +1 Attack.",
+    xxx: 1,
+    enrage: 'EX1_412e'
   },
   {
     "id": "EX1_412e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Enraged",
-    "text": "+1 Attack and <b>Windfury</b>."
+    "text": "+1 Attack and <b>Windfury</b>.",
+    xxx: 'enrage',
+    attack: 1,
+    tags: [TAGS.windfury]
   },
   {
     "id": "EX1_414",
@@ -5092,7 +5097,7 @@ const actions = [
     "text": "<b>Battlecry:</b> Give a friendly minion <b>Windfury</b>.",
     xxx: 'test buff()',
     target: 'own minion',
-    play({target, buff}) {
+    play ({target, buff}) {
       buff(target, TAGS.windfury);
     }
   },
@@ -7299,8 +7304,14 @@ const actions = [
       {
         activeZone: 'play',
         eventName: EVENTS.turn_started,
-        condition: null,
-        action: ({$}) => $('minion').destroy() // not implemented         
+        condition: ({target, self}) => target === self.owner,
+        //shorthand
+        //action: ({$}) => $('minion').destroy() 
+        action: ({$}) => {
+        //   console.log('[Doomsayer]: EVERYBODY DIES !!')
+            $('minion').destroy();
+        //   console.log($('minion').map(v => v.tags));
+        }         
       }
     ] 
   },

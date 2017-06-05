@@ -48,7 +48,9 @@ const TAGS = {
   charge: 'CHARGE',
   windfury: 'WINDFURY',
   stealth: 'STEALTH',
-  silence: 'SILENCE'
+  silence: 'SILENCE',
+  enraged: 'ENRAGED',
+  _pendingDestruction: '__DESTROY__' // check rulebook
 };
 
 const TAGS_LIST = Object.keys(TAGS).reduce((a,v) => a.concat(TAGS[v]),[]);

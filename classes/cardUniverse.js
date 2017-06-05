@@ -19,7 +19,19 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a,v) => {
   a[v.id] = v;
   return a;
 }, {});
-abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx, attack}) => {
+abilitiesMixin.forEach(({
+    //long destructuring
+    id,
+    tags,
+    target,
+    play,
+    death,
+    _triggers_v1,
+    aura,
+    enrage,
+    xxx,
+    attack
+  }) => {
   //console.log(id);
   if (attack) CardDefinitionsIndex[id].attack = attack;
   
@@ -28,6 +40,9 @@ abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx, attac
   if (death) CardDefinitionsIndex[id].death = death;
   if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
   if (tags) CardDefinitionsIndex[id].tags = tags;
+  if (aura) CardDefinitionsIndex[id].aura = aura;
+  if (enrage) CardDefinitionsIndex[id].enrage = enrage;
+
   if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true; 
 });
 //---Deck2.js sketch------------------
@@ -42,6 +57,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Chillwind Yeti',
       //'River Crocolisk',
       //'Bloodfen Raptor',
+//--
+      //'Coin',       
 //--spells:damage
       //'Fireball',
       //'Meteor',
@@ -49,6 +66,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Arcane Missiles',
 //      'Hellfire',
       //'Swipe',
+      //'Assassinate',
 
 //--basic minions with tags or battlecries
       //'Flame Imp',
@@ -68,22 +86,24 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       // 'Thrallmar Farseer',
 // - silence
       //'Ironbeak Owl',
-      //'Mass Dispel',      
+      //'Mass Dispel',    
 // - give
       //'Bloodsail Raider',
       //'Windfury',
       //'Hand of Protection',
       //'Shattered Sun Cleric',
       //'Windspeaker',      
-      //'Bloodlust',
-      'Sunfury Protector', // adjacent 
+      //'Abusive Sergeant', // this turn
+      //'Bloodlust', // this turn
+      // 'Houndmaster',
+      // 'Sunfury Protector', // adjacent 
       //'Defender of Argus', // adjacent
       //'Blessing of Wisdom',
+      'Raging Worgen', //enrage
 // - aura
-      //'Timber Wolf',
-      //'Flametongue Totem',
-      //'Houndmaster',
-      //'Tundra Rhino',
+      // 'Timber Wolf',
+      // 'Flametongue Totem',
+      // 'Tundra Rhino',
       //'Warsong Commander',
 
 //--summon
@@ -97,13 +117,13 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 
 
 //--trigger, MVP minions
-      //'Knife Juggler',
-      //'Acolyte of Pain',
-      //'Imp Gang Boss',
-      //'Starving Buzzard',
+      'Knife Juggler',
+      'Acolyte of Pain',
+      'Imp Gang Boss',
+      'Starving Buzzard',
       //'Patches the Pirate',
-      //'Doomsayer',
-      //'Grim Patron',
+      'Doomsayer',
+      'Grim Patron',
 
     ].includes(v.name))
     ;

@@ -118,6 +118,10 @@ class Game {
       v.isReady = true;
     });
     //execute triggers: "At the beginning of ... turn"
+    this.eventBus.emit(EVENTS.turn_started, {
+      target: this.activePlayer
+    });
+    this._cleanup(); // cancer great again ? :/
   }
   _attemptToDrawCard () { // wrappers inside of wrappers ...
     this.activePlayer.draw(1);
@@ -200,11 +204,15 @@ class Game {
     return this;  
   }  
   _cleanup () {
+    //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
+    //aura update: Health/Attack
+    let aura_1_list = [];
+
+
     //death logic onwards
     let deathrattle_list = [];
     this.board.$(this.activePlayer, 'character').forEach(character => {
-      character.isStillAlive();
-      if(character.health <= 0) deathrattle_list.push(character);
+      if (!character.isAlive()) deathrattle_list.push(character);
     });
     
     if (!deathrattle_list.length) {
@@ -215,6 +223,7 @@ class Game {
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
+      character._die();
       let $ = this.board.$.bind(this.board, character.owner);
       let self = character;
       let game = this;
@@ -245,6 +254,10 @@ class Game {
         delete character._listener; 
       }
     });
+
+    //aura update: Other
+    //Mal'Ganis, Baron Riverdale, Auchenai Soulpriest, Brann Bronzebeard, (Spiritsinger Umbra ?)
+
     this._cleanup(); //recursion !
   }
   chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {

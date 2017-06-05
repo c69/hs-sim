@@ -16,6 +16,9 @@ const {
     if (!target) throw 'no target'; //return;
     if (target.health < 1) throw `dead target ${target.name} #${target.card_id} @${target.zone}`; //return;
     if (attacker.health < 1) throw `dead attacker ${attacker.name} #${attacker.card_id} @${attacker.zone}`; //return;
+
+    //if (attacker.attack > 10) throw `is too strong ${attacker.name} #${attacker.card_id}`; //return;
+
     if (attacker.attack < 1) throw `harmless attacker ${attacker.name} #${attacker.card_id}`; //return;
     if (attacker.owner !== game.activePlayer) throw 'wrong turn'; //return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
     if (target.owner === attacker.owner) throw 'own unit'; //return; // will fail for Hunter:Misdirection secret, and Ogres

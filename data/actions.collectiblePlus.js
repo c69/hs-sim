@@ -3233,12 +3233,21 @@ const actions = [
   {
     "id": "CS2_222",
     "_info": "(7) 6/6 [NEUTRAL]: Stormwind Champion",
-    "text": "Your other minions have +1/+1."
+    "text": "Your other minions have +1/+1.",
+    xxx: 'aura + other',
+    aura: {
+      //target: 'own minion !self',
+      target: 'own minion',
+      buff: 'CS2_222o'
+    }
   },
   {
     "id": "CS2_222o",
     "_info": "ENCHANTMENT [*NEUTRAL]: Might of Stormwind",
-    "text": "Has +1/+1."
+    "text": "Has +1/+1.",
+    xxx: 0,
+    attack: 1,
+    health: 1
   },
   {
     "id": "CS2_226",
@@ -3334,7 +3343,7 @@ const actions = [
     "text": "Your other Beasts have +1 Attack.",
     xxx: 'aura',
     aura: {
-      target: 'own minions .race=beast',
+      target: 'own minion .race=beast',
       buff: 'DS1_175o'
     }
   },
@@ -3351,7 +3360,7 @@ const actions = [
     "text": "Your Beasts have <b>Charge</b>.",
     xxx: 'aura',
     aura: {
-      target: 'own minions .race=beast',
+      target: 'own minion .race=beast',
       buff: 'DS1_178e'
     }
   },
@@ -3745,7 +3754,7 @@ const actions = [
     "text": "Your <b>Charge</b> minions have +1 Attack.",
     xxx: 'aura',
     aura: {
-      target: 'own minions #charge',
+      target: 'own minion #charge',
       buff: 'EX1_084e'
     }
   },
@@ -4960,7 +4969,7 @@ const actions = [
     "id": "EX1_565",
     "_info": "(2) 0/3 [SHAMAN]: Flametongue Totem |TOTEM",
     "text": "Adjacent minions have +2 Attack.",
-    xxx: 'aura',
+    xxx: 'aura AND declarative adjacent ...',
     aura: {
       buff: 'EX1_565o',
       target: 'adjacent'  

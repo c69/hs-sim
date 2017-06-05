@@ -90,7 +90,7 @@ class Card {
             throw `Played card of unplayable type:${this.type}`;
         }
     }
-    summon () {  
+    _summon () {  
       this.zone = ZONES.play;
        
       this.eventBus.emit(EVENTS.minion_summoned, {
@@ -147,30 +147,8 @@ class Card {
         this._die();
         //console.log(`🔥 ${this.name} is being destroyed!`);
     }
-    buff (enchantment) {
-        if (typeof enchantment === 'string') {
-            // if (Reflect.values(TAGS).includes(enchantment)) {
-            //     this.buffs.push(enchantment); // check for duplicates
-            //     return this;
-            // } else if (let x = _getCardById(enchantment)) {
-            //     this.buffs.push(x)
-            //     return this;
-            // };
-        } else if (enchantment && typeof enchantment === 'object') {
-            //this.buffs.push(enchantment);
-            enchantment.apply(this); //why not .play ?
-            return this;
-        } else {
-          throw new RangeError('String or Object expected');
-        }
-    }
-    x_give (args, descr) {
-      if (!Array.isArray(args)) throw new RangeError('Array expected');
-      var card = this;
-      card.buffs.concat(args);
-    }
-    silence () {
-      console.log(`${this.name} got SILENCED!`);  
+     silence () {
+      console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);  
       this.buffs.push(TAGS.silence);
 
       // super dirty solution for silencing triggers (copy paste from game.js deathsweep) 
@@ -203,7 +181,9 @@ class Minion extends Card {
     }
     get attack () {
       //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
-      let modifiers = this.buffs.filter(v => v.attack);
+      let mostRecentSilence = this.buffs.lastIndexOf(TAGS.silence);
+      if (mostRecentSilence === -1) mostRecentSilence = 0;
+      let modifiers = this.buffs.slice(mostRecentSilence).filter(v => v.attack);
       if (!modifiers) return this.baseAttack;  
       return this.baseAttack + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
@@ -244,10 +224,9 @@ class Hero extends Card {
       //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
     }
     get attack () {
-      //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
-      let modifiers = this.buffs.filter(v => v.attack);
-      if (!modifiers) return this.baseAttack;  
-      return this.baseAttack + modifiers.reduce((a,v) => a + v, 0)   
+      //ARCHITECTURE BUG: currently getter must be copy/pasted bewteen hero and minion
+      // for now i'll just ignore buffs for Hero 
+      return this.baseAttack;
     }
     _die () {
         super._die();
@@ -271,24 +250,38 @@ class Enchantment extends Card {
       
       //console.log('EXCH', cardDef);
       //DESIGN BUG: clunky object shape
+      // todo: finalize when SET attack/health/cost will be implemented
       this.effect = {
+          //modify numbers
           attack: cardDef.attack,
-          health: cardDef.health,
-          durability: cardDef.durability,
-          cost: cardDef.cost,
-          //owner: cardDef.owner --< unclear how to do
-          death: cardDef.death
+        //   health: cardDef.health,
+        //   durability: cardDef.durability,
+        //   cost: cardDef.cost,
+          //add fn to array
+        //   death: cardDef.death,
+          //set number to
+        //   attackEquals: cardDef.attackEquals,
+        //   healthEquals: cardDef.healthEquals,
+        //   costEquals: cardDef.costEquals,
+          //ownerEquals: cardDef.ownerEquals
+          // ~
+          // resource = 'health'; //vs default, mana
+          
       }
     }
     apply ({target, $, game}) {
           //console.log(target);
           super._play();
-          console.log(this.effect, '_______');
+          //console.log(this.effect, '_______');
           let attack_bonus = (typeof this.effect.attack !== 'function') ? this.effect.attack : this.effect.attack({target, $, game});
           
           target.buffs.push({
               attack: attack_bonus,
-              _by: this  
+              //tags: ???tags
+              _by: this,
+              toString () {
+                  return `[Object Buff: ${this._by.name} #${this._by.card_id}]`
+              }  
           });
           //console.log(target.name, target.buffs);        
     }

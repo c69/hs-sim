@@ -222,6 +222,9 @@ class ArrayOfCards extends Array {
     destroy (n) {
         this.forEach(v => v.destroy(n));
     }
+    silence (n) {
+        this.forEach(v => v.silence(n));
+    }
 }
 
 module.exports = Board;

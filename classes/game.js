@@ -230,7 +230,7 @@ class Game {
 
               let MY_CREATION = createCard(id, self.owner, game.eventBus);
               self.owner.deck._arr.push(MY_CREATION);
-              MY_CREATION.summon();
+              MY_CREATION._summon();
               //console.log('its real!!!', MY_CREATION);
           },
           draw (n) {

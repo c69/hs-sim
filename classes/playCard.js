@@ -42,7 +42,7 @@ function playFromHand (card, {game, $, target, position}) {
         // this.board.$('own minions').forEach((v,i) => {
         //   v.position = i;
         // });
-        card.summon();//({position}); // position is IGNORED for now
+        card._summon();//({position}); // position is IGNORED for now
         
 
         let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
@@ -83,7 +83,7 @@ function playFromHand (card, {game, $, target, position}) {
 
                         let MY_CREATION = createCard(id, card.owner, game.eventBus);
                         card.owner.deck._arr.push(MY_CREATION);
-                        MY_CREATION.summon();
+                        MY_CREATION._summon();
                         //console.log('its real!!!', MY_CREATION);
                     },
                     draw (n) {
@@ -130,7 +130,8 @@ function playFromHand (card, {game, $, target, position}) {
         }
     }
     card.play({
-        self: card,  
+        self: card,
+        adjacent: $('own minion'), //.slice(0,2), //dirty hack for testing buff even works   
         target,
         position,
         $: $,
@@ -141,22 +142,29 @@ function playFromHand (card, {game, $, target, position}) {
 
             let MY_CREATION = createCard(id, card.owner, game.eventBus);
             card.owner.deck._arr.push(MY_CREATION);
-            MY_CREATION.summon();
+            MY_CREATION._summon();
             //console.log('its real!!!', MY_CREATION);
         },
         draw (n) {
             console.log(`PLAY: try to draw ${n}cards`);
             card.owner.draw(n);
         },
-        _$_card (id) {
-            return createCard(id, card.owner, game.eventBus);
-        },
+        // _$_card (id) {
+        //     return createCard(id, card.owner, game.eventBus);
+        // },
         buff (x, id_or_Tag) {
-            if (TAGS_LIST.includes(id_or_Tag)) {
-                x.buffs.push(id_or_Tag); // check for duplicates
-            } else {
-                createCard(id_or_Tag, card.owner, game.eventBus).apply({target: x, $, game});
-            }
+            if (!x) throw new RangeError('No target provided for buff');
+            if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
+
+            let x2 = Array.isArray(x) ? x : [x]; 
+            x2.forEach(v => {
+                if (TAGS_LIST.includes(id_or_Tag)) {
+                    v.buffs.push(id_or_Tag); // check for duplicates
+                } else {
+                    createCard(id_or_Tag, card.owner, game.eventBus)
+                    .apply({target: v, $, game});
+                }
+            });
             return x;
         }
     });

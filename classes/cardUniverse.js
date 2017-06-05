@@ -33,7 +33,10 @@ abilitiesMixin.forEach(({id, tags, target, play, death, _triggers_v1, xxx, attac
 //---Deck2.js sketch------------------
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
     .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
-    .filter(v => v.type ==! CARD_TYPES.spell || v.play)
+    .filter(v => {
+      if (v.type === CARD_TYPES.spell) return !!v.play;
+      return true;
+    })
     //.filter(v => !v._NOT_IMPLEMENTED_)
     .filter(v => [
       //'Chillwind Yeti',
@@ -49,7 +52,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 //--basic minions with tags or battlecries
       //'Flame Imp',
       //'Ironfur Grizzly',
-      //'Ironbeak Owl',
+
       //'Leper Gnome',
       //'Unstable Ghoul',
       //'Abomination',
@@ -60,16 +63,30 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       // 'Argent Horseraider',
       //'Young Dragonhawk',
       // 'Thrallmar Farseer',
+// - silence
+      //'Ironbeak Owl',
+      'Mass Dispel',      
 // - give
-      'Bloodsail Raider',
-      'Windfury',
-      'Hand of Protection',
+      //'Bloodsail Raider',
+      //'Windfury',
+      //'Hand of Protection',
+      //'Shattered Sun Cleric',
       //'Windspeaker',      
+      //'Bloodlust',
+      //'Sunfury Protector', // adjacent 
+      'Defender of Argus', // adjacent
+      //'Blessing of Wisdom',
+// - aura
+      //'Timber Wolf',
+      //'Flametongue Totem',
+      //'Houndmaster',
+      //'Tundra Rhino',
+      //'Warsong Commander',
 
 //--summon
       //'Murloc Tidehunter',
       //'Leeroy Jenkins',
-      //'Mirror Image',
+      'Mirror Image',
       //'Unleash the Hounds',
       //'Dreadsteed',
       //'Sludge Belcher',
@@ -87,6 +104,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     ].includes(v.name))
     ;
     ////
+
+console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 
 /**
  * @param {Array} arr1 

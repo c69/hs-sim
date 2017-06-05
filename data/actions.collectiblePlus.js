@@ -2730,12 +2730,19 @@ const actions = [
   {
     "id": "CS2_046",
     "_info": "(5) SPELL [SHAMAN]: Bloodlust",
-    "text": "Give your minions +3 Attack this turn."
+    "text": "Give your minions +3 Attack this turn.",
+    xxx: 'buff',
+    play ({$, buff}) {
+      $('own minion').forEach(v => buff(v, 'CS2_046e'));
+    }
   },
   {
     "id": "CS2_046e",
     "_info": "ENCHANTMENT [*SHAMAN]: Bloodlust",
-    "text": "+3 Attack this turn."
+    "text": "+3 Attack this turn.",
+    xxx: 1,
+    attack: 3,
+    expires: 'turn'
   },
   {
     "id": "CS2_053",
@@ -3138,15 +3145,17 @@ const actions = [
     "text": "<b>Battlecry:</b> Give a minion +2 Attack this turn.",
     xxx: 'test buff',
     target: 'minion',
-    play ({target}) {
-      target.buff('CS2_188o');
+    play ({target, buff}) {
+      buff(target, 'CS2_188o');
     }
   },
   {
     "id": "CS2_188o",
     "_info": "ENCHANTMENT [*NEUTRAL]: 'Inspired'",
     "text": "This minion has +2 Attack this turn.",
-    xxx: 1
+    xxx: 1,
+    attack: 2,
+    expires: 'turn'
   },
   {
     "id": "CS2_189",
@@ -3240,7 +3249,8 @@ const actions = [
   {
     "id": "CS2_232",
     "_info": "(8) 8/8 [DRUID]: Ironbark Protector",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "CS2_233",
@@ -3292,40 +3302,58 @@ const actions = [
     "text": "<b>Battlecry:</b> Give a friendly Beast +2/+2 and <b>Taunt</b>.",
     xxx: 1,
     target: 'own minion .race=beast',
-    play ({target}) {
-      target.buff('DS1_070o');
+    play ({target, buff}) {
+      buff(target, 'DS1_070o');
     }
   },
   {
     "id": "DS1_070o",
     "_info": "ENCHANTMENT [*HUNTER]: Master's Presence",
     "text": "+2/+2 and <b>Taunt</b>.",
-    xxx: 1
+    xxx: 1,
+    attack: 2,
+    health: 2,
+    tags: [TAGS.taunt]
   },
   {
     "id": "DS1_175",
     "_info": "(1) 1/1 [HUNTER]: Timber Wolf |BEAST",
-    "text": "Your other Beasts have +1 Attack."
+    "text": "Your other Beasts have +1 Attack.",
+    xxx: 'aura',
+    aura: {
+      target: 'own minions .race=beast',
+      buff: 'DS1_175o'
+    }
   },
   {
     "id": "DS1_175o",
     "_info": "ENCHANTMENT [*HUNTER]: Furious Howl",
-    "text": "+1 Attack from Timber Wolf."
+    "text": "+1 Attack from Timber Wolf.",
+    xxx: 'aura',
+    attack: 1
   },
   {
     "id": "DS1_178",
     "_info": "(5) 2/5 [HUNTER]: Tundra Rhino |BEAST",
-    "text": "Your Beasts have <b>Charge</b>."
+    "text": "Your Beasts have <b>Charge</b>.",
+    xxx: 'aura',
+    aura: {
+      target: 'own minions .race=beast',
+      buff: 'DS1_178e'
+    }
   },
   {
     "id": "DS1_178e",
     "_info": "ENCHANTMENT [*HUNTER]: Charge",
-    "text": "Tundra Rhino grants <b>Charge</b>."
+    "text": "Tundra Rhino grants <b>Charge</b>.",
+    xxx: 'aura',
+    tags: [TAGS.charge]
   },
   {
     "id": "DS1_183",
     "_info": "(4) SPELL [HUNTER]: Multi-Shot",
-    "text": "Deal $3 damage to two random enemy minions."
+    "text": "Deal $3 damage to two random enemy minions.",
+    xxx: 'target can only have 1 value :( this one should have other property.. like ~ playcondition'
   },
   {
     "id": "DS1_184",
@@ -3335,7 +3363,11 @@ const actions = [
   {
     "id": "DS1_185",
     "_info": "(1) SPELL [HUNTER]: Arcane Shot",
-    "text": "Deal $2 damage."
+    "text": "Deal $2 damage.",
+    target: 'character',
+    play ({target}) {
+      target.dealDamageSpell(2);
+    }
   },
   {
     "id": "DS1_188",
@@ -3349,7 +3381,10 @@ const actions = [
   {
     "id": "DS1_233",
     "_info": "(2) SPELL [PRIEST]: Mind Blast",
-    "text": "Deal $5 damage to the enemy hero."
+    "text": "Deal $5 damage to the enemy hero.",
+    play ({$}) { 
+      $('enemy hero').dealDamageSpell(5)
+    }
   },
   {
     "id": "EX1_001",
@@ -3364,7 +3399,11 @@ const actions = [
   {
     "id": "EX1_002",
     "_info": "(6) 4/5 [NEUTRAL]: The Black Knight",
-    "text": "<b>Battlecry:</b> Destroy an enemy minion with <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Destroy an enemy minion with <b>Taunt</b>.",
+    target: 'enemy minion #taunt',
+    play ({target}) {
+      target.destroy()
+    }
   },
   {
     "id": "EX1_004",
@@ -3379,7 +3418,11 @@ const actions = [
   {
     "id": "EX1_005",
     "_info": "(5) 4/2 [NEUTRAL]: Big Game Hunter",
-    "text": "<b>Battlecry:</b> Destroy a minion with 7 or more Attack."
+    "text": "<b>Battlecry:</b> Destroy a minion with 7 or more Attack.",
+    target: 'minion .attack>=7',
+    play ({target}) {
+      target.destroy()
+    }
   },
   {
     "id": "EX1_006",
@@ -3403,22 +3446,29 @@ const actions = [
   {
     "id": "EX1_008",
     "_info": "(1) 1/1 [NEUTRAL]: Argent Squire",
-    "text": "<b>Divine Shield</b>"
+    "text": "<b>Divine Shield</b>",
+    tags: [TAGS.divineShield]
   },
   {
     "id": "EX1_009",
     "_info": "(1) 1/1 [NEUTRAL]: Angry Chicken |BEAST",
-    "text": "<b>Enrage:</b> +5 Attack."
+    "text": "<b>Enrage:</b> +5 Attack.",
+    xxx: 'enrage',
+    enrage: 'EX1_009e'
   },
   {
     "id": "EX1_009e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Enraged",
-    "text": "+5 Attack."
+    "text": "+5 Attack.",
+    xxx: 'enrage',
+    attack: 5,
+    expires: 'enrage' // aura ?
   },
   {
     "id": "EX1_010",
     "_info": "(1) 2/1 [NEUTRAL]: Worgen Infiltrator",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "EX1_011",
@@ -3458,27 +3508,31 @@ const actions = [
   {
     "id": "EX1_017",
     "_info": "(3) 4/2 [NEUTRAL]: Jungle Panther |BEAST",
-    "text": "<b>Stealth</b>"
+    "text": "<b>Stealth</b>",
+    tags: [TAGS.stealth]
   },
   {
     "id": "EX1_019",
     "_info": "(3) 3/2 [NEUTRAL]: Shattered Sun Cleric",
     "text": "<b>Battlecry:</b> Give a friendly minion +1/+1.",
     target: 'own minion',
-    play ({target}) {
-      target.buff('EX1_019e');
+    play ({target, buff}) {
+      buff(target, 'EX1_019e');
     }
   },
   {
     "id": "EX1_019e",
     "_info": "ENCHANTMENT [*PRIEST]: Cleric's Blessing",
     "text": "+1/+1.",
-    xxx: 1
+    xxx: 1,
+    attack: 1,
+    health: 1
   },
   {
     "id": "EX1_020",
     "_info": "(3) 3/1 [NEUTRAL]: Scarlet Crusader",
-    "text": "<b>Divine Shield</b>"
+    "text": "<b>Divine Shield</b>",
+    tags: [TAGS.divineShield]
   },
   {
     "id": "EX1_021",
@@ -3607,7 +3661,11 @@ const actions = [
   {
     "id": "EX1_058",
     "_info": "(2) 2/3 [NEUTRAL]: Sunfury Protector",
-    "text": "<b>Battlecry:</b> Give adjacent minions <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Give adjacent minions <b>Taunt</b>.",
+    xxx: 1,
+    play ({buff, adjacent}) {
+      buff(adjacent, TAGS.taunt)
+    }
   },
   {
     "id": "EX1_059",
@@ -3622,7 +3680,10 @@ const actions = [
   {
     "id": "EX1_062",
     "_info": "(4) 2/4 [NEUTRAL]: Old Murk-Eye |MURLOC",
-    "text": "<b>Charge</b>. Has +1 Attack for each other Murloc on the battlefield."
+    "text": "<b>Charge</b>. Has +1 Attack for each other Murloc on the battlefield.",
+    xxx: 'reverse? aura',
+    tags: [TAGS.charge],
+    // small time buccaneer has his enchantment :( but not murk eye
   },
   {
     "id": "EX1_066",
@@ -3668,12 +3729,20 @@ const actions = [
   {
     "id": "EX1_084",
     "_info": "(3) 2/3 [WARRIOR]: Warsong Commander",
-    "text": "Your <b>Charge</b> minions have +1 Attack."
+    "text": "Your <b>Charge</b> minions have +1 Attack.",
+    xxx: 'aura',
+    aura: {
+      target: 'own minions #charge',
+      buff: 'EX1_084e'
+    }
   },
   {
     "id": "EX1_084e",
     "_info": "ENCHANTMENT [*WARRIOR]: Charge",
-    "text": "Warsong Commander is granting this minion +1 Attack."
+    "text": "Warsong Commander is granting this minion +1 Attack.",
+    xxx: 'aura',
+    attack: 1,
+    expires: 'aura'
   },
   {
     "id": "EX1_085",
@@ -3693,12 +3762,20 @@ const actions = [
   {
     "id": "EX1_093",
     "_info": "(4) 2/3 [NEUTRAL]: Defender of Argus",
-    "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>."
+    "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+    xxx: 'adjacent',
+    play ({buff, adjacent}) {
+      buff(adjacent, 'EX1_093e')
+    }
   },
   {
     "id": "EX1_093e",
     "_info": "ENCHANTMENT [*NEUTRAL]: Hand of Argus",
-    "text": "+1/+1 and <b>Taunt</b>."
+    "text": "+1/+1 and <b>Taunt</b>.",
+    xxx: 'adjacent',
+    attack: 5,//1,
+    health: 5,//1,
+    tags: [TAGS.taunt] 
   },
   {
     "id": "EX1_095",
@@ -4438,8 +4515,8 @@ const actions = [
     "text": "<b>Battlecry:</b> Give a friendly minion <b>Divine Shield</b>.",
     xxx: 'test',
     target: 'minion',
-    play ({target}) {
-      target.buff(TAGS.divineShield);
+    play ({target, buff}) {
+      buff(target, TAGS.divineShield);
     }
   },
   {
@@ -4448,8 +4525,8 @@ const actions = [
     "text": "Choose a minion. Whenever it attacks, draw a card.",
     xxx: 'test',
     target: 'minion',
-    play ({target}) {
-      target.buff('EX1_363e');
+    play ({target, buff}) {
+      buff(target, 'EX1_363e');
     }
   },
   {
@@ -4457,6 +4534,7 @@ const actions = [
     "_info": "ENCHANTMENT [*PALADIN]: Blessing of Wisdom",
     "text": "When this minion attacks, the player who blessed it draws a card.",
     xxx: 'implement'
+    //trigger:FN ?
   },
   {
     //this looks like crazy brawl version ?
@@ -4862,12 +4940,21 @@ const actions = [
   {
     "id": "EX1_565",
     "_info": "(2) 0/3 [SHAMAN]: Flametongue Totem |TOTEM",
-    "text": "Adjacent minions have +2 Attack."
+    "text": "Adjacent minions have +2 Attack.",
+    xxx: 'aura',
+    aura: {
+      buff: 'EX1_565o',
+      target: 'adjacent'  
+    }
   },
   {
     "id": "EX1_565o",
     "_info": "ENCHANTMENT [*SHAMAN]: Flametongue",
-    "text": "+2 Attack from Flametongue Totem."
+    "text": "+2 Attack from Flametongue Totem.",
+    xxx: 'aura',
+    attack: 2,
+    //expires: 'turn|aura|fn',
+    expires: 'aura' 
   },
   {
     "id": "EX1_567",
@@ -4989,10 +5076,10 @@ const actions = [
     "id": "EX1_587",
     "_info": "(4) 3/3 [SHAMAN]: Windspeaker",
     "text": "<b>Battlecry:</b> Give a friendly minion <b>Windfury</b>.",
-    xxx: 'test .buff()',
+    xxx: 'test buff()',
     target: 'own minion',
-    play({target}) {
-      target.buff(TAGS.windfury);
+    play({target, buff}) {
+      buff(target, TAGS.windfury);
     }
   },
   {
@@ -5197,7 +5284,11 @@ const actions = [
   {
     "id": "EX1_626",
     "_info": "(4) SPELL [PRIEST]: Mass Dispel",
-    "text": "<b>Silence</b> all enemy minions. Draw a card."
+    "text": "<b>Silence</b> all enemy minions. Draw a card.",
+    play ({$, draw}) {
+      $('enemy minion').silence();
+      draw(1);
+    }
   },
   {
     "id": "FP1_001",
@@ -7119,7 +7210,7 @@ const actions = [
     "_info": "(2) 2/3 [NEUTRAL]: Bloodsail Raider |PIRATE",
     "text": "<b>Battlecry:</b> Gain Attack equal to the Attack\nof your weapon.",
     xxx: 'clean this up',
-    play ({self, _$_card, buff}) {
+    play ({self, buff}) {
       //self.buff('NEW1_018e');
       //self.buff(_$_card('NEW1_018e'));
       buff(self, 'NEW1_018e');

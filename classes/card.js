@@ -283,7 +283,8 @@ class Enchantment extends Card {
                   return `[Object Buff: ${this._by.name} #${this._by.card_id}]`
               }  
           });
-          //console.log(target.name, target.buffs);        
+          //console.log(target.name, target.buffs);
+          console.log(`${target.owner.name}'s ${target.name} got buffed with ${this.name}`);        
     }
 }
 

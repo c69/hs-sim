@@ -130,8 +130,7 @@ function playFromHand (card, {game, $, target, position}) {
         }
     }
     card.play({
-        self: card,
-        adjacent: $('own minion'), //.slice(0,2), //dirty hack for testing buff even works   
+        self: card,  
         target,
         position,
         $: $,

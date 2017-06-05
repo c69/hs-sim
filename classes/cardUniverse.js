@@ -44,6 +44,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Bloodfen Raptor',
 //--spells:damage
       //'Fireball',
+      'Meteor',
       //'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
@@ -55,6 +56,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 
       //'Leper Gnome',
       //'Unstable Ghoul',
+      'Ravaging Ghoul',
+      //'Mad Bomber',
       //'Abomination',
       //'Elven Archer',
       //'Silent Knight', //-- stealth
@@ -65,7 +68,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       // 'Thrallmar Farseer',
 // - silence
       //'Ironbeak Owl',
-      'Mass Dispel',      
+      //'Mass Dispel',      
 // - give
       //'Bloodsail Raider',
       //'Windfury',
@@ -73,8 +76,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Shattered Sun Cleric',
       //'Windspeaker',      
       //'Bloodlust',
-      //'Sunfury Protector', // adjacent 
-      'Defender of Argus', // adjacent
+      'Sunfury Protector', // adjacent 
+      //'Defender of Argus', // adjacent
       //'Blessing of Wisdom',
 // - aura
       //'Timber Wolf',

@@ -9,6 +9,7 @@ const {
 } = require('./cardUniverse.js');
 const {
   TAGS,
+  TAGS_LIST,
   CARD_TYPES,
   ACTION_TYPES,
   EVENTS
@@ -140,7 +141,7 @@ class Game {
   end () {
     this.isOver = true;
     this.result = {
-      //coulb be a draw, too..
+      //could be a draw, too.. (when turn #87 is reached ?)
       winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
     };
     return this;  
@@ -205,15 +206,33 @@ class Game {
   }  
   _cleanup () {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
-    //aura update: Health/Attack
-    let aura_1_list = [];
+    //PHASE: "Aura update: Health/Attack"
 
+    let characters = this.board.$(this.activePlayer, 'character');
+    characters.forEach(v => v.auras = []);
+    //console.log('== RESET ALL AURA EFFECTS ==');
+    //this.view();
+    
+    //re-apply auras
+    characters.filter(character => {
+      return character.aura;
+    }).forEach(character => {
+      let p = character.owner;
+      let a = character.aura;
+      let $ = this.board.$.bind(this.board, p); 
+      //let t = this.board.$(p, a.target)
+      let t = $(a.target);
+
+      //the signature is ugly... but i will refactor it
+      buff(this, $, character, t, a.buff);  
+    });
 
     //death logic onwards
-    let deathrattle_list = [];
-    this.board.$(this.activePlayer, 'character').forEach(character => {
-      if (!character.isAlive()) deathrattle_list.push(character);
-    });
+    let deathrattle_list = characters
+    //let deathrattle_list = this.board.$(this.activePlayer, 'character')
+      .filter(character => {
+        return !character.isAlive();
+      });
     
     if (!deathrattle_list.length) {
       return;
@@ -255,7 +274,7 @@ class Game {
       }
     });
 
-    //aura update: Other
+    //PHASE: "Aura update: Health/Attack"
     //Mal'Ganis, Baron Riverdale, Auchenai Soulpriest, Brann Bronzebeard, (Spiritsinger Umbra ?)
 
     this._cleanup(); //recursion !
@@ -380,6 +399,9 @@ class Game {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
       let own_minions = this.board.$(player, 'own minion');
+      
+      //console.log(own_minions.map(({buffs, auras, tags}) => {return {buffs, auras, tags}} ))
+      
       if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
       console.log(`
@@ -392,12 +414,36 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
       (v.tags.find(v => v.death) ? '☠️' : '') +
       (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
+      (v.auras.length ? 'A' : '') +
+
       `${v.attack}/${v.health}`
       ));
     });
     
     return this;
   }
+}
+
+// move this away
+function buff (game, $, char, x, id_or_Tag) {
+    if (!x) throw new RangeError('No target provided for buff');
+    if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
+
+    let x2 = Array.isArray(x) ? x : [x]; 
+    x2.forEach(v => {
+        if (TAGS_LIST.includes(id_or_Tag)) {
+            v.auras.push(id_or_Tag); // check for duplicates
+        } else {
+            createCard(id_or_Tag, char.owner, game.eventBus)
+            .apply({
+              target: v,
+              $,
+              game,
+              type: 'aura'
+            });
+        }
+    });
+    return x;
 }
 
 module.exports = Game;

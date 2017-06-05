@@ -39,7 +39,8 @@ class Card {
       //this.joust = ???
 
       this.buffs = (cardDef.tags || []).slice(0);
-      //this.tags is getter
+      this.auras = []; // consider rename
+      //this.tags is a getter
       
       if (cardDef.death) {
         this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
@@ -61,10 +62,10 @@ class Card {
     get tags () {
       let real_store = this.buffs;  
       //console.log(`card.tags: #${this.card_id}`);
-      if (real_store.find(v => v === TAGS.silence)) return [TAGS.silence];
+      // -- this line is INCORRECT -- if (real_store.find(v => v === TAGS.silence)) return [TAGS.silence];
       
       //console.log(`card.tags returned: ${this.buffs}`);
-      return this.buffs;  
+      return [].concat(this.buffs, this.auras);  
     }
     _draw () {
         if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
@@ -184,9 +185,10 @@ class Minion extends Card {
     }
     get attack () {
       //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
-      let mostRecentSilence = this.buffs.lastIndexOf(TAGS.silence);
+      // getter inside of getter ..
+      let mostRecentSilence = this.tags.lastIndexOf(TAGS.silence);
       if (mostRecentSilence === -1) mostRecentSilence = 0;
-      let modifiers = this.buffs.slice(mostRecentSilence).filter(v => v.attack);
+      let modifiers = this.tags.slice(mostRecentSilence).filter(v => v.attack);
       if (!modifiers) return this.attackBase;  
       return this.attackBase + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
@@ -272,13 +274,15 @@ class Enchantment extends Card {
           
       }
     }
-    apply ({target, $, game}) {
+    //consider splitting this, to somehow simplify signature
+    apply ({target, $, game, type = "buff"}) {
           //console.log(target);
           super._play();
           //console.log(this.effect, '_______');
           let attack_bonus = (typeof this.effect.attack !== 'function') ? this.effect.attack : this.effect.attack({target, $, game});
           
-          target.buffs.push({
+          let container = type === 'aura' ? target.auras : target.buffs;
+          container.push({
               attack: attack_bonus,
               //tags: ???tags
               _by: this,
@@ -286,8 +290,12 @@ class Enchantment extends Card {
                   return `[Object Buff: ${this._by.name} #${this._by.card_id}]`
               }  
           });
-          //console.log(target.name, target.buffs);
-          console.log(`${target.owner.name}'s ${target.name} got buffed with ${this.name}`);        
+          //console.log(target.name, container);
+          if (type === 'aura') {
+              //console.log(`Aura refresh: ${this.name} on ${target.owner.name}'s ${target.name} by [source?]`);  
+          } else {
+              console.log(`${target.owner.name}'s ${target.name} got buffed with ${this.name}`);        
+          }
     }
 }
 

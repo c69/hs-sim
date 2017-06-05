@@ -63,20 +63,24 @@ class Board {
     // before you ask: Why are you merging two deck, and then searching for owner ?!
     // - think: minion can be stolen
     let f = {
+      // es3/es5 functions are slightly faster than arrows :(
+      // shaved 200ms (7.00s to 6.80s) on 100 runs in Node6
+      // should consider memoisation/caching (with turn-tick-phase key)
       //try to optimize for most used cases ? and then maybe move this strings to constants
-      'minion': v => v.zone === ZONES.play && v.type === TYPES.minion,
-      'character': v => v.zone === ZONES.play && (v.type === TYPES.minion || v.type === TYPES.hero),
-      'own minion': v => v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.minion,
-      'enemy minion': v => v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.minion,
-      'own character': v => v.zone === ZONES.play && v.owner === ownPlayer && (v.type === TYPES.minion || v.type === TYPES.hero),
-      'enemy character': v => v.zone === ZONES.play && v.owner === enemyPlayer && (v.type === TYPES.minion || v.type === TYPES.hero),
+      'minion': function (v) { return v.zone === ZONES.play && v.type === TYPES.minion;},
+      'character': function (v) { return v.zone === ZONES.play && (v.type === TYPES.minion || v.type === TYPES.hero);},
+      'own minion': function (v) { return v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.minion;},
+      'enemy minion': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.minion;},
+      'own character': function (v) { return  v.zone === ZONES.play && v.owner === ownPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
+      'enemy character': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
       //:validTarget for attack or missiles
-      'enemy character .health>0': v => v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero)
+      //:isAlive ? :isDamaged ?
+      'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
     }[selector_string];
     if (f) return (new ArrayOfCards()).concat( all_cards.filter(f) );
     
     _$_count_slow_path += 1;
-    _$_slow_selectors[selector_string] = 1;
+    _$_slow_selectors[selector_string] = _$_slow_selectors[selector_string] ? _$_slow_selectors[selector_string] + 1 : 1;
 
     let tokens = selector_string.split(/\s+/);
    
@@ -136,9 +140,17 @@ class Board {
       if (zoneSelectors.includes('@secret')) {
         allowed_zones.push(ZONES.secret);  
       }
+      filters.push(v => allowed_zones.includes(v.zone));
+    } else {
+      all_cards = all_cards.filter(function (v) {ZONES.play === v.zone});  
     }
     //console.log('zones', allowed_zones);
-    filters.push(v => allowed_zones.includes(v.zone));
+    //filters.push(v => allowed_zones.includes(v.zone));
+
+    // let prime_zone = allowed_zones[0];
+    // let cards_in_zone = allowed_zones.length > 1 ?
+    //    all_cards.filter(v => allowed_zones.includes(v.zone))
+    //    : all_cards.filter(v => prime_zone === (v.zone));
 
     //tag selectors only NARROW the search, so its AND
     var tagSelectors = tokens.filter(v => /^#[a-z]+/i.test(v));
@@ -196,7 +208,12 @@ class Board {
     ////console.log(all_cards.map(v=>v.type));
     //console.log(all_cards.map(v=>v.zone+' '+v.name));
     //console.log(all_cards.length)
+
+
+    //let result = [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), cards_in_zone);
     let result = [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
+
+
     //console.log(selector_string, result);
     //return result;
     return (new ArrayOfCards()).concat(result);

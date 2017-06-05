@@ -62,7 +62,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 //--spells:damage
       //'Fireball',
       //'Meteor',
-      //'Arcane Explosion',
+      // 'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
       //'Swipe',
@@ -70,7 +70,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 
 //--basic minions with tags or battlecries
       //'Flame Imp',
-      //'Ironfur Grizzly',
+      // 'Ironfur Grizzly',
 
       //'Leper Gnome',
       //'Unstable Ghoul',
@@ -85,45 +85,45 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Young Dragonhawk',
       // 'Thrallmar Farseer',
 // - silence
-      //'Ironbeak Owl',
-      //'Mass Dispel',    
+      // 'Ironbeak Owl',
+      'Mass Dispel',    
 // - give
       //'Bloodsail Raider',
       //'Windfury',
-      //'Hand of Protection',
-      //'Shattered Sun Cleric',
+      // 'Hand of Protection',
+      // 'Shattered Sun Cleric',
       //'Windspeaker',      
       //'Abusive Sergeant', // this turn
       //'Bloodlust', // this turn
       // 'Houndmaster',
-      // 'Sunfury Protector', // adjacent 
-      //'Defender of Argus', // adjacent
+      //  'Sunfury Protector', // adjacent 
+      // 'Defender of Argus', // adjacent
       //'Blessing of Wisdom',
-      'Raging Worgen', //enrage
+      // 'Raging Worgen', //enrage
 // - aura
-      // 'Timber Wolf',
-      // 'Flametongue Totem',
-      // 'Tundra Rhino',
-      //'Warsong Commander',
-
+      //'Timber Wolf', //other
+      //'Flametongue Totem', //adjacent
+      'Tundra Rhino',
+      // 'Warsong Commander',
+      //'Stormwind Champion', //other
 //--summon
-      'Blood To Ichor',
-      //'Murloc Tidehunter',
+      //'Blood To Ichor',
+      // 'Murloc Tidehunter',
       //'Leeroy Jenkins',
-      //'Mirror Image',
-      //'Unleash the Hounds',
+      // 'Mirror Image',
+      // 'Unleash the Hounds',
       //'Dreadsteed',
-      //'Sludge Belcher',
+      // 'Sludge Belcher',
 
 
 //--trigger, MVP minions
-      'Knife Juggler',
-      'Acolyte of Pain',
-      'Imp Gang Boss',
-      'Starving Buzzard',
-      //'Patches the Pirate',
-      'Doomsayer',
-      'Grim Patron',
+      // 'Knife Juggler',
+      // 'Acolyte of Pain',
+      // 'Imp Gang Boss',
+      // 'Starving Buzzard',
+      // 'Patches the Pirate',
+      // 'Doomsayer',
+      // 'Grim Patron',
 
     ].includes(v.name))
     ;

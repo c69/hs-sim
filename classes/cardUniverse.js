@@ -44,7 +44,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Bloodfen Raptor',
 //--spells:damage
       //'Fireball',
-      'Meteor',
+      //'Meteor',
       //'Arcane Explosion',
       //'Arcane Missiles',
 //      'Hellfire',
@@ -56,7 +56,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 
       //'Leper Gnome',
       //'Unstable Ghoul',
-      'Ravaging Ghoul',
+      //'Ravaging Ghoul',
       //'Mad Bomber',
       //'Abomination',
       //'Elven Archer',
@@ -87,9 +87,10 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
       //'Warsong Commander',
 
 //--summon
+      'Blood To Ichor',
       //'Murloc Tidehunter',
       //'Leeroy Jenkins',
-      'Mirror Image',
+      //'Mirror Image',
       //'Unleash the Hounds',
       //'Dreadsteed',
       //'Sludge Belcher',

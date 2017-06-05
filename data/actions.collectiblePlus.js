@@ -2575,12 +2575,10 @@ const actions = [
     "id": "CS2_012",
     "_info": "(4) SPELL [DRUID]: Swipe",
     "text": "Deal $4 damage to an enemy and $1 damage to all other enemies.",
-    xxx: 'real swipe works in ONE frame, my is TWO frames',
     target: 'enemy character',
     play ({target, $}) {
-      //console.log(`swipe ${target} ${$}`);
-      target.dealDamageSpell(4); // =_= - i want "exclude" selector
-      $('enemy character').filter(v => v !== target).dealDamageSpell(1);
+      target.dealDamageSpell(4);
+      $('enemy character').exclude(target).dealDamageSpell(1);
     }
   },
   {
@@ -2732,6 +2730,7 @@ const actions = [
     "_info": "(5) SPELL [SHAMAN]: Bloodlust",
     "text": "Give your minions +3 Attack this turn.",
     xxx: 'buff',
+    // this clearly shows the need for $().buff method
     play ({$, buff}) {
       $('own minion').forEach(v => buff(v, 'CS2_046e'));
     }
@@ -2757,7 +2756,11 @@ const actions = [
   {
     "id": "CS2_057",
     "_info": "(3) SPELL [WARLOCK]: Shadow Bolt",
-    "text": "Deal $4 damage\nto a minion."
+    "text": "Deal $4 damage\nto a minion.",
+    target: 'minion',
+    play ({target}) {
+      target.dealDamageSpell(4);
+    }
   },
   {
     "id": "CS2_059",
@@ -2836,12 +2839,19 @@ const actions = [
   {
     "id": "CS2_075",
     "_info": "(1) SPELL [ROGUE]: Sinister Strike",
-    "text": "Deal $3 damage to the enemy hero."
+    "text": "Deal $3 damage to the enemy hero.",
+    play ($) {
+      $('enemy hero').dealDamageSpell(3);
+    }
   },
   {
     "id": "CS2_076",
     "_info": "(5) SPELL [ROGUE]: Assassinate",
-    "text": "Destroy an enemy minion."
+    "text": "Destroy an enemy minion.",
+    target: 'enemy minion',
+    play (target) {
+      target.destroy();
+    }
   },
   {
     "id": "CS2_077",
@@ -2899,7 +2909,10 @@ const actions = [
   {
     "id": "CS2_093",
     "_info": "(4) SPELL [PALADIN]: Consecration",
-    "text": "Deal $2 damage to all enemies."
+    "text": "Deal $2 damage to all enemies.",
+    play ($) {
+      $('enemy character').dealDamageSpell(2);
+    }
   },
   {
     "id": "CS2_094",
@@ -3662,9 +3675,9 @@ const actions = [
     "id": "EX1_058",
     "_info": "(2) 2/3 [NEUTRAL]: Sunfury Protector",
     "text": "<b>Battlecry:</b> Give adjacent minions <b>Taunt</b>.",
-    xxx: 1,
-    play ({buff, adjacent}) {
-      buff(adjacent, TAGS.taunt)
+    play ({buff, $, self}) {
+      let pals = $('minion').adjacent(self);
+      buff(pals, TAGS.taunt)
     }
   },
   {
@@ -3715,10 +3728,10 @@ const actions = [
     "id": "EX1_082",
     "_info": "(2) 3/2 [NEUTRAL]: Mad Bomber",
     "text": "<b>Battlecry:</b> Deal 3 damage randomly split between all other characters.",
-    xxx: 1,
-    play ({$}) {
-      //3x
-      $('character').random().dealDamage(1); //OTHER
+    play ({$, self}) {
+      for(let i = 0; i < 3; i++) {
+        $('character .health>0').exclude(self).getRandom().dealDamage(1);
+      }
     }
   },
   {
@@ -3764,8 +3777,9 @@ const actions = [
     "_info": "(4) 2/3 [NEUTRAL]: Defender of Argus",
     "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
     xxx: 'adjacent',
-    play ({buff, adjacent}) {
-      buff(adjacent, 'EX1_093e')
+    play ({buff, $, self}) {
+      let dudes = $('minion').adjacent(self);
+      buff(dudes, 'EX1_093e')
     }
   },
   {
@@ -7847,9 +7861,8 @@ const actions = [
     "id": "OG_149",
     "_info": "(3) 3/3 [WARRIOR]: Ravaging Ghoul",
     "text": "<b>Battlecry:</b> Deal 1 damage to all other minions.",
-    xxx: 'OTHER MINiONS!!!!',
-    play ({$}) {
-      $('minion').dealDamage(1);// OTHER
+    play ({$, self}) {
+      $('minion').exclude(self).dealDamage(1);
     }
   },
   {
@@ -8409,10 +8422,9 @@ const actions = [
     "id": "OG_314",
     "_info": "(1) SPELL [WARRIOR]: Blood To Ichor",
     "text": "Deal $1 damage to a minion. If it survives, summon a 2/2 Slime.",
-    xxx: 'test this',
     target: 'minion',
     play ({target, summon}) {
-      target.dealDamage(1); //check damage frames, etc ..
+      target.dealDamage(1);
       if (target.health > 0) {
         summon('OG_314b');
       }
@@ -8498,7 +8510,8 @@ const actions = [
   {
     "id": "OG_327",
     "_info": "(3) 2/4 [NEUTRAL]: Squirming Tentacle",
-    "text": "<b>Taunt</b>"
+    "text": "<b>Taunt</b>",
+    tags: [TAGS.taunt]
   },
   {
     "id": "OG_328",
@@ -9554,7 +9567,12 @@ const actions = [
   {
     "id": "UNG_955",
     "_info": "(6) SPELL [MAGE]: Meteor",
-    "text": "Deal $15 damage to a minion and $3 damage to adjacent ones."
+    "text": "Deal $15 damage to a minion and $3 damage to adjacent ones.",
+    target: 'minion',
+    play ({target, $}) {
+      target.dealDamageSpell(15);
+      $('minion').adjacent(target).dealDamageSpell(3);
+    }
   },
   {
     "id": "UNG_956",

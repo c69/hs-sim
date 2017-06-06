@@ -58,7 +58,7 @@ function playFromHand (card, {game, $, target, position}) {
             // }
             let event_name = _trigger_v1.eventName;
             let listener = function (evt) {
-                let $ = game.board.$.bind(game.board, card.owner);
+                let $ = game._$.get(card.owner);
                 let condition = _trigger_v1.condition;
                 if (condition === 'self') {
                     // proceed
@@ -78,7 +78,7 @@ function playFromHand (card, {game, $, target, position}) {
                     $,
                     game,
                     summon (id) {
-                        console.log(`TRIGGER.summon: Summonning ${id}`);
+                        console.log(`TRIGGER.summon: Summoning ${id}`);
                         if ($('own minion').length >= 7) return;
 
                         let MY_CREATION = createCard(id, card.owner, game.eventBus);
@@ -90,13 +90,6 @@ function playFromHand (card, {game, $, target, position}) {
                         console.log(`TRIGGER: try to draw ${n}cards`);
                         card.owner.draw(n);
                     }
-                    // summon (ref_or_id) {
-                    //     console.log('TRIGGER: try to summon ', ref_or_id);
-                    // },
-                    // draw (n) {
-                    //     console.log(`TRIGGER: try to draw ${n}cards`);
-                    //     card.owner.draw(1);
-                    // }
                 });
             }.bind(game);
             game.eventBus.on(event_name, listener);
@@ -148,9 +141,6 @@ function playFromHand (card, {game, $, target, position}) {
             console.log(`PLAY: try to draw ${n}cards`);
             card.owner.draw(n);
         },
-        // _$_card (id) {
-        //     return createCard(id, card.owner, game.eventBus);
-        // },
         buff (x, id_or_Tag) {
             if (!x) throw new RangeError('No target provided for buff');
             if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');

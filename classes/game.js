@@ -232,7 +232,7 @@ class Game {
       let t = $(aura.target);
 
       //the signature is ugly... but i will refactor it
-      buff(this, $, character, t, aura.buff);  
+      buffAura(this, $, character, t, aura.buff);  
     });
 
     //death logic onwards
@@ -432,7 +432,7 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
 }
 
 // move this away
-function buff (game, $, auraGiver, x, id_or_Tag) {
+function buffAura (game, $, auraGiver, x, id_or_Tag) {
     if (!x) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 

@@ -51,7 +51,8 @@ class Board {
   $ (player, selector_string) {
     _$_count += 1;
     
-    //console.log(`---SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
+    //console.log(`- $ -- SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
+    
     if (typeof selector_string !== 'string') throw new TypeError(`String expected, instead got: ${selector_string}. Full list of arguments: this: ${this}, ${player}, ${selector_string}`);
       
     let [
@@ -163,7 +164,7 @@ class Board {
          case 'deathratle':
          return (v) => typeof(v.death) === 'function' || v.tags.some(v1=>!!v1.death);
          case 'aura':
-         return (v) => typeof(v.aura) === 'function';
+         return (v) => typeof(v.aura) === 'object';
          case 'trigger':
          return (v) => typeof(v.trigger) === 'function';
          case 'overload':
@@ -180,12 +181,12 @@ class Board {
     var propSelectors = tokens.filter(v => propRegexp.test(v));
     //console.log('propSelectors', propSelectors);
     let propFilters = propSelectors.map(selector => {
-        let [
+       let [
           _match, // destructuring will throw, if regex match fails
           propertyName,
           operator,
           comparisonValue
-        ] = selector.match(/^\.([0-9a-z]+)(!=|<=|>=|<|>|=)?(.*)$/);
+       ] = selector.match(/^\.([0-9a-z]+)(!=|<=|>=|<|>|=)?(.*)$/);
        
        if (!operator) {
          return v => !!v.propertyName;
@@ -211,7 +212,7 @@ class Board {
 
 
     //let result = [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), cards_in_zone);
-    let result = [...filters, ...tagFilters, ...propFilters].reduce((a,v) => a.filter(v), all_cards);
+    let result = filters.concat(tagFilters, propFilters).reduce((a,v) => a.filter(v), all_cards);
 
 
     //console.log(selector_string, result);

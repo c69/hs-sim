@@ -71,11 +71,18 @@ class Game {
     this.players = players;
 
     this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
-    
+
+    // save the bound $ function, and do not recreate them every tick
+    let $p1 = this.board.$.bind(this.board, players[0]);
+    let $p2 = this.board.$.bind(this.board, players[1]);
+    this._$ = new Map();
+    this._$.set(players[0], $p1);
+    this._$.set(players[1], $p2);
+
     this.turn = 0;
     this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
-    
+
     //this.observableState = {}; // ?
     //this.fullState = {}; // ??? 
   }
@@ -185,7 +192,7 @@ class Game {
       var position = c.positionList[position_idx];
     } 
 
-    let $ = this.board.$.bind(this.board, this.activePlayer);
+    let $ = this._$.get(this.activePlayer);
     let card = c.card;
     //console.log('play card', c.name, target, position);
     playCard(card, {
@@ -212,25 +219,24 @@ class Game {
     characters.forEach(v => v.auras = []);
     //console.log('== RESET ALL AURA EFFECTS ==');
     //this.view();
-    
-    //re-apply auras
+
+
+    //refresh/re-apply auras
     characters.filter(character => {
       return character.aura;
     }).forEach(character => {
       let p = character.owner;
-      let a = character.aura;
-      let $ = this.board.$.bind(this.board, p); 
+      let aura = character.aura;
+      let $ = this._$.get(p); 
       //let t = this.board.$(p, a.target)
-      let t = $(a.target);
+      let t = $(aura.target);
 
       //the signature is ugly... but i will refactor it
-      buff(this, $, character, t, a.buff);  
+      buff(this, $, character, t, aura.buff);  
     });
 
     //death logic onwards
-    let deathrattle_list = characters
-    //let deathrattle_list = this.board.$(this.activePlayer, 'character')
-      .filter(character => {
+    let deathrattle_list = characters.filter(character => {
         return !character.isAlive();
       });
     
@@ -243,7 +249,8 @@ class Game {
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
       character._die();
-      let $ = this.board.$.bind(this.board, character.owner);
+
+      let $ = this._$.get(character.owner);
       let self = character;
       let game = this;
       character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
@@ -319,7 +326,7 @@ class Game {
         actions: []
       };
     }
-    let $ = this.board.$.bind(this.board, this.activePlayer);
+    let $ = this._$.get(this.activePlayer);
  
     let pawns = $('own character');
     let warriors = pawns.filter(v => {
@@ -336,12 +343,12 @@ class Game {
     
     let aubergines = $('enemy character');
     let sheeps = aubergines.filter(v => {
-      return v.health > 0;
+      return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
     });
 
     //scan for taunt
-    let hasTaunt = sheeps.some(v => v.tags && v.tags.includes(TAGS.taunt));
-    if (hasTaunt) sheeps = sheeps.filter(v => v.tags.includes(TAGS.taunt));
+    let sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
+    if (sheepsTaunt.length) sheeps = sheepsTaunt;
     
     // scan for spell shield
     // ..
@@ -425,7 +432,7 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
 }
 
 // move this away
-function buff (game, $, char, x, id_or_Tag) {
+function buff (game, $, auraGiver, x, id_or_Tag) {
     if (!x) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
@@ -434,7 +441,7 @@ function buff (game, $, char, x, id_or_Tag) {
         if (TAGS_LIST.includes(id_or_Tag)) {
             v.auras.push(id_or_Tag); // check for duplicates
         } else {
-            createCard(id_or_Tag, char.owner, game.eventBus)
+            createCard(id_or_Tag, auraGiver.owner, game.eventBus)
             .apply({
               target: v,
               $,

@@ -49,7 +49,7 @@ function playFromHand (card, {game, $, target, position}) {
         _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
 
         if(_trigger_v1 && _trigger_v1.activeZone === 'play') {
-            console.log(`hand.js: ${card.name} trigger ...`);
+            console.log(`playCard.js: ${card.name} trigger ...`);
             // {
             //   activeZone: 'deck',
             //   eventName: 'summon',

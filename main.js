@@ -14,7 +14,6 @@ const bootstrap2 = require('./classes/bootstrap.js');
 const Card = require('./classes/card.js');
 const Board = require('./classes/board.js');
 const {
-  CARD_TYPES: TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
   EVENTS,
   ZONES
 } = require('./data/constants.js');
@@ -25,54 +24,6 @@ const {
   _progress
 } = require('./classes/cardUniverse.js');
 
-//---Deck2.js sketch------------------
-// let card_defs = CardDefinitions.filter(v => v.collectible === true)
-//     .filter(v => [TYPES.minion, TYPES.spell].includes(v.type))
-//     .filter(v => [
-//       //'Chillwind Yeti',
-//       //'River Crocolisk',
-//       //'Bloodfen Raptor',
-// //--spells:damage
-// //      'Fireball',
-//       'Arcane Explosion',
-//       //'Arcane Missiles',
-// //      'Hellfire',
-//       'Swipe',
-
-// //--basic minions with tags or battlecries
-//       'Flame Imp',
-//       //'Ironfur Grizzly',
-//       'Ironbeak Owl',
-//       //'Leper Gnome',
-//       'Unstable Ghoul',
-//       //'Abomination',
-//       'Elven Archer',
-//       //'Silent Knight', //-- stealth
-//       //'Annoy-o-Tron',
-//       //'Shielded Minibot',
-//       // 'Argent Horseraider',
-//       //'Young Dragonhawk',
-//       // 'Thrallmar Farseer',
-      
-// //--summon
-//       'Murloc Tidehunter',
-//       //'Leeroy Jenkins',
-//       'Mirror Image',
-
-// //--trigger, MVP minions
-//       'Knife Juggler',
-//       'Acolyte of Pain',
-//       //'Imp Gang Boss',
-//       'Starving Buzzard',
-//       //'Patches the Pirate',
-//       //'Doomsayer',
-//       //'Grim Patron',
-
-//     ].includes(v.name))
-//     ;
-
-//---------------
-
 function _quick_play (seed) {
   let _c = console.log;
   let _w = console.warn;
@@ -82,7 +33,8 @@ function _quick_play (seed) {
   // actual play
   let g = bootstrap2(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
   g.start();
-  for(let i = 0; i < 100 && !g.isOver; i++) {
+  //actual HS hardcoded maximum round is 87 or so..
+  for(let i = 0; i < 90 && !g.isOver; i++) {
     //g.view();
 
     //g.usePower(0); // hero power first suggested target
@@ -197,8 +149,17 @@ console.log(jjj.reduce((a,v) => {
   let k = v.winner;
   if (!a[k]) a[k] = 0;
   a[k] += 1;
+
+  a.turns += v.turn;
+  if (a.longestGame < v.turn) a.longestGame = v.turn;
+  if (a.shortestGame > v.turn) a.shortestGame = v.turn;
+
   return a;
-}, {}));
+}, {
+  turns: 0,
+  longestGame: 0,
+  shortestGame: 100
+}));
 
 _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }

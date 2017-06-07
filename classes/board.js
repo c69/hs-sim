@@ -145,10 +145,10 @@ class Board {
       }
       filters.push(v => allowed_zones.includes(v.zone));
     } else {
-      all_cards = all_cards.filter(function (v) {ZONES.play === v.zone});  
+      //all_cards = all_cards.filter(function (v) {ZONES.play === v.zone});  
     }
     //console.log('zones', allowed_zones);
-    //filters.push(v => allowed_zones.includes(v.zone));
+    filters.push(v => allowed_zones.includes(v.zone));
 
     // let prime_zone = allowed_zones[0];
     // let cards_in_zone = allowed_zones.length > 1 ?

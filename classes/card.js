@@ -39,7 +39,7 @@ class Card {
       //this.joust = ???
 
       this.buffs = (cardDef.tags || []).slice(0);
-      this.auras = []; // consider rename
+      this.incomingAuras = [];
       //this.tags is a getter
       
       if (cardDef.death) {
@@ -52,7 +52,12 @@ class Card {
           trigger: cardDef._trigger_v1  
         });
       }
-      this.aura = cardDef.aura;
+      if (cardDef.aura) {
+        this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
+          aura: cardDef.aura  
+        });
+      }
+      //this.aura = cardDef.aura;
 
       this.zone = ZONES.deck;
       this.owner = owner;
@@ -60,12 +65,21 @@ class Card {
       this.card_id = card_id++; 
     }
     get tags () {
-      let real_store = this.buffs;  
       //console.log(`card.tags: #${this.card_id}`);
-      // -- this line is INCORRECT -- if (real_store.find(v => v === TAGS.silence)) return [TAGS.silence];
+      let allBuffs = [].concat(this.buffs, this.incomingAuras)
       
-      //console.log(`card.tags returned: ${this.buffs}`);
-      return [].concat(this.buffs, this.auras);  
+      let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
+      if (ignoreOlder === -1) ignoreOlder = 0;
+      let activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
+        //   if (buffOrTag.tags) {
+        //       return [buffOrTag.tags, buffOrTag.attack];
+        //       //todo: also split stat modifiers and tags
+        //   }
+          return buffOrTag;
+      });  
+
+      //console.log(`card.tags returned: ${activeBuffs}`);
+      return activeBuffs;
     }
     _draw () {
         if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
@@ -186,9 +200,10 @@ class Minion extends Card {
     get attack () {
       //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
       // getter inside of getter ..
-      let mostRecentSilence = this.tags.lastIndexOf(TAGS.silence);
-      if (mostRecentSilence === -1) mostRecentSilence = 0;
-      let modifiers = this.tags.slice(mostRecentSilence).filter(v => v.attack);
+    //   let mostRecentSilence = this.tags.lastIndexOf(TAGS.silence);
+    //   if (mostRecentSilence === -1) mostRecentSilence = 0;
+    //   let modifiers = this.tags.slice(mostRecentSilence).filter(v => v.attack);
+      let modifiers = this.tags.filter(v => v.attack);
       if (!modifiers) return this.attackBase;  
       return this.attackBase + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
@@ -281,9 +296,10 @@ class Enchantment extends Card {
           //console.log(this.effect, '_______');
           let attack_bonus = (typeof this.effect.attack !== 'function') ? this.effect.attack : this.effect.attack({target, $, game});
           
-          let container = type === 'aura' ? target.auras : target.buffs;
+          let container = type === 'aura' ? target.incomingAuras : target.buffs;
           container.push({
               attack: attack_bonus,
+              tags: this.tags, 
               //tags: ???tags
               _by: this,
               toString () {

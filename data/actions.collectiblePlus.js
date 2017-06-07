@@ -3236,8 +3236,7 @@ const actions = [
     "text": "Your other minions have +1/+1.",
     xxx: 'aura + other',
     aura: {
-      //target: 'own minion !self',
-      target: 'own minion',
+      target: 'other own minion',
       buff: 'CS2_222o'
     }
   },
@@ -3343,7 +3342,7 @@ const actions = [
     "text": "Your other Beasts have +1 Attack.",
     xxx: 'aura',
     aura: {
-      target: 'own minion .race=beast',
+      target: 'other own minion .race=beast',
       buff: 'DS1_175o'
     }
   },

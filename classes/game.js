@@ -216,35 +216,48 @@ class Game {
     //PHASE: "Aura update: Health/Attack"
 
     let characters = this.board.$(this.activePlayer, 'character');
-    characters.forEach(v => v.auras = []);
+    characters.forEach(v => v.incomingAuras = []);
     //console.log('== RESET ALL AURA EFFECTS ==');
     //this.view();
 
-
     //refresh/re-apply auras
-    characters.filter(character => {
-      return character.aura;
-    }).forEach(character => {
-      let p = character.owner;
-      let aura = character.aura;
-      let $ = this._$.get(p); 
-      //let t = this.board.$(p, a.target)
-      let t = $(aura.target);
+    characters.forEach(character => {
+      
+      character.tags.filter(tag => !!tag.aura)
+      .forEach(({aura}) => {
+        //console.log(aura);
+        let p = character.owner;
+        let $ = this._$.get(p); 
+               
+        let t;
+        if (aura.target === 'self') {
+          t = character;
+        } else if (aura.target === 'adjacent') {
+          t = $('own minion').adjacent(character);
+        } else if (/\bother\b/i.test(aura.target)) {
+          let selector = aura.target.replace('other', '').trim().replace(/\s+/g, ' ');
+          t = $(selector).exclude(character); 
+        } else {
+          t = $(aura.target);
+        }
+        //console.log(`Aura of ${character.name}: ${t.length} of "${aura.target}"`);
 
-      //the signature is ugly... but i will refactor it
-      buffAura(this, $, character, t, aura.buff);  
+        //the signature is ugly... but i will refactor it
+        buffAura(this, $, character, t, aura.buff);  
+      });
     });
+    
 
     //death logic onwards
-    let deathrattle_list = characters.filter(character => {
+    let death_list = characters.filter(character => {
         return !character.isAlive();
       });
     
-    if (!deathrattle_list.length) {
+    if (!death_list.length) {
       return;
     }
     //console.log('death list', deathrattle_list); // was always empty :(( because minions _die() before the sweep
-    deathrattle_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
+    death_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
       //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
@@ -407,7 +420,7 @@ class Game {
     this.players.forEach(player => {
       let own_minions = this.board.$(player, 'own minion');
       
-      //console.log(own_minions.map(({buffs, auras, tags}) => {return {buffs, auras, tags}} ))
+      //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
       
       if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
@@ -419,10 +432,14 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
       (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
       (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
+      (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
+      
       (v.tags.find(v => v.death) ? '☠️' : '') +
+      (v.tags.find(v => v.trigger) ? 'T' : '') +
+      (v.tags.find(v => v.aura) ? 'A' : '') +
       (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
-      (v.auras.length ? 'A' : '') +
-
+      (v.incomingAuras.length ? 'a' : '') +
+ 
       `${v.attack}/${v.health}`
       ));
     });
@@ -432,14 +449,14 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
 }
 
 // move this away
-function buffAura (game, $, auraGiver, x, id_or_Tag) {
-    if (!x) throw new RangeError('No target provided for buff');
+function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
+    if (!auraTarget) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
-    let x2 = Array.isArray(x) ? x : [x]; 
+    let x2 = Array.isArray(auraTarget) ? auraTarget : [auraTarget]; 
     x2.forEach(v => {
         if (TAGS_LIST.includes(id_or_Tag)) {
-            v.auras.push(id_or_Tag); // check for duplicates
+            v.incomingAuras.push(id_or_Tag); // check for duplicates
         } else {
             createCard(id_or_Tag, auraGiver.owner, game.eventBus)
             .apply({
@@ -450,7 +467,7 @@ function buffAura (game, $, auraGiver, x, id_or_Tag) {
             });
         }
     });
-    return x;
+    return auraTarget;
 }
 
 module.exports = Game;

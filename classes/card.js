@@ -30,7 +30,7 @@ class Card {
       //.multiclass
       this.rarity = cardDef.rarity;
 
-      this.cost = cardDef.cost;
+      this.costBase = cardDef.cost;
       this.overload = cardDef.overload;
 
       this.play = cardDef.play;
@@ -63,6 +63,29 @@ class Card {
       this.owner = owner;
 
       this.card_id = card_id++; 
+    }
+    get cost () {
+      if (!this.tags.length) return this.costBase;
+      
+      let modifiers = this.tags.filter(v => !!v.cost);
+      if (!modifiers.length) return this.costBase;
+      
+      //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
+      //console.log(this.costBase, modifiers);
+      
+      let new_cost = modifiers.reduce((a, v, i) => {
+        //console.log('cost reduce:', a, v, i, this);
+        let cost = v.cost;
+        if (typeof cost === 'number') {
+          a += cost;
+        } else if (typeof cost === 'function') {
+          a = cost(a);
+        }
+        return a;  
+      }, this.costBase, this);
+      
+      console.log(`${this.zone} ${this.name}'s cost is modified from ${this.costBase} to ${new_cost}`);
+      return new_cost > 0 ? new_cost : 0;  
     }
     get tags () {
       //console.log(`card.tags: #${this.card_id}`);
@@ -197,12 +220,14 @@ class Minion extends Card {
       this.isReady = false; //applies only to minion - initial ZZZ / sleep
       this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
+    /**
+     * @deprecated - rewrite this to be same as .cost getter 
+     */
     get attack () {
       //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
       // getter inside of getter ..
-    //   let mostRecentSilence = this.tags.lastIndexOf(TAGS.silence);
-    //   if (mostRecentSilence === -1) mostRecentSilence = 0;
-    //   let modifiers = this.tags.slice(mostRecentSilence).filter(v => v.attack);
+      
+    //  return this.attackBase;
       let modifiers = this.tags.filter(v => v.attack);
       if (!modifiers) return this.attackBase;  
       return this.attackBase + modifiers.reduce(((a,v) => a + v.attack), 0)   
@@ -271,47 +296,25 @@ class Enchantment extends Card {
       //console.log('EXCH', cardDef);
       //DESIGN BUG: clunky object shape
       // todo: finalize when SET attack/health/cost will be implemented
-      this.effect = {
-          //modify numbers
-          attack: cardDef.attack,
-        //   health: cardDef.health,
-        //   durability: cardDef.durability,
-        //   cost: cardDef.cost,
-          //add fn to array
-        //   death: cardDef.death,
-          //set number to
-        //   attackEquals: cardDef.attackEquals,
-        //   healthEquals: cardDef.healthEquals,
-        //   costEquals: cardDef.costEquals,
-          //ownerEquals: cardDef.ownerEquals
-          // ~
-          // resource = 'health'; //vs default, mana
-          
-      }
-    }
-    //consider splitting this, to somehow simplify signature
-    apply ({target, $, game, type = "buff"}) {
-          //console.log(target);
-          super._play();
-          //console.log(this.effect, '_______');
-          let attack_bonus = (typeof this.effect.attack !== 'function') ? this.effect.attack : this.effect.attack({target, $, game});
-          
-          let container = type === 'aura' ? target.incomingAuras : target.buffs;
-          container.push({
-              attack: attack_bonus,
-              tags: this.tags, 
-              //tags: ???tags
-              _by: this,
-              toString () {
-                  return `[Object Buff: ${this._by.name} #${this._by.card_id}]`
-              }  
-          });
-          //console.log(target.name, container);
-          if (type === 'aura') {
-              //console.log(`Aura refresh: ${this.name} on ${target.owner.name}'s ${target.name} by [source?]`);  
-          } else {
-              console.log(`${target.owner.name}'s ${target.name} got buffed with ${this.name}`);        
-          }
+      this.effect = {};
+      //_.pick (-_-)
+      [
+        'attack',
+        'health',
+        'cost',
+        'tags',
+        'durability',
+        'death',
+        'resource',
+        'owner'    
+      ].forEach(prop => {
+        let v = cardDef[prop];
+        if (v) {
+          this.effect[prop] = v;
+        }
+      }, this);
+ 
+      
     }
 }
 
@@ -319,7 +322,7 @@ module.exports = {
     Card,
     Minion,
     Spell,
-    Hero, // consider name clashes!,
+    Hero,
     Weapon,
     Power,
     Enchantment

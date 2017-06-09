@@ -12,6 +12,7 @@ const {
 
 //private debug vars
 let _$_count = 0;
+let _$_all_selectors = {};
 let _$_count_slow_path = 0;
 let _$_slow_selectors = {};
 
@@ -29,6 +30,7 @@ class Board {
   static _profile () {
     return {
       _$_count,
+      _$_all_selectors,
       _$_count_slow_path,
       _$_slow_selectors
     }
@@ -62,6 +64,8 @@ class Board {
       enemyPlayer
     ] = this.player1 === player ? [this.player1, this.player2] : [this.player2, this.player1];
 
+    _$_all_selectors[selector_string] = _$_all_selectors[selector_string] ? _$_all_selectors[selector_string] + 1 : 1;
+
     let all_cards = [].concat(this.deck1, this.deck2);
     // before you ask: Why are you merging two deck, and then searching for owner ?!
     // - think: minion can be stolen
@@ -70,9 +74,14 @@ class Board {
       // shaved 200ms (7.00s to 6.80s) on 100 runs in Node6
       // should consider memoisation/caching (with turn-tick-phase key)
       //try to optimize for most used cases ? and then maybe move this strings to constants
+//      '*': function (v) {return true }, // =_=
       'minion': function (v) { return v.zone === ZONES.play && v.type === TYPES.minion;},
       'character': function (v) { return v.zone === ZONES.play && (v.type === TYPES.minion || v.type === TYPES.hero);},
       'own minion': function (v) { return v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.minion;},
+      //'enemy hero': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.hero;},
+      //'own hero': function (v) { return v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.hero;},
+      //'enemy hero': function (v) { return  enemyPlayer.hero;},
+      //'own hero': function (v) { return ownPlayer.hero;},
       'enemy minion': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.minion;},
       'own character': function (v) { return  v.zone === ZONES.play && v.owner === ownPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
       'enemy character': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
@@ -84,6 +93,10 @@ class Board {
     
     _$_count_slow_path += 1;
     _$_slow_selectors[selector_string] = _$_slow_selectors[selector_string] ? _$_slow_selectors[selector_string] + 1 : 1;
+
+    // '*' is a "slow" selector, but itss simple conceptually. I want to use it for auras, till API stabilization
+    if (selector_string === '*') return all_cards; // the ONLY place where we use * selector (today) is aura refresh..
+  
 
     let tokens = selector_string.split(/\s+/);
    

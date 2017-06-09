@@ -61,8 +61,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'Coin',       
     //--spells:damage
     //'Fireball',
-    'Meteor',
-    'Arcane Explosion',
+    //'Meteor',
+    //'Arcane Explosion',
     //'Arcane Missiles',
     //      'Hellfire',
     //'Swipe',
@@ -79,7 +79,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'Abomination',
     //'Elven Archer',
     //'Silent Knight', //-- stealth
-    'Annoy-o-Tron',
+    //'Annoy-o-Tron',
     //'Shielded Minibot',
     // 'Argent Horseraider',
     //'Young Dragonhawk',
@@ -105,28 +105,31 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     
     // - aura
     //'Timber Wolf', //other
-    'Flametongue Totem', //adjacent
+    // 'Flametongue Totem', //adjacent
     //'Tundra Rhino',
     //'Warsong Commander',
-    'Stormwind Champion', //other
-   
+    // 'Stormwind Champion', //other
+    'Summoning Portal', //mana cost
+    'Molten Giant', //self cost
+    'Junkbot', //for its (5) 1/5
+
     //--summon
     //'Blood To Ichor',
     // 'Murloc Tidehunter',
     //'Leeroy Jenkins',
-    'Mirror Image',
+    //'Mirror Image',
     //'Unleash the Hounds',
     //'Dreadsteed',
     // 'Sludge Belcher',
 
 
     //--trigger, MVP minions
-    'Knife Juggler',
+    // 'Knife Juggler',
     // 'Acolyte of Pain',
-    'Imp Gang Boss',
-    'Starving Buzzard',
+    // 'Imp Gang Boss',
+    // 'Starving Buzzard',
     // 'Patches the Pirate',
-    'Doomsayer',
+    //'Doomsayer',
     // 'Grim Patron',
 
   ].includes(v.name))

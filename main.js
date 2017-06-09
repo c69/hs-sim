@@ -24,12 +24,13 @@ const {
   _progress
 } = require('./classes/cardUniverse.js');
 
-function _quick_play (seed) {
+function _quick_play (seed, {mute}) {
   let _c = console.log;
   let _w = console.warn;
-  console.log = function () {};
-  console.warn = function () {};
-
+  if (mute) {
+    console.log = function () {};
+    console.warn = function () {};
+  }
   // actual play
   let g = bootstrap2(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
   g.start();
@@ -140,7 +141,7 @@ let _timeStart = Date.now();
 let _N_RUNS = 100;
 for (let j = 0; j < _N_RUNS; j++) { 
   // current speed is 100 games in 15 seconds
-  jjj.push(_quick_play());
+  jjj.push(_quick_play(0, {mute: true}));
 }
 let duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
 
@@ -165,5 +166,11 @@ _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 
 //debug output for performance testing 
-console.log(Game._profile());
-console.log(Board._profile());
+let g_profile = Game._profile();
+let b_profile = Board._profile()
+console.log(g_profile);
+console.log(b_profile);
+console.log( {
+  'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
+});
+  

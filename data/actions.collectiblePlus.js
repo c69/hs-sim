@@ -2,7 +2,8 @@
 
 const {
   TAGS,
-  EVENTS
+  EVENTS,
+  ZONES
 } = require('./constants.js');
 
 const actions = [
@@ -2798,7 +2799,10 @@ const actions = [
   {
     "id": "CS2_064",
     "_info": "(6) 6/6 [WARLOCK]: Dread Infernal |DEMON",
-    "text": "<b>Battlecry:</b> Deal 1 damage to ALL other characters."
+    "text": "<b>Battlecry:</b> Deal 1 damage to ALL other characters.",
+    play ({$, self}) {
+      $('character').exclude(self).dealDamage(1);
+    }
   },
   {
     "id": "CS2_065",
@@ -4398,17 +4402,34 @@ const actions = [
   {
     "id": "EX1_312",
     "_info": "(8) SPELL [WARLOCK]: Twisting Nether",
-    "text": "Destroy all minions."
+    "text": "Destroy all minions.",
+    play ({$}) {
+      $('minion').destroy();
+    }
   },
   {
     "id": "EX1_313",
     "_info": "(4) 5/6 [WARLOCK]: Pit Lord |DEMON",
-    "text": "<b>Battlecry:</b> Deal 5 damage to your hero."
+    "text": "<b>Battlecry:</b> Deal 5 damage to your hero.",
+    play ({$}) {
+      $('own hero').dealDamage(5);
+    }
   },
   {
     "id": "EX1_315",
     "_info": "(4) 0/4 [WARLOCK]: Summoning Portal",
-    "text": "Your minions cost (2) less, but not less than (1)."
+    "text": "Your minions cost (2) less, but not less than (1).",
+    xxx: 'aura mana',
+    aura: {
+      target: 'own minion @hand', // maybe @anywhere ??
+      buff: {
+        cost (v, {target}) {
+          //let c = target.costBase - 2;
+          let c = v - 2;
+          return  c < 1 ? 1 : c;
+        }
+      }
+    }
   },
   {
     "id": "EX1_316",
@@ -5266,7 +5287,18 @@ const actions = [
   {
     "id": "EX1_620",
     "_info": "(25) 8/8 [NEUTRAL]: Molten Giant",
-    "text": "Costs (1) less for each damage your hero has taken."
+    "text": "Costs (1) less for each damage your hero has taken.",
+    xxx: 'aura self cost',
+    aura: {
+      zone: ZONES.hand,
+      target: 'self',
+      buff: {
+        cost (v, {$}) {
+          let h = $('own hero')[0].health;
+          return v - (30 - h);
+        }
+      }
+    }
   },
   {
     "id": "EX1_621",

@@ -14,6 +14,11 @@ const {
     ZONES
 } = require('../data/constants.js');
 
+const {
+    applyBuff
+} = require('./buff.js');
+
+
 function playFromHand (card, {game, $, target, position}) {
     if (!card) throw new RangeError('Card must be provided');
     //console.log(card);
@@ -150,8 +155,9 @@ function playFromHand (card, {game, $, target, position}) {
                 if (TAGS_LIST.includes(id_or_Tag)) {
                     v.buffs.push(id_or_Tag); // check for duplicates
                 } else {
-                    createCard(id_or_Tag, card.owner, game.eventBus)
-                    .apply({target: v, $, game});
+                    let ccc = createCard(id_or_Tag, card.owner, game.eventBus);
+
+                    applyBuff({card: ccc, target: v, $, game});
                 }
             });
             return x;

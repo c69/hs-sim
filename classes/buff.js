@@ -48,7 +48,7 @@ function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buf
     if (type === 'aura') {
         //console.log(`Aura refresh: ${this.name} on ${target.owner.name}'s ${target.name} by [source?]`);  
     } else {
-        console.log(`${target.owner.name}'s ${target.name} got buffed with ${this.name}`);        
+        console.log(`${target.owner.name}'s ${target.name} got buffed with ${card.name}`);        
     }
 }
 

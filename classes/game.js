@@ -3,7 +3,10 @@
 
 const combat = require('./combat.js');
 const playCard = require('./playCard.js');
-const applyBuff = require('./buff.js');
+const {
+  applyBuff,
+  buffAura
+} = require('./buff.js');
 
 const Board = require('./board.js');
 const {
@@ -11,7 +14,6 @@ const {
 } = require('./cardUniverse.js');
 const {
   TAGS,
-  TAGS_LIST,
   CARD_TYPES,
   ACTION_TYPES,
   EVENTS
@@ -454,34 +456,6 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
     
     return this;
   }
-}
-
-// move this away
-function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
-    if (!auraTarget) throw new RangeError('No target provided for buff');
-    if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
-
-    let x2 = Array.isArray(auraTarget) ? auraTarget : [auraTarget]; 
-    x2.forEach(v => {
-      if (TAGS_LIST.includes(id_or_Tag)) {
-        v.incomingAuras.push(id_or_Tag); // check for duplicates
-        return;
-      }
-        
-      let c = id_or_Tag;
-      if (typeof id_or_Tag !== 'object') {
-        c = createCard(id_or_Tag, auraGiver.owner, game.eventBus);
-        c._play(); // unsafe ?
-      } 
-      applyBuff({
-        card: c,
-        target: v,
-        $,
-        game,
-        type: 'aura'
-      });
-    });
-    return auraTarget;
 }
 
 module.exports = Game;

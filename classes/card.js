@@ -65,6 +65,10 @@ class Card {
       this.card_id = card_id++; 
     }
     get cost () {
+      return getter_of_buffed_atribute.call(this, 'cost', 'costBase');
+    }  
+    /** @deprecated hardcoded prop names */
+    get __cost () {
       if (!this.tags.length) return this.costBase;
       
       let modifiers = this.tags.filter(v => !!v.cost);
@@ -151,7 +155,7 @@ class Card {
         copy.zone = ZONES.aside; 
     }
     toString () {
-        return `[Object Card: ${this.name} #${this.card_id}]`;
+        return `[Object Card ${this.type}: ${this.name} #${this.card_id}]`;
     }
 }
 
@@ -165,6 +169,10 @@ class Character extends Card {
       this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
     get attack () {
+      return getter_of_buffed_atribute.call(this, 'attack', 'attackBase');
+    }
+    /** @deprecated copypaste with hardcoded prop names */
+    get __attack () {
       if (!this.tags.length) return this.attackBase;
       
       let modifiers = this.tags.filter(v => !!v.attack);
@@ -321,9 +329,32 @@ class Enchantment extends Card {
           this.effect[prop] = v;
         }
       }, this);
- 
-      
+
+
     }
+}
+
+function getter_of_buffed_atribute (prop, propBase) {
+    if (!this.tags.length) return this[propBase];
+    
+    let modifiers = this.tags.filter(v => !!v[prop]);
+    if (!modifiers.length) return this[propBase];
+    
+    //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
+    //console.log(this.costBase, modifiers);
+    
+    let new_value = modifiers.reduce((a, v) => {
+        let mutator = v[prop];
+        if (typeof mutator === 'number') {
+            a += mutator;
+        } else if (typeof mutator === 'function') {
+            a = mutator(a);
+        }
+        return a;  
+    }, this[propBase], this);
+    
+    console.log(`${this.zone} ${this.name}'s ${prop} is modified from ${this[propBase]} to ${new_value}`);
+    return new_value > 0 ? new_value : 0;  
 }
 
 module.exports = {

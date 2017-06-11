@@ -16,7 +16,8 @@ const {
   TAGS,
   CARD_TYPES,
   ACTION_TYPES,
-  EVENTS
+  EVENTS,
+  ZONES
 } = require('../data/constants.js');
 
 var _frame_count_active = 0;
@@ -232,7 +233,9 @@ class Game {
     allCards.forEach(character => {
       
       character.tags.filter(tag => {
-        return !!tag.aura //&& tag.aura.zone === character.zone
+        if (!tag.aura) return false;
+        let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
+        return zone === character.zone;
       })
       .forEach(({aura}) => {
         //console.log(aura);

@@ -150,6 +150,43 @@ class Card {
         // copy.tags[] are DIRTY !
         copy.zone = ZONES.aside; 
     }
+    toString () {
+        return `[Object Card: ${this.name} #${this.card_id}]`;
+    }
+}
+
+class Character extends Card {
+    constructor (cardDef, ...args) {
+      super(cardDef, ...args);
+
+      this.attackBase = cardDef.attack || 0;
+      this.health = cardDef.health || 0;
+      this.healthMax = this.health; // in the beginning, all characters are at full health
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
+    }
+    get attack () {
+      if (!this.tags.length) return this.attackBase;
+      
+      let modifiers = this.tags.filter(v => !!v.attack);
+      if (!modifiers.length) return this.attackBase;
+      
+      //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
+      //console.log(this.costBase, modifiers);
+      
+      let new_attack = modifiers.reduce((a, v, i) => {
+        //console.log('cost reduce:', a, v, i, this);
+        let attack = v.attack;
+        if (typeof attack === 'number') {
+          a += attack;
+        } else if (typeof attack === 'function') {
+          a = attack(a);
+        }
+        return a;  
+      }, this.attackBase, this);
+      
+      console.log(`${this.zone} ${this.name}'s attack is modified from ${this.attackBase} to ${new_attack}`);
+      return new_attack > 0 ? new_attack : 0;   
+    }
     _damageApply (n, type = '') {
       if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
       let was = this.health;
@@ -201,36 +238,17 @@ class Card {
     isAlive () { // replace with death sweep in game
         return this.health > 0 && !this.tags.includes(TAGS._pendingDestruction);
     }
-    toString () {
-        return `[Object Card: ${this.name} #${this.card_id}]`;
-    }
 }
 
-class Minion extends Card {
+class Minion extends Character {
     constructor (cardDef, ...args) {
       super(cardDef, ...args);
       if (this.type !== TYPES.minion) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.minion}`);
       
-      this.attackBase = cardDef.attack || 0;
-      this.health = cardDef.health || 0;
-      this.healthMax = this.health; // in the beginning, all characters are at full health
       this.race = cardDef.race; // or undefined   
    
       this.isReady = false; //applies only to minion - initial ZZZ / sleep
-      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
-    }
-    /**
-     * @deprecated - rewrite this to be same as .cost getter 
-     */
-    get attack () {
-      //DESIGN BUG: such implementation does not allow to SET attack, only to modify.  
-      // getter inside of getter ..
-      
-    //  return this.attackBase;
-      let modifiers = this.tags.filter(v => v.attack);
-      if (!modifiers) return this.attackBase;  
-      return this.attackBase + modifiers.reduce(((a,v) => a + v.attack), 0)   
     }
 }
 class Spell extends Card {
@@ -253,25 +271,14 @@ class Weapon extends Card {
       this.durability = cardDef.durability || 0;   
     }
 }
-class Hero extends Card {
+class Hero extends Character {
     constructor (cardDef, ...args) {
       super(cardDef, ...args);
       if (this.type !== TYPES.hero) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.hero}`);
       
-      this.attackBase = cardDef.attack || 0;
-      this.health = cardDef.health || 0;
-      this.healthMax = this.health; // in the beginning, all characters are at full health
-      
-      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
-      
       this.armor = cardDef.armor || 0;
       //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
-    }
-    get attack () {
-      //ARCHITECTURE BUG: currently getter must be copy/pasted bewteen hero and minion
-      // for now i'll just ignore buffs for Hero 
-      return this.attackBase;
     }
     _die () {
         super._die();
@@ -284,6 +291,7 @@ class Power extends Card {
       if (this.type !== TYPES.power) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.power}`);
 
+      //maybe rename to .usedThisTurn ? 
       this.attackedThisTurn = 0; //applies to: Minion, Hero, Power   
     }
 }

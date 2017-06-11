@@ -25,7 +25,10 @@ function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buf
     //console.log(target);
     //console.log(this.effect, '_______');
     let effect = card.effect || card;
-    let attack_bonus = (typeof effect.attack !== 'function') ? effect.attack : effect.attack({target, $, game});
+    
+    let attack_modifier = typeof effect.attack === 'number' ? effect.attack : function (v, card) {
+      return effect.attack(v, {target, $, game});    
+    };
 
     let cost_modifier = typeof effect.cost === 'number' ? effect.cost : function (v, card) {
       return effect.cost(v, {target, $, game});    
@@ -33,7 +36,7 @@ function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buf
 
     let container = type === 'aura' ? target.incomingAuras : target.buffs;
     container.push({
-        attack: attack_bonus,
+        attack: attack_modifier,
         cost: cost_modifier,
         tags: effect.tags,
 

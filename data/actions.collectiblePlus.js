@@ -4623,12 +4623,21 @@ const actions = [
   {
     "id": "EX1_382",
     "_info": "(3) 3/3 [PALADIN]: Aldor Peacekeeper",
-    "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1."
+    "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+    xxx: 'buff',
+    target: 'enemy minion',
+    play ({target, buff}) {
+      buff(target, 'EX1_382e');
+    }
   },
   {
     "id": "EX1_382e",
     "_info": "ENCHANTMENT [*PALADIN]: Stand Down!",
-    "text": "Attack changed to 1."
+    "text": "Attack changed to 1.",
+    xxx: 'buff set atk to 1',
+    attack () {
+      return 1;
+    }
   },
   {
     "id": "EX1_383",

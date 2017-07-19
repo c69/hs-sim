@@ -9,6 +9,10 @@ const {
   //EVENTS
 } = require('../data/constants.js');
 
+const {
+  createCard // temporary - test that summoning from Deathratlle works
+} = require('./cardUniverse.js');
+
 //consider splitting this, to somehow simplify signature
 /**
  * 
@@ -24,8 +28,9 @@ function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buf
     
     //console.log(target);
     //console.log(this.effect, '_______');
-    let effect = card.effect || card;
-    
+    let effect = card.effects || card;
+    //console.log(effect);
+
     let attack_modifier = typeof effect.attack === 'number' ? effect.attack : function (v, card) {
       return effect.attack(v, {target, $, game});    
     };
@@ -34,13 +39,17 @@ function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buf
       return effect.cost(v, {target, $, game});    
     };
 
+    //here we directly modify the target.incomingAuras or target.buffs
+    // watch out for bugs (-_-)
     let container = type === 'aura' ? target.incomingAuras : target.buffs;
     container.push({
-        attack: attack_modifier,
-        cost: cost_modifier,
-        tags: effect.tags,
-
-        //? zone: ??? -- is needed for Magma Giant 
+        effects: Object.assign(
+            {},
+            {attack: attack_modifier},
+            {cost: cost_modifier}
+        ),
+        tags: (effect.tags || []).slice(0),
+ 
         _by: card,
         toString () {
             return `[Object Buff: ${this._by.name} #${this._by.card_id}]`

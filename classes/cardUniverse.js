@@ -69,11 +69,11 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'Assassinate',
 
     //--basic minions with tags or battlecries
-    //'Flame Imp',
+    'Flame Imp',
     //'Ironfur Grizzly',
 
     //'Leper Gnome',
-    //'Unstable Ghoul',
+    'Unstable Ghoul',
     //'Ravaging Ghoul',
     //'Mad Bomber',
     //'Abomination',
@@ -86,32 +86,33 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     // 'Thrallmar Farseer',
     
     // - silence
-    //'Ironbeak Owl',
+    'Ironbeak Owl',
     //'Mass Dispel',    
     
     // - give
     //'Bloodsail Raider',
     //'Windfury',
-    // 'Hand of Protection',
+    'Hand of Protection',
     // 'Shattered Sun Cleric',
     //'Windspeaker',      
     //'Abusive Sergeant', // this turn
     //'Bloodlust', // this turn
-    // 'Houndmaster',
-    //  'Sunfury Protector', // adjacent 
-    //'Defender of Argus', // adjacent
+    //'Houndmaster',
+    //'Sunfury Protector', // adjacent 
+    'Defender of Argus', // adjacent
     //'Blessing of Wisdom',
+    'Aldor Peacekeeper',
     // 'Raging Worgen', //enrage
     
     // - aura
     //'Timber Wolf', //other
-    // 'Flametongue Totem', //adjacent
+    'Flametongue Totem', //adjacent
     //'Tundra Rhino',
     //'Warsong Commander',
-    // 'Stormwind Champion', //other
+    'Stormwind Champion', //other
     'Summoning Portal', //mana cost
     'Molten Giant', //self cost
-    'Junkbot', //for its (5) 1/5
+    //'Junkbot', //for its (5) 1/5
 
     //--summon
     //'Blood To Ichor',

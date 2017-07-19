@@ -53,12 +53,11 @@ class Card {
         });
       }
       if (cardDef.aura) {
-        this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
+        this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple auras
           aura: cardDef.aura  
         });
       }
-      //this.aura = cardDef.aura;
-
+      
       this.zone = ZONES.deck;
       this.owner = owner;
 
@@ -67,46 +66,30 @@ class Card {
     get cost () {
       return getter_of_buffed_atribute.call(this, 'cost', 'costBase');
     }  
-    /** @deprecated hardcoded prop names */
-    get __cost () {
-      if (!this.tags.length) return this.costBase;
-      
-      let modifiers = this.tags.filter(v => !!v.cost);
-      if (!modifiers.length) return this.costBase;
-      
-      //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
-      //console.log(this.costBase, modifiers);
-      
-      let new_cost = modifiers.reduce((a, v, i) => {
-        //console.log('cost reduce:', a, v, i, this);
-        let cost = v.cost;
-        if (typeof cost === 'number') {
-          a += cost;
-        } else if (typeof cost === 'function') {
-          a = cost(a);
-        }
-        return a;  
-      }, this.costBase, this);
-      
-      console.log(`${this.zone} ${this.name}'s cost is modified from ${this.costBase} to ${new_cost}`);
-      return new_cost > 0 ? new_cost : 0;  
-    }
+
     get tags () {
       //console.log(`card.tags: #${this.card_id}`);
-      let allBuffs = [].concat(this.buffs, this.incomingAuras)
-      
+      let allBuffs = [].concat(this.buffs, this.incomingAuras);
+      if (!allBuffs.length) return [];
+
       let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
       if (ignoreOlder === -1) ignoreOlder = 0;
       let activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
-        //   if (buffOrTag.tags) {
-        //       return [buffOrTag.tags, buffOrTag.attack];
-        //       //todo: also split stat modifiers and tags
-        //   }
-          return buffOrTag;
+          //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
+          
+          if (typeof buffOrTag === 'object') {
+            //   return (buffOrTag.tags || []).concat([
+            //       {effects: buffOrTag.effects},
+            //       {death: buffOrTag.death},
+            //       {aura: buffOrTag.aura},
+            //       //buffOrTag.trigger // is ignored, because EventEmitter.subscribe is called in playCard.js :(
+            //   ].filter(v => v));
+          }
+          return buffOrTag;          
       });  
 
       //console.log(`card.tags returned: ${activeBuffs}`);
-      return activeBuffs;
+      return [].concat.apply([], activeBuffs);
     }
     _draw () {
         if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
@@ -170,30 +153,6 @@ class Character extends Card {
     }
     get attack () {
       return getter_of_buffed_atribute.call(this, 'attack', 'attackBase');
-    }
-    /** @deprecated copypaste with hardcoded prop names */
-    get __attack () {
-      if (!this.tags.length) return this.attackBase;
-      
-      let modifiers = this.tags.filter(v => !!v.attack);
-      if (!modifiers.length) return this.attackBase;
-      
-      //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
-      //console.log(this.costBase, modifiers);
-      
-      let new_attack = modifiers.reduce((a, v, i) => {
-        //console.log('cost reduce:', a, v, i, this);
-        let attack = v.attack;
-        if (typeof attack === 'number') {
-          a += attack;
-        } else if (typeof attack === 'function') {
-          a = attack(a);
-        }
-        return a;  
-      }, this.attackBase, this);
-      
-      console.log(`${this.zone} ${this.name}'s attack is modified from ${this.attackBase} to ${new_attack}`);
-      return new_attack > 0 ? new_attack : 0;   
     }
     _damageApply (n, type = '') {
       if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
@@ -312,7 +271,7 @@ class Enchantment extends Card {
       //console.log('EXCH', cardDef);
       //DESIGN BUG: clunky object shape
       // todo: finalize when SET attack/health/cost will be implemented
-      this.effect = {};
+      this.effects = {};
       //_.pick (-_-)
       [
         'attack',
@@ -326,7 +285,7 @@ class Enchantment extends Card {
       ].forEach(prop => {
         let v = cardDef[prop];
         if (v) {
-          this.effect[prop] = v;
+          this.effects[prop] = v;
         }
       }, this);
 
@@ -337,14 +296,16 @@ class Enchantment extends Card {
 function getter_of_buffed_atribute (prop, propBase) {
     if (!this.tags.length) return this[propBase];
     
-    let modifiers = this.tags.filter(v => !!v[prop]);
-    if (!modifiers.length) return this[propBase];
-    
+    let modifiers = this.tags.filter(v => (v.effects && (prop in v.effects)));
+    if (!modifiers.length) {
+        //console.log(this.tags);
+        return this[propBase];
+    }
     //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
-    //console.log(this.costBase, modifiers);
+    //console.log(modifiers, this.tags);
     
     let new_value = modifiers.reduce((a, v) => {
-        let mutator = v[prop];
+        let mutator = v.effects[prop];
         if (typeof mutator === 'number') {
             a += mutator;
         } else if (typeof mutator === 'function') {
@@ -353,7 +314,7 @@ function getter_of_buffed_atribute (prop, propBase) {
         return a;  
     }, this[propBase], this);
     
-    console.log(`${this.zone} ${this.name}'s ${prop} is modified from ${this[propBase]} to ${new_value}`);
+    console.log(`${this.zone} ${this.name} ${this.card_id}'s ${prop} is modified from ${this[propBase]} to ${new_value}`);
     return new_value > 0 ? new_value : 0;  
 }
 

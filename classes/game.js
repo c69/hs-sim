@@ -223,7 +223,7 @@ class Game {
     let characters = this.board.$(this.activePlayer, 'character');
     
     let allCards = this.board.$(this.activePlayer, '*');
-    //console.log('== RESET ALL AURA EFFECTS ==');
+    console.log('== RESET ALL AURA EFFECTS ==');
     allCards.forEach(v => v.incomingAuras = []);
     //this.view();
 
@@ -231,11 +231,19 @@ class Game {
     
     //characters.forEach(character => {
     allCards.forEach(character => {
-      
+      //console.log('......', character.name, character.tags);
       character.tags.filter(tag => {
+        //console.log('......', character.name, tag);
+        //return true; // [broken?] hack to ignore aura checking code
         if (!tag.aura) return false;
+        
+        //console.log('emitting aura from', character.name, tag);
         let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
-        return zone === character.zone;
+        let shouldApply = (zone === character.zone);
+        if (!shouldApply) return shouldApply;
+
+        //console.log('emitting aura from', character.name, character.zone, tag);
+        return shouldApply;
       })
       .forEach(({aura}) => {
         //console.log(aura);
@@ -438,7 +446,7 @@ class Game {
       if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
       console.log(`
-player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.name)}`
+player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.cost +') ' + v.name)}`
       );
       //console.log(this.board.$(player, 'own minion').map(v => v.name));
       console.log('minions on board', own_minions.map(v=>

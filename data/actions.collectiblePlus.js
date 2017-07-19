@@ -3799,8 +3799,8 @@ const actions = [
     "_info": "ENCHANTMENT [*NEUTRAL]: Hand of Argus",
     "text": "+1/+1 and <b>Taunt</b>.",
     xxx: 'adjacent',
-    attack: 5,//1,
-    health: 5,//1,
+    attack: 1,
+    health: 1,
     tags: [TAGS.taunt] 
   },
   {
@@ -4422,13 +4422,12 @@ const actions = [
     xxx: 'aura mana',
     aura: {
       target: 'own minion @hand', // maybe @anywhere ??
-      buff: {
+      buff: { effects :{
         cost (v, {target}) {
-          //let c = target.costBase - 2;
           let c = v - 2;
           return  c < 1 ? 1 : c;
         }
-      }
+      }}
     }
   },
   {
@@ -5301,10 +5300,13 @@ const actions = [
     aura: {
       zone: ZONES.hand,
       target: 'self',
-      buff: {
-        cost (v, {$}) {
-          let h = $('own hero')[0].health;
-          return v - (30 - h);
+      buff: { 
+        effects: {
+          cost (v, {$}) {
+            let h = $('own hero')[0].health;
+            let c = v - (30 - h);
+            return c > 0 ? c : 0;
+          }
         }
       }
     }

@@ -435,6 +435,24 @@ class Game {
     };
   }
 
+  exportState () {
+    
+    return JSON.stringify({
+      entities: this.board.$(this.activePlayer, '*'),
+      actions: [],
+      game: {
+        turn: this.turn,
+        isOver: this.isOver,
+        activePlayer: this.activePlayer.name,
+        passivePlayer: this.passivePlayer.name
+      }  
+    }, function (k,v) {
+      if (k === 'eventBus') return undefined;
+      if (k === 'owner') return 'xxx';
+      
+      return v;
+    });
+  } 
   //-----------------------------------
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);

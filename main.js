@@ -117,6 +117,7 @@ g2.start();
 //AI - Artificial stupIdity
 for(let i = 0; i < 13 && !g2.isOver; i++) {
   g2.view();
+  //console.log(g2.exportState());
 
   //g.usePower(0); // hero power first suggested target
   //g.playCard(0,0); // play first possible card at first target

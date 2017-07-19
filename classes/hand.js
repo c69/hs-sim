@@ -29,7 +29,7 @@ class Hand {
 
   add (card) {
     if (this._hand.length >= MAX_HAND_SIZE) {
-      return;
+      return this;
     } 
     this._hand.push(card);
 

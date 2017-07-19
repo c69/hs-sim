@@ -13,6 +13,7 @@ const {
    */
   function combat (attacker, target, game) {
     //console.log(`Attacking ${attacker} -> ${target}`);  
+    if (!attacker) throw 'no attacker'; //return;
     if (!target) throw 'no target'; //return;
     if (target.health < 1) throw `dead target ${target.name} #${target.card_id} @${target.zone}`; //return;
     if (attacker.health < 1) throw `dead attacker ${attacker.name} #${attacker.card_id} @${attacker.zone}`; //return;

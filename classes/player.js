@@ -15,7 +15,10 @@ class Player {
     this.deck = null;//deck; //$('own @deck');
     this.hand = new Hand(this); //$('own @hand');
     
+    this.manaCrystals = 0;
+    this.mana = this.manaCrystals;
     this.fatigue = 1;
+    this.lost = false;
   }
   get hero () {
     //console.log('trying to GET .hero from Player ' + this.name);

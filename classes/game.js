@@ -4,7 +4,6 @@
 const combat = require('./combat.js');
 const playCard = require('./playCard.js');
 const {
-  applyBuff,
   buffAura
 } = require('./buff.js');
 
@@ -338,16 +337,6 @@ class Game {
 
     return this;
   }
-  /** @deprecated @todo convert to documentation / TS definition */
-  _example_viewAvailableOptions () {
-    return {
-      actions: [
-          {id: 'minion1', type: 'ATTACK', name: 'Elf1', targetList: []},
-          {id: 'card1', type: 'CARD', name: 'Phyreball', targetList: []},
-          {id: 'card2', type: 'CARD', name: 'Elf', positionList: [0,1], targetsList: []}
-      ]  
-    }    
-  }
   /**
    * A nice GOD method
    * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
@@ -391,7 +380,7 @@ class Game {
     //console.log('sheeps', sheeps);
     let attack = warriors.map(v => {
       return {
-        id: v._id,
+        card_id: v.card_id,
         unit: v,
         type: ACTION_TYPES.attack,
         name: v.name,
@@ -413,7 +402,7 @@ class Game {
       return true;
     }).map(v => {
       return {
-        id: v._id,
+        card_id: v._id,
         card: v,
         type: ACTION_TYPES.playCard,
         name: v.name,
@@ -435,23 +424,98 @@ class Game {
     };
   }
 
+  /**
+   * First attemp at exporting state
+   * Should be:
+   * - all entities (all cards + buffs, 1 game, 2 players)
+   * - current available options
+   * - uid: game + turn + player
+   * - revealed state for entities
+   * - (?) animations 
+   * 
+   * Next step after this is done should be delta update
+   */
   exportState () {
-    
-    return JSON.stringify({
-      entities: this.board.$(this.activePlayer, '*'),
-      actions: [],
+    function sanitizeCard (card) {
+      //console.log(card);
+      return Object.assign({}, card, {
+        owner: card.owner.name, // change it to Player/EntityID
+
+        attack: card.attack,
+        cost: card.cost,
+        health: card.health,
+        tags: card.tags
+      });
+    }
+
+    function onlyLeaveInCardObject (card) {
+      //console.log(card);
+      return {
+        card_id: card.card_id
+      };
+    }
+
+    let aggregatedState = {
+      entities: this.board.$(this.activePlayer, '*').map(sanitizeCard),
+      actions: this.viewAvailableOptions().actions.map(v => {
+        return {
+          card_id: v.card_id,
+          type: v.type,
+          //card: v.card, // unsafe direct reference
+          //unit: v.unit, // unsafe direct reference
+          targetList: v.targetList && v.targetList.map(onlyLeaveInCardObject), 
+          positionList: v.positionList,
+          name: v.name
+
+        // id: v._id,
+        // unit: v,
+        // type: ACTION_TYPES.attack,
+        // name: v.name,
+        // //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-) 
+        // targetList: sheeps 
+
+        // id: v._id,
+        // card: v,
+        // type: v.ACTION_TYPES.playCard,
+        // name: v.name,
+        // cost: v.cost,
+        // positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
+        // targetList: v.target && $(v.target)
+        }
+      }),
       game: {
         turn: this.turn,
+        //isStarted/isOver should be converted to state:enum
+        isStarted: this.isOver,
         isOver: this.isOver,
-        activePlayer: this.activePlayer.name,
-        passivePlayer: this.passivePlayer.name
+        activePlayer: { // consider returning players as array 
+          name: this.activePlayer.name,
+          mana: this.activePlayer.mana,
+          manaCrystals: this.activePlayer.manaCrystals,
+          //lost:boolean should be converted to state:enum
+          lost: this.activePlayer.lost
+        },
+        passivePlayer: {
+          name: this.passivePlayer.name,
+          mana: this.passivePlayer.mana,
+          manaCrystals: this.passivePlayer.manaCrystals,
+          lost: this.passivePlayer.lost
+        },
       }  
-    }, function (k,v) {
-      if (k === 'eventBus') return undefined;
-      if (k === 'owner') return 'xxx';
-      
-      return v;
-    });
+    };
+    
+    let outputJSON;
+    outputJSON = JSON.stringify(aggregatedState, function (k,v) {
+        if (k === 'eventBus') return undefined;
+        if (k === '_listener') return undefined;
+        
+        if (k === 'buffs') return undefined;
+        if (k === '_by') return undefined;
+        
+        return v;
+      }, '  ');
+
+    return outputJSON;
   } 
   //-----------------------------------
   view () {

@@ -4,7 +4,7 @@
 const {
   //TAGS,
   TAGS_LIST,
-  //CARD_TYPES,
+  CARD_TYPES,
   //ACTION_TYPES,
   //EVENTS
 } = require('../data/constants.js');
@@ -25,19 +25,33 @@ const {
  */
 function applyBuff ({/* card or lambda-buff*/ card, target, $, game, type = 'buff'}) {
     //console.log(card);
+    if (!card) throw 'empty buff';
+    if (!card.type && !card.effects) throw `invalid argument - lambda buff of unknown shape: ${JSON.stringify(card)}`;
+    //if (!card.type && card.effects) throw `lambda buffs are forbidden: ${Object.keys(card.effects).map (v => `\n- ${v}  ${card.effects[v].toString()}`)}`;
     
+    if (card.type === CARD_TYPES.enchantment && !card.effects) throw 'invalid enchantment';
+    if (card.type && card.type !== CARD_TYPES.enchantment) throw `attempt to buff with card of type: ${card.type}`;
+    
+
     //console.log(target);
     //console.log(this.effect, '_______');
     let effect = card.effects || card;
+    if (!effect) throw 'empty effect';
     //console.log(effect);
 
-    let attack_modifier = typeof effect.attack === 'number' ? effect.attack : function (v, card) {
-      return effect.attack(v, {target, $, game});    
-    };
+    let attack_modifier = ({
+      'number': effect.attack,
+      'function': function (v, card) {
+        return effect.attack(v, {target, $, game});    
+     } 
+    }[typeof effect.attack]);
 
-    let cost_modifier = typeof effect.cost === 'number' ? effect.cost : function (v, card) {
-      return effect.cost(v, {target, $, game});    
-    };
+    let cost_modifier = ({
+      'number': effect.cost,
+      'function': function (v, card) {
+        return effect.cost(v, {target, $, game});    
+      }
+    }[typeof effect.cost]);
 
     //here we directly modify the target.incomingAuras or target.buffs
     // watch out for bugs (-_-)

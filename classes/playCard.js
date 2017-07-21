@@ -155,9 +155,9 @@ function playFromHand (card, {game, $, target, position}) {
                 if (TAGS_LIST.includes(id_or_Tag)) {
                     v.buffs.push(id_or_Tag); // check for duplicates
                 } else {
-                    let ccc = createCard(id_or_Tag, card.owner, game.eventBus);
+                    let enchantmentCard = createCard(id_or_Tag, card.owner, game.eventBus);
 
-                    applyBuff({card: ccc, target: v, $, game});
+                    applyBuff({card: enchantmentCard, target: v, $, game});
                 }
             });
             return x;

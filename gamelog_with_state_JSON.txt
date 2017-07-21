@@ -1,0 +1,2306 @@
+
+ == Cards allowed: ==== 
+ [ 'Stormwind Champion',
+  'Molten Giant',
+  'Unstable Ghoul',
+  'Summoning Portal',
+  'Hand of Protection',
+  'Ironbeak Owl',
+  'Aldor Peacekeeper',
+  'Defender of Argus',
+  'Flame Imp',
+  'Flametongue Totem' ]
+initializing players
+bootstrap for game 2 finished
+player Lazy1 draws a card.. (of 30 remaining)
+player Lazy2 draws a card.. (of 30 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 25 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 25 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 24 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 24 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 23 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 23 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 22 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 22 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 21 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 21 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 20 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 20 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 19 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 19 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 18 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 18 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 17 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 17 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 16 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 16 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 15 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 15 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 14 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 14 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 13 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 13 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 12 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 12 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 11 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 11 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 10 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 10 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 9 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 9 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 8 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 8 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 7 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 7 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 6 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 6 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 5 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 5 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 4 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 4 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 3 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 3 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 2 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 2 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 1 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 1 remaining)
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 2  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 2  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 4  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 4  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 6  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 6  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 7  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 7  damage!
+== RESET ALL AURA EFFECTS ==
+player Lazy2 draws a card.. (of 0 remaining)
+Gul'dan takes 8  damage!
+player Lazy1 draws a card.. (of 0 remaining)
+Anduin Wrynn takes 8  damage!
+turn # 66: Lazy1
+HAND Molten Giant 64's cost is modified from 25 to 0
+
+player:Lazy1 hp❤️:-6 mana💎:10/10 deck:0 hand:10 0) Molten Giant,3) Aldor Peacekeeper,1) Flame Imp,2) Unstable Ghoul,7) Stormwind Champion,2) Flametongue Totem,3) Aldor Peacekeeper,4) Defender of Argus,4) Summoning Portal,1) Hand of Protection
+minions on board ArrayOfCards []
+HAND Molten Giant 100's cost is modified from 25 to 0
+
+player:Lazy2 hp❤️:-6 mana💎:10/10 deck:0 hand:10 1) Hand of Protection,4) Summoning Portal,2) Unstable Ghoul,1) Flame Imp,4) Summoning Portal,0) Molten Giant,2) Flametongue Totem,4) Defender of Argus,3) Ironbeak Owl,2) Unstable Ghoul
+minions on board ArrayOfCards []
+==================
+player Alice draws a card.. (of 30 remaining)
+player Bob draws a card.. (of 30 remaining)
+turn # 0: Alice
+
+player:Alice hp❤️:30 mana💎:1/1 deck:25 hand:5 1) Hand of Protection,2) Flametongue Totem,25) Molten Giant,4) Defender of Argus,4) Defender of Argus
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:30 mana💎:1/1 deck:25 hand:5 3) Aldor Peacekeeper,3) Ironbeak Owl,3) Ironbeak Owl,3) Ironbeak Owl,2) Flametongue Totem
+minions on board ArrayOfCards []
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 25 remaining)
+turn # 1: Bob
+HAND Molten Giant 4's cost is modified from 25 to 25
+
+player:Alice hp❤️:30 mana💎:1/1 deck:25 hand:5 1) Hand of Protection,2) Flametongue Totem,25) Molten Giant,4) Defender of Argus,4) Defender of Argus
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:30 mana💎:2/2 deck:24 hand:6 3) Aldor Peacekeeper,3) Ironbeak Owl,3) Ironbeak Owl,3) Ironbeak Owl,2) Flametongue Totem,4) Defender of Argus
+minions on board ArrayOfCards []
+-- frame ---
+playCard: Bob played  Flametongue Totem
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 25 remaining)
+turn # 2: Alice
+HAND Molten Giant 4's cost is modified from 25 to 25
+
+player:Alice hp❤️:30 mana💎:2/2 deck:24 hand:6 1) Hand of Protection,2) Flametongue Totem,25) Molten Giant,4) Defender of Argus,4) Defender of Argus,25) Molten Giant
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:30 mana💎:0/2 deck:24 hand:0 
+minions on board ArrayOfCards [ 'AE0/3' ]
+HAND Molten Giant 4's cost is modified from 25 to 25
+-- frame ---
+HAND Molten Giant 4's cost is modified from 25 to 25
+playCard: Alice played  Hand of Protection
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 24 remaining)
+turn # 3: Bob
+
+player:Alice hp❤️:30 mana💎:1/2 deck:24 hand:0 
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:30 mana💎:3/3 deck:23 hand:1 1) Flame Imp
+minions on board ArrayOfCards [ '🛡AE0/3' ]
+-- frame ---
+playCard: Bob played  Flame Imp
+Garrosh Hellscream takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flame Imp 39's attack is modified from 3 to 5
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 24 remaining)
+turn # 4: Alice
+
+player:Alice hp❤️:30 mana💎:3/3 deck:23 hand:1 7) Stormwind Champion
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:27 mana💎:2/3 deck:23 hand:0 
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE0/3', 'Ea5/2' ]
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 23 remaining)
+turn # 5: Bob
+
+player:Alice hp❤️:30 mana💎:3/3 deck:23 hand:1 7) Stormwind Champion
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:27 mana💎:4/4 deck:22 hand:1 4) Summoning Portal
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE0/3', 'Ea5/2' ]
+PLAY Flame Imp 39's attack is modified from 3 to 5
+-- frame ---
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+⚔️ Flame Imp(5/2) attacks Jaina Proudmoore(0/30)
+PLAY Flame Imp 39's attack is modified from 3 to 5
+Jaina Proudmoore takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flame Imp 39's attack is modified from 3 to 5
+-- frame ---
+PLAY Flame Imp 39's attack is modified from 3 to 5
+playCard: Bob played  Summoning Portal
+== RESET ALL AURA EFFECTS ==
+PLAY Flame Imp 39's attack is modified from 3 to 5
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 23 remaining)
+turn # 6: Alice
+
+player:Alice hp❤️:25 mana💎:4/4 deck:22 hand:2 7) Stormwind Champion,3) Aldor Peacekeeper
+minions on board ArrayOfCards []
+
+player:Bob hp❤️:27 mana💎:0/4 deck:22 hand:0 
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE0/3', 'Ea5/2', 'AE0/4' ]
+-- frame ---
+playCard: Alice played  Aldor Peacekeeper
+Bob's Flametongue Totem got buffed with Stand Down!
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 22 remaining)
+turn # 7: Bob
+
+player:Alice hp❤️:25 mana💎:1/4 deck:22 hand:0 
+minions on board ArrayOfCards [ '3/3' ]
+
+player:Bob hp❤️:27 mana💎:5/5 deck:21 hand:1 3) Ironbeak Owl
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE1/3', 'Ea5/2', 'AE0/4' ]
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+⚔️ Flametongue Totem(1/3) attacks Jaina Proudmoore(0/25)
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+Jaina Proudmoore takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+⚔️ Flame Imp(5/2) attacks Jaina Proudmoore(0/24)
+PLAY Flame Imp 39's attack is modified from 3 to 5
+Jaina Proudmoore takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+HAND Ironbeak Owl 41's cost is modified from 3 to 1
+playCard: Bob played  Ironbeak Owl
+Alice's Aldor Peacekeeper #9 got SILENCED!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 22 remaining)
+turn # 8: Alice
+
+player:Alice hp❤️:19 mana💎:5/5 deck:21 hand:1 3) Aldor Peacekeeper
+minions on board ArrayOfCards [ 'E3/3' ]
+
+player:Bob hp❤️:27 mana💎:4/5 deck:21 hand:0 
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE1/3', 'Ea5/2', 'AE0/4', '2/1' ]
+-- frame ---
+⚔️ Aldor Peacekeeper(3/3) attacks Garrosh Hellscream(0/27)
+Garrosh Hellscream takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+-- frame ---
+playCard: Alice played  Aldor Peacekeeper
+Bob's Flametongue Totem got buffed with Stand Down!
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 21 remaining)
+turn # 9: Bob
+
+player:Alice hp❤️:19 mana💎:2/5 deck:21 hand:0 
+minions on board ArrayOfCards [ 'E3/3', '3/3' ]
+
+player:Bob hp❤️:24 mana💎:6/6 deck:20 hand:1 2) Unstable Ghoul
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE1/3', 'Ea5/2', 'AE0/4', '2/1' ]
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+⚔️ Flametongue Totem(1/3) attacks Jaina Proudmoore(0/19)
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+Jaina Proudmoore takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+⚔️ Flame Imp(5/2) attacks Jaina Proudmoore(0/18)
+PLAY Flame Imp 39's attack is modified from 3 to 5
+Jaina Proudmoore takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+⚔️ Ironbeak Owl(2/1) attacks Jaina Proudmoore(0/13)
+Jaina Proudmoore takes 2  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+HAND Unstable Ghoul 42's cost is modified from 2 to 1
+playCard: Bob played  Unstable Ghoul
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 21 remaining)
+turn # 10: Alice
+
+player:Alice hp❤️:11 mana💎:6/6 deck:20 hand:1 1) Hand of Protection
+minions on board ArrayOfCards [ 'E3/3', '3/3' ]
+
+player:Bob hp❤️:24 mana💎:5/6 deck:20 hand:0 
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ '🛡AE1/3', 'Ea5/2', 'AE0/4', '2/1', '🛡️☠️E1/3' ]
+-- frame ---
+⚔️ Aldor Peacekeeper(3/3) attacks Unstable Ghoul(1/3)
+Aldor Peacekeeper takes 1  damage!
+Unstable Ghoul takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+☠️ minion died: Bob's Unstable Ghoul
+Aldor Peacekeeper takes 1  damage!
+Aldor Peacekeeper takes 1  damage!
+(!) Flametongue Totem loses DIVINE_SHIELD !
+Flame Imp takes 1  damage!
+Summoning Portal takes 1  damage!
+Ironbeak Owl takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+☠️ minion died: Bob's Ironbeak Owl
+== RESET ALL AURA EFFECTS ==
+-- frame ---
+⚔️ Aldor Peacekeeper(3/2) attacks Garrosh Hellscream(0/24)
+Garrosh Hellscream takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+-- frame ---
+playCard: Alice played  Hand of Protection
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 20 remaining)
+turn # 11: Bob
+
+player:Alice hp❤️:11 mana💎:5/6 deck:20 hand:0 
+minions on board ArrayOfCards [ '🛡E3/1', '3/2' ]
+
+player:Bob hp❤️:21 mana💎:7/7 deck:19 hand:1 7) Stormwind Champion
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+minions on board ArrayOfCards [ 'AE1/3', 'Ea5/1', 'AE0/3' ]
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+⚔️ Flametongue Totem(1/3) attacks Jaina Proudmoore(0/11)
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+Jaina Proudmoore takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+PLAY Flame Imp 39's attack is modified from 3 to 5
+⚔️ Flame Imp(5/1) attacks Jaina Proudmoore(0/10)
+PLAY Flame Imp 39's attack is modified from 3 to 5
+Jaina Proudmoore takes 5  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 1
+PLAY Flame Imp 39's attack is modified from 3 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+HAND Stormwind Champion 43's cost is modified from 7 to 5
+playCard: Bob played  Stormwind Champion
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+-- frame ---
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+⚔️ Summoning Portal(1/3) attacks Jaina Proudmoore(0/5)
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+Jaina Proudmoore takes 1  damage!
+== RESET ALL AURA EFFECTS ==
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+___________________
+== RESET ALL AURA EFFECTS ==
+player Alice draws a card.. (of 20 remaining)
+turn # 12: Alice
+
+player:Alice hp❤️:4 mana💎:7/7 deck:19 hand:1 2) Unstable Ghoul
+minions on board ArrayOfCards [ '🛡E3/1', '3/2' ]
+
+player:Bob hp❤️:21 mana💎:2/7 deck:19 hand:0 
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+minions on board ArrayOfCards [ 'AEa2/3', 'Ea6/1', 'AEa1/3', 'AE6/6' ]
+-- frame ---
+⚔️ Aldor Peacekeeper(3/1) attacks Garrosh Hellscream(0/21)
+Garrosh Hellscream takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+-- frame ---
+⚔️ Aldor Peacekeeper(3/2) attacks Garrosh Hellscream(0/18)
+Garrosh Hellscream takes 3  damage!
+== RESET ALL AURA EFFECTS ==
+-- frame ---
+playCard: Alice played  Unstable Ghoul
+== RESET ALL AURA EFFECTS ==
+___________________
+== RESET ALL AURA EFFECTS ==
+player Bob draws a card.. (of 19 remaining)
+HAND Molten Giant 4's attack is modified from 8 to 8
+HAND Molten Giant 4's cost is modified from 25 to 0
+HAND Molten Giant 7's attack is modified from 8 to 8
+HAND Molten Giant 7's cost is modified from 25 to 0
+HAND Aldor Peacekeeper 33's attack is modified from 3 to 3
+HAND Aldor Peacekeeper 33's cost is modified from 3 to 1
+HAND Ironbeak Owl 34's attack is modified from 2 to 2
+HAND Ironbeak Owl 34's cost is modified from 3 to 1
+HAND Ironbeak Owl 35's attack is modified from 2 to 2
+HAND Ironbeak Owl 35's cost is modified from 3 to 1
+HAND Ironbeak Owl 36's attack is modified from 2 to 2
+HAND Ironbeak Owl 36's cost is modified from 3 to 1
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flametongue Totem 37's cost is modified from 2 to 2
+HAND Defender of Argus 38's attack is modified from 2 to 2
+HAND Defender of Argus 38's cost is modified from 4 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Flame Imp 39's cost is modified from 1 to 1
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+PLAY Summoning Portal 40's cost is modified from 4 to 4
+PLAY Flametongue Totem 37's attack is modified from 0 to 2
+PLAY Flame Imp 39's attack is modified from 3 to 6
+PLAY Summoning Portal 40's attack is modified from 0 to 1
+
+
+
+
+{
+  "entities": [
+    {
+      "id": "HERO_08",
+      "type": "HERO",
+      "name": "Jaina Proudmoore",
+      "playerClass": "MAGE",
+      "rarity": "FREE",
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Alice",
+      "card_id": 1,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 30,
+      "attackedThisTurn": 0,
+      "armor": 0,
+      "attack": 0,
+      "tags": []
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "GRAVE",
+      "owner": "Alice",
+      "card_id": 2,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 3,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_620",
+      "type": "MINION",
+      "name": "Molten Giant",
+      "text": "Costs (1) less for each damage your hero has taken.",
+      "playerClass": "NEUTRAL",
+      "rarity": "EPIC",
+      "costBase": 25,
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 4,
+      "attackBase": 8,
+      "health": 8,
+      "healthMax": 8,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 8,
+      "cost": 0,
+      "tags": [
+        {
+          "aura": {
+            "zone": "HAND",
+            "target": "self",
+            "buff": {
+              "effects": {}
+            }
+          }
+        },
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 5,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 4,
+      "tags": []
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 6,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 4,
+      "tags": []
+    },
+    {
+      "id": "EX1_620",
+      "type": "MINION",
+      "name": "Molten Giant",
+      "text": "Costs (1) less for each damage your hero has taken.",
+      "playerClass": "NEUTRAL",
+      "rarity": "EPIC",
+      "costBase": 25,
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 7,
+      "attackBase": 8,
+      "health": 8,
+      "healthMax": 8,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 8,
+      "cost": 0,
+      "tags": [
+        {
+          "aura": {
+            "zone": "HAND",
+            "target": "self",
+            "buff": {
+              "effects": {}
+            }
+          }
+        },
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "HAND",
+      "owner": "Alice",
+      "card_id": 8,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_382",
+      "type": "MINION",
+      "name": "Aldor Peacekeeper",
+      "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+      "playerClass": "PALADIN",
+      "rarity": "RARE",
+      "costBase": 3,
+      "target": "enemy minion",
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Alice",
+      "card_id": 9,
+      "attackBase": 3,
+      "health": 1,
+      "healthMax": 3,
+      "attackedThisTurn": 1,
+      "isReady": true,
+      "attack": 3,
+      "cost": 3,
+      "tags": [
+        "SILENCE",
+        "DIVINE_SHIELD"
+      ]
+    },
+    {
+      "id": "EX1_382",
+      "type": "MINION",
+      "name": "Aldor Peacekeeper",
+      "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+      "playerClass": "PALADIN",
+      "rarity": "RARE",
+      "costBase": 3,
+      "target": "enemy minion",
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Alice",
+      "card_id": 10,
+      "attackBase": 3,
+      "health": 2,
+      "healthMax": 3,
+      "attackedThisTurn": 1,
+      "isReady": true,
+      "attack": 3,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "GRAVE",
+      "owner": "Alice",
+      "card_id": 11,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Alice",
+      "card_id": 12,
+      "attackBase": 1,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 13,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 14,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 15,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 16,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 17,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "EX1_319",
+      "type": "MINION",
+      "name": "Flame Imp",
+      "text": "<b>Battlecry:</b> Deal 3 damage to your hero.",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 1,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 18,
+      "attackBase": 3,
+      "health": 2,
+      "healthMax": 2,
+      "attackedThisTurn": 0,
+      "race": "DEMON",
+      "isReady": false,
+      "attack": 3,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 19,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 20,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_319",
+      "type": "MINION",
+      "name": "Flame Imp",
+      "text": "<b>Battlecry:</b> Deal 3 damage to your hero.",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 1,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 21,
+      "attackBase": 3,
+      "health": 2,
+      "healthMax": 2,
+      "attackedThisTurn": 0,
+      "race": "DEMON",
+      "isReady": false,
+      "attack": 3,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 22,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 23,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 24,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 4,
+      "tags": []
+    },
+    {
+      "id": "EX1_620",
+      "type": "MINION",
+      "name": "Molten Giant",
+      "text": "Costs (1) less for each damage your hero has taken.",
+      "playerClass": "NEUTRAL",
+      "rarity": "EPIC",
+      "costBase": 25,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 25,
+      "attackBase": 8,
+      "health": 8,
+      "healthMax": 8,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 8,
+      "cost": 25,
+      "tags": [
+        {
+          "aura": {
+            "zone": "HAND",
+            "target": "self",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 26,
+      "attackBase": 1,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "EX1_382",
+      "type": "MINION",
+      "name": "Aldor Peacekeeper",
+      "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+      "playerClass": "PALADIN",
+      "rarity": "RARE",
+      "costBase": 3,
+      "target": "enemy minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 27,
+      "attackBase": 3,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 3,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 28,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 29,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 30,
+      "attackBase": 1,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Alice",
+      "card_id": 31,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "HERO_01",
+      "type": "HERO",
+      "name": "Garrosh Hellscream",
+      "playerClass": "WARRIOR",
+      "rarity": "FREE",
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Bob",
+      "card_id": 32,
+      "attackBase": 0,
+      "health": 15,
+      "healthMax": 30,
+      "attackedThisTurn": 0,
+      "armor": 0,
+      "attack": 0,
+      "tags": []
+    },
+    {
+      "id": "EX1_382",
+      "type": "MINION",
+      "name": "Aldor Peacekeeper",
+      "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+      "playerClass": "PALADIN",
+      "rarity": "RARE",
+      "costBase": 3,
+      "target": "enemy minion",
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 33,
+      "attackBase": 3,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 3,
+      "cost": 1,
+      "tags": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 34,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 1,
+      "tags": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 35,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 1,
+      "tags": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 36,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 1,
+      "tags": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ],
+      "zone": "PLAY",
+      "owner": "Bob",
+      "card_id": 37,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": true,
+      "attack": 2,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        },
+        {
+          "effects": {},
+          "tags": []
+        },
+        {
+          "effects": {},
+          "tags": []
+        },
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 38,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 2,
+      "tags": [
+        {
+          "effects": {},
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "EX1_319",
+      "type": "MINION",
+      "name": "Flame Imp",
+      "text": "<b>Battlecry:</b> Deal 3 damage to your hero.",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 1,
+      "incomingAuras": [
+        {
+          "effects": {
+            "attack": 2
+          },
+          "tags": []
+        },
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ],
+      "zone": "PLAY",
+      "owner": "Bob",
+      "card_id": 39,
+      "attackBase": 3,
+      "health": 1,
+      "healthMax": 2,
+      "attackedThisTurn": 0,
+      "race": "DEMON",
+      "isReady": true,
+      "attack": 6,
+      "cost": 1,
+      "tags": [
+        {
+          "effects": {
+            "attack": 2
+          },
+          "tags": []
+        },
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ],
+      "zone": "PLAY",
+      "owner": "Bob",
+      "card_id": 40,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": true,
+      "attack": 1,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        },
+        {
+          "effects": {
+            "attack": 1
+          },
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "GRAVE",
+      "owner": "Bob",
+      "card_id": 41,
+      "attackBase": 2,
+      "health": 0,
+      "healthMax": 1,
+      "attackedThisTurn": 1,
+      "race": "BEAST",
+      "isReady": true,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "GRAVE",
+      "owner": "Bob",
+      "card_id": 42,
+      "attackBase": 1,
+      "health": 0,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "PLAY",
+      "owner": "Bob",
+      "card_id": 43,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": true,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "HAND",
+      "owner": "Bob",
+      "card_id": 44,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_371",
+      "type": "SPELL",
+      "name": "Hand of Protection",
+      "text": "Give a minion <b>Divine Shield</b>.",
+      "playerClass": "PALADIN",
+      "rarity": "FREE",
+      "costBase": 1,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 45,
+      "cost": 1,
+      "tags": []
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 46,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 47,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 0,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 48,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 0,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_382",
+      "type": "MINION",
+      "name": "Aldor Peacekeeper",
+      "text": "<b>Battlecry:</b> Change an enemy minion's Attack to 1.",
+      "playerClass": "PALADIN",
+      "rarity": "RARE",
+      "costBase": 3,
+      "target": "enemy minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 49,
+      "attackBase": 3,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 3,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 50,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 0,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 51,
+      "attackBase": 1,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 52,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "FP1_024",
+      "type": "MINION",
+      "name": "Unstable Ghoul",
+      "text": "<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 53,
+      "attackBase": 1,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 1,
+      "cost": 2,
+      "tags": [
+        "TAUNT",
+        {}
+      ]
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 54,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 0,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_315",
+      "type": "MINION",
+      "name": "Summoning Portal",
+      "text": "Your minions cost (2) less, but not less than (1).",
+      "playerClass": "WARLOCK",
+      "rarity": "COMMON",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 55,
+      "attackBase": 0,
+      "health": 4,
+      "healthMax": 4,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 0,
+      "cost": 4,
+      "tags": [
+        {
+          "aura": {
+            "target": "own minion @hand",
+            "buff": {
+              "effects": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "CS2_203",
+      "type": "MINION",
+      "name": "Ironbeak Owl",
+      "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
+      "playerClass": "NEUTRAL",
+      "rarity": "COMMON",
+      "costBase": 3,
+      "target": "minion",
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 56,
+      "attackBase": 2,
+      "health": 1,
+      "healthMax": 1,
+      "attackedThisTurn": 0,
+      "race": "BEAST",
+      "isReady": false,
+      "attack": 2,
+      "cost": 3,
+      "tags": []
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 57,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 58,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 4,
+      "tags": []
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 59,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_565",
+      "type": "MINION",
+      "name": "Flametongue Totem",
+      "text": "Adjacent minions have +2 Attack.",
+      "playerClass": "SHAMAN",
+      "rarity": "FREE",
+      "costBase": 2,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 60,
+      "attackBase": 0,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "race": "TOTEM",
+      "isReady": false,
+      "attack": 0,
+      "cost": 2,
+      "tags": [
+        {
+          "aura": {
+            "buff": "EX1_565o",
+            "target": "adjacent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CS2_222",
+      "type": "MINION",
+      "name": "Stormwind Champion",
+      "text": "Your other minions have +1/+1.",
+      "playerClass": "NEUTRAL",
+      "rarity": "FREE",
+      "costBase": 7,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 61,
+      "attackBase": 6,
+      "health": 6,
+      "healthMax": 6,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 6,
+      "cost": 7,
+      "tags": [
+        {
+          "aura": {
+            "target": "other own minion",
+            "buff": "CS2_222o"
+          }
+        }
+      ]
+    },
+    {
+      "id": "EX1_093",
+      "type": "MINION",
+      "name": "Defender of Argus",
+      "text": "<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.",
+      "playerClass": "NEUTRAL",
+      "rarity": "RARE",
+      "costBase": 4,
+      "incomingAuras": [],
+      "zone": "DECK",
+      "owner": "Bob",
+      "card_id": 62,
+      "attackBase": 2,
+      "health": 3,
+      "healthMax": 3,
+      "attackedThisTurn": 0,
+      "isReady": false,
+      "attack": 2,
+      "cost": 4,
+      "tags": []
+    }
+  ],
+  "actions": [
+    {
+      "card_id": 37,
+      "type": "ATTACK",
+      "targetList": [
+        {
+          "card_id": 12
+        }
+      ],
+      "name": "Flametongue Totem"
+    },
+    {
+      "card_id": 39,
+      "type": "ATTACK",
+      "targetList": [
+        {
+          "card_id": 12
+        }
+      ],
+      "name": "Flame Imp"
+    },
+    {
+      "card_id": 40,
+      "type": "ATTACK",
+      "targetList": [
+        {
+          "card_id": 12
+        }
+      ],
+      "name": "Summoning Portal"
+    },
+    {
+      "card_id": 43,
+      "type": "ATTACK",
+      "targetList": [
+        {
+          "card_id": 12
+        }
+      ],
+      "name": "Stormwind Champion"
+    },
+    {
+      "type": "PLAY_CARD",
+      "positionList": [
+        0
+      ],
+      "name": "Flametongue Totem"
+    }
+  ],
+  "game": {
+    "turn": 13,
+    "isStarted": false,
+    "isOver": false,
+    "activePlayer": {
+      "name": "Bob",
+      "mana": 8,
+      "manaCrystals": 8,
+      "lost": false
+    },
+    "passivePlayer": {
+      "name": "Alice",
+      "mana": 5,
+      "manaCrystals": 7,
+      "lost": false
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+completed 10 games in 1.569s
+{ turns: 142, longestGame: 18, shortestGame: 11, Blue: 8, Red: 2 }
+~~~~~~
+ card implementation progress (of 1809): { done: 146, in_progress: 69, not_started: 1454 }
+{ _frame_count_active: 315 }
+{ '_$_count': 4109,
+  '_$_all_selectors': 
+   { 'own minion': 666,
+     character: 560,
+     '*': 561,
+     'own hero': 153,
+     'own character': 786,
+     'enemy character': 786,
+     minion: 280,
+     'own minion @hand': 235,
+     'enemy minion': 82 },
+  '_$_count_slow_path': 949,
+  '_$_slow_selectors': { '*': 561, 'own hero': 153, 'own minion @hand': 235 } }
+{ selectorsPerFrame: '13.044' }

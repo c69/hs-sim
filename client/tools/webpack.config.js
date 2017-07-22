@@ -54,13 +54,17 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
+    new webpack.DefinePlugin({
+      // Is this the "client" bundle?
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
   ],
 
   devServer: {
     host: 'localhost',
     port: 3000,
     stats: 'minimal',
-    contentBase: path.join(__dirname, "../src"),
+    contentBase: path.join(__dirname, '../src'),
 
     historyApiFallback: true,
     // respond to 404s with index.html

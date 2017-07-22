@@ -1,11 +1,7 @@
-/**
- * Created by Roman Morozov <roman.morozov@bcgdv.com> on 7/17/17.
- */
+import { AppContainer } from 'react-hot-loader'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-
-import { App } from './components'
+import App from './components/App'
 
 const rootEl = document.getElementById('root')
 const render = Component =>
@@ -17,5 +13,4 @@ const render = Component =>
   )
 
 render(App)
-
 if (module.hot) module.hot.accept('./components/App', () => render(App))

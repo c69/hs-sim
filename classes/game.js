@@ -321,15 +321,20 @@ class Game {
   }
   /**
    * Choose option and sub-options for next action
+   * @param {string} token_idx
    * @param {number} options_idx 
    * @param {number} position_idx 
    * @param {number} target_idx 
    */
-  chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
+  chooseOption (token, options_idx = 0, position_idx = 0, target_idx = 0) {
     _frame_count_active += 1;
 
     console.log('-- frame ---');
-    let actions = this.viewAvailableOptions().actions;
+    if (this.isOver) return this; // if game ended - nobody can do anything
+
+    let options = this.viewAvailableOptions();
+    if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
+    let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
     
     let action = actions[options_idx];
@@ -346,6 +351,12 @@ class Game {
       case ACTION_TYPES.usePower:
         this.usePower(actions, options_idx, target_idx);
         break;
+      case ACTION_TYPES.endTurn:
+        this.endTurn(); 
+        break;
+      case ACTION_TYPES.concede:
+        this.concede();
+        break;  
       default:
         throw new RangeError('Unexpected action type');  
     } 
@@ -432,7 +443,8 @@ class Game {
     // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
     //console.log('actions --', attack, cards);
     //this.options = {
-    return {    
+    return {
+      token: 'GO_GREEN_TODO_IMPLEMENT_ME',    
       actions: [
         ...attack,
         ...cards
@@ -472,9 +484,12 @@ class Game {
       };
     }
 
+    let options = this.viewAvailableOptions();
+
     let aggregatedState = {
       entities: this.board.$(this.activePlayer, '*').map(sanitizeCard),
-      actions: this.viewAvailableOptions().actions.map(v => {
+      token: options.token,
+      actions: options.actions.map(v => {
         return {
           card_id: v.card_id,
           type: v.type,

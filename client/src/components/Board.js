@@ -2,6 +2,9 @@
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/18/17.
  */
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { gameActions } from '../modules'
 
 import {
   BoardGrid,
@@ -20,7 +23,17 @@ import {
 // TODO: restructure - move out into Card dir and export multiple cards, TBD
 import { HandCard, PlayCard, HeroCard } from './'
 
+@connect(
+  state => ({}),
+  dispatch => ({
+    fetchGame: () => dispatch(gameActions.fetchGame())
+  })
+)
 export default class Board extends Component {
+  componentDidMount () {
+    this.props.fetchGame()
+  }
+
   render () {
     return (
       <BoardGrid>

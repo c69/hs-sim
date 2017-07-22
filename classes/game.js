@@ -319,19 +319,36 @@ class Game {
 
     this._cleanup(); //recursion !
   }
+  /**
+   * Choose option and sub-options for next action
+   * @param {number} options_idx 
+   * @param {number} position_idx 
+   * @param {number} target_idx 
+   */
   chooseOption (options_idx = 0, position_idx = 0, target_idx = 0) {
     _frame_count_active += 1;
 
     console.log('-- frame ---');
-    let opts = this.viewAvailableOptions().actions;
-    if (!opts.length) throw 'options.actions[] are empty' //return;
+    let actions = this.viewAvailableOptions().actions;
+    if (!actions.length) throw 'options.actions[] are empty'; //return;
     
-    let o = opts[options_idx];
-    if (!o) throw new RangeError('Invalid option index provided.');
-    //console.log(o.type);
-    if (o.type === ACTION_TYPES.attack) this.attack(opts, options_idx, target_idx);
-    if (o.type === ACTION_TYPES.playCard) this.playCard(opts, options_idx, position_idx, target_idx);
-    //if (o.type === ACTION_TYPES.usePower) this.usePower(opts, options_idx, target_idx);
+    let action = actions[options_idx];
+    if (!action) throw new RangeError('Invalid option index provided.');
+    
+    //console.log(action.type);
+    switch (action.type) {
+      case ACTION_TYPES.attack:
+        this.attack(actions, options_idx, target_idx);
+        break;       
+      case ACTION_TYPES.playCard:
+        this.playCard(actions, options_idx, position_idx, target_idx);
+        break;
+      case ACTION_TYPES.usePower:
+        this.usePower(actions, options_idx, target_idx);
+        break;
+      default:
+        throw new RangeError('Unexpected action type');  
+    } 
 
     this._cleanup();
 

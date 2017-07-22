@@ -49,7 +49,7 @@ function _quick_play (seed, {mute}) {
       let opts = g.viewAvailableOptions();
       //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
       if (!opts.actions.length) break;
-      g.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+      g.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
     }
     console.log('___________________');
     g.endTurn();
@@ -130,16 +130,17 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
     let opts = g2.viewAvailableOptions();
     //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
     if (!opts.actions.length) break;
-    g2.chooseOption(); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+    g2.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }
   
   console.log('___________________');
   g2.endTurn();
 }
+console.log(g2.exportState());
 
 let jjj = [];
 let _timeStart = Date.now();
-let _N_RUNS = 100;
+let _N_RUNS = 10;
 for (let j = 0; j < _N_RUNS; j++) { 
   // current speed is 100 games in 15 seconds
   jjj.push(_quick_play(0, {mute: true}));

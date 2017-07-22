@@ -66,7 +66,8 @@ const ACTION_TYPES = {
   playCard: 'PLAY_CARD',
   attack: 'ATTACK',
   usePower: 'USE_POWER',
-  //concede, endTurn, etc ?
+  endTurn: 'END_TURN',
+  concede: 'CONCEDE'
 };
 
 module.exports = {

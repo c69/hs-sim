@@ -10,7 +10,7 @@ import styled from 'styled-components'
 const Name = styled.div`
   position: relative;
   padding: 5px;
-  background: brown;
+  background: #454545;
   color: white;
   text-shadow: 1px 1px 1px black;
   text-align: center;
@@ -26,8 +26,11 @@ const Health = styled.div`
   position: absolute;
   bottom: -5px;
   right: -5px;
-  padding: 5px;
+  padding: 3px;
   opacity: 0.5;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
   background: #74160f;
   color: white;
   text-shadow: 1px 1px 2px #000,
@@ -56,8 +59,11 @@ const Attack = styled.div`
   position: absolute;
   bottom: -5px;
   left: -5px;
-  padding: 5px;
+  padding: 3px;
   opacity: 0.5;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
   background: #b98822;
   color: white;
   text-shadow: 1px 1px 2px #000,
@@ -74,6 +80,7 @@ const Card = styled.div`
   height: 100px;
   margin: 0 2px ${ifProp('deck', '-50px', '10px')};
   vertical-align: top;
+  text-align: center;
   border: 5px solid #888F98;
   background: #b1bac6;
   border-radius: 10px;
@@ -95,12 +102,12 @@ const Card = styled.div`
 const PlayCard = ({name, text, health, attack, cost, ...props}) => {
   return (
     <Card {...props} onClick={() => {
-      alert(`Data: ${JSON.stringify({name, text, health, attack})}`)
+      alert(`Data: ${JSON.stringify(props, null, '  ')}`)
     }}>
       <Name>{name}</Name>
       <Description dangerouslySetInnerHTML={{__html: text}} />
-      {props.play && <Health>{health}</Health>}
-      {props.play && <Attack>{attack}</Attack>}
+      <Health>{health}</Health>
+      <Attack>{attack}</Attack>
       {props.hand && <Cost>{cost}</Cost>}
     </Card>
   )

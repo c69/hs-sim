@@ -77,7 +77,7 @@ const HandCard = ({cost, name, description, back}) => {
 }
 
 HandCard.propTypes = {
-  cost: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  cost: PropTypes.number,
   name: PropTypes.string,
   description: PropTypes.string,
   back: PropTypes.bool

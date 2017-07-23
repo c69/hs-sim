@@ -4,7 +4,7 @@
   "description": "Heartstone Sim Client",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server --config tools/webpack.config.js",
+    "start": "webpack-dev-server --config tools/webpack.config.js",
     "lint": "eslint src",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.production.js",
@@ -28,6 +28,7 @@
     "redux-thunk": "2.2.0",
     "reselect": "3.0.1",
     "styled-components": "2.1.1",
+    "styled-tools": "0.1.4",
     "type-to-reducer": "1.0.3",
     "yup": "0.21.3"
   },

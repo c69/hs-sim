@@ -6,7 +6,7 @@ import styled from 'styled-components'
 export const BoardGrid = styled.div`
   display: grid;
   grid-template-rows: 75px 125px minmax(50px, 1fr) minmax(50px, 1fr) 125px 75px;
-  grid-template-columns: 50px 100px minmax(300px, 1fr) 100px 100px;
+  grid-template-columns: 50px 100px minmax(300px, 1fr) 100px 1fr;
   background: #efefef;
 
   & div {
@@ -37,6 +37,12 @@ export const PlayerPlay = styled.div`
   justify-self: center;
 `
 
+export const PlayerDeck = styled.div`
+  grid-row: 4 / 7;
+  grid-column: 5;
+  background: #a3aab4;
+`
+
 export const OpponentHand = styled.div`
   grid-row: 1;
   grid-column: 3 / 4;
@@ -60,16 +66,16 @@ export const OpponentPlay = styled.div`
   justify-self: center;
 `
 
+export const OpponentDeck = styled.div`
+  grid-row: 1 / 4;
+  grid-column: 5;
+  background: #a3aab4;
+`
+
 export const History = styled.div`
   grid-row: 1 / 7;
   grid-column: 1;
   background: #a3aab4;
   align-self: center;
   writing-mode: vertical-lr;
-`
-
-export const Deck = styled.div`
-  grid-row: 1 / 7;
-  grid-column: 5;
-  background: #a3aab4;
 `

@@ -5,6 +5,9 @@ import api from './apiService'
 import gameMock from '../mocks/gameMock'
 import yup from 'yup'
 
+// import _ from 'lodash'
+// console.log(_.uniq(_.map(gameMock.entities, 'zone')))
+
 const cardIdSchema = yup.number().positive().integer()
 
 const playerSchema = yup.object().shape({
@@ -34,6 +37,7 @@ const entitySchema = yup.object().shape({
   // optional
   'incomingAuras': yup.array(),
   'tags': yup.array(),
+  'text': yup.string(),
   'health': yup.number().positive().integer(),
   'healthMax': yup.number().positive().integer(),
   'attack': yup.number().positive().integer(),

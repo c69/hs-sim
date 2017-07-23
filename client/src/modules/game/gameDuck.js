@@ -7,7 +7,19 @@ import typeToReducer from 'type-to-reducer'
 import { boardService } from '../../services'
 
 const constants = {
-  name: 'game'
+  name: 'theGame',
+  types: {
+    HERO: 'HERO',
+    SPELL: 'SPELL',
+    MINION: 'MINION'
+  },
+  zones: {
+    DECK: 'DECK',
+    HAND: 'HAND',
+    PLAY: 'PLAY',
+    GRAVE: 'GRAVE',
+    HERO: 'HERO'
+  }
 }
 const types = {
   FETCH_GAME: 'FETCH_GAME'
@@ -23,9 +35,15 @@ actions.fetchGame = () => {
 }
 
 const initial = {
-  turn: undefined,
-  isStarted: undefined,
-  isOver: undefined
+  game: {
+    turn: undefined,
+    isStarted: undefined,
+    isOver: undefined,
+    activePlayer: {},
+    passivePlayer: {}
+  },
+  entities: [],
+  actions: []
 }
 
 const reducer = typeToReducer({

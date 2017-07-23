@@ -51,10 +51,10 @@ const HeroCard = ({name, attack, armor, health, power,}) => {
     <Card>
       <Name>{name}</Name>
 
-      <Attack>Attack: {attack}</Attack>
-      <Armor>Armor: {armor}</Armor>
+      {/*<Attack>Attack: {attack}</Attack>*/}
+      {/*<Armor>Armor: {armor}</Armor>*/}
       <Health>Health: {health}</Health>
-      <Power>Power: {power}</Power>
+      {/*<Power>Power: {power}</Power>*/}
     </Card>
   )
 }

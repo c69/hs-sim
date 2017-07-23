@@ -2,18 +2,21 @@
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/18/17.
  */
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import map from 'lodash/map'
 
-import { gameActions } from '../modules'
+import { gameActions, gameSelectors, gameConstants } from '../modules'
 
 import {
   BoardGrid,
   History,
-  Deck,
+  PlayerDeck,
   PlayerHand,
   PlayerHero,
   PlayerMana,
   PlayerPlay,
+  OpponentDeck,
   OpponentHand,
   OpponentHero,
   OpponentMana,
@@ -24,59 +27,96 @@ import {
 import { HandCard, PlayCard, HeroCard } from './'
 
 @connect(
-  state => ({}),
+  state => ({
+    game: gameSelectors.gameSelector(state),
+    playerEntitiesByZone: gameSelectors.playerEntitiesByZone(state),
+    opponentEntitiesByZone: gameSelectors.opponentEntitiesByZone(state)
+  }),
   dispatch => ({
     fetchGame: () => dispatch(gameActions.fetchGame())
   })
 )
 export default class Board extends Component {
+  static propTypes = {
+    entities: PropTypes.string
+  }
+
   componentDidMount () {
     this.props.fetchGame()
   }
 
   render () {
+    const {activePlayer, passivePlayer, turn, isStarted, isOver} = this.props.game
+    const {playerEntitiesByZone, opponentEntitiesByZone} = this.props
+
+    // TODO: update this with more graceful loading process
+    if (!playerEntitiesByZone || !opponentEntitiesByZone) {
+      return <div>Loading</div>
+    }
+
     return (
       <BoardGrid>
         {/*Extra*/}
-        <History>History</History>
-        <Deck>Deck</Deck>
+        <History>History<br />Turn {turn}</History>
 
         {/*Player*/}
-        <PlayerMana>Mana 5 / 12</PlayerMana>
+        <PlayerDeck>
+          {map(
+            playerEntitiesByZone[gameConstants.zones.DECK],
+            entity => <PlayCard key={entity.id} {...entity} deck />
+          )}
+        </PlayerDeck>
+        <PlayerMana>Mana {activePlayer.mana} / {activePlayer.manaCrystals}</PlayerMana>
         <PlayerHand>
-          <HandCard cost={3} name="Mishka" description="Crazy Bear" />
-          <HandCard cost={1} name="Pluxa Muxa" description="Pluxa jirnaya muha" />
-          <HandCard cost={7} name="Costya" description="Do whatever you want" />
+          {map(
+            playerEntitiesByZone[gameConstants.zones.HAND],
+            entity => <PlayCard key={entity.id} {...entity} hand />
+          )}
         </PlayerHand>
         <PlayerHero>
-          <HeroCard name="Ivan" health={28} attack={7} armor={4} power={2} />
+          {map(
+            playerEntitiesByZone[gameConstants.zones.HERO],
+            entity => <HeroCard key={entity.id} {...entity} />
+          )}
         </PlayerHero>
         <PlayerPlay>
-          <PlayCard name="Joomanji" description="Mas" attack={7} health={3} />
-          <PlayCard name="Rick" description="Old man that knows something" attack={2} health={1} />
-          <PlayCard name="Morty" description="A friend who wants to be a friend" attack={5} health={4} />
-          <PlayCard name="Joomanji" description="Mas" attack={7} health={3} />
-          <PlayCard name="Morty" description="A friend who wants to be a friend" attack={5} health={4} />
-          <PlayCard name="Rick" description="Old man that knows something" attack={2} health={1} />
-          <PlayCard name="Morty" description="A friend who wants to be a friend" attack={5} health={4} />
+          {map(
+            playerEntitiesByZone[gameConstants.zones.PLAY],
+            entity => <PlayCard key={entity.id} {...entity} play />
+          )}
         </PlayerPlay>
 
         {/*Opponent*/}
-        <OpponentMana>Mana 3 / 12</OpponentMana>
+        <OpponentDeck>
+          {map(
+            opponentEntitiesByZone[gameConstants.zones.DECK],
+            entity => <PlayCard key={entity.id} {...entity} deck />
+          )}
+        </OpponentDeck>
+        <OpponentMana>Mana {passivePlayer.mana} / {passivePlayer.manaCrystals}</OpponentMana>
         <OpponentHand>
-          <HandCard back />
-          <HandCard back />
-          <HandCard back />
+          {map(
+            opponentEntitiesByZone[gameConstants.zones.HAND],
+            entity => <PlayCard key={entity.id} {...entity} hand back />
+          )}
         </OpponentHand>
         <OpponentHero>
-          <HeroCard name="Matvey" health={13} attack={2} armor={1} power={25} />
+          {map(
+            opponentEntitiesByZone[gameConstants.zones.HERO],
+            entity => <HeroCard key={entity.id} {...entity} />
+          )}
         </OpponentHero>
         <OpponentPlay>
-          <PlayCard name="Somebody" description="Unknown person" attack={5} health={2} />
-          <PlayCard name="Used" description="Adjective?" attack={8} health={3} />
-          <PlayCard name="To Know" description="Some description for you" attack={5} health={4} />
+          {map(
+            opponentEntitiesByZone[gameConstants.zones.PLAY],
+            entity => <PlayCard key={entity.id} {...entity} play />
+          )}
         </OpponentPlay>
       </BoardGrid>
     )
   }
+}
+
+Board.propTypes = {
+  entities: PropTypes.string
 }

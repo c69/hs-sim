@@ -407,7 +407,7 @@ export default {
       'costBase': 1,
       'target': 'minion',
       'incomingAuras': [],
-      'zone': 'DECK',
+      'zone': 'HAND',
       'owner': 'Alice',
       'card_id': 17,
       'cost': 1,

@@ -12,8 +12,8 @@ const cardIdSchema = yup.number().positive().integer()
 
 const playerSchema = yup.object().shape({
   'name': yup.string().required(),
-  'mana': yup.number().positive().integer().max(15).required(),
-  'manaCrystals': yup.number().positive().integer().max(15).required(),
+  'mana': yup.number().positive().integer().max(10).required(),
+  'manaCrystals': yup.number().positive().integer().max(10).required(),
   'lost': yup.bool().required()
 })
 

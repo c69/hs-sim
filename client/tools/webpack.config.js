@@ -65,6 +65,11 @@ module.exports = {
     port: 3000,
     stats: 'minimal',
     contentBase: path.join(__dirname, '../src'),
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000"
+      }
+    },
 
     historyApiFallback: true,
     // respond to 404s with index.html

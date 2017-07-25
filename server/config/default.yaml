@@ -1,0 +1,3 @@
+app:
+  name: 'HS-Server'
+  port: 8000

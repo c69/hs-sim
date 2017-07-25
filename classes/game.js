@@ -333,7 +333,7 @@ class Game {
     if (this.isOver) return this; // if game ended - nobody can do anything
 
     let options = this.viewAvailableOptions();
-    if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
+    //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
     
@@ -447,7 +447,10 @@ class Game {
       token: 'GO_GREEN_TODO_IMPLEMENT_ME',    
       actions: [
         ...attack,
-        ...cards
+        ...cards,
+        //usePower
+        {type: ACTION_TYPES.endTurn},
+        {type: ACTION_TYPES.concede}
       ]
       //, aubergines
     };

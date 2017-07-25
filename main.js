@@ -136,7 +136,7 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   console.log('___________________');
   g2.endTurn();
 }
-console.log(g2.exportState());
+//console.log(g2.exportState());
 
 let jjj = [];
 let _timeStart = Date.now();

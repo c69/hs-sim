@@ -1,0 +1,14 @@
+{
+  "name": "hs-sim-server",
+  "version": "0.0.1",
+  "description": "Middle tier between core HS-Sim and and HS-Sim Client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}

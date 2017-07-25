@@ -20,7 +20,7 @@ export default class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      rehydrated: false
+      rehydrated: true
     }
   }
 

@@ -11,7 +11,7 @@ const postGameSchema = require('../schemas/postGame')
 const hsGame = require('../../../main_rpc')
 
 router.get('/game', getGame)
-router.post('/game/action', validate(postGameSchema), choseGameOption)
+router.post('/game/action', validate(postGameSchema), choseGameAction)
 
 function getGame (req, res) {
   const gameStateJSON = hsGame.exportState()
@@ -28,8 +28,9 @@ function getGame (req, res) {
   res.send(gameState)
 }
 
-function choseGameOption (req, res) {
-  res.send({game: 1})
+function choseGameAction (req, res) {
+  hsGame.chooseOption('token', req.body.index)
+  res.send(req.body)
   // let game = hs_game.chooseOption(req)
   //res.json(game); // this does not work, obviously
   // res.send(200)

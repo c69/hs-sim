@@ -16,7 +16,7 @@ export const BoardGrid = styled.div`
 
 export const PlayerHand = styled.div`
   grid-row: 6;
-  grid-column: 3 / 4;
+  grid-column: 2 / 4;
   justify-self: center;
 `
 
@@ -45,7 +45,7 @@ export const PlayerDeck = styled.div`
 
 export const OpponentHand = styled.div`
   grid-row: 1;
-  grid-column: 3 / 4;
+  grid-column: 2 / 4;
   justify-self: center;
 `
 
@@ -70,6 +70,11 @@ export const OpponentDeck = styled.div`
   grid-row: 1 / 4;
   grid-column: 5;
   background: #a3aab4;
+`
+
+export const EndTurn = styled.div`
+  grid-row: 6;
+  grid-column: 1;
 `
 
 export const History = styled.div`

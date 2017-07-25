@@ -4,6 +4,7 @@
 import { createSelector } from 'reselect'
 
 import filter from 'lodash/filter'
+import findIndex from 'lodash/findIndex'
 
 import { constants } from './gameDuck'
 
@@ -52,6 +53,12 @@ export default {
     entitiesSelector,
     (game, entities) => {
       if (entities.length) return groupByZones(entities, game.passivePlayer.name)
+    }
+  ),
+  gameActionEndTurn: createSelector(
+    actionsSelector,
+    actions => {
+      return findIndex(actions, {type: 'END_TURN'})
     }
   )
 }

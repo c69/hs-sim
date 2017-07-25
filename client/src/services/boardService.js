@@ -2,11 +2,7 @@
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/22/17.
  */
 import api from './apiService'
-import gameMock from '../mocks/gameMock'
 import yup from 'yup'
-
-// import _ from 'lodash'
-// console.log(_.uniq(_.map(gameMock.entities, 'zone')))
 
 const cardIdSchema = yup.number().positive().integer()
 
@@ -49,7 +45,7 @@ const entitySchema = yup.object().shape({
 const actionsSchema = yup.object().shape({
   'card_id': cardIdSchema,
   'type': yup.string().required(),
-  'name': yup.string().required(),
+  'name': yup.string(),
   'targetList': yup.array(),
   'positionList': yup.array()
 })
@@ -61,15 +57,16 @@ const gameFullSchema = yup.object().shape({
 })
 
 export const fetchGame = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      gameFullSchema.validate(gameMock)
-        .then((valid) => resolve(gameMock))
-        .catch(error => reject(error))
-    }, 300)
+  return api.get('/game').then(data => gameFullSchema.validate(data))
+}
+
+export const endTurn = (params) => {
+  return api.post('/game/action', {
+    index: params.index
   })
 }
 
 export default {
-  fetchGame
+  fetchGame,
+  endTurn
 }

@@ -24,6 +24,7 @@
   "dependencies": {
     "better-npm-run": "^0.0.15",
     "body-parser": "^1.17.2",
+    "compression": "^1.7.0",
     "config": "^1.26.1",
     "cross-env": "^5.0.1",
     "debug": "^2.6.8",

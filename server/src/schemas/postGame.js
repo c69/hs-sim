@@ -4,5 +4,6 @@
 const Joi = require('joi')
 
 module.exports = Joi.object().keys({
-  type: Joi.string().required()
+  type: Joi.string(),
+  index: Joi.number()
 })

@@ -78,12 +78,13 @@ const Card = styled.div`
   display: inline-block;
   width: 75px;
   height: 100px;
-  margin: 0 2px ${ifProp('deck', '-50px', '10px')};
+  margin: 0 2px ${ifProp('deck', '-85px', '10px')};
   vertical-align: top;
   text-align: center;
   border: 5px solid #888F98;
   background: #b1bac6;
   border-radius: 10px;
+  cursor: pointer;
 
   font-face: 'Gill Sans', sans;
   font-size: 12px;

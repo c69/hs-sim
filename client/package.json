@@ -4,7 +4,7 @@
   "description": "Heartstone Sim Client",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config tools/webpack.config.js",
+    "watch": "webpack-dev-server --config tools/webpack.config.js",
     "lint": "eslint src",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.production.js",
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "0.16.2",
+    "lodash": "^4.17.4",
     "prop-types": "15.5.10",
     "react": "15.6.1",
     "react-dom": "15.6.1",

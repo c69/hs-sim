@@ -34,6 +34,13 @@ actions.fetchGame = () => {
   }
 }
 
+actions.endTurn = (params) => {
+  return (dispatch, getState) => {
+    return dispatch(fetchGame(boardService.endTurn(params)))
+      .then(dispatch(actions.fetchGame()))
+  }
+}
+
 const initial = {
   game: {
     turn: undefined,

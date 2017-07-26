@@ -3,6 +3,7 @@
  */
 const path = require('path')
 const webpack = require('webpack')
+const HappyPack = require('happypack');
 
 module.exports = {
   entry: [
@@ -37,9 +38,7 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        use: [
-          'babel-loader',
-        ],
+        use: ['happypack/loader'],
         exclude: /node_modules/,
       },
     ],
@@ -54,10 +53,11 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
-    new webpack.DefinePlugin({
-      // Is this the "client" bundle?
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
+    // new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new HappyPack({
+      // loaders is the only required parameter:
+      loaders: ['babel-loader'],
+    })
   ],
 
   devServer: {
@@ -65,16 +65,12 @@ module.exports = {
     port: 3000,
     stats: 'minimal',
     contentBase: path.join(__dirname, '../src'),
+    historyApiFallback: true,
+    hot: true,
     proxy: {
       "/api": {
         target: "http://localhost:8000"
       }
     },
-
-    historyApiFallback: true,
-    // respond to 404s with index.html
-
-    hot: true,
-    // enable HMR on the server
   },
 }

@@ -14,7 +14,6 @@ router.get('/game', getGame)
 router.post('/game/action', validate(postGameSchema), chooseGameAction)
 
 function getGame (req, res) {
-  console.log('OLOLO');
   const gameStateJSON = hsGame.exportState()
   let gameState
 

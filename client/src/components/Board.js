@@ -65,7 +65,8 @@ export default class Board extends Component {
         {/*Extra*/}
         <History>History<br />Turn {turn}</History>
         <EndTurn>
-          {(endTurnActionIndex !== -1) && <button onClick={() => this.props.endTurn({index: endTurnActionIndex})}>End Turn</button>}
+          {(endTurnActionIndex !== -1) && <button onClick={() => this.props.endTurn({option: endTurnActionIndex})}>End Turn</button>}
+          <button onClick={() => this.props.endTurn({option: 0})}>Whatever First Action</button>
         </EndTurn>
 
         {/*Player*/}

@@ -11,9 +11,10 @@ const postGameSchema = require('../schemas/postGame')
 const hsGame = require('../../../main_rpc')
 
 router.get('/game', getGame)
-router.post('/game/action', validate(postGameSchema), choseGameAction)
+router.post('/game/action', validate(postGameSchema), chooseGameAction)
 
 function getGame (req, res) {
+  console.log('OLOLO');
   const gameStateJSON = hsGame.exportState()
   let gameState
 
@@ -28,12 +29,23 @@ function getGame (req, res) {
   res.send(gameState)
 }
 
-function choseGameAction (req, res) {
-  hsGame.chooseOption('token', req.body.index)
-  res.send(req.body)
-  // let game = hs_game.chooseOption(req)
-  //res.json(game); // this does not work, obviously
-  // res.send(200)
+function chooseGameAction (req, res) {
+  let {
+    option: optionIndex = 0,
+    target: targetIndex = 0,
+    position: positionIndex = 0
+  } = req.body;
+
+  // chooseOption should SOMEHOW return the result of tick,
+  //-- maybe with animations, and maybe asynchronously
+  let game = hsGame.chooseOption(
+    'token', //token validation is disabled in Core, for now
+    optionIndex,
+    targetIndex,
+    positionIndex
+  );
+
+  res.send(req.body);
 }
 
 module.exports.router = router

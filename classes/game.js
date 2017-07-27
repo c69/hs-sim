@@ -430,7 +430,7 @@ class Game {
       return true;
     }).map(v => {
       return {
-        card_id: v._id,
+        card_id: v.card_id,
         card: v,
         type: ACTION_TYPES.playCard,
         name: v.name,

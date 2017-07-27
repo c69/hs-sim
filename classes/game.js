@@ -22,32 +22,32 @@ const {
 var _frame_count_active = 0;
 
 /**
- * 
- 
+ *
+
 http://hearthstone.gamepedia.com/GameTag_enumeration
 
 http://hearthstone.gamepedia.com/Step_enumeration
-INVALID 0 
-BEGIN_FIRST 1 
-BEGIN_SHUFFLE 2 
-BEGIN_DRAW 3 
-BEGIN_MULLIGAN 4 
+INVALID 0
+BEGIN_FIRST 1
+BEGIN_SHUFFLE 2
+BEGIN_DRAW 3
+BEGIN_MULLIGAN 4
 
-MAIN_BEGIN 5 MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc) 
-MAIN_RESOURCE 7 
-MAIN_DRAW 8 
-MAIN_START 9 
-? MAIN_START_TRIGGERS 17 
+MAIN_BEGIN 5 MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc)
+MAIN_RESOURCE 7
+MAIN_DRAW 8
+MAIN_START 9
+? MAIN_START_TRIGGERS 17
 
-MAIN_ACTION 10 
-MAIN_COMBAT 11 
-? MAIN_CLEANUP 16 
+MAIN_ACTION 10
+MAIN_COMBAT 11
+? MAIN_CLEANUP 16
 
-MAIN_END 12 End of Turn triggers. 
-MAIN_NEXT 13 
+MAIN_END 12 End of Turn triggers.
+MAIN_NEXT 13
 
-FINAL_WRAPUP 14 
-FINAL_GAMEOVER 15 
+FINAL_WRAPUP 14
+FINAL_GAMEOVER 15
 
 
 
@@ -55,7 +55,7 @@ FINAL_GAMEOVER 15
 // g.end();
 
 // g.disconnect();
-// g.concede();  
+// g.concede();
 
 // g.endTurn();
 
@@ -88,11 +88,11 @@ class Game {
     this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
 
     //this.observableState = {}; // ?
-    //this.fullState = {}; // ??? 
+    //this.fullState = {}; // ???
   }
   static _profile () {
     return {
-      _frame_count_active 
+      _frame_count_active
     };
   }
   _init () {
@@ -110,11 +110,11 @@ class Game {
   }
   _onTurnStart () {
     this.turn += 1;
-    
+
     let activePlayer = this.players[this.turn % 2];
     this.activePlayer = activePlayer;
     this.passivePlayer = this.players[(this.turn + 1) % 2];
-    
+
     if (this.players.some(v => v.hero.health < 1)) {
       return this.end();
     }
@@ -126,7 +126,7 @@ class Game {
     activePlayer.mana = activePlayer.manaCrystals;
 
     this.board.$(this.activePlayer, 'own minion').forEach(v => {
-      v.attackedThisTurn = 0; // invasively reset attack counters 
+      v.attackedThisTurn = 0; // invasively reset attack counters
       v.isReady = true;
     });
     //execute triggers: "At the beginning of ... turn"
@@ -142,12 +142,12 @@ class Game {
   }
 
   start () {
-    if (this.isStarted) return this; // multiple chain calls to .start could be ignored 
+    if (this.isStarted) return this; // multiple chain calls to .start could be ignored
     this.isStarted = true;
     this.isOver = false;
     this._init();//maybe with rules ? like min/max mana, etc
 
-    return this;  
+    return this;
   }
   end () {
     this.isOver = true;
@@ -155,23 +155,23 @@ class Game {
       //could be a draw, too.. (when turn #87 is reached ?)
       winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
     };
-    return this;  
+    return this;
   }
   concede () {
-    this.activePlayer.loose();  
+    this.activePlayer.loose();
     this.isOver = true;
-    
-    return this;  
+
+    return this;
   }
   disconnect () {
-    //todo: implement me  
+    //todo: implement me
   }
   endTurn () {
     this._onTurnEnd();
     this._onTurnStart();
     this._attemptToDrawCard();
-    
-    return this;        
+
+    return this;
   }
   //-- intra turn action --------------
   attack (actions, attacker_idx, target_idx) {
@@ -184,17 +184,17 @@ class Game {
     combat(a, t, this);
 
     return this;
-  }  
+  }
   playCard (actions, card_idx = 0, position_idx = 0, target_idx = 0) {
     //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
     let c = actions[card_idx];
-    
+
     if (c.targetList) { // spell:fireball OR minion:battlecry
-      var target = c.targetList[target_idx];      
+      var target = c.targetList[target_idx];
     }
     if (c.positionList) { // minion
       var position = c.positionList[position_idx];
-    } 
+    }
 
     let $ = this._$.get(this.activePlayer);
     let card = c.card;
@@ -213,21 +213,21 @@ class Game {
   usePower (actions, target_idx) {
     //todo: implement me
 
-    return this;  
-  }  
+    return this;
+  }
   _cleanup () {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
 
     let characters = this.board.$(this.activePlayer, 'character');
-    
+
     let allCards = this.board.$(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
     allCards.forEach(v => v.incomingAuras = []);
     //this.view();
 
     //refresh/re-apply auras
-    
+
     //characters.forEach(character => {
     allCards.forEach(character => {
       //console.log('......', character.name, character.tags);
@@ -235,7 +235,7 @@ class Game {
         //console.log('......', character.name, tag);
         //return true; // [broken?] hack to ignore aura checking code
         if (!tag.aura) return false;
-        
+
         //console.log('emitting aura from', character.name, tag);
         let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
         let shouldApply = (zone === character.zone);
@@ -247,8 +247,8 @@ class Game {
       .forEach(({aura}) => {
         //console.log(aura);
         let p = character.owner;
-        let $ = this._$.get(p); 
-               
+        let $ = this._$.get(p);
+
         let t;
         if (aura.target === 'self') {
           t = character;
@@ -256,23 +256,23 @@ class Game {
           t = $('own minion').adjacent(character);
         } else if (/\bother\b/i.test(aura.target)) {
           let selector = aura.target.replace('other', '').trim().replace(/\s+/g, ' ');
-          t = $(selector).exclude(character); 
+          t = $(selector).exclude(character);
         } else {
           t = $(aura.target);
         }
         //console.log(`Aura of ${character.name}: ${t.length} of "${aura.target}"`);
 
         //the signature is ugly... but i will refactor it
-        buffAura(this, $, character, t, aura.buff);  
+        buffAura(this, $, character, t, aura.buff);
       });
     });
-    
+
 
     //death logic onwards
     let death_list = characters.filter(character => {
         return !character.isAlive();
       });
-    
+
     if (!death_list.length) {
       return;
     }
@@ -306,11 +306,11 @@ class Game {
               self.owner.draw(n);
           }
         });
-      }, this);   
+      }, this);
       if (character._listener) { // remove triggers - super dirty solution...
         console.log(`removed triggers for ${character.card_id}`);
         this.eventBus.removeListener(character._listener[0], character._listener[1]);
-        delete character._listener; 
+        delete character._listener;
       }
     });
 
@@ -322,9 +322,9 @@ class Game {
   /**
    * Choose option and sub-options for next action
    * @param {string} token_idx
-   * @param {number} options_idx 
-   * @param {number} position_idx 
-   * @param {number} target_idx 
+   * @param {number} options_idx
+   * @param {number} position_idx
+   * @param {number} target_idx
    */
   chooseOption (token, options_idx = 0, position_idx = 0, target_idx = 0) {
     _frame_count_active += 1;
@@ -336,15 +336,15 @@ class Game {
     //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
-    
+
     let action = actions[options_idx];
     if (!action) throw new RangeError('Invalid option index provided.');
-    
+
     //console.log(action.type);
     switch (action.type) {
       case ACTION_TYPES.attack:
         this.attack(actions, options_idx, target_idx);
-        break;       
+        break;
       case ACTION_TYPES.playCard:
         this.playCard(actions, options_idx, position_idx, target_idx);
         break;
@@ -352,14 +352,14 @@ class Game {
         this.usePower(actions, options_idx, target_idx);
         break;
       case ACTION_TYPES.endTurn:
-        this.endTurn(); 
+        this.endTurn();
         break;
       case ACTION_TYPES.concede:
         this.concede();
-        break;  
+        break;
       default:
-        throw new RangeError('Unexpected action type');  
-    } 
+        throw new RangeError('Unexpected action type');
+    }
 
     this._cleanup();
 
@@ -378,20 +378,20 @@ class Game {
       };
     }
     let $ = this._$.get(this.activePlayer);
- 
+
     let pawns = $('own character');
     let warriors = pawns.filter(v => {
       if (v.attack < 1) return false;
       if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
-      
+
       let MAX_ATTACKS_ALLOWED_PER_TURN = 1;
       if (v.tags.includes(TAGS.windfury)) {
          MAX_ATTACKS_ALLOWED_PER_TURN = 2;
-      } 
+      }
       //console.log(`${v.name}: atacked ${v.attackedThisTurn} times of ${MAX_ATTACKS_ALLOWED_PER_TURN}`);
       return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
     });
-    
+
     let aubergines = $('enemy character');
     let sheeps = aubergines.filter(v => {
       return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
@@ -400,7 +400,7 @@ class Game {
     //scan for taunt
     let sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
     if (sheepsTaunt.length) sheeps = sheepsTaunt;
-    
+
     // scan for spell shield
     // ..
 
@@ -412,21 +412,21 @@ class Game {
         unit: v,
         type: ACTION_TYPES.attack,
         name: v.name,
-        //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-) 
-        targetList: sheeps  
+        //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
+        targetList: sheeps
       };
     }).filter(v => v.targetList.length > 0);
 
     let canSummonMore = (pawns.length <= 7); // with hero
-    
+
     let cards = this.activePlayer.hand.listPlayable().filter((v) =>{
       if (v.type === CARD_TYPES.minion) {
         return canSummonMore;
-      } 
+      }
       if (v.type === CARD_TYPES.spell && !!v.target) {
         //console.log('v.target', v.target);
         return $(v.target).length;
-      }       
+      }
       return true;
     }).map(v => {
       return {
@@ -435,7 +435,7 @@ class Game {
         type: ACTION_TYPES.playCard,
         name: v.name,
         cost: v.cost,
-        positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
+        positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
         targetList: v.target && $(v.target)
       };
     });
@@ -444,7 +444,7 @@ class Game {
     //console.log('actions --', attack, cards);
     //this.options = {
     return {
-      token: 'GO_GREEN_TODO_IMPLEMENT_ME',    
+      token: 'GO_GREEN_TODO_IMPLEMENT_ME',
       actions: [
         ...attack,
         ...cards,
@@ -463,8 +463,8 @@ class Game {
    * - current available options
    * - uid: game + turn + player
    * - revealed state for entities
-   * - (?) animations 
-   * 
+   * - (?) animations
+   *
    * Next step after this is done should be delta update
    */
   exportState () {
@@ -498,7 +498,7 @@ class Game {
           type: v.type,
           //card: v.card, // unsafe direct reference
           //unit: v.unit, // unsafe direct reference
-          targetList: v.targetList && v.targetList.map(onlyLeaveInCardObject), 
+          targetList: v.targetList && v.targetList.map(onlyLeaveInCardObject),
           positionList: v.positionList,
           name: v.name
 
@@ -506,15 +506,15 @@ class Game {
         // unit: v,
         // type: ACTION_TYPES.attack,
         // name: v.name,
-        // //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-) 
-        // targetList: sheeps 
+        // //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
+        // targetList: sheeps
 
         // id: v._id,
         // card: v,
         // type: v.ACTION_TYPES.playCard,
         // name: v.name,
         // cost: v.cost,
-        // positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?    
+        // positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
         // targetList: v.target && $(v.target)
         }
       }),
@@ -523,7 +523,7 @@ class Game {
         //isStarted/isOver should be converted to state:enum
         isStarted: this.isOver,
         isOver: this.isOver,
-        activePlayer: { // consider returning players as array 
+        activePlayer: { // consider returning players as array
           name: this.activePlayer.name,
           mana: this.activePlayer.mana,
           manaCrystals: this.activePlayer.manaCrystals,
@@ -536,30 +536,30 @@ class Game {
           manaCrystals: this.passivePlayer.manaCrystals,
           lost: this.passivePlayer.lost
         },
-      }  
+      }
     };
-    
+
     let outputJSON;
     outputJSON = JSON.stringify(aggregatedState, function (k,v) {
         if (k === 'eventBus') return undefined;
         if (k === '_listener') return undefined;
-        
+
         if (k === 'buffs') return undefined;
         if (k === '_by') return undefined;
-        
+
         return v;
       }, '  ');
 
     return outputJSON;
-  } 
+  }
   //-----------------------------------
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
       let own_minions = this.board.$(player, 'own minion');
-      
+
       //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
-      
+
       if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
       console.log(`
@@ -571,17 +571,17 @@ player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${p
       (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
       (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
       (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
-      
+
       (v.tags.find(v => v.death) ? '☠️' : '') +
       (v.tags.find(v => v.trigger) ? 'T' : '') +
       (v.tags.find(v => v.aura) ? 'A' : '') +
       (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
       (v.incomingAuras.length ? 'a' : '') +
- 
+
       `${v.attack}/${v.health}`
       ));
     });
-    
+
     return this;
   }
 }

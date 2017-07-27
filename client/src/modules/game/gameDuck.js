@@ -4,44 +4,86 @@
 import { createActions } from 'redux-actions'
 import typeToReducer from 'type-to-reducer'
 
-import { boardService } from '../../services'
+import { gameService } from '../../services'
+import gameAdapter from './gameAdapter'
+import gameSelectors from './gameSelectors'
 
 const constants = {
-  name: 'theGame',
-  types: {
-    HERO: 'HERO',
-    SPELL: 'SPELL',
-    MINION: 'MINION'
-  },
-  zones: {
-    DECK: 'DECK',
-    HAND: 'HAND',
-    PLAY: 'PLAY',
-    GRAVE: 'GRAVE',
-    HERO: 'HERO'
-  }
+  name: 'hs'
 }
+
 const types = {
-  FETCH_GAME: 'FETCH_GAME'
+  FETCH_GAME: 'hs/FETCH_GAME',
+  END_TURN: 'hs/END_TURN',
+  GAME_ACTION: 'hs/GAME_ACTION',
+  SELECT_CARD: 'hs/SELECT_CARD',
+  SELECT_POSITION: 'hs/SELECT_POSITION'
 }
 
-const {fetchGame} = createActions(types.FETCH_GAME)
+const {hs: {fetchGame, gameAction, selectCard, selectPosition}} = createActions({
+  [types.FETCH_GAME]: promise => promise.then(gameAdapter.massageGame),
+  [types.GAME_ACTION]: undefined,
+  [types.END_TURN]: undefined,
+  [types.SELECT_CARD]: undefined,
+  [types.SELECT_POSITION]: undefined
+})
 
-const actions = {}
+// Sync Actions
+const actions = {
+  selectCard
+}
+
+// Async Actions
 actions.fetchGame = () => {
   return (dispatch, getState) => {
-    return dispatch(fetchGame(boardService.fetchGame()))
+    return dispatch(fetchGame(gameService.fetchGame()))
   }
 }
 
+// TODO: not sure if we need a separate action for this
 actions.endTurn = (params) => {
   return (dispatch, getState) => {
-    return dispatch(fetchGame(boardService.endTurn(params)))
+    return dispatch(gameAction(gameService.gameAction(params)))
+      .then(dispatch(actions.fetchGame()))
+  }
+}
+
+/**
+ * Play selected card at selected position
+ * Currently selected card state is stored in `selected`
+ * @param positionIndex {Number} Index of selected position where the card should be placed
+ * @returns {function(*, *)}
+ */
+actions.selectPosition = (positionIndex) => {
+  return (dispatch, getState) => {
+    const selected = gameSelectors.selectedSelector(getState())
+    const params = {
+      optionIndex: selected.actionIndex,
+      positionIndex: positionIndex
+    }
+    // This action is not handled in redux store for now, just firing it to see it in devTools
+    dispatch(selectPosition(params))
+
+    return dispatch(gameAction(gameService.gameAction(params)))
       .then(dispatch(actions.fetchGame()))
   }
 }
 
 const initial = {
+  selected: {
+    cardId: undefined,
+    type: undefined,
+    targetList: [],
+    positionList: []
+  },
+  // filled by massageGame
+  activePlayer: {
+    zones: []
+  },
+  passivePlayer: {
+    zones: []
+  },
+  // filled by FETCH_GAME response
   game: {
     turn: undefined,
     isStarted: undefined,
@@ -55,8 +97,17 @@ const initial = {
 
 const reducer = typeToReducer({
   [types.FETCH_GAME]: {
-    OK: (state, action) => ({...action.payload})
-  }
+    OK: (state, action) => ({
+      // TODO: Anti-pattern, bad -> we're going to rewrite entire state with action payload. Consider more precise usage
+      ...state,
+      ...action.payload
+    })
+  },
+  [types.SELECT_CARD]: (state, action) => ({
+      ...state,
+      selected: action.payload
+    }
+  )
 }, initial)
 
 export {

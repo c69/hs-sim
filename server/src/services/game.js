@@ -29,15 +29,15 @@ function getGame (req, res) {
 }
 
 function chooseGameAction (req, res) {
-  let {
-    option: optionIndex = 0,
-    target: targetIndex = 0,
-    position: positionIndex = 0
+  const {
+    optionIndex = 0,
+    targetIndex = 0,
+    positionIndex = 0
   } = req.body;
 
   // chooseOption should SOMEHOW return the result of tick,
   //-- maybe with animations, and maybe asynchronously
-  let game = hsGame.chooseOption(
+  const game = hsGame.chooseOption(
     'token', //token validation is disabled in Core, for now
     optionIndex,
     targetIndex,

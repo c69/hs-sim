@@ -60,13 +60,11 @@ export const fetchGame = () => {
   return api.get('/game').then(data => gameFullSchema.validate(data))
 }
 
-export const endTurn = (params) => {
-  return api.post('/game/action', {
-    index: params.index
-  })
+export const gameAction = (params) => {
+  return api.post('/game/action', params)
 }
 
 export default {
   fetchGame,
-  endTurn
+  gameAction
 }

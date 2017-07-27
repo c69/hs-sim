@@ -6,6 +6,8 @@ import PropTypes from 'prop-types'
 
 import styled from 'styled-components'
 
+import { CardWrapper } from './CardStyled'
+
 // TODO: move out
 const Card = styled.div`
   position: relative;
@@ -29,42 +31,34 @@ const Name = styled.div`
        1px 1px 0 #000;
 `
 
-const Attack = styled.div`
-  background: navy;
-  color: white;
-`
-const Armor = styled.div`
-  background: navy;
-  color: white;
-`
 const Health = styled.div`
   background: navy;
   color: white;
 `
-const Power = styled.div`
-  background: navy;
-  color: white;
-`
 
-const HeroCard = ({name, attack, armor, health, power,}) => {
+const HeroCard = ({entity: {name, health}, ...props}) => {
   return (
-    <Card>
+    <CardWrapper {...props}>
       <Name>{name}</Name>
-
       {/*<Attack>Attack: {attack}</Attack>*/}
       {/*<Armor>Armor: {armor}</Armor>*/}
       <Health>Health: {health}</Health>
       {/*<Power>Power: {power}</Power>*/}
-    </Card>
+    </CardWrapper>
   )
 }
 
 HeroCard.propTypes = {
-  name: PropTypes.string,
-  attack: PropTypes.number,
-  armor: PropTypes.number,
-  health: PropTypes.number,
-  power: PropTypes.number // spell?
+  entity: PropTypes.shape({
+    name: PropTypes.string,
+    attack: PropTypes.number,
+    armor: PropTypes.number,
+    health: PropTypes.number,
+    power: PropTypes.number
+  }).isRequired,
+
+  back: PropTypes.bool,
+  hand: PropTypes.bool
 }
 
 export default HeroCard

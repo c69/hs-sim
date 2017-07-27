@@ -25,26 +25,38 @@ import {
 } from './index'
 
 // TODO: restructure - move out into Card dir and export multiple cards, TBD
-import { HandCard, PlayCard, HeroCard } from './'
+import { Card, HandCard, PlayCard, HeroCard, Position, EndTurnButton } from './'
 
 @connect(
   state => ({
     endTurnActionIndex: gameSelectors.gameActionEndTurn(state),
-
     game: gameSelectors.gameSelector(state),
-    playerEntitiesByZone: gameSelectors.playerEntitiesByZone(state),
-    opponentEntitiesByZone: gameSelectors.opponentEntitiesByZone(state)
+    selected: gameSelectors.selectedSelector(state),
+    targets: gameSelectors.targetsSelector(state),
+    positions: gameSelectors.positionsSelector(state),
+    activePlayer: gameSelectors.activePlayerSelector(state),
+    passivePlayer: gameSelectors.passivePlayerSelector(state)
   }),
   dispatch => ({
-    fetchGame: () => dispatch(gameActions.fetchGame()),
-    endTurn: (params) => dispatch(gameActions.endTurn(params))
+    selectPosition: params => dispatch(gameActions.selectPosition(params)),
+    fetchGame: params => dispatch(gameActions.fetchGame(params)),
+    selectCard: params => dispatch(gameActions.selectCard(params)),
+    endTurn: params => dispatch(gameActions.endTurn(params))
   })
 )
 export default class Board extends Component {
   static propTypes = {
-    entities: PropTypes.string,
     endTurn: PropTypes.func.isRequired,
-    fetchGame: PropTypes.func.isRequired
+    fetchGame: PropTypes.func.isRequired,
+    selectCard: PropTypes.func.isRequired,
+    selectPosition: PropTypes.func.isRequired,
+    endTurnActionIndex: PropTypes.number,
+    activePlayer: PropTypes.object,
+    passivePlayer: PropTypes.object,
+    targets: PropTypes.object,
+    positions: PropTypes.array,
+    game: PropTypes.object,
+    selected: PropTypes.object.isRequired
   }
 
   componentDidMount () {
@@ -52,11 +64,16 @@ export default class Board extends Component {
   }
 
   render () {
-    const {activePlayer, passivePlayer, turn, isStarted, isOver} = this.props.game
-    const {playerEntitiesByZone, opponentEntitiesByZone, endTurnActionIndex} = this.props
+    const {turn} = this.props.game
+    const {
+      activePlayer: {zones: activePlayerZones, mana: activePlayerMana, manaCrystals: activePlayerManaCrystals},
+      passivePlayer: {zones: passivePlayerZones, mana: passivePlayerMana, manaCrystals: passivePlayerManaCrystals},
+      endTurnActionIndex, selectCard, selected, positions, targets
+    } = this.props
+    const cardProps = {selectCard, targets}
 
-    // TODO: update this with more graceful loading process
-    if (!playerEntitiesByZone || !opponentEntitiesByZone) {
+    // TODO: update this with more graceful loading process i.e. FETCH_GAME_LOADING selector
+    if (!activePlayerZones || !passivePlayerZones) {
       return <div>Loading</div>
     }
 
@@ -65,61 +82,67 @@ export default class Board extends Component {
         {/*Extra*/}
         <History>History<br />Turn {turn}</History>
         <EndTurn>
-          {(endTurnActionIndex !== -1) && <button onClick={() => this.props.endTurn({option: endTurnActionIndex})}>End Turn</button>}
-          <button onClick={() => this.props.endTurn({option: 0})}>Whatever First Action</button>
+          {
+            (endTurnActionIndex !== -1)
+            && <EndTurnButton
+              available={endTurnActionIndex !== -1}
+              onClick={() => this.props.endTurn({optionIndex: endTurnActionIndex})}>End Turn</EndTurnButton>
+          }
+          <button onClick={() => this.props.endTurn({optionIndex: 0})}>Whatever First Action</button>
         </EndTurn>
 
         {/*Player*/}
         <PlayerDeck>
           {map(
-            playerEntitiesByZone[gameConstants.zones.DECK],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} deck />
+            activePlayerZones[gameConstants.zones.DECK],
+            entity => <Card deck key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </PlayerDeck>
-        <PlayerMana>Mana {activePlayer.mana} / {activePlayer.manaCrystals}</PlayerMana>
+        <PlayerMana>Mana {activePlayerMana} / {activePlayerManaCrystals}</PlayerMana>
         <PlayerHand>
           {map(
-            playerEntitiesByZone[gameConstants.zones.HAND],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} hand />
+            activePlayerZones[gameConstants.zones.HAND],
+            entity => <Card hand key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </PlayerHand>
         <PlayerHero>
           {map(
-            playerEntitiesByZone[gameConstants.zones.HERO],
-            entity => <HeroCard key={entity.id + entity.card_id} {...entity} />
+            activePlayerZones[gameConstants.zones.HERO],
+            entity => <Card hero key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </PlayerHero>
         <PlayerPlay>
+          <Position selectPosition={this.props.selectPosition} positions={positions} />
           {map(
-            playerEntitiesByZone[gameConstants.zones.PLAY],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} play />
+            activePlayerZones[gameConstants.zones.PLAY],
+            entity => <Card play key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </PlayerPlay>
 
         {/*Opponent*/}
         <OpponentDeck>
           {map(
-            opponentEntitiesByZone[gameConstants.zones.DECK],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} deck />
+            passivePlayerZones[gameConstants.zones.DECK],
+            entity => <Card deck key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </OpponentDeck>
-        <OpponentMana>Mana {passivePlayer.mana} / {passivePlayer.manaCrystals}</OpponentMana>
+        <OpponentMana>Mana {passivePlayerMana} / {passivePlayerManaCrystals}</OpponentMana>
         <OpponentHand>
           {map(
-            opponentEntitiesByZone[gameConstants.zones.HAND],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} hand back />
+            passivePlayerZones[gameConstants.zones.HAND],
+            entity => <Card hand back key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </OpponentHand>
         <OpponentHero>
           {map(
-            opponentEntitiesByZone[gameConstants.zones.HERO],
-            entity => <HeroCard key={entity.id + entity.card_id} {...entity} />
+            passivePlayerZones[gameConstants.zones.HERO],
+            entity => <Card hero key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </OpponentHero>
         <OpponentPlay>
           {map(
-            opponentEntitiesByZone[gameConstants.zones.PLAY],
-            entity => <PlayCard key={entity.id + entity.card_id} {...entity} play />
+            passivePlayerZones[gameConstants.zones.PLAY],
+            entity => <Card play key={entity.id + entity.card_id} entity={entity} {...cardProps} />
           )}
         </OpponentPlay>
       </BoardGrid>

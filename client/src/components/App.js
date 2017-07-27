@@ -20,17 +20,18 @@ export default class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      rehydrated: true
+      rehydrated: false
     }
   }
 
   componentWillMount () {
-    persistStore(store, {}, () => {
-      this.setState({
-        rehydrated: true,
-        storage: localForage
-      })
-    })
+    // Disabled rehydrate for now
+    // persistStore(store, {}, () => {
+    //   this.setState({
+    //     rehydrated: true,
+    //     storage: localForage
+    //   })
+    // })
   }
 
   render () {

@@ -3,8 +3,8 @@
  */
 import { combineReducers } from 'redux'
 
-import { gameReducer, gameConstants } from './index'
+import { gameReducer, gameDuckConstants } from './index'
 
 export default combineReducers({
-  [gameConstants.name]: gameReducer
+  [gameDuckConstants.name]: gameReducer
 })

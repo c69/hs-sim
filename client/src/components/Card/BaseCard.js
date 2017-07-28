@@ -43,7 +43,18 @@ export default class BaseCard extends Component {
   }
 
   render() {
-    const { back, hand, hero, play, deck, targets, entity, entity: { action } } = this.props;
+    const { 
+      back,
+      hand,
+      hero,
+      play,
+      deck,
+      targets,
+      entity,
+      entity: {
+        action
+      }
+    } = this.props;
 
     if (back || deck) return <CardBack deck={deck} />;
 

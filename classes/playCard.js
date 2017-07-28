@@ -39,7 +39,7 @@ function playFromHand (card, {game, $, target, position}) {
     card.owner.mana -= card.cost;
     card._play();
     // temporary hack, while Hand still has its own array
-    card.owner.hand._hand = card.owner.hand._hand.filter(v => !v === card);  
+    card.owner.hand._hand = card.owner.hand._hand.filter(v => v !== card);  
     
     console.log(`playCard: ${card.owner.name} played `, card.name);
 

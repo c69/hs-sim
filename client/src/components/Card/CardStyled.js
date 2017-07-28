@@ -29,7 +29,7 @@ export const Health = styled.div`
   font-weight: bold;
   font-size: 16px;
   background: #74160f;
-  color: white;
+  color: ${ifProp('isDamaged', 'red', 'white')};
   text-shadow: 1px 1px 2px #000,
      -1px -1px 0 #000,  
       1px -1px 0 #000,
@@ -47,7 +47,7 @@ export const Attack = styled.div`
   font-weight: bold;
   font-size: 16px;
   background: #b98822;
-  color: white;
+  color: ${ifProp('isBuffed', 'lime', 'white')};
   text-shadow: 1px 1px 2px #000,
      -1px -1px 0 #000,  
       1px -1px 0 #000,
@@ -58,7 +58,7 @@ export const Attack = styled.div`
 export const Name = styled.div`
   position: relative;
   padding: 5px;
-  background: brown;
+  background: #696969;
   color: white;
   text-align: center;
   text-shadow: 1px 1px 2px #000,
@@ -83,7 +83,7 @@ export const CardBack = styled.div`
 export const Description = styled.div`
   font-size: smaller;
   padding: 5px;
-  background: #afafaf;
+  background: lightYellow;
 `;
 
 export const CardWrapper = styled.div`

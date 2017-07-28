@@ -1,10 +1,10 @@
 /**
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/19/17.
  */
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled, { css } from 'styled-components'
-import { ifProp } from 'styled-tools'
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled, { css } from 'styled-components';
+import { ifProp } from 'styled-tools';
 
 const PositionWrapper = styled.div`
   display: inline-block;
@@ -16,19 +16,27 @@ const PositionWrapper = styled.div`
     background: #37d731;
     opacity: 0.8;
   `)}
-`
+`;
 
-const Position = ({positions, selectPosition}) => {
-  const hardcodedFirstPosition = 0
+const Position = ({ positions, selectPosition }) => {
+  const hardcodedFirstPosition = 0;
 
-  const available = positions && positions.length && positions.includes(hardcodedFirstPosition)
+  const available = positions && positions.length && positions.includes(hardcodedFirstPosition);
   return (
-    <PositionWrapper onClick={available && (() => selectPosition(hardcodedFirstPosition))} available={available}>Position</PositionWrapper>
-  )
-}
+    <PositionWrapper
+      onClick={available && (() => selectPosition(hardcodedFirstPosition))}
+      available={available}
+    >Position</PositionWrapper>
+  );
+};
 
 Position.propTypes = {
-  positions: PropTypes.array
-}
+  selectPosition: PropTypes.func.isRequired,
+  positions: PropTypes.arrayOf(PropTypes.number),
+};
 
-export default Position
+Position.defaultProps = {
+  positions: [],
+};
+
+export default Position;

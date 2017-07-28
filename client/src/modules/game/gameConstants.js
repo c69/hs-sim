@@ -5,16 +5,16 @@ export default {
   types: {
     HERO: 'HERO',
     SPELL: 'SPELL',
-    MINION: 'MINION'
+    MINION: 'MINION',
   },
   zones: {
     DECK: 'DECK',
     HAND: 'HAND',
     PLAY: 'PLAY',
     GRAVE: 'GRAVE',
-    HERO: 'HERO'
+    HERO: 'HERO',
   },
   gameActions: {
-    END_TURN: 'END_TURN'
-  }
-}
+    END_TURN: 'END_TURN',
+  },
+};

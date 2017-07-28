@@ -1,8 +1,8 @@
 /**
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/25/17.
  */
-import styled, { css } from 'styled-components'
-import { ifProp } from 'styled-tools'
+import styled, { css } from 'styled-components';
+import { ifProp } from 'styled-tools';
 
 export const Cost = styled.span`
   position: absolute;
@@ -17,7 +17,7 @@ export const Cost = styled.span`
       1px -1px 0 #000,
       -1px 1px 0 #000,
        1px 1px 0 #000;
-`
+`;
 
 export const Health = styled.div`
   position: absolute;
@@ -35,7 +35,7 @@ export const Health = styled.div`
       1px -1px 0 #000,
       -1px 1px 0 #000,
        1px 1px 0 #000;
-`
+`;
 
 export const Attack = styled.div`
   position: absolute;
@@ -53,7 +53,7 @@ export const Attack = styled.div`
       1px -1px 0 #000,
       -1px 1px 0 #000,
        1px 1px 0 #000;
-`
+`;
 
 export const Name = styled.div`
   position: relative;
@@ -66,7 +66,7 @@ export const Name = styled.div`
       1px -1px 0 #000,
       -1px 1px 0 #000,
        1px 1px 0 #000;
-`
+`;
 
 export const CardBack = styled.div`
   position: relative;
@@ -78,17 +78,17 @@ export const CardBack = styled.div`
   border: 1px solid #6e502a;
   margin: 0 10px ${ifProp('deck', '-55px', '10px')};
   box-shadow: 2px 2px 2px #6e401a;
-`
+`;
 
 export const Description = styled.div`
   font-size: smaller;
   padding: 5px;
   background: #afafaf;
-`
+`;
 
 export const CardWrapper = styled.div`
   margin: 0 2px ${ifProp('deck', '-85px', '10px')};
-`
+`;
 
 export const Card = styled.div`
   position: relative;
@@ -122,4 +122,4 @@ export const Card = styled.div`
   &:hover ${Health}, &:hover ${Attack}, &:hover ${Cost} {
     opacity: 1;
   }
-`
+`;

@@ -1,52 +1,44 @@
 /**
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/21/17.
  */
-import { createActions } from 'redux-actions'
-import typeToReducer from 'type-to-reducer'
+import { createActions } from 'redux-actions';
+import typeToReducer from 'type-to-reducer';
 
-import { gameService } from '../../services'
-import gameAdapter from './gameAdapter'
-import gameSelectors from './gameSelectors'
+import { gameService } from '../../services';
+import gameAdapter from './gameAdapter';
+import gameSelectors from './gameSelectors';
 
 const constants = {
-  name: 'hs'
-}
+  name: 'hs',
+};
 
 const types = {
   FETCH_GAME: 'hs/FETCH_GAME',
   END_TURN: 'hs/END_TURN',
   GAME_ACTION: 'hs/GAME_ACTION',
   SELECT_CARD: 'hs/SELECT_CARD',
-  SELECT_POSITION: 'hs/SELECT_POSITION'
-}
+  SELECT_POSITION: 'hs/SELECT_POSITION',
+};
 
-const {hs: {fetchGame, gameAction, selectCard, selectPosition}} = createActions({
+const { hs: { fetchGame, gameAction, selectCard, selectPosition } } = createActions({
   [types.FETCH_GAME]: promise => promise.then(gameAdapter.massageGame),
   [types.GAME_ACTION]: undefined,
   [types.END_TURN]: undefined,
   [types.SELECT_CARD]: undefined,
-  [types.SELECT_POSITION]: undefined
-})
+  [types.SELECT_POSITION]: undefined,
+});
 
 // Sync Actions
 const actions = {
-  selectCard
-}
+  selectCard,
+};
 
 // Async Actions
-actions.fetchGame = () => {
-  return (dispatch, getState) => {
-    return dispatch(fetchGame(gameService.fetchGame()))
-  }
-}
+actions.fetchGame = () => dispatch => dispatch(fetchGame(gameService.fetchGame()));
 
 // TODO: not sure if we need a separate action for this
-actions.endTurn = (params) => {
-  return (dispatch, getState) => {
-    return dispatch(gameAction(gameService.gameAction(params)))
-      .then(dispatch(actions.fetchGame()))
-  }
-}
+actions.endTurn = params => dispatch => dispatch(gameAction(gameService.gameAction(params)))
+  .then(dispatch(actions.fetchGame()));
 
 /**
  * Play selected card at selected position
@@ -54,67 +46,71 @@ actions.endTurn = (params) => {
  * @param positionIndex {Number} Index of selected position where the card should be placed
  * @returns {function(*, *)}
  */
-actions.selectPosition = (positionIndex) => {
-  return (dispatch, getState) => {
-    const selected = gameSelectors.selectedSelector(getState())
-    const params = {
-      optionIndex: selected.actionIndex,
-      positionIndex: positionIndex
-    }
-    // This action is not handled in redux store for now, just firing it to see it in devTools
-    dispatch(selectPosition(params))
+actions.selectPosition = positionIndex => (dispatch, getState) => {
+  const selected = gameSelectors.selectedSelector(getState());
+  const params = {
+    optionIndex: selected.actionIndex,
+    positionIndex,
+  };
 
-    return dispatch(gameAction(gameService.gameAction(params)))
-      .then(dispatch(actions.fetchGame()))
-  }
-}
+  // This action is not handled in redux store for now, just firing it to see it in devTools
+  dispatch(selectPosition(params));
+
+  return dispatch(gameAction(gameService.gameAction(params)))
+    .then(dispatch(actions.fetchGame()));
+};
 
 const initial = {
   selected: {
     cardId: undefined,
     type: undefined,
     targetList: [],
-    positionList: []
+    positionList: [],
   },
+
   // filled by massageGame
   activePlayer: {
-    zones: []
+    zones: [],
   },
   passivePlayer: {
-    zones: []
+    zones: [],
   },
+
   // filled by FETCH_GAME response
   game: {
     turn: undefined,
     isStarted: undefined,
     isOver: undefined,
     activePlayer: {},
-    passivePlayer: {}
+    passivePlayer: {},
   },
   entities: [],
-  actions: []
-}
+  actions: [],
+};
 
 const reducer = typeToReducer({
   [types.FETCH_GAME]: {
     OK: (state, action) => ({
-      // TODO: Anti-pattern, bad -> we're going to rewrite entire state with action payload. Consider more precise usage
+
+      // TODO: Anti-pattern, bad -> we're going to rewrite entire state with action payload.
+      // Consider more precise usage
       ...state,
-      ...action.payload
-    })
+      ...action.payload,
+    }),
   },
-  [types.SELECT_CARD]: (state, action) => ({
+  [types.SELECT_CARD]: (state, action) => (
+    {
       ...state,
-      selected: action.payload
+      selected: action.payload,
     }
-  )
-}, initial)
+  ),
+}, initial);
 
 export {
   constants,
   types,
   actions,
-  reducer
-}
+  reducer,
+};
 
-export default reducer
+export default reducer;

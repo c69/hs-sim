@@ -69,7 +69,7 @@ module.exports = {
     hot: true,
     proxy: {
       "/api": {
-        target: "http://localhost:8000"
+        target: "http://[::1]:8000"
       }
     },
   },

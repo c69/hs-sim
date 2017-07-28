@@ -6,9 +6,19 @@ import PropTypes from 'prop-types';
 
 import { Name, Description, Health, Attack, Cost, CardWrapper } from './CardStyled';
 
-const HandCard = ({ entity: { cost, name, text, health, attack }, ...props }) => (
+const HandCard = ({
+  entity: {
+    card_id,
+    name, 
+    text,
+    cost, 
+    health, 
+    attack 
+  },
+  ...props
+}) => (
   <CardWrapper {...props}>
-    <Name>{name}</Name>
+    <Name>{name} #{card_id}</Name>
     <Description dangerouslySetInnerHTML={{ __html: text }} />
     <Health>{health}</Health>
     <Attack>{attack}</Attack>

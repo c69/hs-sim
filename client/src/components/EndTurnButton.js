@@ -1,10 +1,10 @@
 /**
  * Created by Roman Morozov <sublimeye.ua@gmail.com> on 7/19/17.
  */
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled, { css } from 'styled-components'
-import { ifProp } from 'styled-tools'
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled, { css } from 'styled-components';
+import { ifProp } from 'styled-tools';
 
 const EndTurn = styled.button`
   border: 3px solid grey;
@@ -12,16 +12,15 @@ const EndTurn = styled.button`
     cursor: pointer;
     border-color: #37d731;
   `)}
-`
+`;
 
-const EndTurnButton = ({available, onClick}) => {
-  return (
-    <EndTurn onClick={onClick} available={available}>End Turn</EndTurn>
-  )
-}
+const EndTurnButton = ({ available, onClick }) => (
+  <EndTurn onClick={onClick} available={available}>End Turn</EndTurn>
+);
 
 EndTurnButton.propTypes = {
-  available: PropTypes.bool.isRequired
-}
+  onClick: PropTypes.func.isRequired,
+  available: PropTypes.bool.isRequired,
+};
 
-export default EndTurnButton
+export default EndTurnButton;

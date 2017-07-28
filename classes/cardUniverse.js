@@ -60,10 +60,10 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //--
     //'Coin',       
     //--spells:damage
-    //'Fireball',
-    //'Meteor',
+    'Fireball',
+    'Meteor',
     //'Arcane Explosion',
-    //'Arcane Missiles',
+    'Arcane Missiles',
     //      'Hellfire',
     //'Swipe',
     //'Assassinate',
@@ -80,9 +80,9 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'Elven Archer',
     //'Silent Knight', //-- stealth
     //'Annoy-o-Tron',
-    //'Shielded Minibot',
-    // 'Argent Horseraider',
-    //'Young Dragonhawk',
+    'Shielded Minibot',
+    'Argent Horseraider',
+    'Young Dragonhawk',
     // 'Thrallmar Farseer',
     
     // - silence
@@ -110,28 +110,28 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'Tundra Rhino',
     //'Warsong Commander',
     'Stormwind Champion', //other
-    'Summoning Portal', //mana cost
-    'Molten Giant', //self cost
+    //'Summoning Portal', //mana cost
+    //'Molten Giant', //self cost
     //'Junkbot', //for its (5) 1/5
 
     //--summon
     //'Blood To Ichor',
-    // 'Murloc Tidehunter',
+    'Murloc Tidehunter',
     //'Leeroy Jenkins',
     //'Mirror Image',
-    //'Unleash the Hounds',
+    'Unleash the Hounds',
     //'Dreadsteed',
     // 'Sludge Belcher',
 
 
     //--trigger, MVP minions
-    // 'Knife Juggler',
-    // 'Acolyte of Pain',
+    'Knife Juggler',
+    'Acolyte of Pain',
     // 'Imp Gang Boss',
     // 'Starving Buzzard',
     // 'Patches the Pirate',
     //'Doomsayer',
-    // 'Grim Patron',
+    'Grim Patron',
 
   ].includes(v.name))
   ;

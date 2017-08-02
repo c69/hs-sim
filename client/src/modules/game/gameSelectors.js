@@ -22,11 +22,11 @@ export default {
   passivePlayerSelector,
   targetsSelector: createSelector(
     selectedSelector,
-    selected => keyBy(selected.targetList, 'card_id'),
+    selected => selected && keyBy(selected.targetList, 'card_id'),
   ),
   positionsSelector: createSelector(
     selectedSelector,
-    selected => selected.positionList,
+    selected => selected && selected.positionList,
   ),
   selectedSelector: createSelector(
     selectedSelector,

@@ -28,16 +28,16 @@ const entitySchema = yup.object().shape({
   type: yup.string().required(),
   name: yup.string().required(),
   playerClass: yup.string().required(),
-  rarity: yup.string().required(),
   zone: yup.string().required(),
   owner: yup.string().required(),
   card_id: cardIdSchema.required(),
 
   // optional
+  rarity: yup.string(),
   incomingAuras: yup.array(),
   tags: yup.array(),
   text: yup.string(),
-  health: yup.number().positive().integer(),
+  health: yup.number().integer(),
   healthMax: yup.number().positive().integer(),
   attack: yup.number().positive().integer(),
   attackBase: yup.number().positive().integer(),

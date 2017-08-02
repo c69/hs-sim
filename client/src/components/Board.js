@@ -40,9 +40,10 @@ import {
     passivePlayer: gameSelectors.passivePlayerSelector(state),
   }),
   dispatch => ({
-    selectPosition: params => dispatch(gameActions.selectPosition(params)),
     fetchGame: params => dispatch(gameActions.fetchGame(params)),
     selectCard: params => dispatch(gameActions.selectCard(params)),
+    selectTarget: params => dispatch(gameActions.selectTarget(params)),
+    selectPosition: params => dispatch(gameActions.selectPosition(params)),
     endTurn: params => dispatch(gameActions.endTurn(params)),
   }),
 )
@@ -51,6 +52,7 @@ export default class Board extends Component {
     endTurn: PropTypes.func.isRequired,
     fetchGame: PropTypes.func.isRequired,
     selectCard: PropTypes.func.isRequired,
+    selectTarget: PropTypes.func.isRequired,
     selectPosition: PropTypes.func.isRequired,
     endTurnActionIndex: PropTypes.number.isRequired,
     activePlayer: PropTypes.shape().isRequired,
@@ -69,23 +71,33 @@ export default class Board extends Component {
     const { turn } = this.props.game;
     const {
       activePlayer: {
-        zones: activePlayerZones, mana: activePlayerMana,
+        zones: activePlayerZones,
+        mana: activePlayerMana,
         manaCrystals: activePlayerManaCrystals,
       },
       passivePlayer: {
-        zones: passivePlayerZones, mana: passivePlayerMana,
+        zones: passivePlayerZones,
+        mana: passivePlayerMana,
         manaCrystals: passivePlayerManaCrystals,
       },
-      endTurnActionIndex, selectCard, selected, positions, targets,
+      endTurnActionIndex,
+      selectCard,
+      selectTarget,
+      selected,
+      positions,
+      targets,
     } = this.props;
-    const cardProps = { selectCard, targets };
+    const cardProps = {
+      selected, // todo: rename
+      selectCard,
+      selectTarget,
+      targets,
+    };
 
     // TODO: update this with more graceful loading process i.e. FETCH_GAME_LOADING selector
     if (!activePlayerZones || !passivePlayerZones) {
       return <div>Loading</div>;
     }
-
-    console.log(selected);
 
     return (
       <BoardGrid>

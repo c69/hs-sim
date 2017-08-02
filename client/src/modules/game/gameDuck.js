@@ -17,14 +17,24 @@ const types = {
   END_TURN: 'hs/END_TURN',
   GAME_ACTION: 'hs/GAME_ACTION',
   SELECT_CARD: 'hs/SELECT_CARD',
+  SELECT_TARGET: 'hs/SELECT_TARGET',
   SELECT_POSITION: 'hs/SELECT_POSITION',
 };
 
-const { hs: { fetchGame, gameAction, selectCard, selectPosition } } = createActions({
+const {
+  hs: {
+    fetchGame,
+    gameAction,
+    selectCard,
+    selectTarget,
+    selectPosition,
+  },
+} = createActions({
   [types.FETCH_GAME]: promise => promise.then(gameAdapter.massageGame),
   [types.GAME_ACTION]: undefined,
   [types.END_TURN]: undefined,
   [types.SELECT_CARD]: undefined,
+  [types.SELECT_TARGET]: undefined,
   [types.SELECT_POSITION]: undefined,
 });
 
@@ -55,6 +65,25 @@ actions.selectPosition = positionIndex => (dispatch, getState) => {
 
   // This action is not handled in redux store for now, just firing it to see it in devTools
   dispatch(selectPosition(params));
+
+  return dispatch(gameAction(gameService.gameAction(params)))
+    .then(dispatch(actions.fetchGame()));
+};
+
+/**
+ *
+ */
+// actions.selectTarget = (targetIndex) => {
+actions.selectTarget = targetCardId => (dispatch, getState) => {
+  const selected = gameSelectors.selectedSelector(getState());
+  const params = {
+    optionIndex: selected.actionIndex,
+    targetIndex: selected.targetList.findIndex(target => target.card_id === targetCardId),
+    // ,positionIndex
+  };
+
+    // This action is not handled in redux store for now, just firing it to see it in devTools
+  dispatch(selectTarget(params));
 
   return dispatch(gameAction(gameService.gameAction(params)))
     .then(dispatch(actions.fetchGame()));

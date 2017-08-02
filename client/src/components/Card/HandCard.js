@@ -8,17 +8,17 @@ import { Name, Description, Health, Attack, Cost, CardWrapper } from './CardStyl
 
 const HandCard = ({
   entity: {
-    card_id,
-    name, 
+    card_id: cardId,
+    name,
     text,
-    cost, 
-    health, 
-    attack 
+    cost,
+    health,
+    attack,
   },
   ...props
 }) => (
   <CardWrapper {...props}>
-    <Name>{name} #{card_id}</Name>
+    <Name>{name} #{cardId}</Name>
     <Description dangerouslySetInnerHTML={{ __html: text }} />
     <Health>{health}</Health>
     <Attack>{attack}</Attack>

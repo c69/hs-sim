@@ -18,9 +18,11 @@ export default class BaseCard extends Component {
     targets: PropTypes.arrayOf(PropTypes.shape()),
     back: PropTypes.bool,
     entity: PropTypes.shape({
+      card_id: PropTypes.number.isRequired,
       action: PropTypes.object,
     }),
     selectCard: PropTypes.func.isRequired,
+    selectTarget: PropTypes.func,
   };
 
   static defaultProps = {
@@ -31,19 +33,24 @@ export default class BaseCard extends Component {
     targets: [],
     back: false,
     entity: {},
+    selectTarget: () => null,
   };
 
   constructor(props) {
     super(props);
     this.selectCard = this.selectCard.bind(this);
+    this.selectTarget = this.selectTarget.bind(this);
   }
 
   selectCard() {
     this.props.selectCard(this.props.entity.action);
   }
+  selectTarget() {
+    this.props.selectTarget(this.props.entity.card_id);
+  }
 
   render() {
-    const { 
+    const {
       back,
       hand,
       hero,
@@ -52,23 +59,32 @@ export default class BaseCard extends Component {
       targets,
       entity,
       entity: {
-        action
-      }
+        action,
+      },
     } = this.props;
 
     if (back || deck) return <CardBack deck={deck} />;
 
     // check if card is available for selection
     // selectable vs available vs canBeSelected
-    const isAvailable = !!action;
+    const isPlayable = !!action;
 
     // Check if card is a target
     const isTarget = targets && targets[entity.card_id];
 
     return (
       <Card
-        onClick={isAvailable && this.selectCard}
-        available={isAvailable}
+        onClick={() => {
+          if (isTarget) {
+            this.selectTarget();
+            return;
+          }
+          if (isPlayable) {
+            this.selectCard();
+          }
+        }
+        }
+        available={isPlayable}
         target={isTarget}
         entity={entity}
       >

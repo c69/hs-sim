@@ -322,11 +322,12 @@ class Game {
   /**
    * Choose option and sub-options for next action
    * @param {string} token_idx
-   * @param {number} options_idx
-   * @param {number} position_idx
-   * @param {number} target_idx
+   * @param {Object} optionsChosen
+   * @config {number} optionIndex
+   * @config {number} positionIndex
+   * @config {number} targetIndex
    */
-  chooseOption (token, options_idx = 0, position_idx = 0, target_idx = 0) {
+  chooseOption (token, {optionIndex = 0, positionIndex = 0, targetIndex = 0}) {
     _frame_count_active += 1;
 
     console.log('-- frame ---');
@@ -337,19 +338,19 @@ class Game {
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
 
-    let action = actions[options_idx];
+    let action = actions[optionIndex];
     if (!action) throw new RangeError('Invalid option index provided.');
 
     //console.log(action.type);
     switch (action.type) {
       case ACTION_TYPES.attack:
-        this.attack(actions, options_idx, target_idx);
+        this.attack(actions, optionIndex, targetIndex);
         break;
       case ACTION_TYPES.playCard:
-        this.playCard(actions, options_idx, position_idx, target_idx);
+        this.playCard(actions, optionIndex, positionIndex, targetIndex);
         break;
       case ACTION_TYPES.usePower:
-        this.usePower(actions, options_idx, target_idx);
+        this.usePower(actions, optionIndex, targetIndex);
         break;
       case ACTION_TYPES.endTurn:
         this.endTurn();
@@ -418,8 +419,12 @@ class Game {
     }).filter(v => v.targetList.length > 0);
 
     let canSummonMore = (pawns.length <= 7); // with hero
+    //console.log('canSummonMore', canSummonMore, pawns.length);
 
-    let cards = this.activePlayer.hand.listPlayable().filter((v) =>{
+    let playable = this.activePlayer.hand.listPlayable();
+    //console.log(playable.map(v => `${v.name} #${v.card_id}`));
+
+    let cards = playable.filter((v) =>{
       if (v.type === CARD_TYPES.minion) {
         return canSummonMore;
       }
@@ -439,10 +444,11 @@ class Game {
         targetList: v.target && $(v.target)
       };
     });
+    
+    //console.log(cards);
 
     // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
     //console.log('actions --', attack, cards);
-    //this.options = {
     return {
       token: 'GO_GREEN_TODO_IMPLEMENT_ME',
       actions: [
@@ -452,7 +458,6 @@ class Game {
         {type: ACTION_TYPES.endTurn},
         {type: ACTION_TYPES.concede}
       ]
-      //, aubergines
     };
   }
 

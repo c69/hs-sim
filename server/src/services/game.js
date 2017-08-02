@@ -39,9 +39,11 @@ function chooseGameAction (req, res) {
   //-- maybe with animations, and maybe asynchronously
   const game = hsGame.chooseOption(
     'token', //token validation is disabled in Core, for now
-    optionIndex,
-    targetIndex,
-    positionIndex
+    {
+      optionIndex,
+      targetIndex,
+      positionIndex
+    }  
   );
 
   res.send(req.body);

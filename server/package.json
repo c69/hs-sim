@@ -4,10 +4,18 @@
   "description": "Middle tier between core HS-Sim and and HS-Sim Client",
   "main": "index.js",
   "scripts": {
+    "start": "better-npm-run start",
     "watch": "better-npm-run watch:server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "betterScripts": {
+    "start": {
+      "command": "node src/server",
+      "env": {
+        "NODE_ENV": "development",
+        "DEBUG": "hs*"
+      }
+    },
     "watch:server": {
       "command": "nodemon --watch ./src src/server",
       "env": {

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "webpack-dev-server --config tools/webpack.config.js",
+    "watch:light": "webpack --config tools/webpack.config.light.js",
     "lint": "eslint src",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.production.js",
@@ -54,6 +55,7 @@
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
     "happypack": "4.0.0-beta.1",
+    "html-webpack-plugin": "2.29.0",
     "rimraf": "2.6.1",
     "uglify-js": "3.0.25",
     "webpack": "3.3.0",

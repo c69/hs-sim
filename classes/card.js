@@ -41,31 +41,31 @@ class Card {
       this.buffs = (cardDef.tags || []).slice(0);
       this.incomingAuras = [];
       //this.tags is a getter
-      
+
       if (cardDef.death) {
         this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
-          death: cardDef.death  
+          death: cardDef.death
         });
-      } 
+      }
       if (cardDef._trigger_v1) {
         this.buffs.push({ //potentially shuld be .concat, as potentially card can have multiple triggers
-          trigger: cardDef._trigger_v1  
+          trigger: cardDef._trigger_v1
         });
       }
       if (cardDef.aura) {
         this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple auras
-          aura: cardDef.aura  
+          aura: cardDef.aura
         });
       }
-      
+
       this.zone = ZONES.deck;
       this.owner = owner;
 
-      this.card_id = card_id++; 
+      this.card_id = card_id++;
     }
     get cost () {
-      return getter_of_buffed_atribute.call(this, 'cost', 'costBase');
-    }  
+      return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
+    }
 
     get tags () {
       //console.log(`card.tags: #${this.card_id}`);
@@ -76,7 +76,7 @@ class Card {
       if (ignoreOlder === -1) ignoreOlder = 0;
       let activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
           //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
-          
+
           if (typeof buffOrTag === 'object') {
             //   return (buffOrTag.tags || []).concat([
             //       {effects: buffOrTag.effects},
@@ -85,8 +85,8 @@ class Card {
             //       //buffOrTag.trigger // is ignored, because EventEmitter.subscribe is called in playCard.js :(
             //   ].filter(v => v));
           }
-          return buffOrTag;          
-      });  
+          return buffOrTag;
+      });
 
       //console.log(`card.tags returned: ${activeBuffs}`);
       return [].concat.apply([], activeBuffs);
@@ -115,13 +115,13 @@ class Card {
             throw `Played card of unplayable type:${this.type}`;
         }
     }
-    _summon () {  
+    _summon () {
       this.zone = ZONES.play;
-       
+
       this.eventBus.emit(EVENTS.minion_summoned, {
         target: this
       });
-  
+
       //console.log(`card.js :: summoned ${this.name} for ${this.owner.name}`);
     }
     _mill () {
@@ -135,7 +135,7 @@ class Card {
     _copy () {
         let copy = new this.prototype.constructor(this, this.owner);
         // copy.tags[] are DIRTY !
-        copy.zone = ZONES.aside; 
+        copy.zone = ZONES.aside;
     }
     toString () {
         return `[Object Card ${this.type}: ${this.name} #${this.card_id}]`;
@@ -147,33 +147,37 @@ class Character extends Card {
       super(cardDef, ...args);
 
       this.attackBase = cardDef.attack || 0;
-      this.health = cardDef.health || 0;
-      this.healthMax = this.health; // in the beginning, all characters are at full health
+      //this.attack = this.attackBase;
+
+      this.healthBase = cardDef.health || 0;
+      this.health = this.healthBase;
+      this.healthMax = this.healthBase; // in the beginning, all characters are at full health
+
       this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
     get attack () {
-      return getter_of_buffed_atribute.call(this, 'attack', 'attackBase');
+      return getter_of_buffed_atribute.call(this, 'attack', this.attackBase);
     }
     _damageApply (n, type = '') {
       if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
       let was = this.health;
-      
+
       if (n > 0 && this.tags.includes(TAGS.divineShield)) {
         this.buffs = this.buffs.filter(v => v !== TAGS.divineShield); // = "removeTag"
         console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
       } else {
-        this.health -= n; // replace with damage buff
+        this.health -= n;
       }
       let received_damage = was - this.health;
-      received_damage > 0 && console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`); 
+      received_damage > 0 && console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`);
 
       if (received_damage) {
         this.eventBus.emit(EVENTS.character_damaged, {
           target: this,
-          amount: received_damage  
-        });  
+          amount: received_damage
+        });
       }
-      
+
       return this; // or return received_damage; ?
     }
     // public API
@@ -190,17 +194,17 @@ class Character extends Card {
         //console.log(`🔥 ${this.name} was marked for destroy!`);
     }
     silence () {
-      console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);  
+      console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);
       this.buffs.push(TAGS.silence);
 
-      // super dirty solution for silencing triggers (copy paste from game.js deathsweep) 
+      // super dirty solution for silencing triggers (copy paste from game.js deathsweep)
       if (this._listener) {
         this.eventBus.removeListener(this._listener[0], this._listener[1]);
         delete this._listener;
-      }  
+      }
     }
     isDamaged () {
-        return this.health < this.healthMax;     
+        return this.health < this.healthMax;
     }
     isAlive () { // replace with death sweep in game
         return this.health > 0 && !this.tags.includes(TAGS._pendingDestruction);
@@ -212,9 +216,9 @@ class Minion extends Character {
       super(cardDef, ...args);
       if (this.type !== TYPES.minion) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.minion}`);
-      
-      this.race = cardDef.race; // or undefined   
-   
+
+      this.race = cardDef.race; // or undefined
+
       this.isReady = false; //applies only to minion - initial ZZZ / sleep
     }
 }
@@ -223,7 +227,7 @@ class Spell extends Card {
       super(cardDef, ...args);
       if (this.type !== TYPES.spell) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.spell}`);
-            
+
       //this.secret = cardDef.secret; //must be a function
       //this.quest = cardDef.quest; //must be a function
     }
@@ -233,9 +237,9 @@ class Weapon extends Card {
       super(cardDef, ...args);
       if (this.type !== TYPES.weapon) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.weapon}`);
-      
+
       this.attack = cardDef.attack || 0;
-      this.durability = cardDef.durability || 0;   
+      this.durability = cardDef.durability || 0;
     }
 }
 class Hero extends Character {
@@ -243,9 +247,9 @@ class Hero extends Character {
       super(cardDef, ...args);
       if (this.type !== TYPES.hero) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.hero}`);
-      
+
       this.armor = cardDef.armor || 0;
-      //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]   
+      //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]
     }
     _die () {
         super._die();
@@ -258,8 +262,8 @@ class Power extends Card {
       if (this.type !== TYPES.power) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.power}`);
 
-      //maybe rename to .usedThisTurn ? 
-      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power   
+      //maybe rename to .usedThisTurn ?
+      this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
 }
 class Enchantment extends Card {
@@ -267,7 +271,7 @@ class Enchantment extends Card {
       super(cardDef, ...args);
       if (this.type !== TYPES.enchantment) throw new RangeError(
           `Card definition has type: ${this.type}, expected: ${TYPES.enchantment}`);
-      
+
       //console.log('EXCH', cardDef);
       //DESIGN BUG: clunky object shape
       // todo: finalize when SET attack/health/cost will be implemented
@@ -281,7 +285,7 @@ class Enchantment extends Card {
         'durability',
         'death',
         'resource',
-        'owner'    
+        'owner'
       ].forEach(prop => {
         let v = cardDef[prop];
         if (v) {
@@ -293,17 +297,24 @@ class Enchantment extends Card {
     }
 }
 
-function getter_of_buffed_atribute (prop, propBase) {
-    if (!this.tags.length) return this[propBase];
-    
+/**
+ * This function calculates final value of attribute
+ *  after applying all currently active buffs on the card
+ * @this Card
+ * @param {string} prop Name of the prop in .effects object
+ * @param {*} initialValue
+ */
+function getter_of_buffed_atribute (prop, initialValue) {
+    if (!this.tags.length) return initialValue;
+
     let modifiers = this.tags.filter(v => (v.effects && (prop in v.effects)));
     if (!modifiers.length) {
         //console.log(this.tags);
-        return this[propBase];
+        return initialValue;
     }
     //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
     //console.log(modifiers, this.tags);
-    
+
     let new_value = modifiers.reduce((a, v) => {
         let mutator = v.effects[prop];
         if (typeof mutator === 'number') {
@@ -311,11 +322,11 @@ function getter_of_buffed_atribute (prop, propBase) {
         } else if (typeof mutator === 'function') {
             a = mutator(a);
         }
-        return a;  
-    }, this[propBase], this);
-    
-    console.log(`${this.zone} ${this.name} ${this.card_id}'s ${prop} is modified from ${this[propBase]} to ${new_value}`);
-    return new_value > 0 ? new_value : 0;  
+        return a;
+    }, initialValue, this);
+
+    console.log(`${this.zone} ${this.name} ${this.card_id}'s ${prop} is modified from ${initialValue} to ${new_value}`);
+    return new_value > 0 ? new_value : 0;
 }
 
 module.exports = {

@@ -327,7 +327,7 @@ class Game {
    * @config {number} positionIndex
    * @config {number} targetIndex
    */
-  chooseOption (token, {optionIndex = 0, positionIndex = 0, targetIndex = 0}) {
+  chooseOption (token, {optionIndex = 0, positionIndex = 0, targetIndex = 0} = {}) {
     _frame_count_active += 1;
 
     console.log('-- frame ---');
@@ -444,7 +444,7 @@ class Game {
         targetList: v.target && $(v.target)
       };
     });
-    
+
     //console.log(cards);
 
     // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info

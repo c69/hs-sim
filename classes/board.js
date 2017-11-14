@@ -35,7 +35,7 @@ class Board {
       _$_slow_selectors
     }
   }
-  /** 
+  /**
    * Declarative Array.filter on steroids. Uses DSL for queries:
    * - Owner: [any|own|enemy] XOR //TODO: should it be like this ? (default = any)
    * - Type: [card|character|minion|hero|weapon|power|spell] OR (default = card)
@@ -48,17 +48,17 @@ class Board {
    *   and check boolean, string or number value
    *   e.g.: 'minion .attack<3' or 'minion .race=murloc' or 'character .isReady'
    * - (NOT IMPLEMENTED) Negation: [!self|!.prop] for the real world cases when you need to exclude something
- 
+
    * @param {Player} player Could (and should) be curried for card helper function (player is self.owner)
-   * @param {string} selector_string Refer to syntax above 
+   * @param {string} selector_string Refer to syntax above
    */
   $ (player, selector_string) {
     _$_count += 1;
-    
+
     //console.log(`- $ -- SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
-    
+
     if (typeof selector_string !== 'string') throw new TypeError(`String expected, instead got: ${selector_string}. Full list of arguments: this: ${this}, ${player}, ${selector_string}`);
-      
+
     let [
       ownPlayer,
       enemyPlayer
@@ -90,44 +90,44 @@ class Board {
       'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
     }[selector_string];
     if (f) return (new ArrayOfCards()).concat( all_cards.filter(f) );
-    
+
     _$_count_slow_path += 1;
     _$_slow_selectors[selector_string] = _$_slow_selectors[selector_string] ? _$_slow_selectors[selector_string] + 1 : 1;
 
     // '*' is a "slow" selector, but itss simple conceptually. I want to use it for auras, till API stabilization
     if (selector_string === '*') return all_cards; // the ONLY place where we use * selector (today) is aura refresh..
-  
+
 
     let tokens = selector_string.split(/\s+/);
-   
+
     let filters = [];
-    //card owner: choose one - XOR 
+    //card owner: choose one - XOR
     if (!tokens.includes('any')) {
       if (tokens.includes('enemy')) {
-        filters.push(v => v.owner === enemyPlayer);  
+        filters.push(v => v.owner === enemyPlayer);
       } else if (tokens.includes('own')) {
         filters.push(v => v.owner === ownPlayer);
       }
     }
 
     //card type: BROADEN the search - OR
-    let allowed_types = [];  
+    let allowed_types = [];
     if (!tokens.includes('card')) {
 
       if (tokens.includes('minion')) {
-        allowed_types.push(TYPES.minion);  
+        allowed_types.push(TYPES.minion);
       }
       if (tokens.includes('hero')) {
-        allowed_types.push(TYPES.hero);  
-      } 
+        allowed_types.push(TYPES.hero);
+      }
       if (tokens.includes('character')) {
-        allowed_types.push(TYPES.hero, TYPES.minion);  
-      } 
+        allowed_types.push(TYPES.hero, TYPES.minion);
+      }
       if (tokens.includes('weapon')) {
-        allowed_types.push(TYPES.weapon);  
+        allowed_types.push(TYPES.weapon);
       }
       if (tokens.includes('spell')) {
-        allowed_types.push(TYPES.spell);  
+        allowed_types.push(TYPES.spell);
       }
       //console.log('types', allowed_types);
       filters.push(v => allowed_types.includes(v.type));
@@ -139,26 +139,26 @@ class Board {
     if (zoneSelectors.length) {
       allowed_zones = [];
       if (zoneSelectors.includes('@deck')) {
-        allowed_zones.push(ZONES.deck);  
+        allowed_zones.push(ZONES.deck);
       }
       if (zoneSelectors.includes('@hand')) {
-        allowed_zones.push(ZONES.hand);  
+        allowed_zones.push(ZONES.hand);
       }
       if (zoneSelectors.includes('@play')) {
-        allowed_zones.push(ZONES.play);  
+        allowed_zones.push(ZONES.play);
       }
       if (zoneSelectors.includes('@grave')) {
-        allowed_zones.push(ZONES.grave);  
+        allowed_zones.push(ZONES.grave);
       }
       if (zoneSelectors.includes('@aside')) {
-        allowed_zones.push(ZONES.aside);  
+        allowed_zones.push(ZONES.aside);
       }
       if (zoneSelectors.includes('@secret')) {
-        allowed_zones.push(ZONES.secret);  
+        allowed_zones.push(ZONES.secret);
       }
       filters.push(v => allowed_zones.includes(v.zone));
     } else {
-      //all_cards = all_cards.filter(function (v) {ZONES.play === v.zone});  
+      //all_cards = all_cards.filter(function (v) {ZONES.play === v.zone});
     }
     //console.log('zones', allowed_zones);
     filters.push(v => allowed_zones.includes(v.zone));
@@ -184,12 +184,12 @@ class Board {
          return (v) => typeof(v.trigger) === 'function';
          case 'overload':
          return (v) => !!v.overload;
-         
+
          default:
          return (v) => v.tags.includes(TAGS[tagName]);
        }
     });
- 
+
     //property selectors only NARROW the search, so its AND
     let propRegexp = /^\.[0-9a-z]+((=|!=|<|>|<=|>=)[0-9a-z]+){0,1}$/i;
     //.test('.prop<42')
@@ -202,24 +202,24 @@ class Board {
           operator,
           comparisonValue
        ] = selector.match(/^\.([0-9a-z]+)(!=|<=|>=|<|>|=)?(.*)$/);
-       
+
        if (!operator) {
          return v => !!v.propertyName;
        }
        if (!comparisonValue) throw new SyntaxError('Selector must have comparison value, when comparison operator is provided');
-       // add type/NaN checking - as only Numbers should allow < and >       
+       // add type/NaN checking - as only Numbers should allow < and >
        let ops = {
          '<': (v) => v[propertyName] < comparisonValue,
          '>': (v) => v[propertyName] > comparisonValue,
          '>=': (v) => v[propertyName] >= comparisonValue,
          '<=': (v) => v[propertyName] <= comparisonValue,
-         '=': (v) => v[propertyName] === comparisonValue || new RegExp('^' + comparisonValue + '$', 'i').test(v[propertyName]), 
+         '=': (v) => v[propertyName] === comparisonValue || new RegExp('^' + comparisonValue + '$', 'i').test(v[propertyName]),
          '!=': (v) => v[propertyName] != comparisonValue,
-       };       
+       };
        return ops[operator];
     });
-    //return tokens;  
-    
+    //return tokens;
+
     //console.log(allowed_types, filters[0].toString());
     ////console.log(all_cards.map(v=>v.type));
     //console.log(all_cards.map(v=>v.zone+' '+v.name));

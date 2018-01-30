@@ -1,7 +1,9 @@
 type Trigger = 'deathrattle'
 | 'play'
 | 'on';
+
 type KnownTag = 'DIVINE_SHIELD' | 'TAUNT';
+
 type KnownStat =
 'attack' |
 'health' |
@@ -19,18 +21,20 @@ type MapString<T> = {
 }
 type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
-// type S2 = MapString<number> & UnionKeyToValue<KnownStat, number>;
-type S2 = U2<KnownStat, number>;
+type Stats = U2<KnownStat, number>;
 
-type Stats = UnionKeyToValue<KnownStat, number>;
 type Tag = KnownTag;
 
 type Buff = {
     name: string;
     tagsAdd?: Set<Tag>;
     tagsDelete?: Set<Tag>;
-    expires? (a: number): boolean; // no no no....
     stats?: U2<KnownStat, ((a: number) => number) | number>;
+
+    expires? (a: number): boolean; // no no no....
+    type: 'aura' | 'temporary' | 'permanent'; // not again :(
+
+    // triggers?
 };
 
 type EffectTarget = {
@@ -41,8 +45,7 @@ type EffectTarget = {
         active: Buff[]; // calculated current state
     }
     tags: Set<Tag>; // fast query
-    // stats: Partial<Stats>;
-    stats: Partial<S2>;
+    stats: Partial<Stats>;
     statsBase: Partial<Stats>;
     // triggers: Partial<UnionKeyToValue<Trigger, Function[]>>;  // :(((
 }
@@ -76,7 +79,7 @@ const tags: {[key in KnownTag]: KnownTag} = {
     'TAUNT': 'TAUNT',
     'DIVINE_SHIELD': 'DIVINE_SHIELD'
 };
-let src = ([
+let effectList = ([
     {
         name: 'Divine Blessing',
         stats: {
@@ -87,21 +90,30 @@ let src = ([
     }
 ] as Buff[]);
 
-console.log(src);
+console.log(effectList);
 console.log(baseCard);
 // process.exit();
 
-let xxx = src.reduce<EffectTarget>((a, fx) => {
+let result = effectList.reduce<EffectTarget>((a, fx) => {
+    a.buffs.history.push(fx);
+
+    // this if looks sad .. - also, regenerating whole history each time o_O
+    if (fx.type === 'aura') {
+        a.buffs.incomingAuras.push(fx);
+    } else if (fx.type === 'temporary') {
+        a.buffs.temporary.push(fx);
+    } else if (fx.type === 'permanent') {
+        a.buffs.active.push(fx);
+    }
+
     if (fx.stats) {
         Object.keys(fx.stats).forEach(k => {
-
             let newVal = fx.stats[k];
             if (typeof newVal === 'number') {
                 a.stats[k] += newVal;
             } else {
                 a.stats[k] = newVal(a.stats[k]);
             }
-            console.log(a.stats, k, newVal);
         });
     }
     if (fx.tagsAdd) {
@@ -110,7 +122,6 @@ let xxx = src.reduce<EffectTarget>((a, fx) => {
     if (fx.tagsDelete) {
         fx.tagsAdd.forEach(v => a.tags.delete(v));
     }
-    a.buffs.active.push(fx);
 
     return a;
 }, baseCard);
@@ -125,4 +136,4 @@ type AuditableCard = {
     }
 }
 
-console.log(xxx);
+console.log(result);

@@ -7,30 +7,24 @@ class EventBus extends EventEmitter {
 }
 
 const Game = require('./classes/game.js');
-const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
-const bootstrap2 = require('./classes/bootstrap.js');
 
-const Card = require('./classes/card.js');
 const Board = require('./classes/board.js');
-const {
-  EVENTS,
-  ZONES
-} = require('./data/constants.js');
+// const {
+//   EVENTS,
+// } = require('./data/constants.js');
 
 const {
   bootstrap,
-  CardDefinitionsIndex,
-  _progress
 } = require('./classes/cardUniverse.js');
 
 let eventBus = new EventBus();
-eventBus.on(EVENTS.card_played, function (card) {
-  //console.log(`EVT: card was played: ${card.name}`);
-});
-eventBus.on(EVENTS.character_damaged, function ({target, amount}) {
-  //console.log(`EVT: ${target.name} was damaged for ${amount}`);
-});
+// eventBus.on(EVENTS.card_played, function (card) {
+//   console.log(`EVT: card was played: ${card.name}`);
+// });
+// eventBus.on(EVENTS.character_damaged, function ({target, amount}) {
+//   console.log(`EVT: ${target.name} was damaged for ${amount}`);
+// });
 console.log('initializing players');
 let dude1 = new Player('Alice');
 let dude2 = new Player('Bob');
@@ -68,7 +62,7 @@ gameInstance.start();
 //       if (!opts.actions.length) break;
 //       gameInstance.chooseOption(opts.token);
 //     }
-    
+
 //     console.log('___________________');
 //     gameInstance.endTurn();
 //   }
@@ -76,7 +70,7 @@ gameInstance.start();
 //_progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 
-//debug output for performance testing 
+/** debug output for performance testing */
 function showPerformance () {
   let g_profile = Game._profile();
   let b_profile = Board._profile()
@@ -92,4 +86,4 @@ module.exports = {
   exportState: gameInstance.exportState.bind(gameInstance),
   chooseOption: gameInstance.chooseOption.bind(gameInstance),
   showPerformance: showPerformance
-};  
+};

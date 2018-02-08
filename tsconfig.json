@@ -2,10 +2,12 @@
     "compilerOptions": {
         "target": "es2017",
         "module": "commonjs",
+        "moduleResolution": "node",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "types": ["node"]
     }, "exclude": [
 
     ]

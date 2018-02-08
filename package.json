@@ -1,0 +1,31 @@
+{
+  "name": "hs_sim",
+  "version": "0.3.0",
+  "description": "HS simulator",
+  "main": "main.js",
+  "dependencies": {
+    "eslint": "^3.19.0",
+    "tslint": "^5.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^2.6.0",
+    "yargs": "^8.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c69/hs-sim.git"
+  },
+  "keywords": [
+    "hs",
+    "simulator"
+  ],
+  "author": "Constantine Vesna",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/c69/hs-sim/issues"
+  },
+  "homepage": "https://github.com/c69/hs-sim#readme"
+}

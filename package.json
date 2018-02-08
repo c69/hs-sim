@@ -4,6 +4,7 @@
   "description": "HS simulator",
   "main": "main.js",
   "dependencies": {
+    "@types/node": "^9.4.2",
     "eslint": "^3.19.0",
     "tslint": "^5.9.1"
   },
@@ -12,6 +13,7 @@
     "yargs": "^8.0.2"
   },
   "scripts": {
+    "build": "tsc --outFile game_via_rpc.js main_rpc.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

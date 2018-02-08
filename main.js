@@ -7,23 +7,20 @@ class EventBus extends EventEmitter {
 }
 
 const Game = require('./classes/game.js');
-const Deck = require('./classes/deck.js');
 const Player = require('./classes/player.js');
 const bootstrap2 = require('./classes/bootstrap.js');
 
-const Card = require('./classes/card.js');
 const Board = require('./classes/board.js');
 const {
-  EVENTS,
-  ZONES
+  EVENTS
 } = require('./data/constants.js');
 
 const {
   bootstrap,
-  CardDefinitionsIndex,
   _progress
 } = require('./classes/cardUniverse.js');
 
+/** Play with random actions */
 function _quick_play (seed, {mute}) {
   let _c = console.log;
   let _w = console.warn;
@@ -45,7 +42,7 @@ function _quick_play (seed, {mute}) {
     //g.viewAvailableOptions();
 
     let max_actions_per_turn = 10;
-    for (let i = 0; i < max_actions_per_turn; i++) {
+    for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
       let opts = g.viewAvailableOptions();
       //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
       if (!opts.actions.length) break;
@@ -67,10 +64,10 @@ function _quick_play (seed, {mute}) {
 //---------------
 
 let eventBus2 = new EventBus();
-eventBus2.on(EVENTS.card_played, function (card) {
+eventBus2.on(EVENTS.card_played, function (/*card*/) {
   //console.log(`EVT: card was played: ${card.name}`);
 });
-eventBus2.on(EVENTS.character_damaged, function ({target, amount}) {
+eventBus2.on(EVENTS.character_damaged, function (/*{target, amount}*/) {
   //console.log(`EVT: ${target.name} was damaged for ${amount}`);
 });
 console.log('initializing players');
@@ -97,7 +94,7 @@ bootstrap(
 );
 var g_fatigue = new Game([
   lazy1,
-  lazy2  
+  lazy2
 ], eb1);
 g_fatigue.start();
 
@@ -126,13 +123,13 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   //g.viewAvailableOptions();
 
   let max_actions_per_turn = 10;
-  for (let i = 0; i < max_actions_per_turn; i++) {
+  for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
     let opts = g2.viewAvailableOptions();
     //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
     if (!opts.actions.length) break;
     g2.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }
-  
+
   console.log('___________________');
   g2.endTurn();
 }
@@ -140,8 +137,8 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
 
 let jjj = [];
 let _timeStart = Date.now();
-let _N_RUNS = 10;
-for (let j = 0; j < _N_RUNS; j++) { 
+let _N_RUNS = 50;
+for (let j = 0; j < _N_RUNS; j++) {
   // current speed is 100 games in 15 seconds
   jjj.push(_quick_play(0, {mute: true}));
 }
@@ -167,7 +164,7 @@ console.log(jjj.reduce((a,v) => {
 _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 
-//debug output for performance testing 
+//debug output for performance testing
 let g_profile = Game._profile();
 let b_profile = Board._profile()
 console.log(g_profile);
@@ -175,4 +172,3 @@ console.log(b_profile);
 console.log( {
   'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
 });
-  

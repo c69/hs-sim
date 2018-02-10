@@ -1,19 +1,19 @@
-const EventEmitter = require('events');
+import EventEmitter = require('events');
 class EventBus extends EventEmitter {
   // just in case if i decide to add helper methods..
 }
 
 const Game = require('./classes/game.js');
 const Player = require('./classes/player.js');
-
 const Board = require('./classes/board.js');
-// const {
-//   EVENTS,
-// } = require('./data/constants.js');
-
 const {
   bootstrap,
 } = require('./classes/cardUniverse.js');
+
+import {
+  EVENTS,
+} from './data/constants2';
+
 
 let eventBus = new EventBus();
 // eventBus.on(EVENTS.card_played, function (card) {

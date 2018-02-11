@@ -2,7 +2,10 @@
 // @ts-check
 
 const combat = require('./combat.js');
-const playCard = require('./playCard.js');
+const {
+  playCard,
+  mechanics
+} = require('./playCard.js');
 const {
   buffAura
 } = require('./buff.js');
@@ -21,7 +24,7 @@ const {
 
 var _frame_count_active = 0;
 
-/**
+/*
  *
 
 http://hearthstone.gamepedia.com/GameTag_enumeration
@@ -292,19 +295,7 @@ class Game {
           self,
           $,
           game,
-          summon (id) {
-              console.log(`DEATH.summon: Summonning ${id}`);
-              if ($('own minion').length >= 7) return;
-
-              let MY_CREATION = createCard(id, self.owner, game.eventBus);
-              self.owner.deck._arr.push(MY_CREATION);
-              MY_CREATION._summon();
-              //console.log('its real!!!', MY_CREATION);
-          },
-          draw (n) {
-              console.log(`DEATH: try to draw ${n}cards`);
-              self.owner.draw(n);
-          }
+          ...mechanics(self, game, $)
         });
       }, this);
       if (character._listener) { // remove triggers - super dirty solution...

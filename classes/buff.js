@@ -104,21 +104,21 @@ function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
     if (!auraTarget) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
-    let x2 = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
-    x2.forEach(v => {
+    let auraTargetList = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
+    auraTargetList.forEach(t => {
       if (TAGS_LIST.includes(id_or_Tag)) {
-        v.incomingAuras.push(id_or_Tag); // check for duplicates
+        t.incomingAuras.push(id_or_Tag); // check for duplicates
         return;
       }
 
       let c = id_or_Tag;
       if (typeof id_or_Tag !== 'object') {
         c = createCard(id_or_Tag, auraGiver.owner, game.eventBus);
-        c._play(); // unsafe ?
+        c._play(); // unsafe ? where is the destructor ? TODO: check for leaks
       }
       applyBuff({
         card: c,
-        target: v,
+        target: t,
         $,
         game,
         type: 'aura'

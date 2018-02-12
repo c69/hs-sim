@@ -12,9 +12,6 @@ const {
 
 const Board = require('./board.js');
 const {
-  createCard // temporary - test that summoning from Deathratlle works
-} = require('./cardUniverse.js');
-const {
   TAGS,
   CARD_TYPES,
   ACTION_TYPES,

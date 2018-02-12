@@ -218,6 +218,9 @@ class Game {
 
     return this;
   }
+  /**
+   * @returns {this.cleanup()|void} recursive call, if ANY minion dies
+   */
   _cleanup () {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
@@ -227,19 +230,14 @@ class Game {
     let allCards = this.board.$(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
     allCards.forEach(v => v.incomingAuras = []);
-    //this.view();
 
     //refresh/re-apply auras
 
-    //characters.forEach(character => {
     allCards.forEach(character => {
-      //console.log('......', character.name, character.tags);
       character.tags.filter(tag => {
-        //console.log('......', character.name, tag);
         //return true; // [broken?] hack to ignore aura checking code
         if (!tag.aura) return false;
 
-        //console.log('emitting aura from', character.name, tag);
         let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
         let shouldApply = (zone === character.zone);
         if (!shouldApply) return shouldApply;
@@ -279,9 +277,8 @@ class Game {
     if (!death_list.length) {
       return;
     }
-    //console.log('death list', deathrattle_list); // was always empty :(( because minions _die() before the sweep
     death_list.forEach(character => { // can hero have a deathrattle ? o_O //weapon - can.
-      //character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
+      //~> character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
       character._die();
@@ -290,14 +287,13 @@ class Game {
       let self = character;
       let game = this;
       character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
-        //console.log('DIE, INSECT!', character.name, tag, i);
         tag.death({
           self,
           $,
           game,
           ...mechanics(self, game, $)
         });
-      }, this);
+      });
       if (character._listener) { // remove triggers - super dirty solution...
         console.log(`removed triggers for ${character.card_id}`);
         this.eventBus.removeListener(character._listener[0], character._listener[1]);

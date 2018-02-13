@@ -16,7 +16,7 @@ const Board = require('./classes/board.js');
 
 const {
   bootstrap,
-} = require('./classes/cardUniverse.js');
+} = require('./classes/bootstrap.js');
 
 let eventBus = new EventBus();
 // eventBus.on(EVENTS.card_played, function (card) {

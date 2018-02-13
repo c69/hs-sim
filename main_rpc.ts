@@ -8,8 +8,9 @@ const Player = require('./classes/player.js');
 const Board = require('./classes/board.js');
 const {
   bootstrap,
-} = require('./classes/cardUniverse.js');
+} = require('./classes/bootstrap.js');
 
+// TODO: test that this does not break the build (because even though EVENTS are unused in this file .. still..)
 import {
   EVENTS,
 } from './data/constants2';

@@ -5,7 +5,7 @@
             "~/classes/combat.js": {
                 "_XXX_": {}
             },
-            "~/classes/playCard.js": {
+            "~/classes/mechanics.js": {
                 "~/classes/cardUniverse.js": {
                     "~/data/cards.all.generated.json": {},
                     "~/data/actions.collectiblePlus.js": {
@@ -30,6 +30,45 @@
                         "_XXX_": {}
                     }
                 }
+            },
+            "~/classes/playCard.js": {
+                "~/classes/cardUniverse.js": {
+                    "~/data/cards.all.generated.json": {},
+                    "~/data/actions.collectiblePlus.js": {
+                        "_XXX_": {}
+                    },
+                    "~/classes/card.js": {
+                        "_XXX_": {}
+                    },
+                    "_XXX_": {}
+                },
+                "~/classes/mechanics.js": {
+                    "~/classes/cardUniverse.js": {
+                        "~/data/cards.all.generated.json": {},
+                        "~/data/actions.collectiblePlus.js": {
+                            "_XXX_": {}
+                        },
+                        "~/classes/card.js": {
+                            "_XXX_": {}
+                        },
+                        "_XXX_": {}
+                    },
+                    "_XXX_": {},
+                    "~/classes/buff.js": {
+                        "_XXX_": {},
+                        "~/classes/cardUniverse.js": {
+                            "~/data/cards.all.generated.json": {},
+                            "~/data/actions.collectiblePlus.js": {
+                                "_XXX_": {}
+                            },
+                            "~/classes/card.js": {
+                                "_XXX_": {}
+                            },
+                            "_XXX_": {}
+                        }
+                    }
+                },
+                "_XXX_": {}
             },
             "~/classes/buff.js": {
                 "_XXX_": {},
@@ -81,7 +120,7 @@
                 "~/classes/combat.js": {
                     "_XXX_": {}
                 },
-                "~/classes/playCard.js": {
+                "~/classes/mechanics.js": {
                     "~/classes/cardUniverse.js": {
                         "~/data/cards.all.generated.json": {},
                         "~/data/actions.collectiblePlus.js": {
@@ -106,6 +145,45 @@
                             "_XXX_": {}
                         }
                     }
+                },
+                "~/classes/playCard.js": {
+                    "~/classes/cardUniverse.js": {
+                        "~/data/cards.all.generated.json": {},
+                        "~/data/actions.collectiblePlus.js": {
+                            "_XXX_": {}
+                        },
+                        "~/classes/card.js": {
+                            "_XXX_": {}
+                        },
+                        "_XXX_": {}
+                    },
+                    "~/classes/mechanics.js": {
+                        "~/classes/cardUniverse.js": {
+                            "~/data/cards.all.generated.json": {},
+                            "~/data/actions.collectiblePlus.js": {
+                                "_XXX_": {}
+                            },
+                            "~/classes/card.js": {
+                                "_XXX_": {}
+                            },
+                            "_XXX_": {}
+                        },
+                        "_XXX_": {},
+                        "~/classes/buff.js": {
+                            "_XXX_": {},
+                            "~/classes/cardUniverse.js": {
+                                "~/data/cards.all.generated.json": {},
+                                "~/data/actions.collectiblePlus.js": {
+                                    "_XXX_": {}
+                                },
+                                "~/classes/card.js": {
+                                    "_XXX_": {}
+                                },
+                                "_XXX_": {}
+                            }
+                        }
+                    },
+                    "_XXX_": {}
                 },
                 "~/classes/buff.js": {
                     "_XXX_": {},

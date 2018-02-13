@@ -2,9 +2,9 @@
 // @ts-check
 
 const combat = require('./combat.js');
+const mechanics = require('./mechanics.js');
 const {
-  playCard,
-  mechanics
+  playCard
 } = require('./playCard.js');
 const {
   buffAura

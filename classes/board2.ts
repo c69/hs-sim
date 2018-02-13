@@ -112,7 +112,8 @@ class Board {
    * @param player Could (and should) be curried for card helper function (player is self.owner)
    * @param selector_string Refer to syntax above
    */
-  $ (player: Player, selector_string: string) {
+   $ (player: Player, selector_string: string) {
+   // $ (player: Player, selector_string: string): ArrayOfCards {
     _$_count += 1;
 
     //console.log(`- $ -- SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
@@ -269,5 +270,6 @@ class Board {
 }
 
 export {
-    Board
+    Board,
+    ArrayOfCards
 };

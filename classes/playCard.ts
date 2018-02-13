@@ -103,7 +103,7 @@ function playFromHand (card, {game, $, target, position}) {
         }
     }
 
-    //console.log('playCARD:', card.play
+    // console.log('playCARD:', card, card.play, card._trigger_v1);
     executeBattlecry(card, game, $, target, position);
 }
 

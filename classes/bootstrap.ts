@@ -33,10 +33,11 @@ function bootstrap(
     eb: EventBus
 ) {
     [
-        arr1.concat(eb),
-        arr2.concat(eb)
+        arr1, //.concat(eb),
+        arr2 // .concat(eb)
     ].forEach(function (arr) {
-        bootstrapPlayer(...arr);
+        // TS does not like spread (...arr)
+        bootstrapPlayer(arr[0], arr[1], arr[2], eb);
     });
 }
 
@@ -63,24 +64,18 @@ function bootstrapPlayer(
     }
 }
 
-/**
- *
- * @param {Array} param0
- * @param {Aray} param1
- * @param {?Object} eb
- * @returns {Game} new game
- */
 function initGame(
     [name1, hero_id_1]: [string, string],
     [name2, hero_id_2]: [string, string],
-    eb: EventBus
+    eb?: EventBus
 ) {
     // console.log('initializing players');
 
     const p1 = new Player(name1);
     const p2 = new Player(name2);
-    if (!eb) eb = new EventBus();
-
+    if (!eb) {
+        eb = new EventBus();
+    }
     bootstrap(
         [p1, hero_id_1, []],
         [p2, hero_id_2, []],

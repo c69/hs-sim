@@ -16,7 +16,7 @@
     "yargs": "^8.0.2"
   },
   "scripts": {
-    "build": "tsc --outFile game_via_rpc.js main_rpc.ts",
+    "build": "tsc --module commonjs --target es2017 --outDir ./target main_rpc.ts",
     "test": "nyc mocha --timeout=3000",
     "coverage": "nyc --reporter=html --reporter=text mocha",
     "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/",

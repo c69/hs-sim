@@ -32,9 +32,8 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
 }, {});
 
 abilitiesMixin.forEach(a => {
-  const c = CardDefinitionsIndex[a.id]; // =
+  const c = CardDefinitionsIndex[a.id];
   const a2 = _pick(a, [
-    // 'id',
     'tags',
     'target',
     'play',
@@ -42,7 +41,7 @@ abilitiesMixin.forEach(a => {
     '_triggers_v1',
     'aura',
     'enrage',
-    'attack' // wtf ???
+    'attack' // -- enchantments store their modifier on root level
   ]);
   Object.assign(c, a2);
   if (a.xxx) {

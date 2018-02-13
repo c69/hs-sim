@@ -3,14 +3,12 @@ class EventBus extends EventEmitter {
   // just in case if i decide to add helper methods..
 }
 
-// const Game = require('./classes/game.ts');
-const Player = require('./classes/player.js');
-const Board = require('./classes/board.js');
-const {
+import { Board } from './classes/board2';
+import {
   initGame,
   bootstrap,
   _GAME_profile
-} = require('./classes/bootstrap.ts');
+} from './classes/bootstrap';
 
 // TODO: test that this does not break the build (because even though EVENTS are unused in this file .. still..)
 import {

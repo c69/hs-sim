@@ -39,8 +39,8 @@ type Buff = {
 
 // type HSEvent = 'WAS_DAMAGED' | 'WAS_HEALED'
 
-type EffectTarget = {
-    zone: Set<string>; // ?
+export type EffectTarget = {
+    // zone: Set<string>; // ?
     buffs: {
         incomingAuras: Buff[]; // refreshing each tick
         temporary: Buff[]; // mutable
@@ -54,7 +54,7 @@ type EffectTarget = {
     // triggers: Partial<UnionKeyToValue<Trigger, Function[]>>;  // :(((
 }
 
-const reducer = (a: EffectTarget, fx: Buff): EffectTarget => {
+export function effectReducer (a: EffectTarget, fx: Buff): EffectTarget {
     // todo: only apply buff if target zone matches buff zone(s)
     a.buffs.history.push(fx);
 
@@ -152,5 +152,5 @@ console.log(baseCard);
 // version: number;
 // b.version += 1; // should not we only update the target when it changed ?
 
-let result = effectList.reduce<EffectTarget>(reducer, baseCard);
-console.log(result);
+// let result = effectList.reduce<EffectTarget>(reducer, baseCard);
+// console.log(result);

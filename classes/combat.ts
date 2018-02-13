@@ -1,18 +1,16 @@
-'use strict';
-
 const {
   TAGS,
   //EVENTS
 } = require('../data/constants.js');
 
- /** 
+ /**
    * Execute combat action
    * @param {MinionCard|HeroCard} attacker
    * @param {MinionCard|HeroCard} target
    * @param {?Game} game
    */
-  function combat (attacker, target, game) {
-    //console.log(`Attacking ${attacker} -> ${target}`);  
+  export default function combat (attacker, target, game) {
+    //console.log(`Attacking ${attacker} -> ${target}`);
     if (!attacker) throw 'no attacker'; //return;
     if (!target) throw 'no target'; //return;
     if (target.health < 1) throw `dead target ${target.name} #${target.card_id} @${target.zone}`; //return;
@@ -30,16 +28,14 @@ const {
     }
     console.log(`⚔️ ${attacker.name}(${attacker.attack}/${attacker.health}) attacks ${target.name}(${target.attack}/${target.health})`);
     //console.log(`🛡️ ${attacker.name} attacks ${target.name}(${target.attack}/${target.health})`);
-    
+
     // this looks like generic Card._damageApply(n)
     [
       [attacker, target.attack],
       [target, attacker.attack]
     ].forEach(([character, dmg]) => character._damageApply(dmg));
-    
-    attacker.attackedThisTurn += 1;  
-        
+
+    attacker.attackedThisTurn += 1;
+
     //console.log(`⚔️ end----`);
   }
-
-  module.exports = combat;

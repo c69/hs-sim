@@ -1,11 +1,8 @@
-'use strict';
-// @ts-check
-
 const {
   ZONES
 } = require('../data/constants.js');
 
-class Deck {
+export default class Deck {
   constructor (arr) {
     this._arr = arr; // direct mutable reference +_+ !
   }
@@ -13,7 +10,7 @@ class Deck {
     var result = [];
     while (n > 0) {
       var card = this._deck[0];
-      
+
       if (card) {
        card._draw();
        result.push(card);
@@ -29,5 +26,3 @@ class Deck {
     return this._deck.length;
   }
 }
-
-module.exports = Deck;

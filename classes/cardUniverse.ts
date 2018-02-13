@@ -1,6 +1,3 @@
-'use strict';
-//@ts-check
-
 const CardJSON = require('../data/cards.all.generated.json');
 const abilitiesMixin = require('../data/actions.collectiblePlus.js');
 const Card = require('./card.js');
@@ -14,7 +11,7 @@ const {
 
 
 /** @private maybe its time to stop hubris and add lodash .. */
-function _pick (obj, props) {
+function _pick (obj: object, props: string[]) {
   const a = new Set([].concat(props));
   const r = {};
   for (let k in obj) {
@@ -215,10 +212,11 @@ function _progress() {
   console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);
   //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 }
-module.exports = {
+
+export {
   // bootstrap,
   CardDefinitionsIndex,
-  _cardDefinitionArray: card_defs, //INTERNAL
+  card_defs as _cardDefinitionArray, //INTERNAL
   createCard,
   _progress
 };

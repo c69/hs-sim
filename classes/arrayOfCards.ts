@@ -1,7 +1,4 @@
-'use strict';
-// @ts-check
-
-class ArrayOfCards extends Array {
+export default class ArrayOfCards extends Array {
     constructor () {
       super();
     }
@@ -14,7 +11,7 @@ class ArrayOfCards extends Array {
      * @param {Card} minion A pivoting minion
      * @returns {ArrayOfCards} 0..2 matching minions
      */
-    adjacent (minion) {
+    adjacent (minion: Card) {
       let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
       let i = minions.findIndex(v => v === minion);
       return (new this.constructor()).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
@@ -51,5 +48,3 @@ class ArrayOfCards extends Array {
         this.forEach(v => v.silence(n));
     }
 }
-
-module.exports = ArrayOfCards;

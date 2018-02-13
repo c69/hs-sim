@@ -2,18 +2,18 @@ import EventEmitter = require('events');
 class EventBus extends EventEmitter {
     // just in case if i decide to add helper methods..
 }
-const {
+import {
     createCard,
     _cardDefinitionArray,
     // CardDefinitionsIndex,
     // _progress
-} = require('./cardUniverse.js');
-const Deck = require('./deck.js');
-const {
+} from './cardUniverse';
+import Deck from './deck';
+import {
     ZONES
-} = require('../data/constants.js');
+} from '../data/constants';
 
-import Player = require('./player.js');
+import Player from './player';
 import Card = require('./card.js');
 
 import { Game } from './gameLoop';

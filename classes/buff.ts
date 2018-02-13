@@ -1,17 +1,16 @@
-'use strict';
-// @ts-check
-
-const {
+import {
   //TAGS,
   TAGS_LIST,
   CARD_TYPES,
   //ACTION_TYPES,
   //EVENTS
-} = require('../data/constants.js');
+} from '../data/constants';
 
-const {
+import {
   createCard // temporary - test that summoning from Deathratlle works
-} = require('./cardUniverse.js');
+} from './cardUniverse';
+
+import { MapString } from '../shared.interface';
 
 //consider splitting this, to somehow simplify signature
 /**
@@ -46,19 +45,19 @@ function applyBuff ({
     if (!effect) throw 'empty effect';
     //console.log(effect);
 
-    let attack_modifier = ({
+    let attack_modifier = (({
       'number': effect.attack,
       'function': function (v, card) {
         return effect.attack(v, {target, $, game});
      }
-    }[typeof effect.attack]);
+    } as MapString<(a: number, b: any ) => number>)[typeof effect.attack]);
 
-    let cost_modifier = ({
+    let cost_modifier = (({
       'number': effect.cost,
       'function': function (v, card) {
         return effect.cost(v, {target, $, game});
       }
-    }[typeof effect.cost]);
+    } as MapString<(a: number, b: any ) => number>)[typeof effect.cost]);
 
     // making health work the same way as attack or cost is hard
     // - because it is being mutated by damage
@@ -128,7 +127,7 @@ function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
     return auraTarget;
 }
 
-module.exports = {
+export {
     applyBuff,
     buffAura
 };

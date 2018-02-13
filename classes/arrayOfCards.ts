@@ -11,10 +11,11 @@ export default class ArrayOfCards extends Array {
      * @param {Card} minion A pivoting minion
      * @returns {ArrayOfCards} 0..2 matching minions
      */
-    adjacent (minion: Card) {
+    adjacent (minion) {
       let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
       let i = minions.findIndex(v => v === minion);
-      return (new this.constructor()).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
+      // return (new this.constructor).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
+      return (new (this.constructor as any)()).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
     }
     /**
      * Helper for "other" and "excluding this" keywords
@@ -32,19 +33,19 @@ export default class ArrayOfCards extends Array {
       if (!this.length) return this;
       let random_idx = Math.floor(Math.random() * this.length);
       let v = this[random_idx];
-      return (new this.constructor()).concat(v);
+      return (new (this.constructor as any)()).concat(v);
     }
     // call-through Card methods
-    dealDamage (n) {
+    dealDamage (n: number) {
         this.forEach(v => v.dealDamage(n));
     }
-    dealDamageSpell (n) {
+    dealDamageSpell (n: number) {
         this.forEach(v => v.dealDamageSpell(n));
     }
-    destroy (n) {
+    destroy (n: number) {
         this.forEach(v => v.destroy(n));
     }
-    silence (n) {
+    silence (n: number) {
         this.forEach(v => v.silence(n));
     }
 }

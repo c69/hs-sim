@@ -28,22 +28,31 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   return a;
 }, {});
 
-abilitiesMixin.forEach(a => {
-  const c = CardDefinitionsIndex[a.id];
-  const a2 = _pick(a, [
-    'tags',
-    'target',
-    'play',
-    'death',
-    '_triggers_v1',
-    'aura',
-    'enrage',
-    'attack' // -- enchantments store their modifier on root level
-  ]);
-  Object.assign(c, a2);
-  if (a.xxx) {
-    c._NOT_IMPLEMENTED_ = true
-  }
+abilitiesMixin.forEach(({
+  //long destructuring
+  id,
+  tags,
+  target,
+  play,
+  death,
+  _triggers_v1,
+  aura,
+  enrage,
+  xxx,
+  attack
+  }) => {
+  //console.log(id);
+  if (attack) CardDefinitionsIndex[id].attack = attack;
+
+  if (play) CardDefinitionsIndex[id].play = play;
+  if (target) CardDefinitionsIndex[id].target = target;
+  if (death) CardDefinitionsIndex[id].death = death;
+  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
+  if (tags) CardDefinitionsIndex[id].tags = tags;
+  if (aura) CardDefinitionsIndex[id].aura = aura;
+  if (enrage) CardDefinitionsIndex[id].enrage = enrage;
+
+  if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true;
 });
 
 //---Deck2.js sketch------------------
@@ -61,78 +70,78 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //--
     //'Coin',
     //--spells:damage
-    'Fireball',
-    'Meteor',
+//    'Fireball',
+//    'Meteor',
     //'Arcane Explosion',
-    'Arcane Missiles',
+//    'Arcane Missiles',
     //      'Hellfire',
     //'Swipe',
     //'Assassinate',
 
     //--basic minions with tags or battlecries
-    'Flame Imp',
+//    'Flame Imp',
     //'Ironfur Grizzly',
 
     //'Leper Gnome',
-    'Unstable Ghoul',
+//    'Unstable Ghoul',
     //'Ravaging Ghoul',
     //'Mad Bomber',
     //'Abomination',
     //'Elven Archer',
     //'Silent Knight', //-- stealth
     //'Annoy-o-Tron',
-    'Shielded Minibot',
-    'Argent Horseraider',
-    'Young Dragonhawk',
+//    'Shielded Minibot',
+//    'Argent Horseraider',
+//    'Young Dragonhawk',
     // 'Thrallmar Farseer',
 
     // - silence
-    'Ironbeak Owl',
+//    'Ironbeak Owl',
     //'Mass Dispel',
 
     // - give
     //'Bloodsail Raider',
     //'Windfury',
-    'Hand of Protection',
+//    'Hand of Protection',
     // 'Shattered Sun Cleric',
     //'Windspeaker',
     //'Abusive Sergeant', // this turn
     //'Bloodlust', // this turn
     //'Houndmaster',
     //'Sunfury Protector', // adjacent
-    'Defender of Argus', // adjacent
+    // 'Defender of Argus', // adjacent
     //'Blessing of Wisdom',
-    'Aldor Peacekeeper',
+//    'Aldor Peacekeeper',
     // 'Raging Worgen', //enrage
 
     // - aura
     //'Timber Wolf', //other
-    'Flametongue Totem', //adjacent
+    // 'Flametongue Totem', //adjacent
     //'Tundra Rhino',
     //'Warsong Commander',
-    'Stormwind Champion', //other
+    // 'Stormwind Champion', //other
     //'Summoning Portal', //mana cost
     //'Molten Giant', //self cost
     //'Junkbot', //for its (5) 1/5
 
     //--summon
     //'Blood To Ichor',
-    'Murloc Tidehunter',
+    // 'Murloc Tidehunter',
     //'Leeroy Jenkins',
     //'Mirror Image',
-    'Unleash the Hounds',
+//    'Unleash the Hounds',
     //'Dreadsteed',
     // 'Sludge Belcher',
 
 
     //--trigger, MVP minions
     'Knife Juggler',
-    'Acolyte of Pain',
+    // 'Acolyte of Pain',
     // 'Imp Gang Boss',
     // 'Starving Buzzard',
     // 'Patches the Pirate',
     //'Doomsayer',
-    'Grim Patron',
+    // 'Grim Patron',
 
   ].includes(v.name))
   ;
@@ -174,7 +183,7 @@ let coolCards = abilitiesMixin.filter(v => {
 });
 
 let progressOfCards = coolCards.reduce((a, v) => {
-  let keys = Reflect.ownKeys(v);
+  let keys = Reflect.ownKeys(v) as string[]; //TODO: check what is signature of Reflect.ownKeys
 
   let [id, _info, text] = keys;
   if (keys.length === 3 && id === 'id' && _info === '_info' && text === 'text') {

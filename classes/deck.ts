@@ -1,9 +1,10 @@
-const {
+import {
   ZONES
-} = require('../data/constants.js');
+} from '../data/constants';
 
 export default class Deck {
-  constructor (arr) {
+  _arr: any[];
+  constructor (arr: any[]) {
     this._arr = arr; // direct mutable reference +_+ !
   }
   draw (n = 1) {

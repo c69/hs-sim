@@ -9,7 +9,8 @@ import {
   buffAura
 } from './buff';
 
-import { Board } from './board2';
+import { Board, ArrayOfCards } from './board2';
+
 const {
   TAGS,
   CARD_TYPES,
@@ -70,7 +71,7 @@ class Game {
   eventBus: any;
   players: any[];
   board: Board;
-  _$: Map<any, (a: string) => any[]>;
+  _$: Map<any, (a: string) => ArrayOfCards>;
   turn: number = 0;
   activePlayer: any;
   passivePlayer: any;
@@ -343,9 +344,9 @@ class Game {
       case ACTION_TYPES.playCard:
         this.playCard(actions, optionIndex, positionIndex, targetIndex);
         break;
-      case ACTION_TYPES.usePower:
-        this.usePower(actions, optionIndex, targetIndex);
-        break;
+      // case ACTION_TYPES.usePower:
+      //   this.usePower(actions, optionIndex, targetIndex);
+      //   break;
       case ACTION_TYPES.endTurn:
         this.endTurn();
         break;

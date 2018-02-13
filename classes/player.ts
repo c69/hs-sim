@@ -4,9 +4,20 @@ import {
 } from '../data/constants';
 
 import Hand from './hand';
+import Deck from './deck';
 
 export default class Player {
-  constructor (name) {
+  name: string;
+
+  deck: Deck = null;//deck; //$('own @deck');
+  hand: any ;// = new Hand(this); //$('own @hand');
+
+  manaCrystals: number = 0;
+  /** @deprecated */ mana: number;
+  fatigue: number = 1;
+  lost: boolean = false;
+
+  constructor (name: string) {
     this.name = name;
 
     this.deck = null;//deck; //$('own @deck');
@@ -23,7 +34,7 @@ export default class Player {
     //console.log(r);
     return r || this.deck._arr.find(v => v.type === CARD_TYPES.hero && v.zone === ZONES.grave);
   }
-  draw (n) {
+  draw (n: number) {
     console.log(`player ${this.name} draws a card.. (of ${this.deck.size} remaining)`);
     var newCards = this.deck.draw(n);
     if (!newCards.length) this.hero.dealDamage(this.fatigue++);

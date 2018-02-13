@@ -1,11 +1,13 @@
 import {
   CARD_TYPES,
   EVENTS
-} from '../data/constants.js';
+} from '../data/constants';
 
 const MAX_HAND_SIZE = 10;
 
 export default class Hand {
+  _hand: any[];
+  owner: any;
   constructor (player) {
     this._hand = [];
     this.owner = player;

@@ -1,4 +1,5 @@
 'use strict';
+// @ts-check
 
 const {
     createCard,
@@ -6,6 +7,8 @@ const {
     // CardDefinitionsIndex,
     // _progress
 } = require('./cardUniverse.js');
+
+const mechanics = require('./mechanics.js');
 
 const {
     CARD_TYPES,
@@ -18,39 +21,6 @@ const {
     applyBuff
 } = require('./buff.js');
 
-const mechanics = function (card, game, $) {
-    return {
-        summon (id) {
-            console.log(`TRIGGER.summon: Summoning ${id}`);
-            if ($('own minion').length >= 7) return;
-
-            let MY_CREATION = createCard(id, card.owner, game.eventBus);
-            card.owner.deck._arr.push(MY_CREATION);
-            MY_CREATION._summon();
-            //console.log('its real!!!', MY_CREATION);
-        },
-        draw (n) {
-            console.log(`TRIGGER: try to draw ${n}cards`);
-            card.owner.draw(n);
-        },
-        buff (t, id_or_Tag) {
-            if (!t) throw new RangeError('No target provided for buff');
-            if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
-
-            let targetArray = Array.isArray(t) ? t : [t];
-            targetArray.forEach(v => {
-                if (TAGS_LIST.includes(id_or_Tag)) {
-                    v.buffs.push(id_or_Tag); // check for duplicates
-                } else {
-                    let enchantmentCard = createCard(id_or_Tag, card.owner, game.eventBus);
-
-                    applyBuff({card: enchantmentCard, target: v, $, game});
-                }
-            });
-            return t;
-        }
-    }
-}
 
 /**
  * @param {object} card
@@ -175,5 +145,5 @@ function executeBattlecry (card, game, $, target, position) {
 
 module.exports = {
     playCard: playFromHand,
-    mechanics
+    // mechanics
 };

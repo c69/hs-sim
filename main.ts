@@ -7,7 +7,10 @@ class EventBus extends EventEmitter {
 
 const Game = require('./classes/game.js');
 const Player = require('./classes/player.js');
-const bootstrap2 = require('./classes/bootstrap.js');
+const {
+  bootstrap,
+  initGame
+} = require('./classes/bootstrap.js');
 
 const Board = require('./classes/board.js');
 const {
@@ -15,7 +18,6 @@ const {
 } = require('./data/constants.js');
 
 const {
-  bootstrap,
   _progress
 } = require('./classes/cardUniverse.js');
 
@@ -28,7 +30,7 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
     console.warn = function () {};
   }
   // actual play
-  let g = bootstrap2(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
+  let g = initGame(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
   g.start();
   //actual HS hardcoded maximum round is 87 or so..
   for(let i = 0; i < 90 && !g.isOver; i++) {

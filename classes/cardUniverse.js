@@ -4,15 +4,13 @@
 const CardJSON = require('../data/cards.all.generated.json');
 const abilitiesMixin = require('../data/actions.collectiblePlus.js');
 const Card = require('./card.js');
-const Deck = require('./deck.js');
+// const Deck = require('./deck.js');
 
 //const Board = require('./classes/board.js');
 const {
   CARD_TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
-  ZONES
+  // ZONES
 } = require('../data/constants.js');
-
-const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
 let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
@@ -58,7 +56,7 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //'River Crocolisk',
     //'Bloodfen Raptor',
     //--
-    //'Coin',       
+    //'Coin',
     //--spells:damage
     'Fireball',
     'Meteor',
@@ -84,26 +82,26 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     'Argent Horseraider',
     'Young Dragonhawk',
     // 'Thrallmar Farseer',
-    
+
     // - silence
     'Ironbeak Owl',
-    //'Mass Dispel',    
-    
+    //'Mass Dispel',
+
     // - give
     //'Bloodsail Raider',
     //'Windfury',
     'Hand of Protection',
     // 'Shattered Sun Cleric',
-    //'Windspeaker',      
+    //'Windspeaker',
     //'Abusive Sergeant', // this turn
     //'Bloodlust', // this turn
     //'Houndmaster',
-    //'Sunfury Protector', // adjacent 
+    //'Sunfury Protector', // adjacent
     'Defender of Argus', // adjacent
     //'Blessing of Wisdom',
     'Aldor Peacekeeper',
     // 'Raging Worgen', //enrage
-    
+
     // - aura
     //'Timber Wolf', //other
     'Flametongue Totem', //adjacent
@@ -140,44 +138,8 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 
 /**
- * @param {Array} arr1 
- * @param {Array} arr2 
- * @param {Object} eb 
+ * todo: do we really need to couple card & player & eventBus
  */
-function bootstrap(arr1, arr2, eb) {
-  [
-    arr1.concat(eb),
-    arr2.concat(eb)
-  ].forEach(function (arr) {
-    bootstrapPlayer(...arr);
-  });
-}
-
-/**
- * 
- * @param {Player} player 
- * @param {string} hero_card_id 
- * @param {Array} starting_deck 
- * @param {Object} eventBus 
- */
-function bootstrapPlayer(player, hero_card_id, starting_deck, eventBus) {
-  player.deck = new Deck([]);
-  let deck = player.deck._arr;
-
-  //add Hero, and put it in play
-  deck.push(createCard(hero_card_id, player, eventBus));
-  deck[0].zone = ZONES.play;
-
-  //add 30 random cards to deck
-  for (let i = 0; i < STARTING_DECK_SIZE; i++) {
-    let dice = Math.floor(Math.random() * (card_defs.length));
-    let card = card_defs[dice];
-
-    let new_card = createCard(card.id, player, eventBus);
-    deck.push(new_card);
-  }
-}
-// do we really need to couple card & player & eventBus
 function createCard(id, player, eventBus) {
   let card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
@@ -248,8 +210,9 @@ function _progress() {
   //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 }
 module.exports = {
-  bootstrap,
+  // bootstrap,
   CardDefinitionsIndex,
+  _cardDefinitionArray: card_defs, //INTERNAL
   createCard,
   _progress
 };

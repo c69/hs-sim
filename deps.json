@@ -1,5 +1,5 @@
 {
-    "_XXX_" : "~/data/constants.js",
+    "_XXX_": "~/data/constants.js",
     "~/main.js": {
         "~/classes/game.js": {
             "~/classes/combat.js": {
@@ -12,9 +12,6 @@
                         "_XXX_": {}
                     },
                     "~/classes/card.js": {
-                        "_XXX_": {}
-                    },
-                    "~/classes/deck.js": {
                         "_XXX_": {}
                     },
                     "_XXX_": {}
@@ -30,9 +27,6 @@
                         "~/classes/card.js": {
                             "_XXX_": {}
                         },
-                        "~/classes/deck.js": {
-                            "_XXX_": {}
-                        },
                         "_XXX_": {}
                     }
                 }
@@ -45,9 +39,6 @@
                         "_XXX_": {}
                     },
                     "~/classes/card.js": {
-                        "_XXX_": {}
-                    },
-                    "~/classes/deck.js": {
                         "_XXX_": {}
                     },
                     "_XXX_": {}
@@ -66,6 +57,20 @@
             }
         },
         "~/classes/bootstrap.js": {
+            "~/classes/cardUniverse.js": {
+                "~/data/cards.all.generated.json": {},
+                "~/data/actions.collectiblePlus.js": {
+                    "_XXX_": {}
+                },
+                "~/classes/card.js": {
+                    "_XXX_": {}
+                },
+                "_XXX_": {}
+            },
+            "~/classes/deck.js": {
+                "_XXX_": {}
+            },
+            "_XXX_": {},
             "~/classes/player.js": {
                 "_XXX_": {},
                 "~/classes/hand.js": {
@@ -85,9 +90,6 @@
                         "~/classes/card.js": {
                             "_XXX_": {}
                         },
-                        "~/classes/deck.js": {
-                            "_XXX_": {}
-                        },
                         "_XXX_": {}
                     },
                     "_XXX_": {},
@@ -99,9 +101,6 @@
                                 "_XXX_": {}
                             },
                             "~/classes/card.js": {
-                                "_XXX_": {}
-                            },
-                            "~/classes/deck.js": {
                                 "_XXX_": {}
                             },
                             "_XXX_": {}
@@ -118,27 +117,11 @@
                         "~/classes/card.js": {
                             "_XXX_": {}
                         },
-                        "~/classes/deck.js": {
-                            "_XXX_": {}
-                        },
                         "_XXX_": {}
                     }
                 },
                 "~/classes/board.js": {
                     "~/classes/arrayOfCards.js": {},
-                    "_XXX_": {}
-                },
-                "_XXX_": {}
-            },
-            "~/classes/cardUniverse.js": {
-                "~/data/cards.all.generated.json": {},
-                "~/data/actions.collectiblePlus.js": {
-                    "_XXX_": {}
-                },
-                "~/classes/card.js": {
-                    "_XXX_": {}
-                },
-                "~/classes/deck.js": {
                     "_XXX_": {}
                 },
                 "_XXX_": {}
@@ -155,9 +138,6 @@
                 "_XXX_": {}
             },
             "~/classes/card.js": {
-                "_XXX_": {}
-            },
-            "~/classes/deck.js": {
                 "_XXX_": {}
             },
             "_XXX_": {}

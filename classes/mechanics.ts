@@ -1,26 +1,23 @@
-'use strict';
-// @ts-check
-
-const {
+import {
     createCard,
     // CardDefinitionsIndex,
-} = require('./cardUniverse.js');
+} from './cardUniverse';
 
-const {
+import {
     // CARD_TYPES,
     TAGS_LIST,
     // EVENTS,
     // ZONES
-} = require('../data/constants.js');
+} from '../data/constants';
 
-const {
+import {
     applyBuff
-} = require('./buff.js');
+} from './buff';
 
 /**
  * factory of bound helpers for use in abilty definitions
  */
-function mechanics (card, game, $) {
+export default function mechanics (card, game, $) {
     return {
         summon (id) {
             console.log(`TRIGGER.summon: Summoning ${id}`);
@@ -58,5 +55,3 @@ function mechanics (card, game, $) {
         }
     }
 }
-
-module.exports = mechanics;

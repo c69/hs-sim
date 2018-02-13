@@ -1,21 +1,17 @@
 /// <reference types="node" />
 
-// const Game = require('./classes/game.ts');
-import Player = require('./classes/player.js');
-const {
+import Player from './classes/player';
+import {
   bootstrap,
   initGame,
   _GAME_profile
-} = require('./classes/bootstrap.ts');
+} from './classes/bootstrap';
 
-const Board = require('./classes/board.js');
-const {
-  EVENTS
-} = require('./data/constants.js');
+import { Board } from './classes/board2';
 
-const {
+import {
   _progress
-} = require('./classes/cardUniverse.js');
+} from './classes/cardUniverse';
 
 /** Play with random actions */
 function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {

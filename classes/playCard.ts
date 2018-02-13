@@ -1,21 +1,18 @@
-'use strict';
-// @ts-check
-
-const {
+import {
     createCard,
     // bootstrap,
     // CardDefinitionsIndex,
     // _progress
-} = require('./cardUniverse.js');
+} from './cardUniverse';
 
-const mechanics = require('./mechanics.js');
+import mechanics from './mechanics';
 
-const {
+import {
     CARD_TYPES,
     TAGS_LIST,
     // EVENTS,
     ZONES
-} = require('../data/constants.js');
+} from '../data/constants';
 
 // const {
 //     applyBuff
@@ -143,7 +140,6 @@ function executeBattlecry (card, game, $, target, position) {
     });
 }
 
-module.exports = {
-    playCard: playFromHand,
-    // mechanics
+export {
+    playFromHand as playCard
 };

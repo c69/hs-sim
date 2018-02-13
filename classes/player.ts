@@ -1,20 +1,17 @@
-'use strict';
-// @ts-check
-
-const {
+import {
   CARD_TYPES,
   ZONES
-} = require('../data/constants.js');
+} from '../data/constants';
 
-const Hand = require('./hand.js');
+import Hand from './hand';
 
-class Player {
+export default class Player {
   constructor (name) {
     this.name = name;
-    
+
     this.deck = null;//deck; //$('own @deck');
     this.hand = new Hand(this); //$('own @hand');
-    
+
     this.manaCrystals = 0;
     this.mana = this.manaCrystals;
     this.fatigue = 1;
@@ -30,7 +27,7 @@ class Player {
     console.log(`player ${this.name} draws a card.. (of ${this.deck.size} remaining)`);
     var newCards = this.deck.draw(n);
     if (!newCards.length) this.hero.dealDamage(this.fatigue++);
-    
+
     newCards.forEach(card => (
       this.hand.add(card)
     ), this);
@@ -40,5 +37,3 @@ class Player {
     this.lost = true;
   }
 }
-
-module.exports = Player;

@@ -1,14 +1,11 @@
-'use strict';
-// @ts-check
-
-const {
+import {
   CARD_TYPES,
   EVENTS
-} = require('../data/constants.js');
+} from '../data/constants.js';
 
 const MAX_HAND_SIZE = 10;
 
-class Hand {
+export default class Hand {
   constructor (player) {
     this._hand = [];
     this.owner = player;
@@ -30,7 +27,7 @@ class Hand {
   add (card) {
     if (this._hand.length >= MAX_HAND_SIZE) {
       return this;
-    } 
+    }
     this._hand.push(card);
 
     return this;
@@ -39,5 +36,3 @@ class Hand {
     return this._hand.length;
   }
 }
-
-module.exports = Hand;

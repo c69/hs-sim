@@ -1,15 +1,15 @@
 /// <reference types="node" />
 
-import combat = require('./combat.js');
-const mechanics = require('./mechanics.js');
-const {
+import combat from './combat';
+import mechanics from './mechanics';
+import {
   playCard
-} = require('./playCard.js');
-const {
+} from './playCard';
+import {
   buffAura
-} = require('./buff.js');
+} from './buff';
 
-import Board = require('./board.js');
+import { Board } from './board2';
 const {
   TAGS,
   CARD_TYPES,

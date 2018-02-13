@@ -1,17 +1,18 @@
-'use strict';
-// @ts-check
+import ArrayOfCards from './arrayOfCards';
 
-const ArrayOfCards = require('./arrayOfCards.js');
-
-const {
+import {
     ZONES,
-    CARD_TYPES: TYPES,
+    CARD_TYPES as TYPES,
     TAGS,
     PLAYERCLASS
-} = require('../data/constants.js');
+} from '../data/constants';
+
+import { MapString } from '../shared.interface';
+type Card = any;
+type Player = any;
 
 /** reducer for simple enum tokens */
-function buildFilterSets (a, t) {
+function buildFilterSets (a: Card, t: string) {
     switch (t) {
         // -- PLAYERS --
         case 'any':
@@ -66,11 +67,16 @@ function buildFilterSets (a, t) {
 
 //private debug vars
 let _$_count = 0;
-let _$_all_selectors = {};
+let _$_all_selectors: any = {};
 let _$_count_slow_path = 0;
-let _$_slow_selectors = {};
+let _$_slow_selectors: any = {};
 
 class Board {
+    deck1: any;
+    deck2: any;
+    player1: any;
+    player2: any;
+
   constructor (deck1, deck2, player1, player2) {
     this.deck1 = deck1;
     this.deck2 = deck2;
@@ -103,10 +109,10 @@ class Board {
    *   e.g.: 'minion .attack<3' or 'minion .race=murloc' or 'character .isReady'
    * - (NOT IMPLEMENTED) Negation: [!self|!.prop] for the real world cases when you need to exclude something
 
-   * @param {Player} player Could (and should) be curried for card helper function (player is self.owner)
-   * @param {string} selector_string Refer to syntax above
+   * @param player Could (and should) be curried for card helper function (player is self.owner)
+   * @param selector_string Refer to syntax above
    */
-  $ (player, selector_string) {
+  $ (player: Player, selector_string: string) {
     _$_count += 1;
 
     //console.log(`- $ -- SELECTING ${selector_string} for ${player.name} | bound to ${this}`);
@@ -123,7 +129,7 @@ class Board {
     let all_cards = [].concat(this.deck1, this.deck2);
     // before you ask: Why are you merging two deck, and then searching for owner ?!
     // - think: minion can be stolen
-    let f = {
+    let f = ({
       // es3/es5 functions are slightly faster than arrows :(
       // shaved 200ms (7.00s to 6.80s) on 100 runs in Node6
       // should consider memoisation/caching (with turn-tick-phase key)
@@ -142,7 +148,7 @@ class Board {
       //:validTarget for attack or missiles
       //:isAlive ? :isDamaged ?
       'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
-    }[selector_string];
+    } as MapString<(a: any) => boolean>)[selector_string];
     if (f) return (new ArrayOfCards()).concat( all_cards.filter(f) );
 
     _$_count_slow_path += 1;
@@ -262,4 +268,6 @@ class Board {
   }
 }
 
-module.exports = Board;
+export {
+    Board
+};

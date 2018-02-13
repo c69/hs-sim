@@ -12,37 +12,44 @@ const {
   // ZONES
 } = require('../data/constants.js');
 
+
+/** @private maybe its time to stop hubris and add lodash .. */
+function _pick (obj, props) {
+  const a = new Set([].concat(props));
+  const r = {};
+  for (let k in obj) {
+    if (a.has(k)) {
+      r[k] = obj[k];
+    }
+  }
+  return r;
+}
+
 let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
 }, {});
-abilitiesMixin.forEach(({
-  //long destructuring
-  id,
-  tags,
-  target,
-  play,
-  death,
-  _triggers_v1,
-  aura,
-  enrage,
-  xxx,
-  attack
-  }) => {
-  //console.log(id);
-  if (attack) CardDefinitionsIndex[id].attack = attack;
 
-  if (play) CardDefinitionsIndex[id].play = play;
-  if (target) CardDefinitionsIndex[id].target = target;
-  if (death) CardDefinitionsIndex[id].death = death;
-  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
-  if (tags) CardDefinitionsIndex[id].tags = tags;
-  if (aura) CardDefinitionsIndex[id].aura = aura;
-  if (enrage) CardDefinitionsIndex[id].enrage = enrage;
-
-  if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true;
+abilitiesMixin.forEach(a => {
+  const c = CardDefinitionsIndex[a.id]; // =
+  const a2 = _pick(a, [
+    // 'id',
+    'tags',
+    'target',
+    'play',
+    'death',
+    '_triggers_v1',
+    'aura',
+    'enrage',
+    'attack' // wtf ???
+  ]);
+  Object.assign(c, a2);
+  if (a.xxx) {
+    c._NOT_IMPLEMENTED_ = true
+  }
 });
+
 //---Deck2.js sketch------------------
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))

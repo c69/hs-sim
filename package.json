@@ -9,6 +9,7 @@
     "tslint": "^5.9.1"
   },
   "devDependencies": {
+    "dependency-tree": "^6.0.0",
     "mocha": "^5.0.0",
     "nyc": "^11.4.1",
     "typescript": "^2.6.0",
@@ -18,7 +19,8 @@
     "build": "tsc --outFile game_via_rpc.js main_rpc.ts",
     "test": "nyc mocha --timeout=3000",
     "coverage": "nyc --reporter=html --reporter=text mocha",
-    "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/"
+    "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/",
+    "deps": "dependency-tree --directory ./ main.js > deps.json"
   },
   "repository": {
     "type": "git",

@@ -15,6 +15,7 @@ import {
 
 import Player from './player';
 import Card from './card.js';
+import {Card as BS_X_Card} from './card.js';
 
 import { Game } from './gameLoop';
 
@@ -28,8 +29,8 @@ const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selec
  * @param {Object} eb
  */
 function bootstrap(
-    arr1: [Player, string, Card[]],
-    arr2: [Player, string, Card[]],
+    arr1: [Player, string, BS_X_Card[]],
+    arr2: [Player, string, BS_X_Card[]],
     eb: EventBus
 ) {
     [
@@ -44,7 +45,7 @@ function bootstrap(
 function bootstrapPlayer(
     player: Player,
     hero_card_id: string,
-    starting_deck: Card[],
+    starting_deck: BS_X_Card[],
     eventBus: EventBus
 ) {
     player.deck = new Deck([]);

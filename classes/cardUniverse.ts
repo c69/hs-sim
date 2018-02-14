@@ -1,10 +1,16 @@
-import * as CardDefinitions from '../data/cards.all.generated.json';
-import abilitiesMixin from '../data/actions.collectiblePlus';
-import Card from './card';
 import {
   CARD_TYPES,
+  CardDefinition
   // ZONES
 } from '../data/constants2';
+
+// import * as CardDefinitions from '../data/cards.all.generated.json';
+const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
+// console.log(typeof CardDefinitionsJSON, Object.keys(CardDefinitionsJSON));
+// const CardDefinitions = Object.freeze(JSON.parse(CardDefinitionsJSON) as Readonly<CardDefinition>[]);
+
+import abilitiesMixin from '../data/actions.collectiblePlus';
+import Card from './card';
 
 
 /** @private maybe its time to stop hubris and add lodash .. */
@@ -22,7 +28,7 @@ function _pick (obj: object, props: string[]) {
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
-}, {});
+}, {} as {[key: string]: CardDefinition});
 
 abilitiesMixin.forEach(({
   //long destructuring
@@ -148,7 +154,7 @@ console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 /**
  * todo: do we really need to couple card & player & eventBus
  */
-function createCard(id, player, eventBus) {
+function createCard(id: string, player, eventBus) {
   let card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 

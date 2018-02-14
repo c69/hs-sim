@@ -801,7 +801,7 @@ export default [
     "_info": "(9) 9/7 [NEUTRAL]: North Sea Kraken",
     "text": "<b>Battlecry:</b> Deal 4 damage.",
     target: 'character',
-    play ({$}) {
+    play ({$, target}) {
       target.dealDamage(4);
     }
   },
@@ -8676,7 +8676,7 @@ export default [
     "id": "UNG_010",
     "_info": "(7) 5/7 [NEUTRAL]: Sated Threshadon |BEAST",
     "text": "<b>Deathrattle:</b> Summon three 1/1 Murlocs.",
-    death ({$}) {
+    death ({$, summon}) {
       // token ID is from ETC murlocs - can be wrong
       summon('PRO_001at');
       summon('PRO_001at');

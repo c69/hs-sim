@@ -9,7 +9,11 @@ type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
 export namespace Types {
   export type Zones = 'play'|'deck'|'hand'|'grave'|'aside';
+  export type ZonesAllCAPS = 'PLAY'|'DECK'|'HAND'|'GRAVE'|'ASIDE';
+
   export type Cards = 'minion'|'spell'|'hero'|'weapon'|'power'|'enchantment';
+  export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT';
+
   export type Tags = 'taunt'|'enraged'|'divineShield';
 }
 
@@ -124,9 +128,43 @@ export namespace GameOptions {
   }
 }
 
+type CardDefinition = {
+  id: string;
+  _info: string;
+  text: string;
+  type: Types.CardsAllCAPS;
+  name: string;
+  playerClass: "NEUTRAL";
+  rarity: "EPIC";
+  collectible: boolean;
+  race: string;
+
+  cost?: number;
+  attack?: number | any; // | (a: any)=>number;
+  health?: number;
+  armor?: number;
+  durability?: number;
+
+  overload?: number;
+  enrage?: any;
+  aura?: any;
+  _trigger_v1?: any;
+  death?: any;
+  play?: any;
+  target?: any;
+  tags?: any[];
+
+  _NOT_IMPLEMENTED_?: boolean;
+}
+
+type XXX_ZONE = Types.ZonesAllCAPS;
+type XXX_CARD = Types.CardsAllCAPS;
 export {
     ZONES,
+    XXX_ZONE,
     CARD_TYPES,
+    XXX_CARD,
+    CardDefinition,
     TAGS,
     TAGS_LIST,
     PLAYERCLASS,

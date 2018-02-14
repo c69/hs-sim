@@ -11,13 +11,13 @@ import {
 
 import { Board, ArrayOfCards } from './board2';
 
-const {
+import {
   TAGS,
   CARD_TYPES,
   ACTION_TYPES,
   EVENTS,
   ZONES
-} = require('../data/constants.js');
+} from '../data/constants2';
 
 var _frame_count_active = 0;
 

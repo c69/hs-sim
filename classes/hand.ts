@@ -1,7 +1,7 @@
 import {
   CARD_TYPES,
   EVENTS
-} from '../data/constants';
+} from '../data/constants2';
 
 const MAX_HAND_SIZE = 10;
 

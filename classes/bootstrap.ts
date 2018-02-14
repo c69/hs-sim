@@ -11,7 +11,7 @@ import {
 import Deck from './deck';
 import {
     ZONES
-} from '../data/constants';
+} from '../data/constants2';
 
 import Player from './player';
 import Card = require('./card.js');

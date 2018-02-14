@@ -5,7 +5,7 @@ import {
     CARD_TYPES as TYPES,
     TAGS,
     PLAYERCLASS
-} from '../data/constants';
+} from '../data/constants2';
 
 import { MapString } from '../shared.interface';
 type Card = any;

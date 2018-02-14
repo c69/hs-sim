@@ -1,7 +1,7 @@
-const {
+import {
   TAGS,
   //EVENTS
-} = require('../data/constants.js');
+} from '../data/constants2';
 
  /**
    * Execute combat action

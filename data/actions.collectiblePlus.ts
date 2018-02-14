@@ -1,12 +1,10 @@
-'use strict';
-
-const {
+import {
   TAGS,
   EVENTS,
   ZONES
-} = require('./constants.js');
+} from './constants2';
 
-const actions = [
+export default [
   {
     "id": "AT_001",
     "_info": "(5) SPELL [MAGE]: Flame Lance",
@@ -1121,7 +1119,7 @@ const actions = [
         activeZone: 'play',
         eventName: EVENTS.character_damaged,
         condition: 'self',
-        action: ({summon}) => summon('BRM_006t')         
+        action: ({summon}) => summon('BRM_006t')
       }
     ]
   },
@@ -1238,7 +1236,7 @@ const actions = [
         eventName: EVENTS.character_damaged,
         //condition: ({target, self}) => target === self && !self.isMortallyWounded,
         condition: ({target, self}) => target === self && self.health > 0,
-        action: ({summon}) => summon('BRM_019') // ~another self         
+        action: ({summon}) => summon('BRM_019') // ~another self
       }
     ]
   },
@@ -1997,7 +1995,7 @@ const actions = [
         activeZone: 'deck',
         eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=pirate',
-        action: ({summon, self}) => summon(self)         
+        action: ({summon, self}) => summon(self)
       }
     ]
   },
@@ -2637,7 +2635,7 @@ const actions = [
   {
     // CS_mirror token was added manually
     // because of the irregular ID ..
-    "id": "CS2_mirror", 
+    "id": "CS2_mirror",
     "_info": "(0) 0/2 [*MAGE]: Mirror Image",
     "text": "<b>Taunt</b>",
     tags: [TAGS.taunt]
@@ -3215,7 +3213,7 @@ const actions = [
     "text": "<b>Battlecry:</b> <b>Silence</b> a minion.",
     target: 'minion',
     play ({target}) {
-      target.silence();   
+      target.silence();
     }
   },
   {
@@ -3312,7 +3310,7 @@ const actions = [
         activeZone: 'play',
         eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=beast',
-        action: ({draw}) => draw(1) // sketch is sketch, lala lalala         
+        action: ({draw}) => draw(1) // sketch is sketch, lala lalala
       }
     ]
   },
@@ -3407,7 +3405,7 @@ const actions = [
     "id": "DS1_233",
     "_info": "(2) SPELL [PRIEST]: Mind Blast",
     "text": "Deal $5 damage to the enemy hero.",
-    play ({$}) { 
+    play ({$}) {
       $('enemy hero').dealDamageSpell(5)
     }
   },
@@ -3464,9 +3462,9 @@ const actions = [
         activeZone: 'play',
         eventName: EVENTS.character_damaged,
         condition: ({self, target}) => target === self, // 'self'
-        action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)         
+        action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)
       }
-    ] 
+    ]
   },
   {
     "id": "EX1_008",
@@ -3801,7 +3799,7 @@ const actions = [
     xxx: 'adjacent',
     attack: 1,
     health: 1,
-    tags: [TAGS.taunt] 
+    tags: [TAGS.taunt]
   },
   {
     "id": "EX1_095",
@@ -5000,7 +4998,7 @@ const actions = [
     xxx: 'aura AND declarative adjacent ...',
     aura: {
       buff: 'EX1_565o',
-      target: 'adjacent'  
+      target: 'adjacent'
     }
   },
   {
@@ -5010,7 +5008,7 @@ const actions = [
     xxx: 'aura',
     attack: 2,
     //expires: 'turn|aura|fn',
-    expires: 'aura' 
+    expires: 'aura'
   },
   {
     "id": "EX1_567",
@@ -5300,7 +5298,7 @@ const actions = [
     aura: {
       zone: ZONES.hand,
       target: 'self',
-      buff: { 
+      buff: {
         effects: {
           cost (v, {$}) {
             let h = $('own hero')[0].health;
@@ -7297,16 +7295,16 @@ const actions = [
     attack ({target, $}) {
       return 3;
       // let myWeapon = $('own weapon')[0];
-      // return myWeapon ? myWeapon.attack : 0;  
+      // return myWeapon ? myWeapon.attack : 0;
     }
-    
+
     //attack: ({target, $}) => target.attack + 3 // + $('own weapon')[0].attack
-    
-    
+
+
     // attack_$add: -1,
     // health_$multiply: 2,
     // health ({target}) => target.health * 2,
-    // cost_$set: 5, 
+    // cost_$set: 5,
 
     // mutate: [1, 3, -2, TAGS.taunt],
     // effect: [null, 2, null, TAGS.divineShield],
@@ -7336,8 +7334,8 @@ const actions = [
         condition: 'own minion',
         action: ({$, self}) => {
           console.log(`${self.owner.name}'s KNIFE JUGGLER: Hey, catch !`);
-          $('enemy character .health>0').getRandom().dealDamage(1) //should be :alive (aka hp>0 and NOT pending destroy)         
-        } 
+          $('enemy character .health>0').getRandom().dealDamage(1) //should be :alive (aka hp>0 and NOT pending destroy)
+        }
       }
     ]
   },
@@ -7357,14 +7355,14 @@ const actions = [
         eventName: EVENTS.turn_started,
         condition: ({target, self}) => target === self.owner,
         //shorthand
-        //action: ({$}) => $('minion').destroy() 
+        //action: ({$}) => $('minion').destroy()
         action: ({$}) => {
         //   console.log('[Doomsayer]: EVERYBODY DIES !!')
             $('minion').destroy();
         //   console.log($('minion').map(v => v.tags));
-        }         
+        }
       }
-    ] 
+    ]
   },
   {
     "id": "NEW1_022",
@@ -9170,7 +9168,7 @@ const actions = [
     xxx: 'should it be one frame or two ?',
     play ({$}) {
       $('hero').dealDamage(1);
-      //-- vs 
+      //-- vs
       //$('own hero').dealDamage(1);
       //$('enemy hero').dealDamage(1);
     }
@@ -9700,5 +9698,3 @@ const actions = [
     "_info": "(1) 1/3 [*MAGE]: Spellbender"
   }
 ];
-
-module.exports = actions;

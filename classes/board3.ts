@@ -1,7 +1,5 @@
-
-import ArrayOfCards = require('./arrayOfCards.js');
-import Board2 = require('./Board2.js');
-
+import ArrayOfCards from './arrayOfCards';
+import Board2 from './Board2');
 import {
     ZONES,
     CARD_TYPES,

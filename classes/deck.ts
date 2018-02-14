@@ -1,6 +1,6 @@
 import {
   ZONES
-} from '../data/constants';
+} from '../data/constants2';
 
 export default class Deck {
   _arr: any[];

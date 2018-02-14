@@ -8,7 +8,7 @@ import {
     TAGS_LIST,
     // EVENTS,
     // ZONES
-} from '../data/constants';
+} from '../data/constants2';
 
 import {
     applyBuff

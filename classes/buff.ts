@@ -4,7 +4,7 @@ import {
   CARD_TYPES,
   //ACTION_TYPES,
   //EVENTS
-} from '../data/constants';
+} from '../data/constants2';
 
 import {
   createCard // temporary - test that summoning from Deathratlle works

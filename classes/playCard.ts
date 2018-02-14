@@ -14,10 +14,6 @@ import {
     ZONES
 } from '../data/constants2';
 
-// const {
-//     applyBuff
-// } = require('./buff.js');
-
 
 /**
  * @param {object} card

@@ -1,5 +1,5 @@
-const CardJSON = require('../data/cards.all.generated.json');
-const abilitiesMixin = require('../data/actions.collectiblePlus.js');
+import * as CardDefinitions from '../data/cards.all.generated.json';
+import abilitiesMixin from '../data/actions.collectiblePlus';
 import Card from './card';
 import {
   CARD_TYPES,
@@ -19,7 +19,6 @@ function _pick (obj: object, props: string[]) {
   return r;
 }
 
-let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;

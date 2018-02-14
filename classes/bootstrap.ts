@@ -14,7 +14,7 @@ import {
 } from '../data/constants2';
 
 import Player from './player';
-import Card = require('./card.js');
+import Card from './card.js';
 
 import { Game } from './gameLoop';
 

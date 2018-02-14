@@ -1,6 +1,9 @@
 import {
     ZONES,
+    XXX_ZONE,
     CARD_TYPES,
+    CardDefinition,
+    XXX_CARD, // todo: rethink this ..
     TAGS,
     PLAYERCLASS,
     EVENTS
@@ -8,28 +11,21 @@ import {
 
 let card_id = 1;
 
-type CardDefinition = {};
-type Player = {};
-type EventBus = {};
-
-// type CardConstructor = (
-//     cardDef: CardDefinition,
-//     owner: Player,
-//     eventBus: EventBus
-// ) => Card;
-
-// interface XCard {
-
-// } declare var XCard: {
-//     new (cardDef: CardDefinition, owner: Player, eventBus: EventBus): XCard
-//     constructor: CardConstructor;
-// }
+// type CardDefinition = {};
+type Player = {
+    name: string;
+    loose (): void;
+};
+type EventBus = {
+    emit (a: any, b: any): any;
+    removeListener (a: any, b: any): void;
+};
 
 class Card {
     eventBus: EventBus;
     id: string;
     // dbfId: number;
-    type: keyof CARD_TYPES; // ? :(
+    type: XXX_CARD; // ? :(
     name: string;
     text: string;
     // targetingArrowText: string;
@@ -42,12 +38,13 @@ class Card {
     costBase: number;
     overload: number;
 
-    play: function; // ?
+    play: any;
     target: string;
     buffs: any[];
     incomingAuras: any[];
+    _listener: any = null;
 
-    zone: ZONES; // :(
+    zone: string; // XXX_ZONE; // :(
     owner: Player;
 
     card_id: number;
@@ -184,6 +181,14 @@ class Card {
 
 
 class Character extends Card {
+    health: number = 0;
+
+    // herecy !
+    healthBase: number;
+    healthMax: number;
+    attackBase: number;
+    attackedThisTurn: number;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -199,7 +204,7 @@ class Character extends Card {
     get attack() {
         return getter_of_buffed_atribute.call(this, 'attack', this.attackBase);
     }
-    _damageApply(n, type = '') {
+    _damageApply(n: number, type = '') {
         if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
         let was = this.health;
 
@@ -222,11 +227,11 @@ class Character extends Card {
         return this; // or return received_damage; ?
     }
     // public API
-    dealDamage(n) {
+    dealDamage(n: number) {
         this._damageApply(n);
         //console.log(`🔥 ${this.name} takes ${was - this.health} damage!`);
     }
-    dealDamageSpell(n) {
+    dealDamageSpell(n: number) {
         this._damageApply(n, 'spell');
         //console.log(`🔥 ${this.name} takes ${was - this.health} spell damage!`);
     }
@@ -253,6 +258,9 @@ class Character extends Card {
 }
 
 class Minion extends Character {
+    race: string;
+    isReady: boolean; // TODO: this is our own extension
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -276,6 +284,9 @@ class Spell extends Card {
     }
 }
 class Weapon extends Card {
+    attack: number = 0;
+    durability: number = 0;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -287,6 +298,8 @@ class Weapon extends Card {
     }
 }
 class Hero extends Character {
+    armor: number = 0;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -302,6 +315,8 @@ class Hero extends Character {
     }
 }
 class Power extends Card {
+    attackedThisTurn: number;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -313,6 +328,8 @@ class Power extends Card {
     }
 }
 class Enchantment extends Card {
+    effects: any;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
@@ -384,4 +401,7 @@ export default {
     Weapon,
     Power,
     Enchantment
+}
+export {
+    Card
 }

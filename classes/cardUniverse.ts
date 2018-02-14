@@ -1,13 +1,10 @@
 const CardJSON = require('../data/cards.all.generated.json');
 const abilitiesMixin = require('../data/actions.collectiblePlus.js');
-const Card = require('./card.js');
-// const Deck = require('./deck.js');
-
-//const Board = require('./classes/board.js');
-const {
-  CARD_TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
+import Card from './card';
+import {
+  CARD_TYPES,
   // ZONES
-} = require('../data/constants.js');
+} from '../data/constants2';
 
 
 /** @private maybe its time to stop hubris and add lodash .. */

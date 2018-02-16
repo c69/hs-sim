@@ -1,10 +1,11 @@
 import {
   TAGS,
   EVENTS,
-  ZONES
+  ZONES,
+  CardAbilities
 } from './constants2';
 
-export default [
+export default <CardAbilities[]>[
   {
     "id": "AT_001",
     "_info": "(5) SPELL [MAGE]: Flame Lance",
@@ -9698,3 +9699,4 @@ export default [
     "_info": "(1) 1/3 [*MAGE]: Spellbender"
   }
 ];
+

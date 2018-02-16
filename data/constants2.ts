@@ -128,14 +128,26 @@ export namespace GameOptions {
   }
 }
 
-type CardDefinition = {
+type KnownEnvConstants = {
+  $ (query: string): any[];  // >
+  readonly game: any;
+  readonly self: any;
+}
+
+type KnownMechanics = {
+  summon (id: string): void;
+  draw (n: number): void;
+  buff(id_or_tag: any, t: any): void;
+}
+
+type CardDefinitionBase = {
   id: string;
   _info: string;
   text: string;
   type: Types.CardsAllCAPS;
   name: string;
-  playerClass: "NEUTRAL";
-  rarity: "EPIC";
+  playerClass: 'NEUTRAL';
+  rarity: 'EPIC';
   collectible: boolean;
   race: string;
 
@@ -145,18 +157,29 @@ type CardDefinition = {
   armor?: number;
   durability?: number;
 
-  overload?: number;
-  enrage?: any;
-  aura?: any;
-  _trigger_v1?: any;
-  death?: any;
-  play?: any;
-  target?: any;
-  tags?: any[];
-
   _NOT_IMPLEMENTED_?: boolean;
 }
 
+type CardAbilities = {
+  overload?: number;
+  enrage?: any;
+  aura?: any;
+  xxx?: string;
+  _triggers_v1?: [
+    {
+      activeZone: 'play',
+      eventName: string; // EVENTS.character_damaged,
+      condition: any; //'self' | (options: KnownEnvConstants & KnownMechanics) => boolean;
+      action (options: KnownEnvConstants & KnownMechanics): void;
+    }
+  ];
+  death?: (options: KnownEnvConstants & KnownMechanics) => void;
+  play?: (options: {target: any} & KnownEnvConstants & KnownMechanics) => void;
+  target?: string;
+  tags?: string[];
+}
+
+type CardDefinition = CardDefinitionBase & CardAbilities;
 type XXX_ZONE = Types.ZonesAllCAPS;
 type XXX_CARD = Types.CardsAllCAPS;
 export {
@@ -164,7 +187,9 @@ export {
     XXX_ZONE,
     CARD_TYPES,
     XXX_CARD,
+    CardAbilities,
     CardDefinition,
+    KnownMechanics,
     TAGS,
     TAGS_LIST,
     PLAYERCLASS,

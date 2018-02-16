@@ -3,6 +3,7 @@ node_modules
 .idea
 .fusebox
 .nyc_output
+coverage
 
 client/dist
 target

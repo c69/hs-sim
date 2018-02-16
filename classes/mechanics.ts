@@ -6,6 +6,7 @@ import {
 import {
     // CARD_TYPES,
     TAGS_LIST,
+    KnownMechanics,
     // EVENTS,
     // ZONES
 } from '../data/constants2';
@@ -17,7 +18,7 @@ import {
 /**
  * factory of bound helpers for use in abilty definitions
  */
-export default function mechanics (card, game, $) {
+export default function mechanics (card, game, $): KnownMechanics {
     return {
         summon (id) {
             console.log(`TRIGGER.summon: Summoning ${id}`);

@@ -1,5 +1,5 @@
 import ArrayOfCards from './arrayOfCards';
-import Board2 from './Board2');
+import {Board} from './board2';
 import {
     ZONES,
     CARD_TYPES,
@@ -131,7 +131,7 @@ export class PartiZone {
     // return (new ArrayOfCards()).concat(arr_result);
     // return ArrayOfCards().from(set_result);
     }
-
+/*
     state.$('own minion') -> this.players[this.game.owner].minions;
     state.$('own player') -> this.game.owner;
     state.$('own game') -> this.game ???;
@@ -143,7 +143,7 @@ export class PartiZone {
     state.availableOptions();
     state.whoCanAttack();
     state.playableCards();
-
+*/
     // mechanics
 
     summon () {}

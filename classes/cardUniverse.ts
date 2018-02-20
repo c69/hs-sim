@@ -9,7 +9,7 @@ const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly
 // console.log(typeof CardDefinitionsJSON, Object.keys(CardDefinitionsJSON));
 // const CardDefinitions = Object.freeze(JSON.parse(CardDefinitionsJSON) as Readonly<CardDefinition>[]);
 
-import abilitiesMixin from '../data/actions.collectiblePlus';
+import abilitiesMixin from '../data/actions.collectiblePlus.2';
 import Card from './card';
 
 

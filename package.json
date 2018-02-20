@@ -15,11 +15,13 @@
     "nyc": "^11.4.1",
     "source-map-support": "^0.5.3",
     "ts-node": "^4.1.0",
-    "typescript": "^2.6.0",
+    "typescript": "^2.7.1",
     "yargs": "^8.0.2"
   },
   "scripts": {
-    "build": "tsc --module commonjs --target es2017 --outDir ./target main_rpc.ts",
+    "build": "tsc --pretty --module commonjs --target es2017 --outDir ./target main_rpc.ts",
+    "build2": "tsc --pretty --outDir ./target main_rpc.ts",
+    "ts-version": "tsc -v",
     "test": "nyc mocha --timeout=3000",
     "coverage": "nyc --reporter=html --reporter=text mocha",
     "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/",

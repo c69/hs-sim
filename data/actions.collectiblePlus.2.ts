@@ -618,15 +618,15 @@ export default <CardAbilities[]>[
     id: `AT_078`,
     _info: `(6) SPELL [PALADIN]: Enter the Coliseum`,
     text: `Destroy all minions except each player's highest Attack minion.`,
-    xxx: 'test this',
+    xxx: '@disabled, looks like this never worked',
     play ({$}) {
       [
         $('enemy minion'),
         $('own minion')
       ].forEach(minions => {
         if (minions.length < 2) return;
-        let strongest = minions.reduce((a,v,i) => v.attack > a.attack ? {i, attack: v.attack} : a);
-        minions.splice(strongest.i, 1).destroy();
+        // let strongest = minions.reduce((a,v,i) => v.attack > a.attack ? {i, attack: v.attack} : a);
+        // minions.splice(strongest.i, 1).destroy();
       });
     }
   },

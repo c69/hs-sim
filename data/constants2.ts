@@ -5,7 +5,6 @@ type MapString<T> = {
   readonly [index: string]: T;
 }
 type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
-// ----
 
 export namespace Types {
   export type Zones = 'play'|'deck'|'hand'|'grave'|'aside';
@@ -128,8 +127,28 @@ export namespace GameOptions {
   }
 }
 
+interface CardAction {
+  destroy (): this;
+  silence (): this;
+  dealDamage (): this;
+  dealDamageSpely (): this;
+}
+
+interface AoC<T extends {} = any> extends Array<T> {
+  adjacent (x: any): this;
+  exclude (x: any): this;
+  getRandom (): this;
+  destroy (): void;
+  silence (): void;
+  dealDamage (n: number): void;
+  dealDamageSpell (n: number): void;
+
+  // experimental
+  heal (n: number): void;
+}
+
 type KnownEnvConstants = {
-  $ (query: string): any[];  // >
+  $ (query: string): AoC;// any[];  // >
   readonly game: any;
   readonly self: any;
 }
@@ -138,6 +157,9 @@ type KnownMechanics = {
   summon (id: string): void;
   draw (n: number): void;
   buff(id_or_tag: any, t: any): void;
+
+  // experimental
+  summonEnemy?(id: string): void;
 }
 
 type CardDefinitionBase = {
@@ -160,23 +182,32 @@ type CardDefinitionBase = {
   _NOT_IMPLEMENTED_?: boolean;
 }
 
+type Trigger = {
+  activeZone: 'play',
+  eventName: string; // EVENTS.character_damaged,
+  condition: any; //'self' | (options: KnownEnvConstants & KnownMechanics) => boolean;
+  action (options: KnownEnvConstants & KnownMechanics): void;
+};
+
 type CardAbilities = {
+  readonly id: string;
+  readonly _info: string;
+  readonly text: string;
+
   overload?: number;
   enrage?: any;
   aura?: any;
-  xxx?: string;
-  _triggers_v1?: [
-    {
-      activeZone: 'play',
-      eventName: string; // EVENTS.character_damaged,
-      condition: any; //'self' | (options: KnownEnvConstants & KnownMechanics) => boolean;
-      action (options: KnownEnvConstants & KnownMechanics): void;
-    }
-  ];
+  xxx?: string | number;
+  _trigger_v1?: Trigger; // in CardUniverse
+  _triggers_v1?: Trigger[]; // in actions
+
   death?: (options: KnownEnvConstants & KnownMechanics) => void;
   play?: (options: {target: any} & KnownEnvConstants & KnownMechanics) => void;
   target?: string;
   tags?: string[];
+
+  /** @deprecated */
+  attack: any;
 }
 
 type CardDefinition = CardDefinitionBase & CardAbilities;

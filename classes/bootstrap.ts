@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import EventEmitter = require('events');
 class EventBus extends EventEmitter {
     // just in case if i decide to add helper methods..
@@ -14,9 +16,7 @@ import {
 } from '../data/constants2';
 
 import Player from './player';
-import Card from './card.js';
-import {Card as BS_X_Card} from './card.js';
-
+import { Card } from './card';
 import { Game } from './gameLoop';
 
 
@@ -29,8 +29,8 @@ const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selec
  * @param {Object} eb
  */
 function bootstrap(
-    arr1: [Player, string, BS_X_Card[]],
-    arr2: [Player, string, BS_X_Card[]],
+    arr1: [Player, string, Card[]],
+    arr2: [Player, string, Card[]],
     eb: EventBus
 ) {
     [
@@ -45,7 +45,7 @@ function bootstrap(
 function bootstrapPlayer(
     player: Player,
     hero_card_id: string,
-    starting_deck: BS_X_Card[],
+    starting_deck: Card[],
     eventBus: EventBus
 ) {
     player.deck = new Deck([]);

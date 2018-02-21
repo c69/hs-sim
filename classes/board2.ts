@@ -4,15 +4,31 @@ import {
     ZONES,
     CARD_TYPES as TYPES,
     TAGS,
-    PLAYERCLASS
+    PLAYERCLASS,
+    CardDefinition,
+    // AoC
 } from '../data/constants2';
 
 import { MapString } from '../shared.interface';
 type Card = any;
 type Player = any;
 
+type CardFilterFunction = (a:CardDefinition) => boolean;
+
+// interface AoC extends ArrayOfCards {};
+type AoC = any[];
+
+type FilterAccumulator = {
+    owners: Set<Player>;
+    types: Set<string>;
+    zones: Set<string>;
+    tags: Set<string>;
+    props: null;
+    ownPlayer: Player;
+    enemyPlayer: Player;
+}
 /** reducer for simple enum tokens */
-function buildFilterSets (a: Card, t: string) {
+function buildFilterSets (a: FilterAccumulator, t: string) {
     switch (t) {
         // -- PLAYERS --
         case 'any':
@@ -77,7 +93,7 @@ class Board {
     player1: any;
     player2: any;
 
-  constructor (deck1, deck2, player1, player2) {
+  constructor (deck1: Card[], deck2: Card[], player1: Player, player2: Player) {
     this.deck1 = deck1;
     this.deck2 = deck2;
     this.player1 = player1;
@@ -112,7 +128,7 @@ class Board {
    * @param player Could (and should) be curried for card helper function (player is self.owner)
    * @param selector_string Refer to syntax above
    */
-   $ (player: Player, selector_string: string) {
+   $ (player: Player, selector_string: string): AoC {
    // $ (player: Player, selector_string: string): ArrayOfCards {
     _$_count += 1;
 
@@ -150,13 +166,13 @@ class Board {
       //:isAlive ? :isDamaged ?
       'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
     } as MapString<(a: any) => boolean>)[selector_string];
-    if (f) return (new ArrayOfCards()).concat( all_cards.filter(f) );
+    if (f) return ArrayOfCards.from( all_cards.filter(f) );
 
     _$_count_slow_path += 1;
     _$_slow_selectors[selector_string] = _$_slow_selectors[selector_string] ? _$_slow_selectors[selector_string] + 1 : 1;
 
     // '*' is a "slow" selector, but itss simple conceptually. I want to use it for auras, till API stabilization
-    if (selector_string === '*') return all_cards; // the ONLY place where we use * selector (today) is aura refresh..
+    if (selector_string === '*') return ArrayOfCards.from(all_cards); // the ONLY place where we use * selector (today) is aura refresh..
 
 
     const isVaidSelector = /^(any|own|enemy)?\s*(card|minion|hero|character|weapon|spell)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(selector_string)
@@ -178,7 +194,7 @@ class Board {
         board2xxx.zones.add(ZONES.play);
     }
     // if (!board2xxx.types.size) {
-    //     board2xxx.types.add(TYPES.card);
+    //     board2xxx.types.add(TYPES.card); // -- might be needed if we add Game and Player as entity
     // }
 
     let filters = [];
@@ -204,23 +220,30 @@ class Board {
     //tag selectors only NARROW the search, so its AND
     var tagSelectors = tokens.filter(v => /^#[a-z]+/i.test(v));
     //console.log('tagSelectors', tagSelectors);
-    let tagFilters = tagSelectors.map(selector => {
-       let tagName = selector.slice(1);
-       switch(tagName) {
-         case 'battlecry':
-         return (v) => typeof(v.play) === 'function';
-         case 'deathratle':
-         return (v) => typeof(v.death) === 'function' || v.tags.some(v1=>!!v1.death);
-         case 'aura':
-         return (v) => typeof(v.aura) === 'object';
-         case 'trigger':
-         return (v) => typeof(v.trigger) === 'function';
-         case 'overload':
-         return (v) => !!v.overload;
 
-         default:
-         return (v) => v.tags.includes(TAGS[tagName]);
-       }
+    // this piece of code was almost never tested, and had at least 3 bugs..
+    let tagFilters = tagSelectors.map((selector): CardFilterFunction => {
+        let tagName = selector.slice(1);
+        // most of the cases are commented out because they do not work
+        switch(tagName) {
+            // case 'battlecry':
+            // return (v) => typeof(v.play) === 'function';
+            // case 'deathratle':
+            // TODO: fix
+            // here we can see asssumption that .tags could be
+            // EITHER string[] or Buff[] !
+            // such assumption will probably be wrong
+            // return (v) => typeof(v.death) === 'function' || v.tags.some(v1 => !!v1.death);
+            // case 'aura':
+            // return (v) => typeof(v.aura) === 'object';
+            // case 'trigger':
+            // return (v) => typeof(v.trigger) === 'function';
+            // case 'overload':
+            // return (v) => !!v.overload;
+
+            default:
+            return (v) => v.tags.includes(TAGS[tagName]);
+        }
     });
 
     //property selectors only NARROW the search, so its AND
@@ -228,7 +251,7 @@ class Board {
     //.test('.prop<42')
     var propSelectors = tokens.filter(v => propRegexp.test(v));
     //console.log('propSelectors', propSelectors);
-    let propFilters = propSelectors.map(selector => {
+    let propFilters = propSelectors.map((selector): CardFilterFunction => {
        let [
           _match, // destructuring will throw, if regex match fails
           propertyName,
@@ -237,7 +260,7 @@ class Board {
        ] = selector.match(/^\.([0-9a-z]+)(!=|<=|>=|<|>|=)?(.*)$/);
 
        if (!operator) {
-         return v => !!v.propertyName;
+         return v => !!v[propertyName];
        }
        if (!comparisonValue) throw new SyntaxError('Selector must have comparison value, when comparison operator is provided');
        // add type/NaN checking - as only Numbers should allow < and >

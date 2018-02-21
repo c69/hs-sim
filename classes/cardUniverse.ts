@@ -1,13 +1,12 @@
+/// <reference types="node" />
+
 import {
   CARD_TYPES,
   CardDefinition
   // ZONES
 } from '../data/constants2';
 
-// import * as CardDefinitions from '../data/cards.all.generated.json';
 const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
-// console.log(typeof CardDefinitionsJSON, Object.keys(CardDefinitionsJSON));
-// const CardDefinitions = Object.freeze(JSON.parse(CardDefinitionsJSON) as Readonly<CardDefinition>[]);
 
 import abilitiesMixin from '../data/actions.collectiblePlus.2';
 import Card from './card';
@@ -58,6 +57,110 @@ abilitiesMixin.forEach(({
 });
 
 //---Deck2.js sketch------------------
+const summerParty = [
+  'Fireball',
+  'Meteor',
+  'Arcane Missiles',
+  'Flame Imp',
+  'Unstable Ghoul',
+  'Shielded Minibot',
+  'Argent Horseraider',
+  'Young Dragonhawk',
+  'Ironbeak Owl',
+  'Hand of Protection',
+  'Aldor Peacekeeper',
+  'Unleash the Hounds',
+  'Knife Juggler',
+];
+const HeyCatch = [
+  'Knife Juggler'
+];
+const everyone = [
+  //'Chillwind Yeti',
+  //'River Crocolisk',
+  //'Bloodfen Raptor',
+  //--
+  //'Coin',
+  //--spells:damage
+  'Fireball',
+  'Meteor',
+  'Arcane Explosion',
+  'Arcane Missiles',
+  'Hellfire',
+  'Swipe',
+  'Assassinate',
+
+  //--basic minions with tags or battlecries
+  'Flame Imp',
+  'Ironfur Grizzly',
+
+  'Leper Gnome',
+  'Unstable Ghoul',
+  //'Ravaging Ghoul',
+  //'Mad Bomber',
+  'Abomination',
+  //'Elven Archer',
+  //'Silent Knight', //-- stealth
+  'Annoy-o-Tron',
+  'Shielded Minibot',
+  'Argent Horseraider',
+  'Young Dragonhawk',
+  // 'Thrallmar Farseer',
+
+  // - silence
+  'Ironbeak Owl',
+  //'Mass Dispel',
+
+  // - give
+  //'Bloodsail Raider',
+  'Windfury',
+  'Hand of Protection',
+  // 'Shattered Sun Cleric',
+  //'Windspeaker',
+  //'Abusive Sergeant', // this turn
+  //'Bloodlust', // this turn
+  //'Houndmaster',
+  //'Sunfury Protector', // adjacent
+  'Defender of Argus', // adjacent
+  //'Blessing of Wisdom',
+  'Aldor Peacekeeper',
+  // 'Raging Worgen', //enrage
+
+  // - aura
+  'Timber Wolf', //other
+  'Flametongue Totem', //adjacent
+  'Tundra Rhino',
+  //'Warsong Commander',
+  'Stormwind Champion', //other
+  'Summoning Portal', //mana cost
+  // 'Molten Giant', //self cost - NOT WORKING !
+  'Junkbot', //for its (5) 1/5
+
+  //--summon
+  //'Blood To Ichor',
+  // 'Murloc Tidehunter',
+  //'Leeroy Jenkins',
+  //'Mirror Image',
+//    'Unleash the Hounds',
+  //'Dreadsteed',
+  // 'Sludge Belcher',
+
+
+  //--trigger, MVP minions
+  'Knife Juggler',
+  'Acolyte of Pain',
+  'Imp Gang Boss',
+  // 'Starving Buzzard',
+  // 'Patches the Pirate',
+  //'Doomsayer',
+  'Grim Patron',
+
+];
+
+const theDeck = everyone;
+// const theDeck = summerParty;
+// const theDeck = HeyCatch;
+
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
   .filter(v => {
@@ -65,91 +168,11 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     return true;
   })
   //.filter(v => !v._NOT_IMPLEMENTED_)
-  .filter(v => [
-    //'Chillwind Yeti',
-    //'River Crocolisk',
-    //'Bloodfen Raptor',
-    //--
-    //'Coin',
-    //--spells:damage
-//    'Fireball',
-//    'Meteor',
-    //'Arcane Explosion',
-//    'Arcane Missiles',
-    //      'Hellfire',
-    //'Swipe',
-    //'Assassinate',
-
-    //--basic minions with tags or battlecries
-//    'Flame Imp',
-    //'Ironfur Grizzly',
-
-    //'Leper Gnome',
-//    'Unstable Ghoul',
-    //'Ravaging Ghoul',
-    //'Mad Bomber',
-    //'Abomination',
-    //'Elven Archer',
-    //'Silent Knight', //-- stealth
-    //'Annoy-o-Tron',
-//    'Shielded Minibot',
-//    'Argent Horseraider',
-//    'Young Dragonhawk',
-    // 'Thrallmar Farseer',
-
-    // - silence
-//    'Ironbeak Owl',
-    //'Mass Dispel',
-
-    // - give
-    //'Bloodsail Raider',
-    //'Windfury',
-//    'Hand of Protection',
-    // 'Shattered Sun Cleric',
-    //'Windspeaker',
-    //'Abusive Sergeant', // this turn
-    //'Bloodlust', // this turn
-    //'Houndmaster',
-    //'Sunfury Protector', // adjacent
-    // 'Defender of Argus', // adjacent
-    //'Blessing of Wisdom',
-//    'Aldor Peacekeeper',
-    // 'Raging Worgen', //enrage
-
-    // - aura
-    //'Timber Wolf', //other
-    // 'Flametongue Totem', //adjacent
-    //'Tundra Rhino',
-    //'Warsong Commander',
-    // 'Stormwind Champion', //other
-    //'Summoning Portal', //mana cost
-    //'Molten Giant', //self cost
-    //'Junkbot', //for its (5) 1/5
-
-    //--summon
-    //'Blood To Ichor',
-    // 'Murloc Tidehunter',
-    //'Leeroy Jenkins',
-    //'Mirror Image',
-//    'Unleash the Hounds',
-    //'Dreadsteed',
-    // 'Sludge Belcher',
-
-
-    //--trigger, MVP minions
-    'Knife Juggler',
-    // 'Acolyte of Pain',
-    // 'Imp Gang Boss',
-    // 'Starving Buzzard',
-    // 'Patches the Pirate',
-    //'Doomsayer',
-    // 'Grim Patron',
-
-  ].includes(v.name))
-  ;
-////
-
+  .filter(v => theDeck.includes(v.name));
+/////
 console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
+/////
+
 
 /**
  * todo: do we really need to couple card & player & eventBus
@@ -201,7 +224,7 @@ let progressOfCards = coolCards.reduce((a, v) => {
     'death',
     'target',
     'tags',
-    'trigger'
+    // 'trigger'
   ].includes(k));
   if (hasWeirdProps) {
     a.in_progress += 1;
@@ -225,7 +248,6 @@ function _progress() {
 }
 
 export {
-  // bootstrap,
   CardDefinitionsIndex,
   card_defs as _cardDefinitionArray, //INTERNAL
   createCard,

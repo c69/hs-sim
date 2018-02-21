@@ -1,8 +1,6 @@
 import {
     createCard,
-    // bootstrap,
     // CardDefinitionsIndex,
-    // _progress
 } from './cardUniverse';
 
 import mechanics from './mechanics';

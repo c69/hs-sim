@@ -14,7 +14,7 @@ export default class ArrayOfCards extends Array {
     adjacent (minion) {
       let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
       let i = minions.findIndex(v => v === minion);
-      // return (new this.constructor).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
+
       return (new (this.constructor as any)()).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
     }
     /**

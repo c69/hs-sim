@@ -1,7 +1,4 @@
-import EventEmitter = require('events');
-class EventBus extends EventEmitter {
-  // just in case if i decide to add helper methods..
-}
+/// <reference types="node" />
 
 import { Board } from './classes/board2';
 import {
@@ -9,11 +6,6 @@ import {
   bootstrap,
   _GAME_profile
 } from './classes/bootstrap';
-
-// TODO: test that this does not break the build (because even though EVENTS are unused in this file .. still..)
-import {
-  EVENTS,
-} from './data/constants2';
 
 let gameInstance = initGame(
   ['Alizee', 'HERO_08'],

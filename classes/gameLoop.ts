@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 import combat from './combat';
 import mechanics from './mechanics';
 import {

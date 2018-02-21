@@ -8,7 +8,7 @@ import {
 
 const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
 
-import abilitiesMixin from '../data/actions.collectiblePlus.2';
+import abilitiesMixin from '../data/actions.collectiblePlus';
 import Card from './card';
 
 

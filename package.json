@@ -19,13 +19,14 @@
     "yargs": "^8.0.2"
   },
   "scripts": {
-    "build": "tsc --pretty --module commonjs --target es2017 --outDir ./target main_rpc.ts",
-    "build2": "tsc --pretty --outDir ./target main_rpc.ts",
+    "build": "tsc --pretty --module commonjs --target es2017 --outDir ./dist main_rpc.ts && npm run copy-data",
+    "build2_with-profile_WIP": "tsc --pretty --outDir ./dist main_rpc.ts",
+    "copy-data": "echo Please, now go, and manually copy all .json files from ./data to ./dist/data",
     "ts-version": "tsc -v",
     "test": "nyc mocha --timeout=3000",
     "coverage": "nyc --reporter=html --reporter=text mocha",
     "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/",
-    "deps": "dependency-tree --directory ./target/ ./target/main_rpc.js > deps.json"
+    "deps": "dependency-tree --directory ./dist/ ./dist/main_rpc.js > deps.json"
   },
   "nyc": {
     "include": [

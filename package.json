@@ -19,6 +19,7 @@
     "yargs": "^8.0.2"
   },
   "scripts": {
+    "start": "ts-node main.ts",
     "build": "tsc --pretty --module commonjs --target es2017 --outDir ./dist main_rpc.ts && npm run copy-data",
     "build2_with-profile_WIP": "tsc --pretty --outDir ./dist main_rpc.ts",
     "copy-data": "echo Please, now go, and manually copy all .json files from ./data to ./dist/data",

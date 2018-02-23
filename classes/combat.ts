@@ -1,7 +1,7 @@
 import {
   TAGS,
   //EVENTS
-} from '../data/constants2';
+} from '../data/constants';
 
  /**
    * Execute combat action

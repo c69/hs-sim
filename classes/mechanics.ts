@@ -9,7 +9,7 @@ import {
     KnownMechanics,
     // EVENTS,
     // ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 import {
     applyBuff

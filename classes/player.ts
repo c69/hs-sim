@@ -1,7 +1,7 @@
 import {
   CARD_TYPES,
   ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 import Hand from './hand';
 import Deck from './deck';

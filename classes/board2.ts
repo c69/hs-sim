@@ -7,7 +7,7 @@ import {
     PLAYERCLASS,
     CardDefinition,
     // AoC
-} from '../data/constants2';
+} from '../data/constants';
 
 import { MapString } from '../shared.interface';
 type Card = any;

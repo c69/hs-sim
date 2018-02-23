@@ -4,7 +4,7 @@ import {
   CARD_TYPES,
   CardDefinition
   // ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
 

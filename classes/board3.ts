@@ -8,7 +8,7 @@ import {
     ACTION_TYPES,
     Types,
     GameOptions
-} from '../data/constants2';
+} from '../data/constants';
 
 /* --- GOALS
 

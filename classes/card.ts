@@ -7,7 +7,7 @@ import {
     TAGS,
     PLAYERCLASS,
     EVENTS
-} from '../data/constants2';
+} from '../data/constants';
 
 let card_id = 1;
 

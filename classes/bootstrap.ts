@@ -13,7 +13,7 @@ import {
 import Deck from './deck';
 import {
     ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 import Player from './player';
 import { Card } from './card';

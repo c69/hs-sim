@@ -3,7 +3,7 @@ import {
   EVENTS,
   ZONES,
   CardAbilities
-} from './constants2';
+} from './constants';
 
 export default <CardAbilities[]>[
   {

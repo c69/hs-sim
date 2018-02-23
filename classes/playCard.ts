@@ -10,7 +10,7 @@ import {
     TAGS_LIST,
     // EVENTS,
     ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 
 /**

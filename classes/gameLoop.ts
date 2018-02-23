@@ -15,7 +15,7 @@ import {
   ACTION_TYPES,
   EVENTS,
   ZONES
-} from '../data/constants2';
+} from '../data/constants';
 
 var _frame_count_active = 0;
 

@@ -93,6 +93,8 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   let max_actions_per_turn = 10;
   for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
     let opts = g2.viewAvailableOptions();
+
+    g2.exportState(); // verify JSON export is working
     //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
     if (!opts.actions.length) break;
     g2.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)

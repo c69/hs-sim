@@ -184,7 +184,7 @@ export namespace GameOptions {
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?
-      targetList: Cards.Card[];
+      targetList?: Cards.Card[];
   };
   type EndTurn = {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;

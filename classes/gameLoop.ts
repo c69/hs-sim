@@ -518,7 +518,7 @@ class Game implements GameRPC, GameRunner<Game> {
       });
     }
 
-    function onlyLeaveInCardObject (card: Cards.Card) {
+    function neuterTheCard (card: Cards.Card) {
       //console.log(card);
       return {
         card_id: card.card_id
@@ -547,7 +547,7 @@ class Game implements GameRPC, GameRunner<Game> {
             //unit: v.unit, // unsafe direct reference
             name: v.name,
             //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
-            targetList: v.targetList,
+            targetList: v.targetList.map(neuterTheCard),
             // positionList: v.positionList
           };
           case ACTION_TYPES.playCard:
@@ -556,7 +556,7 @@ class Game implements GameRPC, GameRunner<Game> {
             card_id: v.card_id,
             name: v.name,
             cost: v.cost,
-            targetList: v.targetList,
+            targetList: v.targetList && v.targetList.map(neuterTheCard),
             positionList: v.positionList
           };
           default:
@@ -586,14 +586,14 @@ class Game implements GameRPC, GameRunner<Game> {
 
     let outputJSON;
     outputJSON = JSON.stringify(aggregatedState, function (k,v) {
-        if (k === 'eventBus') return undefined;
-        if (k === '_listener') return undefined;
+      if (k === 'eventBus') return undefined;
+      if (k === '_listener') return undefined;
 
-        if (k === 'buffs') return undefined;
-        if (k === '_by') return undefined;
+      if (k === 'buffs') return undefined;
+      if (k === '_by') return undefined;
 
-        return v;
-      }, '  ');
+      return v;
+    }, '  ');
 
     return outputJSON;
   }

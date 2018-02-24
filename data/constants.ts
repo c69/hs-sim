@@ -100,13 +100,25 @@ const ACTION_TYPES = {
 /**
  * @see ..\classes\arrayOfCards.ts
  */
-type AoC_b<T extends Cards.Card> = T[];
-// export interface AoC extends AoC_b<Cards.Card> {
-export interface AoC<T extends Cards.Card = Cards.Card> extends AoC_b<T> {
-// interface AoC<T extends {} = any> extends Array<T> {
-  adjacent (x: any): this;
-  exclude (x: any): this;
-  getRandom (): this;
+type TypedArrayHS<C extends Cards.Card> = C[];
+export interface AoC<
+  T extends Cards.Card = Cards.Card
+> extends TypedArrayHS<T> {
+
+/* DOES NOT WORK - attempt to make generic .filter
+  filter<S extends T = T>(callbackfn: (
+      value: S,
+      index: number,
+      array: S[]
+    ) => value is S, thisArg?: any
+  ): AoC<S>;
+*/
+  // from (x: T[]): AoC<T>;
+  [position: number]: T;
+
+  adjacent (x: Cards.Card): AoC<T>;
+  exclude (x: Cards.Card): AoC<T>;
+  getRandom (): AoC<T>;
 
   destroy (): void;
   silence (): void;
@@ -114,7 +126,7 @@ export interface AoC<T extends Cards.Card = Cards.Card> extends AoC_b<T> {
   dealDamageSpell (n: number): void;
 
   // experimental
-  heal (n: number): void;
+  heal? (n: number): void;
 }
 
 

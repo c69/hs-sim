@@ -1,6 +1,12 @@
-export default class ArrayOfCards extends Array {
+import {
+    Cards,
+    AoC
+} from './../data/constants';
+
+export default class ArrayOfCards<T extends Cards.Card> extends Array implements AoC {
+    'constructor': typeof ArrayOfCards;
     constructor () {
-      super();
+        super();
     }
     /**
      * Find and return immediately adjacent minions
@@ -8,32 +14,32 @@ export default class ArrayOfCards extends Array {
      * // but this DEFINITELY needs to take into account
      * // current .zone and .position
      * // instead of the board index (i.e.: order of play)
-     * @param {Card} minion A pivoting minion
-     * @returns {ArrayOfCards} 0..2 matching minions
+     * @param minion A pivoting minion
+     * @return 0..2 matching minions
      */
-    adjacent (minion) {
-      let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
-      let i = minions.findIndex(v => v === minion);
+    adjacent (minion: Cards.Card) {
+        let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
+        let i = minions.findIndex(v => v === minion);
 
-      return (new (this.constructor as any)()).concat([minions[i - 1], minions[i + 1]]).filter(v => v);
+        return (new this.constructor()).concat([minions[i - 1], minions[i + 1]]).filter(v => v) as AoC<T>;
     }
     /**
      * Helper for "other" and "excluding this" keywords
-     * @param {Card} card Card to exclude
-     * @returns {ArrayOfCards} 0..* Remaining cards
+     * @param card Card to exclude
+     * @return 0..* Remaining cards
      */
-    exclude (card) {
-      return this.filter(v => v !== card);
+    exclude (card: Cards.Card) {
+        return this.filter(v => v !== card) as AoC<T>;
     }
     /**
      * Find and return random card from current ArrayOfCards
-     * @returns {ArrayOfCards} 1 matching minions
+     * @return collection of 1 matching minions
      */
     getRandom () { // i'd like signature to be getRandom(n) where n is number of distinct random members
-      if (!this.length) return this;
-      let random_idx = Math.floor(Math.random() * this.length);
-      let v = this[random_idx];
-      return (new (this.constructor as any)()).concat(v);
+        const random_idx = Math.floor(Math.random() * this.length);
+        const v = this[random_idx] || this;
+
+        return (new this.constructor()).concat(v) as AoC<T>;
     }
     // call-through Card methods
     dealDamage (n: number) {
@@ -43,10 +49,10 @@ export default class ArrayOfCards extends Array {
     dealDamageSpell (n: number) {
         this.forEach(v => v.dealDamageSpell(n));
     }
-    destroy (n: number) {
-        this.forEach(v => v.destroy(n));
+    destroy () {
+        this.forEach(v => v.destroy());
     }
-    silence (n: number) {
-        this.forEach(v => v.silence(n));
+    silence () {
+        this.forEach(v => v.silence());
     }
 }

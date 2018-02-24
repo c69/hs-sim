@@ -5,22 +5,15 @@ import {
     CARD_TYPES as TYPES,
     TAGS,
     PLAYERCLASS,
-    // CardDefinition,
     AoC as AoC_b,
     Cards
 } from '../data/constants';
 
 import { MapString } from '../shared.interface';
 import { Card } from './card';
-
-// type Card = any;
-type Player = any;
+import Player from './player';
 
 type CardFilterFunction = (a: Cards.Card) => boolean;
-
-// interface AoC extends ArrayOfCards {};
-// type AoC<T extends Cards.Card = Cards.Card> = T[];
-// type AoC_b<T extends Cards.Card> = T[];
 
 type FilterAccumulator = {
     owners: Set<Player>;
@@ -92,18 +85,18 @@ let _$_all_selectors: any = {};
 let _$_count_slow_path = 0;
 let _$_slow_selectors: any = {};
 
-interface Board {
+interface QuerySearch {
     $<T extends Cards.Card = Cards.Card>(p: Player, s: string): AoC_b<T>;
     $(p: Player, s: '*'): AoC_b<Cards.Card>;
 }
 
-class Board{
-    deck1: any;
-    deck2: any;
-    player1: any;
-    player2: any;
+class Board implements QuerySearch {
+    deck1: Cards.Card[];
+    deck2: Cards.Card[];
+    player1: Player;
+    player2: Player;
 
-  constructor (deck1: Card[], deck2: Card[], player1: Player, player2: Player) {
+  constructor (deck1: Cards.Card[], deck2: Cards.Card[], player1: Player, player2: Player) {
     this.deck1 = deck1;
     this.deck2 = deck2;
     this.player1 = player1;
@@ -138,7 +131,7 @@ class Board{
    * @param player Could (and should) be curried for card helper function (player is self.owner)
    * @param selector_string Refer to syntax above
    */
-   $ (player: Player, selector_string: string) {
+   $ <T extends Cards.Card = Cards.Card>(player: Player, selector_string: string): AoC_b<T> {
    // $ (player: Player, selector_string: string): ArrayOfCards {
     _$_count += 1;
 
@@ -153,7 +146,8 @@ class Board{
 
     _$_all_selectors[selector_string] = _$_all_selectors[selector_string] ? _$_all_selectors[selector_string] + 1 : 1;
 
-    let all_cards = [].concat(this.deck1, this.deck2);
+    const all_cards: Cards.Card[] = [].concat(this.deck1, this.deck2);
+
     // before you ask: Why are you merging two deck, and then searching for owner ?!
     // - think: minion can be stolen
     let f = ({
@@ -178,13 +172,19 @@ class Board{
       'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
 */
     } as MapString<(a: any) => boolean>)[selector_string];
-    if (f) return ArrayOfCards.from( all_cards.filter(f) );
+
+    if (f) {
+      return (new ArrayOfCards).concat(all_cards.filter(f)) as AoC_b<T>;
+    }
 
     _$_count_slow_path += 1;
     _$_slow_selectors[selector_string] = _$_slow_selectors[selector_string] ? _$_slow_selectors[selector_string] + 1 : 1;
 
     // '*' is a "slow" selector, but itss simple conceptually. I want to use it for auras, till API stabilization
-    if (selector_string === '*') return ArrayOfCards.from(all_cards); // the ONLY place where we use * selector (today) is aura refresh..
+    // the ONLY place where we use * selector (today) is aura refresh..
+    if (selector_string === '*') {
+        return (new ArrayOfCards).concat(all_cards) as AoC_b<T>;
+    }
 
 
     const isVaidSelector = /^(any|own|enemy)?\s*(card|minion|hero|character|weapon|spell)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(selector_string)
@@ -214,16 +214,16 @@ class Board{
     // zone is the most discriminating of light weight checks
     // type less so - because 99% of @play are minions or heroes
     if (board2xxx.types.size) {
-        filters.push(function (v: Card) {
+        filters.push(function (v: Cards.Card) {
             return board2xxx.zones.has(v.zone) && board2xxx.types.has(v.type);
         })
     } else {
-        filters.push(function (v: Card) {
+        filters.push(function (v: Cards.Card) {
             return board2xxx.zones.has(v.zone);
         })
     }
     if (board2xxx.owners.size) {
-        filters.push(function (v: Card) {
+        filters.push(function (v: Cards.Card) {
             return board2xxx.owners.has(v.owner);
         })
     }
@@ -299,8 +299,8 @@ class Board{
 
 
     //console.log(selector_string, result);
-    //return result;
-    return (new ArrayOfCards()).concat(result);
+
+    return (new ArrayOfCards()).concat(result) as AoC_b<T>;
   }
 }
 

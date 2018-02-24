@@ -33,14 +33,23 @@ const ZONES: U2<Types.Zones, string> = {
   //removedFromGame: 'REMOVEDFROMGAME' // o_O
 };
 
-const CARD_TYPES: U2<Types.Cards, string> = {
-  minion: 'MINION',
-  spell: 'SPELL',
-  weapon: 'WEAPON',
-  hero: 'HERO',
-  power: 'HERO_POWER',
-  enchantment: 'ENCHANTMENT'
+const CARD_TYPES = {
+  minion: 'MINION' as 'MINION',
+  spell: 'SPELL' as 'SPELL',
+  weapon: 'WEAPON' as 'WEAPON',
+  hero: 'HERO' as 'HERO',
+  power: 'HERO_POWER' as 'HERO_POWER',
+  enchantment: 'ENCHANTMENT' as 'ENCHANTMENT'
 };
+
+// const CARD_TYPES: U2<Types.Cards, Types.CardsAllCAPS> = {
+//   minion: 'MINION' as 'MINION',
+//   spell: 'SPELL' as 'SPELL',
+//   weapon: 'WEAPON' as 'WEAPON',
+//   hero: 'HERO' as 'HERO',
+//   power: 'HERO_POWER' as 'HERO_POWER',
+//   enchantment: 'ENCHANTMENT' as 'ENCHANTMENT'
+// };
 
 const PLAYERCLASS = {
   mage: 'MAGE',
@@ -80,39 +89,102 @@ const EVENTS = {
 
 /* @deprecated */
 const ACTION_TYPES = {
-  playCard: 'PLAY_CARD',
-  attack: 'ATTACK',
-  usePower: 'USE_POWER',
-  endTurn: 'END_TURN',
-  concede: 'CONCEDE'
+  playCard: 'PLAY_CARD' as 'PLAY_CARD',
+  attack: 'ATTACK' as 'ATTACK',
+  usePower: 'USE_POWER' as 'USE_POWER',
+  endTurn: 'END_TURN' as 'END_TURN',
+  concede: 'CONCEDE' as 'CONCEDE'
 };
 
+
+/**
+ * @see ..\classes\arrayOfCards.ts
+ */
+type AoC_b<T extends Cards.Card> = T[];
+// export interface AoC extends AoC_b<Cards.Card> {
+export interface AoC<T extends Cards.Card = Cards.Card> extends AoC_b<T> {
+// interface AoC<T extends {} = any> extends Array<T> {
+  adjacent (x: any): this;
+  exclude (x: any): this;
+  getRandom (): this;
+
+  destroy (): void;
+  silence (): void;
+  dealDamage (n: number): void;
+  dealDamageSpell (n: number): void;
+
+  // experimental
+  heal (n: number): void;
+}
+
+
+export namespace Cards {
+  export type LegacyBuff = {
+    aura?: {
+      zone: string;
+      target: string;
+      buff: any; // o_O
+    };
+    death? (o: {}): void;
+    trigger? (): void;
+    type: string;
+  }
+  export interface Card {
+    card_id: number;
+    name: string;
+
+    zone: string;
+    owner: any;
+    type: Types.CardsAllCAPS;
+    tags: (string | LegacyBuff)[];
+    incomingAuras?: LegacyBuff[]
+
+    _listener?: [any, any];
+
+    target?: string;
+    // play (): void;
+    cost?: number;
+
+    [key: string]: any;
+  }
+  export interface Character extends Card {
+    type: 'MINION' | 'HERO';
+    attack: number;
+    health: number;
+    isReady: boolean;
+    attackedThisTurn: number;
+    isAlive (): boolean;
+    _die (): void;
+  }
+  export interface Spell extends Card {
+    type: 'SPELL';
+  }
+}
+
 export namespace GameOptions {
-  type Card = any;
-  type Character = Card;
-  export type Types = 'ATTACK' | 'PLAY' | 'USE_POWER' | 'END_TURN' | 'CONCEDE';
+  export type Types = 'ATTACK' | 'PLAY_CARD' | 'USE_POWER' | 'END_TURN' | 'CONCEDE';
   interface BaseAction {
       entity_id: number;
-      entity: Card;
+      entity: Cards.Card;
       type: Types; // ACTION_TYPES.playCard;
       name: string;
   }
-  type Attack = {
+  export type Attack = {
       card_id: number;
-      unit: Card; // read Object ?
+      unit: Cards.Character; // read Object ?
       type: 'ATTACK'; // ACTION_TYPES.attack;
       name: string;
-      cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
-      targetList: Character[];
+      // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
+      targetList: Cards.Character[];
   }
-  type Play = {
+  export type Play = {
       card_id: number;
-      card: Card;
-      type: 'PLAY'; // ACTION_TYPES.playCard;
+      card: Cards.Card;
+      type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?
-      targetList: Character[];
+      targetList: Cards.Card[];
   };
   type EndTurn = {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
@@ -122,7 +194,7 @@ export namespace GameOptions {
   }
   export type Action = Attack | Play | EndTurn | Concede;
   export type Options = {
-      token: string;
+      token?: string;
       actions: Action[];
   }
 }
@@ -132,19 +204,6 @@ interface CardAction {
   silence (): this;
   dealDamage (): this;
   dealDamageSpely (): this;
-}
-
-interface AoC<T extends {} = any> extends Array<T> {
-  adjacent (x: any): this;
-  exclude (x: any): this;
-  getRandom (): this;
-  destroy (): void;
-  silence (): void;
-  dealDamage (n: number): void;
-  dealDamageSpell (n: number): void;
-
-  // experimental
-  heal (n: number): void;
 }
 
 type KnownEnvConstants = {

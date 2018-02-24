@@ -1,12 +1,13 @@
 import {
   CARD_TYPES,
-  EVENTS
+  EVENTS,
+  Cards
 } from '../data/constants';
 
 const MAX_HAND_SIZE = 10;
 
 export default class Hand {
-  _hand: any[];
+  _hand: Cards.Card[];
   owner: any;
   constructor (player) {
     this._hand = [];

@@ -75,6 +75,9 @@ const summerParty = [
 const HeyCatch = [
   'Knife Juggler'
 ];
+const Fuu = [
+  'Flame Imp'
+];
 const everyone = [
   //'Chillwind Yeti',
   //'River Crocolisk',
@@ -157,12 +160,15 @@ const everyone = [
 
 ];
 
-const theDeck = everyone;
+// const theDeck = everyone;
 // const theDeck = summerParty;
 // const theDeck = HeyCatch;
+const theDeck = Fuu;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
-  .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
+  .filter(v => {
+    return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
+  })
   .filter(v => {
     if (v.type === CARD_TYPES.spell) return !!v.play;
     return true;

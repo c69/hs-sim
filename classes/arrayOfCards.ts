@@ -37,6 +37,7 @@ export default class ArrayOfCards extends Array {
     }
     // call-through Card methods
     dealDamage (n: number) {
+        console.log(`damaging ${this.length} minions`);
         this.forEach(v => v.dealDamage(n));
     }
     dealDamageSpell (n: number) {

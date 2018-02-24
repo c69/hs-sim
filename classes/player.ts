@@ -10,7 +10,7 @@ export default class Player {
   name: string;
 
   deck: Deck = null;//deck; //$('own @deck');
-  hand: any ;// = new Hand(this); //$('own @hand');
+  hand: Hand;
 
   manaCrystals: number = 0;
   /** @deprecated */ mana: number;

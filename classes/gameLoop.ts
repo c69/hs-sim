@@ -8,14 +8,53 @@ import {
 } from './buff';
 
 import { Board, ArrayOfCards } from './board2';
-
+import { Card } from './card';
 import {
   TAGS,
   CARD_TYPES,
   ACTION_TYPES,
+  GameOptions,
+  AoC,
+  Cards,
+  CardDefinition,
   EVENTS,
   ZONES
 } from '../data/constants';
+import Player from './player';
+
+type FluentMethod<T> = () => T;
+type ActionCoordinates = {
+  targetIndex: number;
+  positionIndex: number;
+}
+interface GameRunner<G> {
+  start (): G;
+  _onTurnStart(): G;
+  end (): G;
+  disconnect (): G;
+  concede (): G;
+  endTurn (): G;
+
+  // usePower (0) hero power first suggested target
+  usePower (action: GameOptions.Action, o: ActionCoordinates): G;
+  // playCard (0,0) - to play first possible card at first target
+  playCard (action: GameOptions.Play, o: ActionCoordinates): G;
+  // attack(0,0) to attack with first suggested character first suggested target
+  attack (action: GameOptions.Attack, o: ActionCoordinates): G;
+
+// g.viewState();
+// g.clone(); // would not be needed when state is immutable ! :)
+  viewAvailableOptions (): GameOptions.Options;
+}
+
+interface GameRPC {
+  exportState (): string; // LOL - typesafety at its finest =_=
+  chooseOption (token: string, option: {
+    optionIndex?: number;
+    positionIndex?: number;
+    targetIndex?: number;
+  }): any;
+};
 
 var _frame_count_active = 0;
 
@@ -31,7 +70,8 @@ BEGIN_SHUFFLE 2
 BEGIN_DRAW 3
 BEGIN_MULLIGAN 4
 
-MAIN_BEGIN 5 MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc)
+MAIN_BEGIN 5
+MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc)
 MAIN_RESOURCE 7
 MAIN_DRAW 8
 MAIN_START 9
@@ -47,32 +87,16 @@ MAIN_NEXT 13
 FINAL_WRAPUP 14
 FINAL_GAMEOVER 15
 
-
-
-// g.start();
-// g.end();
-
-// g.disconnect();
-// g.concede();
-
-// g.endTurn();
-
-// g.usePower(0); // hero power first suggested target
-// g.playCard(0,0); // play first possible card at first target
-// g.attack(0,0); // attack with first suggested character first suggested target
-
-// g.viewState();
-// g.clone(); // would not be needed when state is immutable ! :)
-// g.viewAvailableOptions();
  */
-class Game {
+class Game implements GameRPC, GameRunner<Game> {
   eventBus: any;
-  players: any[];
+  players: Player[];
   board: Board;
-  _$: Map<any, (a: string) => ArrayOfCards>;
+  _$: Map<Player, (a: string) => AoC>;
+  // _$: Map<any, (a: string) => ArrayOfCards>;
   turn: number = 0;
-  activePlayer: any;
-  passivePlayer: any;
+  activePlayer: Player;
+  passivePlayer: Player;
   isStarted: boolean = false;
   isOver: boolean = false;
   result: any = null;
@@ -174,6 +198,7 @@ class Game {
   }
   disconnect () {
     //todo: implement me
+    return this;
   }
   endTurn () {
     this._onTurnEnd();
@@ -183,30 +208,25 @@ class Game {
     return this;
   }
   //-- intra turn action --------------
-  attack (actions, attacker_idx, target_idx) {
-    let o = actions[attacker_idx];
-
+  attack (o: GameOptions.Attack, {targetIndex = 0}) {
     let a = o.unit;
-    let t = o.targetList[target_idx];
+    let t = o.targetList[targetIndex];
     // if Ogre retarget - choose new target :)
     //this._onBeforeAttack(a, t);
     combat(a, t, this);
 
     return this;
   }
-  playCard (actions, card_idx = 0, position_idx = 0, target_idx = 0) {
-    //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let c = actions[card_idx];
-
-    if (c.targetList) { // spell:fireball OR minion:battlecry
-      var target = c.targetList[target_idx];
+  playCard (o: GameOptions.Play, {positionIndex = 0, targetIndex = 0}) {
+    if (o.targetList) { // spell:fireball OR minion:battlecry
+      var target = o.targetList[targetIndex];
     }
-    if (c.positionList) { // minion
-      var position = c.positionList[position_idx];
+    if (o.positionList) { // minion
+      var position = o.positionList[positionIndex];
     }
 
     let $ = this._$.get(this.activePlayer);
-    let card = c.card;
+    let card = o.card;
     //console.log('play card', c.name, target, position);
     playCard(card, {
       game: this,
@@ -219,7 +239,7 @@ class Game {
 
     return this;
   }
-  usePower (actions, target_idx) {
+  usePower (o: GameOptions.Action,  {targetIndex = 0}) {
     //todo: implement me
 
     return this;
@@ -231,7 +251,7 @@ class Game {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
 
-    let characters = this.board.$(this.activePlayer, 'character');
+    let characters = this.board.$<Cards.Character>(this.activePlayer, 'character');
 
     let allCards = this.board.$(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
@@ -239,19 +259,25 @@ class Game {
 
     //refresh/re-apply auras
 
+    function hasAura (a: any): a is Cards.LegacyBuff {
+      return 'aura' in a;
+    }
+    function hasDeath (a: any): a is Cards.LegacyBuff {
+      return 'death' in a;
+    }
+
     allCards.forEach(character => {
-      character.tags.filter(tag => {
+      character.tags.filter((tag) => {
         //return true; // [broken?] hack to ignore aura checking code
-        if (!tag.aura) return false;
 
-        let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
-        let shouldApply = (zone === character.zone);
-        if (!shouldApply) return shouldApply;
+        if (!hasAura(tag)) return false;
 
+        const zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
+        const shouldApply = (zone === character.zone);
         //console.log('emitting aura from', character.name, character.zone, tag);
         return shouldApply;
       })
-      .forEach(({aura}) => {
+      .forEach(({aura}: Cards.LegacyBuff) => {
         //console.log(aura);
         let p = character.owner;
         let $ = this._$.get(p);
@@ -292,8 +318,10 @@ class Game {
       let $ = this._$.get(character.owner);
       let self = character;
       let game = this;
-      character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
-        tag.death({
+      character.tags.filter(tag => hasDeath(tag)).filter(v => v).forEach((tag, i) => {
+        if (!hasDeath(tag)) return false; // TS does not activate inferrence without this line...
+
+        (tag.death as CardDefinition['death'])({
           self,
           $,
           game,
@@ -320,13 +348,18 @@ class Game {
    * @config {number} positionIndex
    * @config {number} targetIndex
    */
-  chooseOption (token, {optionIndex = 0, positionIndex = 0, targetIndex = 0} = {}) {
+  chooseOption (token = '', {
+    optionIndex = 0,
+    // suboptionIndex = 0,
+    positionIndex = 0,
+    targetIndex = 0
+  } = {}) {
     _frame_count_active += 1;
 
-    console.log('-- frame ---');
+    console.log('-- frame: MAIN_ACTION ---');
     if (this.isOver) return this; // if game ended - nobody can do anything
 
-    let options = this.viewAvailableOptions();
+    let options: GameOptions.Options = this.viewAvailableOptions();
     //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
@@ -336,19 +369,24 @@ class Game {
 
     //console.log(action.type);
     switch (action.type) {
+      // case ACTION_TYPES.attack:
       case ACTION_TYPES.attack:
-        this.attack(actions, optionIndex, targetIndex);
+        // console.log('choose: ATTACK', action);
+        this.attack(action, {targetIndex});
         break;
       case ACTION_TYPES.playCard:
-        this.playCard(actions, optionIndex, positionIndex, targetIndex);
+        // console.log('choose: PLAY CARD', action);
+        this.playCard(action, {positionIndex, targetIndex});
         break;
       // case ACTION_TYPES.usePower:
       //   this.usePower(actions, optionIndex, targetIndex);
       //   break;
       case ACTION_TYPES.endTurn:
+        console.log('choose: NEXT_TURN', action);
         this.endTurn();
         break;
       case ACTION_TYPES.concede:
+        console.log('choose: :(', action);
         this.concede();
         break;
       default:
@@ -368,12 +406,12 @@ class Game {
     if (!this.isStarted || this.isOver) {
       console.log('No options are available - game state is wrong.');
       return {
-        actions: []
+        actions: [] as GameOptions.Action[]
       };
     }
     let $ = this._$.get(this.activePlayer);
 
-    let pawns = $('own character');
+    let pawns = $('own character') as AoC<Cards.Character>;
     let warriors = pawns.filter(v => {
       if (v.attack < 1) return false;
       if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
@@ -386,7 +424,7 @@ class Game {
       return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
     });
 
-    let aubergines = $('enemy character');
+    let aubergines = $('enemy character') as AoC<Cards.Character>;
     let sheeps = aubergines.filter(v => {
       return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
     });
@@ -407,14 +445,14 @@ class Game {
         type: ACTION_TYPES.attack,
         name: v.name,
         //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
-        targetList: sheeps
+        targetList: Array.from(sheeps)
       };
     }).filter(v => v.targetList.length > 0);
 
     let canSummonMore = (pawns.length <= 7); // with hero
     //console.log('canSummonMore', canSummonMore, pawns.length);
 
-    let playable = this.activePlayer.hand.listPlayable();
+    let playable: Cards.Card[] = this.activePlayer.hand.listPlayable();
     //console.log(playable.map(v => `${v.name} #${v.card_id}`));
 
     let cards = playable.filter((v) =>{
@@ -434,7 +472,7 @@ class Game {
         name: v.name,
         cost: v.cost,
         positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-        targetList: v.target && $(v.target)
+        targetList: v.target && Array.from($(v.target))
       };
     });
 
@@ -466,11 +504,13 @@ class Game {
    * Next step after this is done should be delta update
    */
   exportState () {
-    function sanitizeCard (card) {
+    function sanitizeCard (card1: Cards.Card) {
       //console.log(card);
+      let card = card1 as Cards.Card & Cards.Character;
       return Object.assign({}, card, {
         owner: card.owner.name, // change it to Player/EntityID
 
+        // resolve getters
         attack: card.attack,
         cost: card.cost,
         health: card.health,
@@ -478,42 +518,49 @@ class Game {
       });
     }
 
-    function onlyLeaveInCardObject (card) {
+    function onlyLeaveInCardObject (card: Cards.Card) {
       //console.log(card);
       return {
         card_id: card.card_id
       };
     }
 
-    let options = this.viewAvailableOptions();
+    let options: GameOptions.Options = this.viewAvailableOptions();
 
     let aggregatedState = {
       entities: this.board.$(this.activePlayer, '*').map(sanitizeCard),
       token: options.token,
       actions: options.actions.map(v => {
-        return {
-          card_id: v.card_id,
-          type: v.type,
-          //card: v.card, // unsafe direct reference
-          //unit: v.unit, // unsafe direct reference
-          targetList: v.targetList && v.targetList.map(onlyLeaveInCardObject),
-          positionList: v.positionList,
-          name: v.name
-
-        // id: v._id,
-        // unit: v,
-        // type: ACTION_TYPES.attack,
-        // name: v.name,
-        // //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
-        // targetList: sheeps
-
-        // id: v._id,
-        // card: v,
-        // type: v.ACTION_TYPES.playCard,
-        // name: v.name,
-        // cost: v.cost,
-        // positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-        // targetList: v.target && $(v.target)
+        const {
+          type
+        } = v;
+        switch (v.type) { // TS does not discriminate, it its switch(type) i.e destructured const ..
+          case ACTION_TYPES.concede:
+          return {type};
+          case ACTION_TYPES.endTurn:
+          return {type};
+          case ACTION_TYPES.attack:
+          return {
+            type,
+            card_id: v.card_id,
+            //card: v.card, // unsafe direct reference
+            //unit: v.unit, // unsafe direct reference
+            name: v.name,
+            //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
+            targetList: v.targetList,
+            // positionList: v.positionList
+          };
+          case ACTION_TYPES.playCard:
+          return {
+            type,
+            card_id: v.card_id,
+            name: v.name,
+            cost: v.cost,
+            targetList: v.targetList,
+            positionList: v.positionList
+          };
+          default:
+          throw new Error('Unexpected option');
         }
       }),
       game: {
@@ -554,7 +601,7 @@ class Game {
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
     this.players.forEach(player => {
-      let own_minions = this.board.$(player, 'own minion');
+      let own_minions = this.board.$<Cards.Character>(player, 'own minion');
 
       //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
 
@@ -564,16 +611,28 @@ class Game {
 player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.cost +') ' + v.name)}`
       );
       //console.log(this.board.$(player, 'own minion').map(v => v.name));
+
+      /** this is a HACK: fix type errors in fancy way */
+      function isObjectTag (v: any): v is ({
+        death: any,
+        aura: any,
+        trigger: any,
+        type: any
+      }) {
+        return typeof v !== 'string';
+      }
+
       console.log('minions on board', own_minions.map(v=>
       (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
       (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
       (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
       (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
 
-      (v.tags.find(v => v.death) ? '☠️' : '') +
-      (v.tags.find(v => v.trigger) ? 'T' : '') +
-      (v.tags.find(v => v.aura) ? 'A' : '') +
-      (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
+
+      (v.tags.filter(isObjectTag).find(v => !!v.death) ? '☠️' : '') +
+      (v.tags.filter(isObjectTag).find(v => !!v.trigger) ? 'T' : '') +
+      (v.tags.filter(isObjectTag).find(v => !!v.aura) ? 'A' : '') +
+      (v.tags.filter(isObjectTag).find(v => v.type === CARD_TYPES.enchantment) ? 'E' : '') +
       (v.incomingAuras.length ? 'a' : '') +
 
       `${v.attack}/${v.health}`

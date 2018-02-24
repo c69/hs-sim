@@ -3,6 +3,7 @@ import {
     XXX_ZONE,
     CARD_TYPES,
     CardDefinition,
+    Cards,
     XXX_CARD, // todo: rethink this ..
     TAGS,
     PLAYERCLASS,
@@ -21,7 +22,7 @@ type EventBus = {
     removeListener (a: any, b: any): void;
 };
 
-class Card {
+class Card implements Cards.Card {
     eventBus: EventBus;
     id: string;
     // dbfId: number;

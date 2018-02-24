@@ -5,18 +5,22 @@ import {
     CARD_TYPES as TYPES,
     TAGS,
     PLAYERCLASS,
-    CardDefinition,
-    // AoC
+    // CardDefinition,
+    AoC as AoC_b,
+    Cards
 } from '../data/constants';
 
 import { MapString } from '../shared.interface';
-type Card = any;
+import { Card } from './card';
+
+// type Card = any;
 type Player = any;
 
-type CardFilterFunction = (a:CardDefinition) => boolean;
+type CardFilterFunction = (a: Cards.Card) => boolean;
 
 // interface AoC extends ArrayOfCards {};
-type AoC = any[];
+// type AoC<T extends Cards.Card = Cards.Card> = T[];
+// type AoC_b<T extends Cards.Card> = T[];
 
 type FilterAccumulator = {
     owners: Set<Player>;
@@ -29,6 +33,7 @@ type FilterAccumulator = {
 }
 /** reducer for simple enum tokens */
 function buildFilterSets (a: FilterAccumulator, t: string) {
+    // TODO: there is a bug with "own hero" method :(
     switch (t) {
         // -- PLAYERS --
         case 'any':
@@ -87,7 +92,12 @@ let _$_all_selectors: any = {};
 let _$_count_slow_path = 0;
 let _$_slow_selectors: any = {};
 
-class Board {
+interface Board {
+    $<T extends Cards.Card = Cards.Card>(p: Player, s: string): AoC_b<T>;
+    $(p: Player, s: '*'): AoC_b<Cards.Card>;
+}
+
+class Board{
     deck1: any;
     deck2: any;
     player1: any;
@@ -128,7 +138,7 @@ class Board {
    * @param player Could (and should) be curried for card helper function (player is self.owner)
    * @param selector_string Refer to syntax above
    */
-   $ (player: Player, selector_string: string): AoC {
+   $ (player: Player, selector_string: string) {
    // $ (player: Player, selector_string: string): ArrayOfCards {
     _$_count += 1;
 
@@ -151,20 +161,22 @@ class Board {
       // shaved 200ms (7.00s to 6.80s) on 100 runs in Node6
       // should consider memoisation/caching (with turn-tick-phase key)
       //try to optimize for most used cases ? and then maybe move this strings to constants
-//      '*': function (v) {return true }, // =_=
+
+/*
       'minion': function (v) { return v.zone === ZONES.play && v.type === TYPES.minion;},
       'character': function (v) { return v.zone === ZONES.play && (v.type === TYPES.minion || v.type === TYPES.hero);},
       'own minion': function (v) { return v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.minion;},
-      //'enemy hero': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.hero;},
-      //'own hero': function (v) { return v.zone === ZONES.play && v.owner === ownPlayer && v.type === TYPES.hero;},
-      //'enemy hero': function (v) { return  enemyPlayer.hero;},
-      //'own hero': function (v) { return ownPlayer.hero;},
       'enemy minion': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && v.type === TYPES.minion;},
       'own character': function (v) { return  v.zone === ZONES.play && v.owner === ownPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
       'enemy character': function (v) { return  v.zone === ZONES.play && v.owner === enemyPlayer && (v.type === TYPES.minion || v.type === TYPES.hero);},
+      // heroes are OFTEN in the beginning of the deck (cough.. "premature optimization")
+      'own hero': function (v) { return v.type === TYPES.hero && v.zone === ZONES.play && v.owner === ownPlayer},
+      'enemy hero': function (v) { return v.type === TYPES.hero && v.zone === ZONES.play && v.owner === enemyPlayer},
+
       //:validTarget for attack or missiles
       //:isAlive ? :isDamaged ?
       'enemy character .health>0': function (v) { return v.zone === ZONES.play && v.owner === enemyPlayer && v.health > 0 && (v.type === TYPES.minion || v.type === TYPES.hero);}
+*/
     } as MapString<(a: any) => boolean>)[selector_string];
     if (f) return ArrayOfCards.from( all_cards.filter(f) );
 
@@ -183,10 +195,10 @@ class Board {
     const board2xxx = tokens.reduce(buildFilterSets, {
         ownPlayer: ownPlayer,
         enemyPlayer: enemyPlayer,
-        owners: new Set(),
-        types: new Set(),
-        zones: new Set(),
-        tags: new Set(),
+        owners: new Set() as Set<Player>,
+        types: new Set() as Set<string>,
+        zones: new Set() as Set<string>,
+        tags: new Set() as Set<string>,
         props: null
     });
 
@@ -202,17 +214,17 @@ class Board {
     // zone is the most discriminating of light weight checks
     // type less so - because 99% of @play are minions or heroes
     if (board2xxx.types.size) {
-        filters.push(function (v) {
-            return board2xxx.zones.has(v) && board2xxx.types.has(v);
+        filters.push(function (v: Card) {
+            return board2xxx.zones.has(v.zone) && board2xxx.types.has(v.type);
         })
     } else {
-        filters.push(function (v) {
-            return board2xxx.zones.has(v);
+        filters.push(function (v: Card) {
+            return board2xxx.zones.has(v.zone);
         })
     }
     if (board2xxx.owners.size) {
-        filters.push(function (v) {
-            return board2xxx.owners.has(v);
+        filters.push(function (v: Card) {
+            return board2xxx.owners.has(v.owner);
         })
     }
 
@@ -271,7 +283,7 @@ class Board {
          '<=': (v) => v[propertyName] <= comparisonValue,
          '=': (v) => v[propertyName] === comparisonValue || new RegExp('^' + comparisonValue + '$', 'i').test(v[propertyName]),
          '!=': (v) => v[propertyName] != comparisonValue,
-       };
+       } as {[key: string]: (v: Cards.Card) => boolean};
        return ops[operator];
     });
     //return tokens;

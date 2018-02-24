@@ -123,6 +123,14 @@ let baseCard: EffectTarget = {
     }
 };
 
+/**
+this is interpreted as :(
+
+const tags: {
+    DIVINE_SHIELD: "DIVINE_SHIELD" | "TAUNT";
+    TAUNT: "DIVINE_SHIELD" | "TAUNT";
+}
+*/
 const tags: {[key in KnownTag]: KnownTag} = {
     'TAUNT': 'TAUNT',
     'DIVINE_SHIELD': 'DIVINE_SHIELD'

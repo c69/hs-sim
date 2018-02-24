@@ -260,10 +260,10 @@ class Game implements GameRPC, GameRunner<Game> {
     //refresh/re-apply auras
 
     function hasAura (a: any): a is Cards.LegacyBuff {
-      return 'aura' in a;
+      return a.aura;
     }
     function hasDeath (a: any): a is Cards.LegacyBuff {
-      return 'death' in a;
+      return a.death;
     }
 
     allCards.forEach(character => {

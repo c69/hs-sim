@@ -160,10 +160,10 @@ const everyone = [
 
 ];
 
-// const theDeck = everyone;
+const theDeck = everyone;
 // const theDeck = summerParty;
 // const theDeck = HeyCatch;
-const theDeck = Fuu;
+// const theDeck = Fuu;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {

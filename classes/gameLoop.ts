@@ -92,8 +92,7 @@ class Game implements GameRPC, GameRunner<Game> {
   eventBus: any;
   players: Player[];
   board: Board;
-  _$: Map<Player, (a: string) => AoC>;
-  // _$: Map<any, (a: string) => ArrayOfCards>;
+  _$: Map<Player, <T extends Cards.Card>(a: string) => AoC<T>>;
   turn: number = 0;
   activePlayer: Player;
   passivePlayer: Player;
@@ -110,8 +109,19 @@ class Game implements GameRPC, GameRunner<Game> {
     this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
 
     // save the bound $ function, and do not recreate them every tick
-    let $p1 = this.board.$.bind(this.board, players[0]);
-    let $p2 = this.board.$.bind(this.board, players[1]);
+    const p1 = players[0];
+    const p2 = players[1];
+    // BEFORE THIS WAS: let $p1 = this.board.$.bind(this.board, players[0]);
+    // but - you cannot transfer generic with .bind
+    // this looks like a potential performance hit
+    // but ! we should just move this to Board
+    // and stop writing wrappers-over-wrappers
+    const $p1 = (<T extends Cards.Card>(q: string) => {
+      return this.board.$<T>(p1, q);
+    });
+    const $p2 = (<T extends Cards.Card>(q: string) => {
+      return this.board.$<T>(p2, q);
+    });
     this._$ = new Map();
     this._$.set(players[0], $p1);
     this._$.set(players[1], $p2);
@@ -406,12 +416,13 @@ class Game implements GameRPC, GameRunner<Game> {
     if (!this.isStarted || this.isOver) {
       console.log('No options are available - game state is wrong.');
       return {
+        // token ?
         actions: [] as GameOptions.Action[]
       };
     }
     let $ = this._$.get(this.activePlayer);
 
-    let pawns = $('own character') as AoC<Cards.Character>;
+    let pawns = $<Cards.Character>('own character');
     let warriors = pawns.filter(v => {
       if (v.attack < 1) return false;
       if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
@@ -424,7 +435,7 @@ class Game implements GameRPC, GameRunner<Game> {
       return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
     });
 
-    let aubergines = $('enemy character') as AoC<Cards.Character>;
+    let aubergines = $<Cards.Character>('enemy character');
     let sheeps = aubergines.filter(v => {
       return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
     });
@@ -436,8 +447,6 @@ class Game implements GameRPC, GameRunner<Game> {
     // scan for spell shield
     // ..
 
-    //console.log('warriors', warriors);
-    //console.log('sheeps', sheeps);
     let attack = warriors.map(v => {
       return {
         card_id: v.card_id,

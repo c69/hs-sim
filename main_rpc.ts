@@ -51,7 +51,7 @@ function showPerformance () {
 
 module.exports = {
   //start: gameInstance.start.bind(gameInstance),
-  exportState: gameInstance.exportState.bind(gameInstance),
-  chooseOption: gameInstance.chooseOption.bind(gameInstance),
+  exportState: gameInstance.exportState,
+  chooseOption: gameInstance.chooseOption,
   showPerformance: showPerformance
 };

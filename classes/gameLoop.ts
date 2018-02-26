@@ -21,6 +21,9 @@ import {
   ZONES
 } from '../data/constants';
 import Player from './player';
+import { exportStateJSON } from './exportState';
+import { viewAvailableOptions } from './frameOptions';
+
 
 type FluentMethod<T> = () => T;
 type ActionCoordinates = {
@@ -371,7 +374,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     console.log('-- frame: MAIN_ACTION ---');
     if (this.isOver) return this; // if game ended - nobody can do anything
 
-    let options: GameOptions.Options = this.board.viewAvailableOptions();
+    let options: GameOptions.Options = viewAvailableOptions(this.board);
+
     //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
@@ -409,11 +413,11 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
 
     return this;
   }
-  viewAvailableOptions() {
-    return this.board.viewAvailableOptions();
+  viewAvailableOptions = () => {
+    return viewAvailableOptions(this.board);
   };
-  exportState () {
-    return this.board.exportStateJSON();
+  exportState = () => {
+    return exportStateJSON(this.board);
   }
   //-----------------------------------
   view () {

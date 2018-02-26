@@ -1,15 +1,14 @@
 /// <reference types="node" />
 
-import { Board } from './classes/board2';
+import { Board } from './classes/board5';
 import {
   initGame,
-  bootstrap,
   _GAME_profile
 } from './classes/bootstrap';
 
 let gameInstance = initGame(
-  ['Alizee', 'HERO_08'],
-  ['Sir Bob', 'HERO_01']
+  ['Alizee', ['HERO_08']],
+  ['Sir Bob', ['HERO_01']]
 );
 gameInstance.start();
 
@@ -42,11 +41,11 @@ gameInstance.start();
 /** debug output for performance testing */
 function showPerformance () {
   let g_profile = _GAME_profile();
-  let b_profile = Board._profile()
+  // let b_profile = Board._profile()
   console.log(g_profile);
-  console.log(b_profile);
+  // console.log(b_profile);
   console.log( {
-    'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
+    // 'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
   });
 }
 

@@ -15,34 +15,19 @@ import {
     ZONES
 } from '../data/constants';
 
+import { Board } from './board5';
 import Player from './player';
 import { Card } from './card';
-import { Game } from './gameLoop';
+import {
+    GameLoop,
+    GameState
+} from './gameLoop';
 
 
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
 
-/**
- * @param {Array} arr1
- * @param {Array} arr2
- * @param {Object} eb
- */
-function bootstrap(
-    arr1: [Player, string, Card[]],
-    arr2: [Player, string, Card[]],
-    eb: EventBus
-) {
-    [
-        arr1, //.concat(eb),
-        arr2 // .concat(eb)
-    ].forEach(function (arr) {
-        // TS does not like spread (...arr)
-        bootstrapPlayer(arr[0], arr[1], arr[2], eb);
-    });
-}
-
-function bootstrapPlayer(
+function generateDeck_legacy (
     player: Player,
     hero_card_id: string,
     starting_deck: Card[],
@@ -63,37 +48,40 @@ function bootstrapPlayer(
         let new_card = createCard(card.id, player, eventBus);
         deck.push(new_card);
     }
+
+    return deck;
 }
+// function generateDeck([hero, ...others]: string[]): Card[] {
+//     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
+// }
 
-function initGame(
-    [name1, hero_id_1]: [string, string],
-    [name2, hero_id_2]: [string, string],
-    eb?: EventBus
+
+
+type PlayerConfig = [string, string[]];
+
+function initGame (
+    [name1, deck1]: PlayerConfig,
+    [name2, deck2]: PlayerConfig
 ) {
-    // console.log('initializing players');
-
+    const rules = {}; // max, min, etc
+    const state = {}; // current turn, mana, etc
+    const g = new GameState({rules, state});
     const p1 = new Player(name1);
     const p2 = new Player(name2);
-    if (!eb) {
-        eb = new EventBus();
-    }
-    bootstrap(
-        [p1, hero_id_1, []],
-        [p2, hero_id_2, []],
-        eb
-    );
-    //console.log(Game, Game.toString(), JSON.stringify(Game));
-    const game = new Game([
-        p1,
-        p2
-    ], eb);
+    // const d1 = generateDeck(deck1);
+    // const d2 = generateDeck(deck2);
+    const eb = new EventBus();
+    const d1 = generateDeck_legacy(p1, deck1[0], [], eb);
+    const d2 = generateDeck_legacy(p2, deck2[0], [], eb);
 
-    return game;
+    const board = new Board(g, [p1, d1], [p2, d2], eb);
+    const runner = new GameLoop(board, [p1, p2], eb);
+
+    return runner;
 }
 
-const _profile = Game._profile;
+const _profile = GameLoop._profile;
 export {
-    bootstrap,
     initGame,
     _profile as _GAME_profile
 };

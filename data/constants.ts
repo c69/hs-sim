@@ -147,7 +147,7 @@ export namespace Cards {
 
     zone: string;
     owner: any;
-    type: Types.CardsAllCAPS;
+    type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
     tags: (string | LegacyBuff)[];
     incomingAuras?: LegacyBuff[]
 

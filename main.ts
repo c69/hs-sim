@@ -2,12 +2,11 @@
 
 import Player from './classes/player';
 import {
-  bootstrap,
   initGame,
   _GAME_profile
 } from './classes/bootstrap';
 
-import { Board } from './classes/board2';
+import { Board } from './classes/board5';
 
 import {
   _progress
@@ -22,7 +21,7 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
     console.warn = function () {};
   }
   // actual play
-  let g = initGame(['Red', 'HERO_01'], ['Blue', 'HERO_02']);
+  let g = initGame(['Red', ['HERO_01']], ['Blue', ['HERO_02']]);
   g.start();
   //actual HS hardcoded maximum round is 87 or so..
   for(let i = 0; i < 90 && !g.isOver; i++) {
@@ -58,8 +57,8 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
 
 //e2e test for Fatigue
 var g_fatigue = initGame(
-  ['Lazy1', 'HERO_09'],
-  ['Lazy', 'HERO_07']
+  ['Lazy1', ['HERO_09']],
+  ['Lazy', ['HERO_07']]
 );
 g_fatigue.start();
 
@@ -73,8 +72,8 @@ console.log('==================');
 // bootstrap / init
 // actual play
 let g2 = initGame(
-  ['Alice', 'HERO_08'],
-  ['Bob', 'HERO_01']
+  ['Alice', ['HERO_08']],
+  ['Bob', ['HERO_01']]
 );
 g2.start();
 
@@ -138,9 +137,9 @@ _progress();
 
 //debug output for performance testing
 let g_profile = _GAME_profile();
-let b_profile = Board._profile()
+// let b_profile = Board._profile()
 console.log(g_profile);
-console.log(b_profile);
+// console.log(b_profile);
 console.log( {
-  'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
+  // 'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
 });

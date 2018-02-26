@@ -1,23 +1,34 @@
 import {
   CARD_TYPES,
-  ZONES
+  ZONES,
+  Cards
 } from '../data/constants';
 
+import { Card } from './card';
 import Hand from './hand';
 import Deck from './deck';
 
-export default class Player {
-  name: string;
+// export default class Player extends Card {
+export default class Player implements Cards.Card {
+  card_id: number;
+  name = 'PLAYER_UNKNOWN';
+  zone: 'PLAY';
+  owner: Player = null;
+  type: 'GAME';
+  tags: Cards.Card['tags'] = [];
 
+  /** @deprecated */
   deck: Deck = null;//deck; //$('own @deck');
+  /** @deprecated */
   hand: Hand;
 
   manaCrystals: number = 0;
-  /** @deprecated */ mana: number;
+  mana: number = 0;
   fatigue: number = 1;
   lost: boolean = false;
 
   constructor (name: string) {
+    // super(def, this, eb?!);
     this.name = name;
 
     this.deck = null;//deck; //$('own @deck');
@@ -28,6 +39,7 @@ export default class Player {
     this.fatigue = 1;
     this.lost = false;
   }
+  /** @deprecated */
   get hero () {
     //console.log('trying to GET .hero from Player ' + this.name);
     let r = this.deck._arr.find(v => v.type === CARD_TYPES.hero && v.zone === ZONES.play); // probably hero should be injected by Board ..

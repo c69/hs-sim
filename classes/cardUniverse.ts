@@ -201,6 +201,14 @@ function createCard(id: string, player, eventBus) {
 }
 
 /////
+function shuffle (arr: any[]): any[] {
+  // TODO: shuffle
+  return arr;
+}
+// function cardFromName (name: string): Card {
+//   // TODO: find by name
+//   return new Card();
+// }
 
 
 let coolCards = abilitiesMixin.filter(v => {

@@ -4,7 +4,7 @@ type UnionKeyToValue<U extends string, T> = {
 type MapString<T> = {
   readonly [index: string]: T;
 }
-type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
+export type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
 export namespace Types {
   export type Zones = 'play'|'deck'|'hand'|'grave'|'aside';
@@ -20,13 +20,13 @@ export namespace Types {
 // refer to http://hearthstone.gamepedia.com/Advanced_rulebook
 
 // http://hearthstone.gamepedia.com/Zone_enumeration
-const ZONES: U2<Types.Zones, string> = {
-  deck: 'DECK',
-  hand: 'HAND',
-  play: 'PLAY',
-  grave: 'GRAVE',
-  aside: 'ASIDE', //setaside
-  secret: 'SECRET',
+const ZONES = {
+  deck: 'DECK' as 'DECK',
+  hand: 'HAND' as 'HAND',
+  play: 'PLAY' as 'PLAY',
+  grave: 'GRAVE' as 'GRAVE',
+  aside: 'ASIDE' as 'ASIDE', //setaside
+  secret: 'SECRET' as 'SECRET',
   //
   //invalid: 'INVALID',
   //discard: 'DISCARD'
@@ -145,8 +145,8 @@ export namespace Cards {
     card_id: number;
     name: string;
 
-    zone: string;
-    owner: any;
+    zone: Types.ZonesAllCAPS;
+    owner: Player;
     type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
     tags: (string | LegacyBuff)[];
     incomingAuras?: LegacyBuff[]
@@ -158,6 +158,21 @@ export namespace Cards {
     cost?: number;
 
     [key: string]: any;
+  }
+  export interface Player  extends Card {
+    type: 'PLAYER';
+
+    manaCrystals: number;
+    mana: number;
+    fatigue: number;
+
+    deck: any;
+    hand: any;
+    hero: any;
+
+    draw: (n: number) => void;
+    loose: () => void;
+    lost: boolean;
   }
   export interface Character extends Card {
     type: 'MINION' | 'HERO';

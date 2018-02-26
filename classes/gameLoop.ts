@@ -140,7 +140,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   _init () {
     //console.log('starting the game...');
     this.players.forEach(player => {
-      player.draw(5);
+      this.board.draw(player, 5);
       player.manaCrystals = 1;
       player.mana = player.manaCrystals;
     });
@@ -184,7 +184,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     this._cleanup(); // cancer great again ? :/
   }
   _attemptToDrawCard () { // wrappers inside of wrappers ...
-    this.activePlayer.draw(1);
+    this.board.draw(this.activePlayer, 1);
 
     //execute triggers: "When player draws a card"
   }

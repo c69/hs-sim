@@ -1,4 +1,5 @@
 import {
+    Types,
     ZONES,
     XXX_ZONE,
     CARD_TYPES,
@@ -12,11 +13,8 @@ import {
 
 let card_id = 1;
 
-// type CardDefinition = {};
-type Player = {
-    name: string;
-    loose (): void;
-};
+type Player = Cards.Player;
+
 type EventBus = {
     emit (a: any, b: any): any;
     removeListener (a: any, b: any): void;
@@ -26,7 +24,7 @@ class Card implements Cards.Card {
     eventBus: EventBus;
     id: string;
     // dbfId: number;
-    type: XXX_CARD; // ? :(
+    type: Types.CardsAllCAPS;
     name: string;
     text: string;
     // targetingArrowText: string;
@@ -45,8 +43,9 @@ class Card implements Cards.Card {
     incomingAuras: any[];
     _listener: any = null;
 
-    zone: string; // XXX_ZONE; // :(
+    zone: Types.ZonesAllCAPS;
     owner: Player;
+
 
     card_id: number;
 

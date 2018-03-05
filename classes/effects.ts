@@ -44,7 +44,7 @@ export type EffectTarget = {
     buffs: {
         incomingAuras: Buff[]; // refreshing each tick
         temporary: Buff[]; // mutable
-        history: Buff[]; // append-only
+        history: Buff[]; // all, !append-only
         active: Buff[]; // calculated current state
     }
     tags: Set<Tag>; // fast query

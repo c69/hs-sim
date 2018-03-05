@@ -24,7 +24,7 @@ export function viewAvailableOptions (board: Board) {
 
     //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
     if (!game.isStarted || game.isOver) {
-        console.log('No options are available - game state is wrong.');
+        console.log(`No options are available - game #${game.card_id} state is wrong: s ${game.isStarted} | o ${game.isOver}`);
         return {
             // token ?
             actions: [] as GameOptions.Action[]
@@ -67,10 +67,10 @@ export function viewAvailableOptions (board: Board) {
         };
     }).filter(v => v.targetList.length > 0);
 
-    let canSummonMore = (pawns.length <= 7); // with hero
+    const canSummonMore = (pawns.length <= 7); // with hero
     //console.log('canSummonMore', canSummonMore, pawns.length);
 
-    let playable: Cards.Card[] = this.activePlayer.hand.listPlayable();
+    const playable: Cards.Card[] = board.playableCards(board.activePlayer);
 
     //console.log(playable.map(v => `${v.name} #${v.card_id}`));
 
@@ -80,7 +80,7 @@ export function viewAvailableOptions (board: Board) {
         }
         if (v.type === CARD_TYPES.spell && !!v.target) {
             //console.log('v.target', v.target);
-            return this.$(v.target).length;
+            return $(v.target).length;
         }
         return true;
     }).map(v => {
@@ -91,11 +91,11 @@ export function viewAvailableOptions (board: Board) {
             name: v.name,
             cost: v.cost,
             positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-            targetList: v.target && this.select(this.activePlayer, v.target)
+            targetList: v.target && board.select(board.activePlayer, v.target)
         };
     });
 
-    //console.log(cards);
+    // console.log(cards);
 
     // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
     //console.log('actions --', attack, cards);

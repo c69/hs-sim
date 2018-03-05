@@ -155,6 +155,7 @@ export namespace Cards {
 
     target?: string;
     // play (): void;
+    play?: CardAbilities["play"];
     cost?: number;
 
     [key: string]: any;
@@ -170,7 +171,7 @@ export namespace Cards {
     hand: any;
     hero: any;
 
-    draw: (n: number) => void;
+    // draw: (n: number) => void;
     loose: () => void;
     lost: boolean;
   }
@@ -181,11 +182,15 @@ export namespace Cards {
     isReady: boolean;
     attackedThisTurn: number;
     isAlive (): boolean;
-    _die (): void;
+    // _die (): void;
   }
   export interface Spell extends Card {
     type: 'SPELL';
   }
+}
+
+export namespace StateMachine {
+  // see: board5.ts !
 }
 
 export namespace GameOptions {
@@ -237,6 +242,7 @@ type KnownEnvConstants = {
   $ (query: string): AoC;// any[];  // >
   readonly game: any;
   readonly self: any;
+  readonly position?: number; // only for play() of minion ?
 }
 
 type KnownMechanics = {

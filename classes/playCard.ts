@@ -6,6 +6,7 @@ import {
 import mechanics from './mechanics';
 
 import {
+    Cards,
     CARD_TYPES,
     TAGS_LIST,
     // EVENTS,
@@ -13,18 +14,16 @@ import {
 } from '../data/constants';
 
 
-/**
- * @param {object} card
- * @param {object} environment
- * @config {object} environment.game
- * @config {function} environment.$
- * @config {object} environment.target
- * @config {number} environment.position
- * @returns {function}
- */
-function playFromHand (card, {game, $, target, position}) {
+function playFromHand ({card, game, board, $, target, position}: {
+    card: Cards.Card,
+    game: any,
+    $: any,
+    board: any,
+    target: Cards.Card,
+    position: number,
+}) {
     if (!card) throw new RangeError('Card must be provided');
-    //console.log(card);
+    // console.log('playCard.ts::DEBUG', card);
 
     if (!card.owner === game.activePlayer) {
         console.warn(`playCard: ${card.owner.name} cannot play card on other player's turn`);
@@ -40,9 +39,7 @@ function playFromHand (card, {game, $, target, position}) {
     }
 
     card.owner.mana -= card.cost;
-    card._play();
-    // temporary hack, while Hand still has its own array
-    card.owner.hand._hand = card.owner.hand._hand.filter(v => v !== card);
+    board._playFromHand(card);
 
     console.log(`playCard: ${card.owner.name} played `, card.name);
 
@@ -50,7 +47,7 @@ function playFromHand (card, {game, $, target, position}) {
         // this.board.$('own minions').forEach((v,i) => {
         //   v.position = i;
         // });
-        card._summon();//({position}); // position is IGNORED for now
+        board._summon(card);//({position}); // position is IGNORED for now
 
 
         let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
@@ -66,7 +63,7 @@ function playFromHand (card, {game, $, target, position}) {
             // }
             let event_name = _trigger_v1.eventName;
             let listener = function (evt) {
-                let $ = game._$.get(card.owner);
+                let $ = board._$(card.owner);
                 let condition = _trigger_v1.condition;
                 if (condition === 'self') {
                     // proceed
@@ -86,7 +83,7 @@ function playFromHand (card, {game, $, target, position}) {
                     // position, - not applicable ?
                     $,
                     game,
-                    ...mechanics(card, game, $)
+                    ...mechanics(card, game, $, board)
                 });
             }.bind(game);
             game.eventBus.on(event_name, listener);
@@ -98,11 +95,11 @@ function playFromHand (card, {game, $, target, position}) {
     }
 
     // console.log('playCARD:', card, card.play, card._trigger_v1);
-    executeBattlecry(card, game, $, target, position);
+    executeBattlecry(card, game, $, target, position, board);
 }
 
-/** */
-function executeBattlecry (card, game, $, target, position) {
+// TODO: split battlecry and spell action
+function executeBattlecry (card: Cards.Card, game, $, target, position, board) {
     if (!card.play) {
         if (card.type === CARD_TYPES.spell) {
           throw `Spell ${card.name} has no action!`
@@ -124,13 +121,14 @@ function executeBattlecry (card, game, $, target, position) {
             return;
         }
     }
+
     card.play({
         self: card,
         target,
         position,
         $: $,
         game,
-        ...mechanics(card, game, $)
+        ...mechanics(card, game, $, board)
     });
 }
 

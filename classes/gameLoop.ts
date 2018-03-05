@@ -10,7 +10,7 @@ import {
 import { Board } from './board5';
 import { Card } from './card';
 import {
-  TAGS,
+  // TAGS,
   CARD_TYPES,
   ACTION_TYPES,
   GameOptions,
@@ -105,27 +105,27 @@ export class GameState implements Cards.Card {
 
   isStarted: boolean = false;
   isOver: boolean = false;
-  result: string = null;
+  result: any = null;
   constructor (a?: any) {}
 }
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   eventBus: any;
   board: Board;
-
-  turn: number = 0;
-
   players: Player[];
   activePlayer: Player;
   passivePlayer: Player;
 
-  isStarted: boolean = false;
-  isOver: boolean = false;
-  result: any = null;
+  turn: number = 0;
+
+  // isStarted: boolean = false;
+  // isOver: boolean = false;
+  // result: any = null;
 
   constructor (board: Board, players: [Player, Player], eventBus: any) {
     if (players.length !== 2) throw new RangeError("Game expects two players");
-    this.players = players;
+
     this.board = board;
+    this.players = players;
     this.eventBus = eventBus;
 
     this.turn = 0;
@@ -144,14 +144,13 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       player.manaCrystals = 1;
       player.mana = player.manaCrystals;
     });
-
   }
   _toggleActivePlayer () {
     this.activePlayer = this.players[this.turn % 2];
     this.passivePlayer = this.players[(this.turn + 1) % 2];
 
     this.board.activePlayer = this.activePlayer;
-    this.board.passivePlayer = this.activePlayer;
+    this.board.passivePlayer = this.passivePlayer;
   }
   _onTurnEnd () {
 
@@ -190,16 +189,16 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
 
   start () {
-    if (this.isStarted) return this; // multiple chain calls to .start could be ignored
-    this.isStarted = true;
-    this.isOver = false;
+    if (this.board.game.isStarted) return this; // multiple chain calls to .start could be ignored
+    this.board.game.isStarted = true;
+    this.board.game.isOver = false;
     this._init();//maybe with rules ? like min/max mana, etc
 
     return this;
   }
   end () {
-    this.isOver = true;
-    this.result = {
+    this.board.game.isOver = true;
+    this.board.game.result = {
       //could be a draw, too.. (when turn #87 is reached ?)
       winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
     };
@@ -207,7 +206,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
   concede () {
     this.activePlayer.loose();
-    this.isOver = true;
+    this.board.game.isOver = true;
 
     return this;
   }
@@ -243,12 +242,20 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     let $ = this.board._$(this.activePlayer);
     let card = o.card;
     //console.log('play card', c.name, target, position);
-    playCard(card, {
-      game: this,
+    playCard({
+      card, // vs "self" - we should standartize on name
+      game: this, // do we really need this ?
       $,
+      board: this.board,
       target,
       position
     });
+    // (tag.death as CardDefinition['death'])({
+    //   self,
+    //   $,
+    //   game,
+    //   ...mechanics(self, game, $)
+    // });
 
     this.eventBus.emit(EVENTS.card_played, card);
 
@@ -266,7 +273,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
 
-    let characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
+    const characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
 
     let allCards = this.board.select(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
@@ -310,16 +317,16 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
         }
         //console.log(`Aura of ${character.name}: ${t.length} of "${aura.target}"`);
 
-        //the signature is ugly... but i will refactor it
-        buffAura(this, $, character, t, aura.buff);
+        //the signature is EVEN MORE ugly... but i will refactor it
+        buffAura(this, $, this.board, character, t, aura.buff);
       });
     });
 
 
     //death logic onwards
     let death_list = characters.filter(character => {
-        return !character.isAlive();
-      });
+      return !character.isAlive();
+    });
 
     if (!death_list.length) {
       return;
@@ -328,7 +335,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       //~> character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
-      character._die();
+      this.board.kill(character);
 
       let $ = this.board._$(character.owner);
       let self = character;
@@ -340,7 +347,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
           self,
           $,
           game,
-          ...mechanics(self, game, $)
+          ...mechanics(self, game, $, this.board)
         });
       });
       if (character._listener) { // remove triggers - super dirty solution...
@@ -372,7 +379,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     _frame_count_active += 1;
 
     console.log('-- frame: MAIN_ACTION ---');
-    if (this.isOver) return this; // if game ended - nobody can do anything
+    if (this.board.game.isOver) return this; // if game ended - nobody can do anything
 
     let options: GameOptions.Options = viewAvailableOptions(this.board);
 
@@ -419,47 +426,9 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   exportState = () => {
     return exportStateJSON(this.board);
   }
-  //-----------------------------------
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
-    this.players.forEach(player => {
-      let own_minions = this.board.select<Cards.Character>(player, 'own minion');
-
-      //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
-
-      if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
-
-      console.log(`
-player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.cost +') ' + v.name)}`
-      );
-      //console.log(this.board.$(player, 'own minion').map(v => v.name));
-
-      /** this is a HACK: fix type errors in fancy way */
-      function isObjectTag (v: any): v is ({
-        death: any,
-        aura: any,
-        trigger: any,
-        type: any
-      }) {
-        return typeof v !== 'string';
-      }
-
-      console.log('minions on board', own_minions.map(v=>
-      (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
-      (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
-      (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
-      (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
-
-
-      (v.tags.filter(isObjectTag).find(v => !!v.death) ? '☠️' : '') +
-      (v.tags.filter(isObjectTag).find(v => !!v.trigger) ? 'T' : '') +
-      (v.tags.filter(isObjectTag).find(v => !!v.aura) ? 'A' : '') +
-      (v.tags.filter(isObjectTag).find(v => v.type === CARD_TYPES.enchantment) ? 'E' : '') +
-      (v.incomingAuras.length ? 'a' : '') +
-
-      `${v.attack}/${v.health}`
-      ));
-    });
+    this.players.forEach(p => this.board.viewStateForPlayer(p));
 
     return this;
   }

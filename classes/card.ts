@@ -22,6 +22,7 @@ type EventBus = {
 
 class Card implements Cards.Card {
     eventBus: EventBus;
+//    board: any;
     id: string;
     // dbfId: number;
     type: Types.CardsAllCAPS;
@@ -52,6 +53,7 @@ class Card implements Cards.Card {
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
+        // this.board = board || null;
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
         if (!owner) throw new RangeError('Owner player required');
@@ -127,52 +129,6 @@ class Card implements Cards.Card {
 
         //console.log(`card.tags returned: ${activeBuffs}`);
         return [].concat.apply([], activeBuffs);
-    }
-    _draw() {
-        if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
-        this.zone = ZONES.hand;
-    }
-    _play() {
-        if (this.type === CARD_TYPES.enchantment) {
-            // no idea from which zone to play it ..
-        } else {
-            if (this.zone !== ZONES.hand) throw `Attempt to play card NOT from hand: ${this.name} #${this.card_id}, but from: ${this.zone}`;
-        }
-        this.zone = ZONES.aside;
-
-        // todo: consider splitting this IF so proper event could be emitted
-        if (this.type === CARD_TYPES.minion || this.type === CARD_TYPES.weapon) {
-            this.zone = ZONES.play;
-        } else if (this.type === CARD_TYPES.spell) {
-            // todo: implements secrets
-            // this.zone = this.isSecret ? ZONES.secret : ZONES.grave;
-        } else if (this.type === CARD_TYPES.enchantment) {
-            this.zone = ZONES.play;
-        } else {
-            throw `Played card of unplayable type:${this.type}`;
-        }
-    }
-    _summon() {
-        this.zone = ZONES.play;
-
-        this.eventBus.emit(EVENTS.minion_summoned, {
-            target: this
-        });
-
-        //console.log(`card.js :: summoned ${this.name} for ${this.owner.name}`);
-    }
-    _mill() {
-        this.zone = ZONES.grave;
-    }
-    _die() {
-        console.log(`☠️ ${this.type.toLowerCase()} died: ${this.owner.name}'s ${this.name}`);
-        //this.death && this.death({self: this, $: game.board.$, game}); // deathrattle
-        this.zone = ZONES.grave;
-    }
-    _copy() {
-        let copy = (new (this.constructor as any)(this, this.owner));
-        // copy.tags[] are DIRTY !
-        copy.zone = ZONES.aside;
     }
     toString() {
         return `[Object Card ${this.type}: ${this.name} #${this.card_id}]`;
@@ -308,10 +264,6 @@ class Hero extends Character {
 
         this.armor = cardDef.armor || 0;
         //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]
-    }
-    _die() {
-        super._die();
-        this.owner.loose();
     }
 }
 class Power extends Card {

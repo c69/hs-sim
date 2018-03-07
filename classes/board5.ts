@@ -170,6 +170,7 @@ export class Board {
         }
 
         this.all = d1.concat(d2);
+        this.all.forEach(c => this.initCache(c));
         this.all = this.all.map(c => this.placeCardInit(c));
 
         console.log(`board setup ready!`, p1.name, p2.name);
@@ -251,6 +252,14 @@ export class Board {
         // todo: add mandatory targets
     }
 
+    initCache (this: this, card: C) {
+        if (typeof card.name !== 'string' || typeof card !== 'object') {
+            throw `Some junk is stored in the board! ${card}`;
+        }
+        this.byType[card.type].add(card);
+        this.byZone[card.zone].push(card);
+        this.byOwner.get(card.owner).add(card);
+    }
     add(this: this, card: C, zone?: Types.ZonesAllCAPS): this {
         if (typeof card.name !== 'string' || typeof card !== 'object') {
             throw `Some junk is being added to board! ${card}`;

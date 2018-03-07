@@ -2,7 +2,7 @@ import {
   ZONES
 } from '../data/constants';
 
-export default class Deck {
+export default class legacy_Deck {
   _arr: any[];
   constructor (arr: any[]) {
     this._arr = arr; // direct mutable reference +_+ !

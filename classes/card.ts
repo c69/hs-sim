@@ -58,6 +58,12 @@ class Card implements Cards.Card {
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
         if (!owner) throw new RangeError('Owner player required');
 
+        this.zone = ZONES.aside;
+        this.owner = owner;
+
+        this.card_id = card_id++;
+
+
         this.id = cardDef.id;
         //this.dbfId = cardDef.dbfId;
         this.type = cardDef.type;
@@ -96,11 +102,6 @@ class Card implements Cards.Card {
                 aura: cardDef.aura
             });
         }
-
-        this.zone = ZONES.deck;
-        this.owner = owner;
-
-        this.card_id = card_id++;
     }
     get cost() {
         return getter_of_buffed_atribute.call(this, 'cost', this.costBase);

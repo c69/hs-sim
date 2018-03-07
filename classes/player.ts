@@ -12,7 +12,7 @@ import Deck from './deck';
 export default class Player implements Cards.Player {
   card_id: number;
   name = 'PLAYER_UNKNOWN';
-  zone: Types.ZonesAllCAPS = 'PLAY';
+  zone: Types.ZonesAllCAPS = 'ASIDE';
   owner: Player = null;
   type: 'PLAYER';
   tags: Cards.Card['tags'] = [];
@@ -41,9 +41,9 @@ export default class Player implements Cards.Player {
     this.fatigue = 1;
     this.lost = false;
   }
-  // draw (n: number) {
+  draw (n: number) {
 
-  // }
+  }
   loose () {
     if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
     console.warn(`player ${this.name} LOST the game`);

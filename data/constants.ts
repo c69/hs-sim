@@ -171,7 +171,9 @@ export namespace Cards {
     hand: any;
     hero: any;
 
-    // draw: (n: number) => void;
+    /** @deprecated this is being overwritten on the instance in board5.ts */
+    draw: (n: number) => void;
+
     loose: () => void;
     lost: boolean;
   }

@@ -118,7 +118,7 @@ function buffAura (game, $, board, auraGiver, auraTarget, id_or_Tag) {
         // ... no no no no
         // again the "put in the game" and "play from hand are mixed" :(
         // aura and buff need "put in play" (from ouside)
-        board._playFromHand(c); // unsafe ? where is the destructor ? TODO: check for leaks
+        board._putInPlay(c); // unsafe ? where is the destructor ? TODO: check for leaks
       }
       applyBuff({
         card: c,

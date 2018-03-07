@@ -15,7 +15,7 @@ import {
     ZONES
 } from '../data/constants';
 
-import { Board } from './board5';
+import { Board } from './board7';
 import Player from './player';
 import { Card } from './card';
 import {

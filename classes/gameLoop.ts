@@ -7,7 +7,7 @@ import {
   buffAura
 } from './buff';
 
-import { Board } from './board5';
+import { Board } from './board7';
 import { Card } from './card';
 import {
   // TAGS,
@@ -197,6 +197,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return this;
   }
   end () {
+    this.isOver = true; // temporary hack for main js
+
     this.board.game.isOver = true;
     this.board.game.result = {
       //could be a draw, too.. (when turn #87 is reached ?)

@@ -105,7 +105,7 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
 
 let jjj = [];
 let _timeStart = Date.now();
-let _N_RUNS = 50;
+let _N_RUNS = process.argv[2] || 50;
 for (let j = 0; j < _N_RUNS; j++) {
   // current speed is 100 games in 15 seconds
   jjj.push(_quick_play(0, {mute: true}));

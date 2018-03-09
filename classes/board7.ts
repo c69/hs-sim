@@ -8,6 +8,7 @@ import {
     Cards,
     // GameOptions,
     // ACTION_TYPES,
+    EVENTS,
     CARD_TYPES
 } from '../data/constants';
 import { Card, Game } from './card';
@@ -323,34 +324,8 @@ export class Board {
             console.log(`${card.owner.name} My hand is too full !`);
             to = Z.grave;
         }
-        // -- not more that 7 minions
-        // if (to === Z.play
-        //     && card.type === CARD_TYPES.minion
-        //     && this.byZone[Z.play].filter(c =>
-        //         intersect(
-        //             this.byType.MINION,
-        //             this.byOwner.get(card.owner)
-        //         ).has(c)
-        //     ).length >= MAX_MINIONS_IN_PLAY
-        // ) {
-        //     to = Z.grave;
-        // }
+        // -- not more that 7 minions in play OR goto grave
         // -- new hero replaces existing one
-        // if (to === Z.play
-        //     && card.type === CARD_TYPES.hero
-        // ) {
-        //     const oldHeroes = intersect(intersect(
-        //         this.byZone[Z.play],
-        //         this.byType.HERO),
-        //         this.byOwner.get(card.owner)
-        //     );
-        //     if (oldHeroes.size > 1) throw `Invalid state: more than 1 hero for player ${card.owner.name}`
-        //     if (oldHeroes.size === 1) {
-        //         let oldHero = [...oldHeroes][0];
-        //         this._update(oldHero, {zone: Z.grave})
-        //     }
-        // }
-        // TBD -- new weapon replaces existing one
         // TBD -- new weapon replaces existing one
         // TBD -- new hero_power replaces existing one
         // TBD -- new secret cannot be added if same one exists
@@ -396,9 +371,9 @@ export class Board {
     _summon(this: this, card: Cards.Card) {
         this.move(card, Z.play);
 
-        // this.eventBus.emit(EVENTS.minion_summoned, {
-        //     target: this
-        // });
+        card.eventBus.emit(EVENTS.minion_summoned, {
+            target: card
+        });
 
         //console.log(`board5.ts :: summoned ${this.name} for ${this.owner.name}`);
     }

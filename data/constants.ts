@@ -10,8 +10,8 @@ export namespace Types {
   export type Zones = 'play'|'deck'|'hand'|'grave'|'aside';
   export type ZonesAllCAPS = 'PLAY'|'DECK'|'HAND'|'GRAVE'|'ASIDE';
 
-  export type Cards = 'minion'|'spell'|'hero'|'weapon'|'power'|'enchantment';
-  export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT';
+  export type Cards = 'minion'|'spell'|'hero'|'weapon'|'power'|'enchantment|game|player';
+  export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT'|'GAME'|'PLAYER';
 
   export type Tags = 'taunt'|'enraged'|'divineShield';
 }
@@ -39,7 +39,11 @@ const CARD_TYPES = {
   weapon: 'WEAPON' as 'WEAPON',
   hero: 'HERO' as 'HERO',
   power: 'HERO_POWER' as 'HERO_POWER',
-  enchantment: 'ENCHANTMENT' as 'ENCHANTMENT'
+  enchantment: 'ENCHANTMENT' as 'ENCHANTMENT',
+
+  player: 'PLAYER' as 'PLAYER',
+  game: 'GAME' as 'GAME',
+
 };
 
 // const CARD_TYPES: U2<Types.Cards, Types.CardsAllCAPS> = {
@@ -257,15 +261,17 @@ type KnownMechanics = {
 }
 
 type CardDefinitionBase = {
-  id: string;
+  readonly id: string;
+  readonly type: Types.CardsAllCAPS;
+  readonly name: string;
+
   _info: string;
   text: string;
-  type: Types.CardsAllCAPS;
-  name: string;
-  playerClass: 'NEUTRAL';
-  rarity: 'EPIC';
-  collectible: boolean;
-  race: string;
+
+  playerClass?: 'NEUTRAL';
+  rarity?: 'EPIC';
+  collectible?: boolean;
+  race?: string;
 
   cost?: number;
   attack?: number | any; // | (a: any)=>number;
@@ -301,7 +307,7 @@ type CardAbilities = {
   tags?: string[];
 
   /** @deprecated */
-  attack: any;
+  attack?: any;
 }
 
 type CardDefinition = CardDefinitionBase & CardAbilities;

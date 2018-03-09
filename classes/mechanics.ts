@@ -186,7 +186,7 @@ export default function mechanics (card, game, $, board): KnownMechanics {
             if ($('own minion').length >= 7) return;
 
             let MY_CREATION = createCard(id, card.owner, game.eventBus);
-            card.owner.deck._arr.push(MY_CREATION);
+            board.add(MY_CREATION);
             board._summon(MY_CREATION);
             //console.log('its real!!!', MY_CREATION);
         },

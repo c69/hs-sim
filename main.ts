@@ -1,6 +1,5 @@
 /// <reference types="node" />
 
-import Player from './classes/player';
 import {
   initGame,
   _GAME_profile

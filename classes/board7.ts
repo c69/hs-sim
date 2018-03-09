@@ -1,5 +1,3 @@
-import ArrayOfCards from './arrayOfCards';
-
 import {
     U2,
     Types,
@@ -12,13 +10,11 @@ import {
     // ACTION_TYPES,
     CARD_TYPES
 } from '../data/constants';
-
-// import { MapString } from '../shared.interface';
-import { Card } from './card';
-import Player from './player';
-import { GameState } from './gameLoop';
+import { Card, Game } from './card';
+import ArrayOfCards from './arrayOfCards';
 
 type C = Cards.Card;
+type Player = Cards.Player;
 
 type bZx = U2<Types.ZonesAllCAPS, C[]>
 type bZ = U2<Types.ZonesAllCAPS, Set<C>>
@@ -66,6 +62,12 @@ function buildFilterSets (a: FilterAccumulator, t: string) {
         case 'card':
             a.types.clear();
             break;
+        case 'game':
+            // ???
+            break;
+        case 'player':
+            // ???
+            break;
         case 'minion':
             a.types.add(CARD_TYPES.minion);
             break;
@@ -80,6 +82,12 @@ function buildFilterSets (a: FilterAccumulator, t: string) {
             break;
         case 'spell':
             a.types.add(CARD_TYPES.spell);
+            break;
+        case 'hero_power':
+            a.types.add(CARD_TYPES.power);
+            break;
+        case 'enchantment':
+            a.types.add(CARD_TYPES.enchantment);
             break;
         // -- ZONES --
         case '@deck':
@@ -113,7 +121,7 @@ export class Board {
     // should be
     player1: Player = null;
     player2: Player = null;
-    game: GameState = null;
+    game: Game = null;
     // game.owner === activePlayer
 
     private byOwner = new Map<Player, Set<C>>();
@@ -138,7 +146,7 @@ export class Board {
     // }
 
     constructor(
-        g: GameState,
+        g: Game,
         [p1, d1]: [Player, C[]],
         [p2, d2]: [Player, C[]],
         eb: any
@@ -163,7 +171,7 @@ export class Board {
         console.log(`board setup ready!`, p1.name, p2.name);
     }
     select<T extends C = C>(this: this, p: Player, query: string): C[] {
-        const isVaidSelector = /^(any|own|enemy)?\s*(card|minion|hero|character|weapon|spell)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
+        const isVaidSelector = /^(any|own|enemy)?\s*(card|card|player|minion|hero|character|weapon|spell|hero_power|enchantment)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
         if (!isVaidSelector) throw 'Selector syntaxt invalid';
 
         const [
@@ -240,16 +248,16 @@ export class Board {
     }
 
     initCache (this: this, card: C) {
-        if (typeof card.name !== 'string' || typeof card !== 'object') {
-            throw `Some junk is stored in the board! ${card}`;
-        }
+        // if (typeof card.name !== 'string' || typeof card !== 'object') {
+        //     throw `Some junk is stored in the board! ${card}`;
+        // }
         this.byType[card.type].add(card);
         this.byOwner.get(card.owner).add(card);
     }
     add(this: this, card: C, zone: Types.ZonesAllCAPS = Z.aside): this {
-        if (typeof card.name !== 'string' || typeof card !== 'object') {
-            throw `Some junk is being added to board! ${card}`;
-        }
+        // if (typeof card.name !== 'string' || typeof card !== 'object') {
+        //     throw `Some junk is being added to board! ${card}`;
+        // }
         this.byType[card.type].add(card);
         this._update(card, {
             owner: card.owner,
@@ -424,7 +432,7 @@ export class Board {
         if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
         console.log(`
-  player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${this.hand(player).length} ${this.hand(player).map(v=>v.cost +') ' + v.name)}`
+  player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${this.deck(player).length} hand:${this.hand(player).length} ${this.hand(player).map(v=>v.cost +') ' + v.name)}`
         );
         //console.log(this.board.$(player, 'own minion').map(v => v.name));
 

@@ -9,7 +9,8 @@ import {
     CARD_TYPES
 } from '../data/constants';
 import { Board } from './board7';
-import Player from './player';
+
+type Player = Cards.Player;
 
 /**
  * A nice GOD method

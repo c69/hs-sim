@@ -15,8 +15,11 @@ import {
 
 // import { MapString } from '../shared.interface';
 import { Card } from './card';
-import Player from './player';
-import { GameState } from './gameLoop';
+// import Player from './player';
+// import { GameState } from './gameLoop';
+
+type Player = any;
+type GameState = any;
 
 type C = Cards.Card;
 

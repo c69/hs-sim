@@ -8,7 +8,7 @@ import {
 } from './buff';
 
 import { Board } from './board7';
-import { Card } from './card';
+// import { Card } from './card';
 import {
   // TAGS,
   CARD_TYPES,
@@ -20,7 +20,7 @@ import {
   EVENTS,
   ZONES
 } from '../data/constants';
-import Player from './player';
+
 import { exportStateJSON } from './exportState';
 import { viewAvailableOptions } from './frameOptions';
 
@@ -92,22 +92,8 @@ FINAL_GAMEOVER 15
 
  */
 
- // could potentially extend Card
-export class GameState implements Cards.Card {
-  card_id: number;
-  name: 'GAME_ENTITY';
-  zone: 'PLAY';
-  owner: Player = null;
-  type: 'GAME';
-  tags: Cards.Card['tags'] = [];
+type Player = Cards.Player;
 
-  turn: number = 0;
-
-  isStarted: boolean = false;
-  isOver: boolean = false;
-  result: any = null;
-  constructor (a?: any) {}
-}
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   eventBus: any;
   board: Board;
@@ -118,8 +104,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   turn: number = 0;
 
   // isStarted: boolean = false;
-  // isOver: boolean = false;
-  // result: any = null;
+  isOver: boolean = false; // ~ temporary hack
+  result: any = null; // ~ temporary hack
 
   constructor (board: Board, players: [Player, Player], eventBus: any) {
     if (players.length !== 2) throw new RangeError("Game expects two players");
@@ -197,13 +183,15 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return this;
   }
   end () {
-    this.isOver = true; // temporary hack for main js
 
     this.board.game.isOver = true;
     this.board.game.result = {
       //could be a draw, too.. (when turn #87 is reached ?)
       winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
     };
+
+    this.isOver = this.board.game.isOver; // temporary hack for main js
+    this.result = this.board.game.result; // temporary hack for main js
     return this;
   }
   concede () {

@@ -13,7 +13,6 @@ import {
 
 let card_id = 1;
 
-type Player = Cards.Player;
 
 type EventBus = {
     emit (a: any, b: any): any;
@@ -49,14 +48,18 @@ class Card implements Cards.Card {
 
 
     card_id: number;
-
+    //'constructor': typeof Card;
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
         // this.board = board || null;
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
-        if (!owner) throw new RangeError('Owner player required');
+        if (!owner && !(
+                cardDef.type === CARD_TYPES.game ||
+                cardDef.type === CARD_TYPES.player
+            )
+        ) throw new RangeError('Owner player required');
 
         this.zone = ZONES.aside;
         this.owner = owner;
@@ -314,6 +317,66 @@ class Enchantment extends Card {
     }
 }
 
+class Game extends Card {
+    card_id: number;
+    name: 'GAME_ENTITY';
+    zone: 'PLAY';
+    owner: Player = null;
+    type: 'GAME';
+
+    turn: number = 0;
+
+    isStarted: boolean = false;
+    isOver: boolean = false;
+    result: any = null;
+
+    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(cardDef, null, eventBus);
+    }
+}
+
+class Player extends Card implements Cards.Player {
+    card_id: number;
+    name = 'PLAYER_UNKNOWN';
+    zone: Types.ZonesAllCAPS = 'ASIDE';
+    owner: Player = null;
+    type: 'PLAYER';
+
+    deck: null;
+    hand: null;
+    hero: null;
+
+    manaCrystals: number = 0;
+    mana: number = 0;
+    fatigue: number = 1;
+    lost: boolean = false;
+
+    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(cardDef, null, eventBus);
+
+        if (this.type !== CARD_TYPES.player) throw new RangeError(
+            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
+
+        this.name = cardDef.name;
+        this.owner = this;
+
+        // this.manaCrystals = cardDef.manaCrystals || 0;
+        this.manaCrystals = 0;
+        this.mana = this.manaCrystals;
+        this.fatigue = 1;
+        this.lost = false;
+    }
+    draw (n: number) {
+
+    }
+    loose () {
+      if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
+      console.warn(`player ${this.name} LOST the game`);
+      this.lost = true;
+    }
+  }
+
+
 /**
  * This function calculates final value of attribute
  *  after applying all currently active buffs on the card
@@ -346,15 +409,14 @@ function getter_of_buffed_atribute(prop, initialValue) {
     return new_value > 0 ? new_value : 0;
 }
 
-export default {
+export {
     Card,
     Minion,
     Spell,
     Hero,
     Weapon,
     Power,
-    Enchantment
-}
-export {
-    Card
+    Enchantment,
+    Game,
+    Player
 }

@@ -9,9 +9,9 @@ import {
     CARD_TYPES
 } from '../data/constants';
 import { Board } from './board7';
-import Player from './player';
-
 import { viewAvailableOptions } from './frameOptions';
+
+type Player = Cards.Player;
 
 function sanitizeCard (card1: Cards.Card) {
     //console.log(card);

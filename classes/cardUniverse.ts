@@ -1,24 +1,44 @@
-'use strict';
-//@ts-check
+/// <reference types="node" />
 
-const CardJSON = require('../data/cards.all.generated.json');
-const abilitiesMixin = require('../data/actions.collectiblePlus.js');
-const Card = require('./card.js');
-const Deck = require('./deck.js');
+import {
+  CARD_TYPES,
+  CardDefinition
+  // ZONES
+} from '../data/constants';
 
-//const Board = require('./classes/board.js');
-const {
-  CARD_TYPES, // ! destructuring - so the renaming order is NON-OBVIOUS
-  ZONES
-} = require('../data/constants.js');
+const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
 
-const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
+import abilitiesMixin from '../data/actions.collectiblePlus';
+import {
+  Card,
+  Minion,
+  Spell,
+  Hero,
+  Weapon,
+  Power,
+  Enchantment,
+  Game,
+  Player
+} from './card';
 
-let CardDefinitions = JSON.parse(JSON.stringify(CardJSON));
+
+/** @private maybe its time to stop hubris and add lodash .. */
+function _pick (obj: object, props: string[]) {
+  const a = new Set([].concat(props));
+  const r = {};
+  for (let k in obj) {
+    if (a.has(k)) {
+      r[k] = obj[k];
+    }
+  }
+  return r;
+}
+
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
-}, {});
+}, {} as {[key: string]: CardDefinition});
+
 abilitiesMixin.forEach(({
   //long destructuring
   id,
@@ -45,81 +65,97 @@ abilitiesMixin.forEach(({
 
   if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true;
 });
+
 //---Deck2.js sketch------------------
-let card_defs = CardDefinitions.filter(v => v.collectible === true)
-  .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
-  .filter(v => {
-    if (v.type === CARD_TYPES.spell) return !!v.play;
-    return true;
-  })
-  //.filter(v => !v._NOT_IMPLEMENTED_)
-  .filter(v => [
+const DECKS = {
+  summerParty: [
+    'Fireball',
+    'Meteor',
+    'Arcane Missiles',
+    'Flame Imp',
+    'Unstable Ghoul',
+    'Shielded Minibot',
+    'Argent Horseraider',
+    'Young Dragonhawk',
+    'Ironbeak Owl',
+    'Hand of Protection',
+    'Aldor Peacekeeper',
+    'Unleash the Hounds',
+    'Knife Juggler',
+  ],
+  HeyCatch: [
+    'Knife Juggler'
+  ],
+  Fuu: [
+    'Flame Imp'
+  ],
+  everyone: [
     //'Chillwind Yeti',
     //'River Crocolisk',
     //'Bloodfen Raptor',
     //--
-    //'Coin',       
+    //'Coin',
     //--spells:damage
     'Fireball',
     'Meteor',
-    //'Arcane Explosion',
+    'Arcane Explosion',
     'Arcane Missiles',
-    //      'Hellfire',
-    //'Swipe',
-    //'Assassinate',
+    'Hellfire',
+    'Swipe',
+    'Assassinate',
 
     //--basic minions with tags or battlecries
     'Flame Imp',
-    //'Ironfur Grizzly',
+    'Ironfur Grizzly',
 
-    //'Leper Gnome',
+    'Leper Gnome',
     'Unstable Ghoul',
     //'Ravaging Ghoul',
     //'Mad Bomber',
-    //'Abomination',
+    'Abomination',
     //'Elven Archer',
     //'Silent Knight', //-- stealth
-    //'Annoy-o-Tron',
+    'Annoy-o-Tron',
     'Shielded Minibot',
     'Argent Horseraider',
     'Young Dragonhawk',
     // 'Thrallmar Farseer',
-    
+
     // - silence
     'Ironbeak Owl',
-    //'Mass Dispel',    
-    
+    //'Mass Dispel',
+
     // - give
     //'Bloodsail Raider',
-    //'Windfury',
+    'Windfury',
     'Hand of Protection',
     // 'Shattered Sun Cleric',
-    //'Windspeaker',      
+    //'Windspeaker',
     //'Abusive Sergeant', // this turn
     //'Bloodlust', // this turn
     //'Houndmaster',
-    //'Sunfury Protector', // adjacent 
+    //'Sunfury Protector', // adjacent
     'Defender of Argus', // adjacent
     //'Blessing of Wisdom',
     'Aldor Peacekeeper',
     // 'Raging Worgen', //enrage
-    
+
     // - aura
-    //'Timber Wolf', //other
+    'Timber Wolf', //other
     'Flametongue Totem', //adjacent
-    //'Tundra Rhino',
+    'Tundra Rhino',
     //'Warsong Commander',
     'Stormwind Champion', //other
-    //'Summoning Portal', //mana cost
-    //'Molten Giant', //self cost
-    //'Junkbot', //for its (5) 1/5
+    'Summoning Portal', //mana cost
+    // 'Molten Giant', //self cost - NOT WORKING !
+    'Junkbot', //for its (5) 1/5
 
     //--summon
     //'Blood To Ichor',
-    'Murloc Tidehunter',
+    // 'Murloc Tidehunter',
     //'Leeroy Jenkins',
     //'Mirror Image',
-    'Unleash the Hounds',
+  //    'Unleash the Hounds',
     //'Dreadsteed',
     // 'Sludge Belcher',
 
@@ -127,75 +163,72 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
     //--trigger, MVP minions
     'Knife Juggler',
     'Acolyte of Pain',
-    // 'Imp Gang Boss',
+    'Imp Gang Boss',
     // 'Starving Buzzard',
     // 'Patches the Pirate',
     //'Doomsayer',
     'Grim Patron',
+  ]
+};
 
-  ].includes(v.name))
-  ;
-////
+const theDeck = DECKS.everyone;
+// const theDeck = DECKS.summerParty;
+// const theDeck = DECKS.HeyCatch;
+// const theDeck = DECKS.Fuu;
 
+let card_defs = CardDefinitions.filter(v => v.collectible === true)
+  .filter(v => {
+    return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
+  })
+  .filter(v => {
+    if (v.type === CARD_TYPES.spell) return !!v.play;
+    return true;
+  })
+  //.filter(v => !v._NOT_IMPLEMENTED_)
+  .filter(v => theDeck.includes(v.name));
+/////
 console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
+/////
+
 
 /**
- * @param {Array} arr1 
- * @param {Array} arr2 
- * @param {Object} eb 
+ * todo: do we really need to couple card & player & eventBus
  */
-function bootstrap(arr1, arr2, eb) {
-  [
-    arr1.concat(eb),
-    arr2.concat(eb)
-  ].forEach(function (arr) {
-    bootstrapPlayer(...arr);
-  });
-}
-
-/**
- * 
- * @param {Player} player 
- * @param {string} hero_card_id 
- * @param {Array} starting_deck 
- * @param {Object} eventBus 
- */
-function bootstrapPlayer(player, hero_card_id, starting_deck, eventBus) {
-  player.deck = new Deck([]);
-  let deck = player.deck._arr;
-
-  //add Hero, and put it in play
-  deck.push(createCard(hero_card_id, player, eventBus));
-  deck[0].zone = ZONES.play;
-
-  //add 30 random cards to deck
-  for (let i = 0; i < STARTING_DECK_SIZE; i++) {
-    let dice = Math.floor(Math.random() * (card_defs.length));
-    let card = card_defs[dice];
-
-    let new_card = createCard(card.id, player, eventBus);
-    deck.push(new_card);
-  }
-}
-// do we really need to couple card & player & eventBus
-function createCard(id, player, eventBus) {
+function createCard(id: string, player: Player, eventBus) {
   let card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 
-  let structor = {
-    [CARD_TYPES.minion]: Card.Minion,
-    [CARD_TYPES.hero]: Card.Hero,
-    [CARD_TYPES.weapon]: Card.Weapon,
-    [CARD_TYPES.spell]: Card.Spell,
-    [CARD_TYPES.power]: Card.Power,
-    [CARD_TYPES.enchantment]: Card.Enchantment,
-  }[card.type];
-
-  let new_card = new structor(card, player, eventBus);
-  return new_card;
+  let C = CARD_TYPES;
+  let _ = null;
+  switch (card.type) {
+    case C.minion: _ = Minion; break;
+    case C.hero: _ = Hero; break;
+    case C.weapon: _ = Weapon; break;
+    case C.spell: _ = Spell; break;
+    case C.power: _ = Power; break;
+    case C.enchantment: _ = Enchantment; break;
+//  case C.game: _ = Game; break;
+//  case C.player: _ = Player; break;
+    default: throw 'Attempt to create card of invalid type';
+  }
+  let new_card = new _ (
+    card,
+//  (card.type === C.player || card.type === C.game) ? null : player,
+    player,
+    eventBus
+  );
+  return new_card as Card;
 }
 
 /////
+function shuffle (arr: any[]): any[] {
+  // TODO: shuffle
+  return arr;
+}
+// function cardFromName (name: string): Card {
+//   // TODO: find by name
+//   return new Card();
+// }
 
 
 let coolCards = abilitiesMixin.filter(v => {
@@ -209,7 +242,7 @@ let coolCards = abilitiesMixin.filter(v => {
 });
 
 let progressOfCards = coolCards.reduce((a, v) => {
-  let keys = Reflect.ownKeys(v);
+  let keys = Reflect.ownKeys(v) as string[]; //TODO: check what is signature of Reflect.ownKeys
 
   let [id, _info, text] = keys;
   if (keys.length === 3 && id === 'id' && _info === '_info' && text === 'text') {
@@ -225,7 +258,7 @@ let progressOfCards = coolCards.reduce((a, v) => {
     'death',
     'target',
     'tags',
-    'trigger'
+    // 'trigger'
   ].includes(k));
   if (hasWeirdProps) {
     a.in_progress += 1;
@@ -247,9 +280,10 @@ function _progress() {
   console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);
   //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 }
-module.exports = {
-  bootstrap,
+
+export {
   CardDefinitionsIndex,
+  card_defs as _cardDefinitionArray, //INTERNAL
   createCard,
   _progress
 };

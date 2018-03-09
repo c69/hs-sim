@@ -8,7 +8,7 @@ const debug = require('debug')('hs:service:game')
 const validate = require('../middlewares/validate')
 const postGameSchema = require('../schemas/postGame')
 
-const hsGame = require('../../../main_rpc')
+const hsGame = require('../../../dist/main_rpc')
 
 router.get('/game', getGame)
 router.post('/game/action', validate(postGameSchema), chooseGameAction)
@@ -43,7 +43,7 @@ function chooseGameAction (req, res) {
       optionIndex,
       targetIndex,
       positionIndex
-    }  
+    }
   );
 
   res.send(req.body);

@@ -1,0 +1,101 @@
+{
+    "_XXX_": "~/data/constants.js",
+    "~/main_rpc.js": {
+        "~/classes/board2.js": {
+            "~/classes/arrayOfCards.js": {},
+            "_XXX_": {}
+        },
+        "~/classes/bootstrap.js": {
+            "~/classes/cardUniverse.js": {
+                "_XXX_": {},
+                "~/data/actions.collectiblePlus.js": {
+                    "_XXX_": {}
+                },
+                "~/classes/card.js": {
+                    "_XXX_": {}
+                }
+            },
+            "~/classes/deck.js": {
+                "_XXX_": {}
+            },
+            "_XXX_": {},
+            "~/classes/player.js": {
+                "_XXX_": {},
+                "~/classes/hand.js": {}
+            },
+            "~/classes/gameLoop.js": {
+                "~/classes/combat.js": {
+                    "_XXX_": {}
+                },
+                "~/classes/mechanics.js": {
+                    "~/classes/cardUniverse.js": {
+                        "_XXX_": {},
+                        "~/data/actions.collectiblePlus.js": {
+                            "_XXX_": {}
+                        },
+                        "~/classes/card.js": {
+                            "_XXX_": {}
+                        }
+                    },
+                    "_XXX_": {},
+                    "~/classes/buff.js": {
+                        "_XXX_": {},
+                        "~/classes/cardUniverse.js": {
+                            "_XXX_": {},
+                            "~/data/actions.collectiblePlus.js": {
+                                "_XXX_": {}
+                            },
+                            "~/classes/card.js": {
+                                "_XXX_": {}
+                            }
+                        }
+                    }
+                },
+                "~/classes/playCard.js": {
+                    "~/classes/mechanics.js": {
+                        "~/classes/cardUniverse.js": {
+                            "_XXX_": {},
+                            "~/data/actions.collectiblePlus.js": {
+                                "_XXX_": {}
+                            },
+                            "~/classes/card.js": {
+                                "_XXX_": {}
+                            }
+                        },
+                        "_XXX_": {},
+                        "~/classes/buff.js": {
+                            "_XXX_": {},
+                            "~/classes/cardUniverse.js": {
+                                "_XXX_": {},
+                                "~/data/actions.collectiblePlus.js": {
+                                    "_XXX_": {}
+                                },
+                                "~/classes/card.js": {
+                                    "_XXX_": {}
+                                }
+                            }
+                        }
+                    },
+                    "_XXX_": {}
+                },
+                "~/classes/buff.js": {
+                    "_XXX_": {},
+                    "~/classes/cardUniverse.js": {
+                        "_XXX_": {},
+                        "~/data/actions.collectiblePlus.js": {
+                            "_XXX_": {}
+                        },
+                        "~/classes/card.js": {
+                            "_XXX_": {}
+                        }
+                    }
+                },
+                "~/classes/board2.js": {
+                    "~/classes/arrayOfCards.js": {},
+                    "_XXX_": {}
+                },
+                "_XXX_": {}
+            }
+        }
+    }
+}

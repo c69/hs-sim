@@ -2,5 +2,9 @@ node_modules
 .vscode
 .idea
 .fusebox
+.nyc_output
+coverage
 
 client/dist
+target
+dist

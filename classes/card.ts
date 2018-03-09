@@ -8,20 +8,16 @@ import {
     XXX_CARD, // todo: rethink this ..
     TAGS,
     PLAYERCLASS,
-    EVENTS
+    EVENTS,
+    EventBus
 } from '../data/constants';
 
 let card_id = 1;
 
 
-type EventBus = {
-    emit (a: any, b: any): any;
-    removeListener (a: any, b: any): void;
-};
-
 class Card implements Cards.Card {
     eventBus: EventBus;
-//    board: any;
+
     id: string;
     // dbfId: number;
     type: Types.CardsAllCAPS;
@@ -48,11 +44,9 @@ class Card implements Cards.Card {
 
 
     card_id: number;
-    //'constructor': typeof Card;
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
-        // this.board = board || null;
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
         if (!owner && !(
@@ -135,7 +129,7 @@ class Card implements Cards.Card {
         return [].concat.apply([], activeBuffs);
     }
     toString() {
-        return `[Object Card ${this.type}: ${this.name} #${this.card_id}]`;
+        return `[${this.type}: ${this.name} #${this.card_id}]`;
     }
 }
 
@@ -200,7 +194,7 @@ class Character extends Card {
         //console.log(`🔥 ${this.name} was marked for destroy!`);
     }
     silence() {
-        console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);
+        console.log(`${this.owner.name}'s ${this} got SILENCED!`);
         this.buffs.push(TAGS.silence);
 
         // super dirty solution for silencing triggers (copy paste from game.js deathsweep)

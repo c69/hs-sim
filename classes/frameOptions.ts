@@ -23,9 +23,9 @@ export function viewAvailableOptions (board: Board) {
     const game = board.game;
     const $ = board._$(activePlayer);
 
-    //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
+    //console.log(`refreshing options for ${this.activePlayer.name} on turn#${game.turn}`);
     if (!game.isStarted || game.isOver) {
-        console.log(`No options are available - game #${game.card_id} state is wrong: s ${game.isStarted} | o ${game.isOver}`);
+        console.log(`No options are available - game ${game} state is wrong: s ${game.isStarted} | o ${game.isOver}`);
         return {
             // token ?
             actions: [] as GameOptions.Action[]
@@ -74,7 +74,7 @@ export function viewAvailableOptions (board: Board) {
 
     const playable: Cards.Card[] = board.playableCards(board.activePlayer);
 
-    //console.log(playable.map(v => `${v.name} #${v.card_id}`));
+    //console.log(playable.map(v => `${v}`));
 
     let cards = playable.filter((v) => {
         if (v.type === CARD_TYPES.minion) {

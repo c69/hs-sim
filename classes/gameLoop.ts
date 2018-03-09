@@ -18,6 +18,7 @@ import {
   Cards,
   CardDefinition,
   EVENTS,
+  EventBus,
   ZONES
 } from '../data/constants';
 
@@ -95,7 +96,7 @@ FINAL_GAMEOVER 15
 type Player = Cards.Player;
 
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
-  eventBus: any;
+  eventBus: EventBus;
   board: Board;
   players: Player[];
   activePlayer: Player;

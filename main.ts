@@ -108,6 +108,7 @@ let _timeStart = Date.now();
 let _N_RUNS = process.argv[2] || 50;
 for (let j = 0; j < _N_RUNS; j++) {
   // current speed is 100 games in 15 seconds
+  // @ 09 Mar 2018 - current speed is 100 games in 5 seconds, node 9.7.1
   jjj.push(_quick_play(0, {mute: true}));
 }
 let duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);

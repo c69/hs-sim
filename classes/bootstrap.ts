@@ -12,6 +12,7 @@ import {
 } from './cardUniverse';
 
 import {
+    CARD_TYPES,
     ZONES
 } from '../data/constants';
 
@@ -29,13 +30,9 @@ function generateDeck_legacy (
     starting_deck: Card[],
     eventBus: EventBus
 ) {
-    // player.deck = new Deck([]);
-    let deck = []; // = player.deck._arr;
-
+    let deck = [];
     //add Hero
     deck.push(createCard(hero_card_id, player, eventBus));
-    // .., and put it in play
-    // deck[0].zone = ZONES.play;
 
     //add 30 random cards to deck
     for (let i = 0; i < STARTING_DECK_SIZE; i++) {
@@ -53,7 +50,24 @@ function generateDeck_legacy (
 // }
 
 
-
+function gameDef () {
+    return {
+        id: 'xxx_GAME_ENTITY',
+        type: CARD_TYPES.game,
+        name: 'GAME',
+        _info: '...',
+        text: '...'
+    }
+}
+function playerDef (name: string) {
+    return {
+        id: 'xxx_PLAYER_ENTITY',
+        type: CARD_TYPES.player,
+        name: name,
+        _info: '...',
+        text: '...'
+    }
+}
 type PlayerConfig = [string, string[]];
 
 function initGame (
@@ -66,28 +80,10 @@ function initGame (
     // const state = {}; // current turn, mana, etc
 
     // todo: simplify constructor signatures for game and player
-    const g = new Game({
-        id: 'xxx_GAME_ENTITY',
-        type: 'GAME',
-        name: 'GAME',
-        _info: '...',
-        text: '...'
-    }, null, eb);
+    const g = new Game(gameDef(), null, eb);
+    const p1 = new Player(playerDef(name1), null, eb);
+    const p2 = new Player(playerDef(name2), null, eb);
 
-    const p1 = new Player({
-        id: 'xxx_GAME_PLAYER_ENTITY',
-        type: 'PLAYER',
-        name: name1,
-        _info: '...',
-        text: '...'
-    }, null, eb);
-    const p2 = new Player({
-        id: 'xxx_GAME_PLAYER_ENTITY',
-        type: 'PLAYER',
-        name: name2,
-        _info: '...',
-        text: '...'
-    }, null, eb);
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);
     const d1 = generateDeck_legacy(p1, deck1[0], [], eb);

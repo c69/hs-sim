@@ -169,7 +169,7 @@ export class Board {
         this.all.forEach(c => this.initCache(c));
         this.all = this.all.map(c => this.placeCardInit(c));
 
-        console.log(`board setup ready!`, p1.name, p2.name);
+        console.log(`Board setup for ${g} finished! ${p1} VS ${p2}\n`);
     }
     select<T extends C = C>(this: this, p: Player, query: string): C[] {
         const isVaidSelector = /^(any|own|enemy)?\s*(card|card|player|minion|hero|character|weapon|spell|hero_power|enchantment)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
@@ -289,7 +289,7 @@ export class Board {
             this.byOwner.get(owner).add(card);
         }
 
-        console.log(`${card.name} #${card.card_id} -> ${
+        console.log(`${card} -> ${
             (zone && owner) ?
                 [zone, owner.name]
             : (zone || owner.name )
@@ -311,7 +311,7 @@ export class Board {
     private move(card: C, to: Types.ZonesAllCAPS, from?: string): this {
         const actualFrom = card.zone;
         if (from && from !== actualFrom) {
-            throw `ZONE CACHE: state machine expected ${card.name} #${card.card_id} to be in ${from}, but actual .zone is ${actualFrom}`;
+            throw `ZONE CACHE: state machine expected ${card} to be in ${from}, but actual .zone is ${actualFrom}`;
         }
 
         const MAX_HAND_SIZE = 10;
@@ -348,7 +348,7 @@ export class Board {
                 p.hero.dealDamage(p.fatigue++);
                 continue;
             }
-            // else if (card.zone !== Z.deck) throw `Attempt to draw ${card.name} #${card.card_id} NOT from deck, but from: ${card.zone}`;
+            // else if (card.zone !== Z.deck) throw `Attempt to draw ${card} NOT from deck, but from: ${card.zone}`;
 
             this.move(card, Z.hand, Z.deck);
             r.push(card);
@@ -385,7 +385,7 @@ export class Board {
         console.log(`☠️ ${card.type.toLowerCase()} died: ${card.owner.name}'s ${card.name}`);
         //this.death && this.death({self: this, $: game.board.$, game}); // deathrattle
         if (card.zone === Z.grave) {
-            throw `Dont kill dead cards .. again! ${card.name} #${card.card_id}`;
+            throw `Dont kill dead cards .. again! ${card}`;
         }
         this.move(card, Z.grave, Z.play);
         if (card.type === CARD_TYPES.hero) {

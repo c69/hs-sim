@@ -2,7 +2,8 @@
 
 import {
   CARD_TYPES,
-  CardDefinition
+  CardDefinition,
+  EventBus
   // ZONES
 } from '../data/constants';
 
@@ -175,9 +176,9 @@ const DECKS = {
   ]
 };
 
-// const theDeck = DECKS.everyone;
+const theDeck = DECKS.everyone;
 // const theDeck = DECKS.summerParty;
-const theDeck = DECKS.HeyCatch;
+// const theDeck = DECKS.HeyCatch;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
 
@@ -199,7 +200,7 @@ console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 /**
  * todo: do we really need to couple card & player & eventBus
  */
-function createCard(id: string, player: Player, eventBus) {
+function createCard(id: string, player: Player, eventBus: EventBus) {
   let card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 

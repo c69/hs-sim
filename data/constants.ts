@@ -46,15 +46,6 @@ const CARD_TYPES = {
 
 };
 
-// const CARD_TYPES: U2<Types.Cards, Types.CardsAllCAPS> = {
-//   minion: 'MINION' as 'MINION',
-//   spell: 'SPELL' as 'SPELL',
-//   weapon: 'WEAPON' as 'WEAPON',
-//   hero: 'HERO' as 'HERO',
-//   power: 'HERO_POWER' as 'HERO_POWER',
-//   enchantment: 'ENCHANTMENT' as 'ENCHANTMENT'
-// };
-
 const PLAYERCLASS = {
   mage: 'MAGE',
   priest: 'PRIEST',
@@ -92,6 +83,12 @@ const EVENTS = {
   turn_started: 'TURN_STARTED',
   turn_ended: 'TURN_ENDED'
 };
+
+type EventBus = {
+  emit (a: any, b: any): any;
+  removeListener (a: any, b: any): void;
+};
+
 
 /* @deprecated */
 const ACTION_TYPES = {
@@ -190,7 +187,6 @@ export namespace Cards {
     isReady: boolean;
     attackedThisTurn: number;
     isAlive (): boolean;
-    // _die (): void;
   }
   export interface Spell extends Card {
     type: 'SPELL';
@@ -198,7 +194,7 @@ export namespace Cards {
 }
 
 export namespace StateMachine {
-  // see: board5.ts !
+  // see: board7.ts !
 }
 
 export namespace GameOptions {
@@ -206,12 +202,12 @@ export namespace GameOptions {
   interface BaseAction {
       entity_id: number;
       entity: Cards.Card;
-      type: Types; // ACTION_TYPES.playCard;
+      type: Types;
       name: string;
   }
   export type Attack = {
       card_id: number;
-      unit: Cards.Character; // read Object ?
+      unit: Cards.Character;
       type: 'ATTACK'; // ACTION_TYPES.attack;
       name: string;
       // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
@@ -327,5 +323,6 @@ export {
     TAGS_LIST,
     PLAYERCLASS,
     ACTION_TYPES,
-    EVENTS
+    EVENTS,
+    EventBus
 };

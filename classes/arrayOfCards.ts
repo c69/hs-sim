@@ -17,7 +17,7 @@ export default class ArrayOfCards<T extends Cards.Card> extends Array implements
      * @param minion A pivoting minion
      * @return 0..2 matching minions
      */
-    adjacent (minion: Cards.Card) {
+    adjacent (this: this, minion: Cards.Card) {
         let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
         let i = minions.findIndex(v => v === minion);
 
@@ -28,31 +28,31 @@ export default class ArrayOfCards<T extends Cards.Card> extends Array implements
      * @param card Card to exclude
      * @return 0..* Remaining cards
      */
-    exclude (card: Cards.Card) {
+    exclude (this: this, card: Cards.Card) {
         return this.filter(v => v !== card) as AoC<T>;
     }
     /**
      * Find and return random card from current ArrayOfCards
      * @return collection of 1 matching minions
      */
-    getRandom () { // i'd like signature to be getRandom(n) where n is number of distinct random members
+    getRandom (this: this) { // i'd like signature to be getRandom(n) where n is number of distinct random members
         const random_idx = Math.floor(Math.random() * this.length);
         const v = this[random_idx] || this;
 
         return (new this.constructor()).concat(v) as AoC<T>;
     }
     // call-through Card methods
-    dealDamage (n: number) {
+    dealDamage (this: this, n: number) {
         console.log(`damaging ${this.length} minions`);
         this.forEach(v => v.dealDamage(n));
     }
-    dealDamageSpell (n: number) {
+    dealDamageSpell (this: this, n: number) {
         this.forEach(v => v.dealDamageSpell(n));
     }
-    destroy () {
+    destroy (this: this) {
         this.forEach(v => v.destroy());
     }
-    silence () {
+    silence (this: this) {
         this.forEach(v => v.silence());
     }
 }

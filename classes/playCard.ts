@@ -28,7 +28,7 @@ function playFromHand ({card, game, board, $, target, position}: {
         return () => {};
     }
     if (card.cost > card.owner.mana) {
-        console.warn(`playCard: cannot play card ${card.name} #${card.card_id} - not enough mana`);
+        console.warn(`playCard: cannot play card ${card} - not enough mana`);
         return () => {};
     }
 
@@ -72,7 +72,7 @@ function doSpellAction (card: Cards.Card, args) {
     if (!card.play) throw `Spell ${card.name} has no action!`
     if (target && !card.target) throw `unexpected target for card which does not need it: ${args.target, card.target}`;
     if (!target && card.target && !card.targetIsOptional) {
-        throw `spell which require target, MUST have target: ${card.name} #${card.card_id} | ${card.target}`;
+        throw `spell which require target, MUST have target: ${card} | ${card.target}`;
     }
 
     card.play({
@@ -118,7 +118,7 @@ function summonMinion (card: Cards.Card, board, game) {
             })) {
                 return;
             }
-            console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
+            console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card} @${card.zone}]`);
             _trigger_v1.action({
                 self: card,
                 target: evt.target,

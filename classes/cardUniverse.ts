@@ -86,6 +86,9 @@ const DECKS = {
   HeyCatch: [
     'Knife Juggler'
   ],
+  DieInsect: [
+    'Ragnaros the Firelord'
+  ],
   Fuu: [
     'Flame Imp'
   ],
@@ -168,12 +171,14 @@ const DECKS = {
     // 'Patches the Pirate',
     //'Doomsayer',
     'Grim Patron',
+    'Ragnaros the Firelord'
   ]
 };
 
-const theDeck = DECKS.everyone;
+// const theDeck = DECKS.everyone;
 // const theDeck = DECKS.summerParty;
-// const theDeck = DECKS.HeyCatch;
+const theDeck = DECKS.HeyCatch;
+// const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)

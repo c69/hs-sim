@@ -36,6 +36,7 @@ export function viewAvailableOptions (board: Board) {
     let warriors = pawns.filter(v => {
         if (v.attack < 1) return false;
         if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
+        if (v.tags.includes(TAGS.cannot_attack)) return false;
 
         let MAX_ATTACKS_ALLOWED_PER_TURN = 1;
         if (v.tags.includes(TAGS.windfury)) {

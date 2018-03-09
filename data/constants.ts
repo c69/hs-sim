@@ -79,6 +79,7 @@ const TAGS: U2<Types.Tags, string> = {
   stealth: 'STEALTH',
   silence: 'SILENCE',
   enraged: 'ENRAGED',
+  cant_attack: 'CANT_ATTACK',
   _pendingDestruction: '__DESTROY__' // check rulebook
 };
 
@@ -88,7 +89,8 @@ const EVENTS = {
   character_damaged: 'CHARACTER_DAMAGED',
   minion_summoned: 'MINION_SUMMONED',
   card_played: 'CARD_PLAYED',
-  turn_started: 'TURN_STARTED'
+  turn_started: 'TURN_STARTED',
+  turn_ended: 'TURN_ENDED'
 };
 
 /* @deprecated */

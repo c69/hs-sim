@@ -139,8 +139,9 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     this.board.passivePlayer = this.passivePlayer;
   }
   _onTurnEnd () {
-
-    //execute triggers: "At the end of ... turn"
+    this.eventBus.emit(EVENTS.turn_ended, {
+      target: this.activePlayer
+    });
   }
   _onTurnStart () {
     this.turn += 1;
@@ -211,7 +212,6 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
 
     return this;
   }
-  //-- intra turn action --------------
   attack (o: GameOptions.Attack, {targetIndex = 0}) {
     let a = o.unit;
     let t = o.targetList[targetIndex];
@@ -240,12 +240,6 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       target,
       position
     });
-    // (tag.death as CardDefinition['death'])({
-    //   self,
-    //   $,
-    //   game,
-    //   ...mechanics(self, game, $)
-    // });
 
     this.eventBus.emit(EVENTS.card_played, card);
 
@@ -382,7 +376,6 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
 
     //console.log(action.type);
     switch (action.type) {
-      // case ACTION_TYPES.attack:
       case ACTION_TYPES.attack:
         // console.log('choose: ATTACK', action);
         this.attack(action, {targetIndex});

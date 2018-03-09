@@ -142,3 +142,4 @@ console.log(g_profile);
 console.log( {
   // 'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
 });
+console.log(process.memoryUsage(), process.cpuUsage());

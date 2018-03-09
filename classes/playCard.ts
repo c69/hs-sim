@@ -1,17 +1,11 @@
 import {
-    createCard,
-    // CardDefinitionsIndex,
-} from './cardUniverse';
-
-import mechanics from './mechanics';
-
-import {
     Cards,
     CARD_TYPES,
     TAGS_LIST,
     // EVENTS,
     ZONES
 } from '../data/constants';
+import mechanics from './mechanics';
 
 
 function playFromHand ({card, game, board, $, target, position}: {
@@ -40,97 +34,109 @@ function playFromHand ({card, game, board, $, target, position}: {
 
     card.owner.mana -= card.cost;
     board._playFromHand(card);
-
     console.log(`playCard: ${card.owner.name} played `, card.name);
 
-    if (card.type === CARD_TYPES.minion) {
-        // this.board.$('own minions').forEach((v,i) => {
-        //   v.position = i;
-        // });
-        board._summon(card);//({position}); // position is IGNORED for now
+    const params = {card, game, $, target, position, board};
 
-
-        let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
-        _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
-
-        if(_trigger_v1 && _trigger_v1.activeZone === 'play') {
-            console.log(`playCard.js: ${card.name} trigger ...`);
-            // {
-            //   activeZone: 'deck',
-            //   eventName: 'summon',
-            //   condition: 'own minion .race=pirate',
-            //   action: ({summon, self}) => summon(self)
-            // }
-            let event_name = _trigger_v1.eventName;
-            let listener = function (evt) {
-                let $ = board._$(card.owner);
-                let condition = _trigger_v1.condition;
-                if (condition === 'self') {
-                    // proceed
-                } else if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
-                    return;
-                } else if (typeof condition === 'function' && !condition({
-                    target: evt.target,
-                    self: card,
-                    $
-                })) {
-                    return;
-                }
-                console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
-                _trigger_v1.action({
-                    self: card,
-                    target: evt.target,
-                    // position, - not applicable ?
-                    $,
-                    game,
-                    ...mechanics(card, game, $, board)
-                });
-            }.bind(game);
-            game.eventBus.on(event_name, listener);
-            console.log(`${card.name} is now listening to ${event_name}`);
-            card._listener = [event_name, listener];
-        } else {
-            //console.log('Hand.js NO TRIGGERS in ', Reflect.ownKeys(card));
-        }
+    if (card.type === CARD_TYPES.spell) {
+        doSpellAction(card, params);
+    } else if (card.type === CARD_TYPES.minion) {
+        summonMinion(card, board, game);
+        doBattlecry(card, params);
+    } else if (card.type === CARD_TYPES.hero) {
+        // changeHero(card, board);
+        doBattlecry(card, params);
+    } else if (card.type === CARD_TYPES.weapon) {
+        // equipWeapon(card, board);
+        doBattlecry(card, params);
+    } else {
+        throw `Unexpected type of card to be played from hand: ${card.type}`
     }
-
-    // console.log('playCARD:', card, card.play, card._trigger_v1);
-    executeBattlecry(card, game, $, target, position, board);
 }
 
-// TODO: split battlecry and spell action
-function executeBattlecry (card: Cards.Card, game, $, target, position, board) {
-    if (!card.play) {
-        if (card.type === CARD_TYPES.spell) {
-          throw `Spell ${card.name} has no action!`
-        }
-        //console.log('no battlecry. no problem :)')
-        return;
-    }
-    //only execute battlecry/spell_text if there is a valid target, or it does not require a target
-    if (target && !card.target) {
-      console.log('no battle, no cry...', target, card.target);
-      throw 'unexpected target for card which does not need it';
-    }
-    if (!target && card.target) {
-        if (card.type === CARD_TYPES.spell) {
-            console.log('no battle, no cry...', target, card.target);
-            throw 'spell which require target, MUST have target';
-        } else {
-            //console.log('no valid target for battlecry. no problem :)')
-            return;
-        }
+function doBattlecry (card: Cards.Card, args) {
+    if (!card.play) return;
+
+    const { target, game, $, board } = args;
+    if (target && !card.target) throw `unexpected target for card which does not need it: ${args.target, card.target}`;
+    if (!target && card.target) return;
+
+    card.play({
+        self: card,
+        ...args,
+        ...mechanics(card, game, $, board)
+    });
+}
+function doSpellAction (card: Cards.Card, args) {
+    const { target, game, $, board } = args;
+    if (!card.play) throw `Spell ${card.name} has no action!`
+    if (target && !card.target) throw `unexpected target for card which does not need it: ${args.target, card.target}`;
+    if (!target && card.target && !card.targetIsOptional) {
+        throw `spell which require target, MUST have target: ${card.name} #${card.card_id} | ${card.target}`;
     }
 
     card.play({
         self: card,
-        target,
-        position,
-        $: $,
-        game,
+        ...args,
         ...mechanics(card, game, $, board)
     });
 }
+
+function summonMinion (card: Cards.Card, board, game) {
+    if (card.type !== CARD_TYPES.minion) {
+        return;
+    }
+    // this.board.$('own minions').forEach((v,i) => {
+    //   v.position = i;
+    // });
+    board._summon(card);//({position}); // position is IGNORED for now
+
+
+    let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
+    _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
+
+    if(_trigger_v1 && _trigger_v1.activeZone === 'play') {
+        console.log(`playCard.js: ${card.name} trigger ...`);
+        // {
+        //   activeZone: 'deck',
+        //   eventName: 'summon',
+        //   condition: 'own minion .race=pirate',
+        //   action: ({summon, self}) => summon(self)
+        // }
+        let event_name = _trigger_v1.eventName;
+        let listener = function (evt) {
+            let $ = board._$(card.owner);
+            let condition = _trigger_v1.condition;
+            if (condition === 'self') {
+                // proceed
+            } else if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
+                return;
+            } else if (typeof condition === 'function' && !condition({
+                target: evt.target,
+                self: card,
+                $
+            })) {
+                return;
+            }
+            console.log(`TRIGGER: action !active:${game.activePlayer.name} owner:${card.owner.name} ! ${event_name} [${card.name} #${card.card_id} @${card.zone}]`);
+            _trigger_v1.action({
+                self: card,
+                target: evt.target,
+                // position, - not applicable ?
+                $,
+                game,
+                ...mechanics(card, game, $, board)
+            });
+        }.bind(game);
+        game.eventBus.on(event_name, listener);
+        console.log(`${card.name} is now listening to ${event_name}`);
+        card._listener = [event_name, listener];
+    } else {
+        //console.log('Hand.js NO TRIGGERS in ', Reflect.ownKeys(card));
+    }
+
+    // console.log('playCARD:', card, card.play, card._trigger_v1);
+};
 
 export {
     playFromHand as playCard

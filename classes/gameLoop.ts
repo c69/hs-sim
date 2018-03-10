@@ -7,15 +7,58 @@ import {
   buffAura
 } from './buff';
 
-import { Board, ArrayOfCards } from './board2';
-
+import { Board } from './board7';
+// import { Card } from './card';
 import {
-  TAGS,
+  // TAGS,
   CARD_TYPES,
   ACTION_TYPES,
+  GameOptions,
+  AoC,
+  Cards,
+  CardDefinition,
   EVENTS,
+  EventBus,
   ZONES
 } from '../data/constants';
+
+import { exportStateJSON } from './exportState';
+import { viewAvailableOptions } from './frameOptions';
+
+
+type FluentMethod<T> = () => T;
+type ActionCoordinates = {
+  targetIndex: number;
+  positionIndex: number;
+}
+interface GameRunner<G> {
+  start (): G;
+  _onTurnStart(): G;
+  end (): G;
+  disconnect (): G;
+  concede (): G;
+  endTurn (): G;
+
+  // usePower (0) hero power first suggested target
+  usePower (action: GameOptions.Action, o: ActionCoordinates): G;
+  // playCard (0,0) - to play first possible card at first target
+  playCard (action: GameOptions.Play, o: ActionCoordinates): G;
+  // attack(0,0) to attack with first suggested character first suggested target
+  attack (action: GameOptions.Attack, o: ActionCoordinates): G;
+
+// g.viewState();
+// g.clone(); // would not be needed when state is immutable ! :)
+  // --viewAvailableOptions (): GameOptions.Options;
+}
+
+interface GameRPC {
+  exportState (): string; // LOL - typesafety at its finest =_=
+  chooseOption (token: string, option: {
+    optionIndex?: number;
+    positionIndex?: number;
+    targetIndex?: number;
+  }): any;
+};
 
 var _frame_count_active = 0;
 
@@ -31,7 +74,8 @@ BEGIN_SHUFFLE 2
 BEGIN_DRAW 3
 BEGIN_MULLIGAN 4
 
-MAIN_BEGIN 5 MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc)
+MAIN_BEGIN 5
+MAIN_READY 6 Player tags are reset/incremented (RESOURCES, COMBO_ACTIVE, NUM_CARDS_DRAWN_THIS_TURN, etc)
 MAIN_RESOURCE 7
 MAIN_DRAW 8
 MAIN_START 9
@@ -47,57 +91,33 @@ MAIN_NEXT 13
 FINAL_WRAPUP 14
 FINAL_GAMEOVER 15
 
-
-
-// g.start();
-// g.end();
-
-// g.disconnect();
-// g.concede();
-
-// g.endTurn();
-
-// g.usePower(0); // hero power first suggested target
-// g.playCard(0,0); // play first possible card at first target
-// g.attack(0,0); // attack with first suggested character first suggested target
-
-// g.viewState();
-// g.clone(); // would not be needed when state is immutable ! :)
-// g.viewAvailableOptions();
  */
-class Game {
-  eventBus: any;
-  players: any[];
-  board: Board;
-  _$: Map<any, (a: string) => ArrayOfCards>;
-  turn: number = 0;
-  activePlayer: any;
-  passivePlayer: any;
-  isStarted: boolean = false;
-  isOver: boolean = false;
-  result: any = null;
 
-  constructor (players: any[], eventBus: any) {
+type Player = Cards.Player;
+
+export class GameLoop implements GameRPC, GameRunner<GameLoop> {
+  eventBus: EventBus;
+  board: Board;
+  players: Player[];
+  activePlayer: Player;
+  passivePlayer: Player;
+
+  turn: number = 0;
+
+  // isStarted: boolean = false;
+  isOver: boolean = false; // ~ temporary hack
+  result: any = null; // ~ temporary hack
+
+  constructor (board: Board, players: [Player, Player], eventBus: any) {
+    if (players.length !== 2) throw new RangeError("Game expects two players");
+
+    this.board = board;
+    this.players = players;
     this.eventBus = eventBus;
 
-    if (players.length !== 2) throw new RangeError("Game expects two players");
-    this.players = players;
-
-    this.board = new Board(players[0].deck._arr, players[1].deck._arr, players[0], players[1]);
-
-    // save the bound $ function, and do not recreate them every tick
-    let $p1 = this.board.$.bind(this.board, players[0]);
-    let $p2 = this.board.$.bind(this.board, players[1]);
-    this._$ = new Map();
-    this._$.set(players[0], $p1);
-    this._$.set(players[1], $p2);
-
     this.turn = 0;
-    this.activePlayer = this.players[this.turn % 2]; //this is a copypaste
-    this.passivePlayer = this.players[(this.turn + 1) % 2]; //this is a copypaste
 
-    //this.observableState = {}; // ?
-    //this.fullState = {}; // ???
+    this._toggleActivePlayer();
   }
   static _profile () {
     return {
@@ -107,22 +127,28 @@ class Game {
   _init () {
     //console.log('starting the game...');
     this.players.forEach(player => {
-      player.draw(5);
+      this.board.draw(player, 5);
       player.manaCrystals = 1;
       player.mana = player.manaCrystals;
     });
+  }
+  _toggleActivePlayer () {
+    this.activePlayer = this.players[this.turn % 2];
+    this.passivePlayer = this.players[(this.turn + 1) % 2];
 
+    this.board.activePlayer = this.activePlayer;
+    this.board.passivePlayer = this.passivePlayer;
   }
   _onTurnEnd () {
-
-    //execute triggers: "At the end of ... turn"
+    this.eventBus.emit(EVENTS.turn_ended, {
+      target: this.activePlayer
+    });
   }
   _onTurnStart () {
     this.turn += 1;
 
-    let activePlayer = this.players[this.turn % 2];
-    this.activePlayer = activePlayer;
-    this.passivePlayer = this.players[(this.turn + 1) % 2];
+    this._toggleActivePlayer();
+    let activePlayer = this.activePlayer;
 
     if (this.players.some(v => v.hero.health < 1)) {
       return this.end();
@@ -134,7 +160,7 @@ class Game {
     if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     activePlayer.mana = activePlayer.manaCrystals;
 
-    this.board.$(this.activePlayer, 'own minion').forEach(v => {
+    this.board.select(activePlayer, 'own minion').forEach(v => {
       v.attackedThisTurn = 0; // invasively reset attack counters
       v.isReady = true;
     });
@@ -145,35 +171,40 @@ class Game {
     this._cleanup(); // cancer great again ? :/
   }
   _attemptToDrawCard () { // wrappers inside of wrappers ...
-    this.activePlayer.draw(1);
+    this.board.draw(this.activePlayer, 1);
 
     //execute triggers: "When player draws a card"
   }
 
   start () {
-    if (this.isStarted) return this; // multiple chain calls to .start could be ignored
-    this.isStarted = true;
-    this.isOver = false;
+    if (this.board.game.isStarted) return this; // multiple chain calls to .start could be ignored
+    this.board.game.isStarted = true;
+    this.board.game.isOver = false;
     this._init();//maybe with rules ? like min/max mana, etc
 
     return this;
   }
   end () {
-    this.isOver = true;
-    this.result = {
+
+    this.board.game.isOver = true;
+    this.board.game.result = {
       //could be a draw, too.. (when turn #87 is reached ?)
       winner: this.activePlayer.lost ? this.passivePlayer : this.activePlayer
     };
+
+    this.isOver = this.board.game.isOver; // temporary hack for main js
+    this.result = this.board.game.result; // temporary hack for main js
     return this;
   }
   concede () {
     this.activePlayer.loose();
-    this.isOver = true;
+    this.board.game.isOver = true;
 
     return this;
   }
   disconnect () {
     //todo: implement me
+    return this;
   }
   endTurn () {
     this._onTurnEnd();
@@ -182,35 +213,31 @@ class Game {
 
     return this;
   }
-  //-- intra turn action --------------
-  attack (actions, attacker_idx, target_idx) {
-    let o = actions[attacker_idx];
-
+  attack (o: GameOptions.Attack, {targetIndex = 0}) {
     let a = o.unit;
-    let t = o.targetList[target_idx];
+    let t = o.targetList[targetIndex];
     // if Ogre retarget - choose new target :)
     //this._onBeforeAttack(a, t);
     combat(a, t, this);
 
     return this;
   }
-  playCard (actions, card_idx = 0, position_idx = 0, target_idx = 0) {
-    //console.log(`${this.activePlayer.name} tries to play ${card_idx}`);
-    let c = actions[card_idx];
-
-    if (c.targetList) { // spell:fireball OR minion:battlecry
-      var target = c.targetList[target_idx];
+  playCard (o: GameOptions.Play, {positionIndex = 0, targetIndex = 0}) {
+    if (o.targetList) { // spell:fireball OR minion:battlecry
+      var target = o.targetList[targetIndex];
     }
-    if (c.positionList) { // minion
-      var position = c.positionList[position_idx];
+    if (o.positionList) { // minion
+      var position = o.positionList[positionIndex];
     }
 
-    let $ = this._$.get(this.activePlayer);
-    let card = c.card;
+    let $ = this.board._$(this.activePlayer);
+    let card = o.card;
     //console.log('play card', c.name, target, position);
-    playCard(card, {
-      game: this,
+    playCard({
+      card, // vs "self" - we should standartize on name
+      game: this, // do we really need this ?
       $,
+      board: this.board,
       target,
       position
     });
@@ -219,7 +246,7 @@ class Game {
 
     return this;
   }
-  usePower (actions, target_idx) {
+  usePower (o: GameOptions.Action,  {targetIndex = 0}) {
     //todo: implement me
 
     return this;
@@ -231,30 +258,36 @@ class Game {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
 
-    let characters = this.board.$(this.activePlayer, 'character');
+    const characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
 
-    let allCards = this.board.$(this.activePlayer, '*');
+    let allCards = this.board.select(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
     allCards.forEach(v => v.incomingAuras = []);
 
     //refresh/re-apply auras
 
+    function hasAura (a: any): a is Cards.LegacyBuff {
+      return a.aura;
+    }
+    function hasDeath (a: any): a is Cards.LegacyBuff {
+      return a.death;
+    }
+
     allCards.forEach(character => {
-      character.tags.filter(tag => {
+      character.tags.filter((tag) => {
         //return true; // [broken?] hack to ignore aura checking code
-        if (!tag.aura) return false;
 
-        let zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
-        let shouldApply = (zone === character.zone);
-        if (!shouldApply) return shouldApply;
+        if (!hasAura(tag)) return false;
 
+        const zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
+        const shouldApply = (zone === character.zone);
         //console.log('emitting aura from', character.name, character.zone, tag);
         return shouldApply;
       })
-      .forEach(({aura}) => {
+      .forEach(({aura}: Cards.LegacyBuff) => {
         //console.log(aura);
         let p = character.owner;
-        let $ = this._$.get(p);
+        let $ = this.board._$(p);
 
         let t;
         if (aura.target === 'self') {
@@ -269,16 +302,16 @@ class Game {
         }
         //console.log(`Aura of ${character.name}: ${t.length} of "${aura.target}"`);
 
-        //the signature is ugly... but i will refactor it
-        buffAura(this, $, character, t, aura.buff);
+        //the signature is EVEN MORE ugly... but i will refactor it
+        buffAura(this, $, this.board, character, t, aura.buff);
       });
     });
 
 
     //death logic onwards
     let death_list = characters.filter(character => {
-        return !character.isAlive();
-      });
+      return !character.isAlive();
+    });
 
     if (!death_list.length) {
       return;
@@ -287,17 +320,19 @@ class Game {
       //~> character.buffs.filter(v => v.deathrattle).forEach(v => v.deathrattle(character, board));
       //console.log`deathrattle ${character}`;
       //console.log(character.tags);
-      character._die();
+      this.board.kill(character);
 
-      let $ = this._$.get(character.owner);
+      let $ = this.board._$(character.owner);
       let self = character;
       let game = this;
-      character.tags.filter(tag => !!tag.death).forEach((tag, i) => {
-        tag.death({
+      character.tags.filter(tag => hasDeath(tag)).filter(v => v).forEach((tag, i) => {
+        if (!hasDeath(tag)) return false; // TS does not activate inferrence without this line...
+
+        (tag.death as CardDefinition['death'])({
           self,
           $,
           game,
-          ...mechanics(self, game, $)
+          ...mechanics(self, game, $, this.board)
         });
       });
       if (character._listener) { // remove triggers - super dirty solution...
@@ -320,13 +355,19 @@ class Game {
    * @config {number} positionIndex
    * @config {number} targetIndex
    */
-  chooseOption (token, {optionIndex = 0, positionIndex = 0, targetIndex = 0} = {}) {
+  chooseOption (token = '', {
+    optionIndex = 0,
+    // suboptionIndex = 0,
+    positionIndex = 0,
+    targetIndex = 0
+  } = {}) {
     _frame_count_active += 1;
 
-    console.log('-- frame ---');
-    if (this.isOver) return this; // if game ended - nobody can do anything
+    console.log('-- frame: MAIN_ACTION ---');
+    if (this.board.game.isOver) return this; // if game ended - nobody can do anything
 
-    let options = this.viewAvailableOptions();
+    let options: GameOptions.Options = viewAvailableOptions(this.board);
+
     //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
     let actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
@@ -337,18 +378,22 @@ class Game {
     //console.log(action.type);
     switch (action.type) {
       case ACTION_TYPES.attack:
-        this.attack(actions, optionIndex, targetIndex);
+        // console.log('choose: ATTACK', action);
+        this.attack(action, {targetIndex});
         break;
       case ACTION_TYPES.playCard:
-        this.playCard(actions, optionIndex, positionIndex, targetIndex);
+        // console.log('choose: PLAY CARD', action);
+        this.playCard(action, {positionIndex, targetIndex});
         break;
       // case ACTION_TYPES.usePower:
       //   this.usePower(actions, optionIndex, targetIndex);
       //   break;
       case ACTION_TYPES.endTurn:
+        console.log('choose: NEXT_TURN', action);
         this.endTurn();
         break;
       case ACTION_TYPES.concede:
+        console.log('choose: :(', action);
         this.concede();
         break;
       default:
@@ -359,231 +404,16 @@ class Game {
 
     return this;
   }
-  /**
-   * A nice GOD method
-   * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
-   */
-  viewAvailableOptions () {
-    //console.log(`refreshing options for ${this.activePlayer.name} on turn#${this.turn}`);
-    if (!this.isStarted || this.isOver) {
-      console.log('No options are available - game state is wrong.');
-      return {
-        actions: []
-      };
-    }
-    let $ = this._$.get(this.activePlayer);
-
-    let pawns = $('own character');
-    let warriors = pawns.filter(v => {
-      if (v.attack < 1) return false;
-      if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
-
-      let MAX_ATTACKS_ALLOWED_PER_TURN = 1;
-      if (v.tags.includes(TAGS.windfury)) {
-         MAX_ATTACKS_ALLOWED_PER_TURN = 2;
-      }
-      //console.log(`${v.name}: atacked ${v.attackedThisTurn} times of ${MAX_ATTACKS_ALLOWED_PER_TURN}`);
-      return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
-    });
-
-    let aubergines = $('enemy character');
-    let sheeps = aubergines.filter(v => {
-      return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
-    });
-
-    //scan for taunt
-    let sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
-    if (sheepsTaunt.length) sheeps = sheepsTaunt;
-
-    // scan for spell shield
-    // ..
-
-    //console.log('warriors', warriors);
-    //console.log('sheeps', sheeps);
-    let attack = warriors.map(v => {
-      return {
-        card_id: v.card_id,
-        unit: v,
-        type: ACTION_TYPES.attack,
-        name: v.name,
-        //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
-        targetList: sheeps
-      };
-    }).filter(v => v.targetList.length > 0);
-
-    let canSummonMore = (pawns.length <= 7); // with hero
-    //console.log('canSummonMore', canSummonMore, pawns.length);
-
-    let playable = this.activePlayer.hand.listPlayable();
-    //console.log(playable.map(v => `${v.name} #${v.card_id}`));
-
-    let cards = playable.filter((v) =>{
-      if (v.type === CARD_TYPES.minion) {
-        return canSummonMore;
-      }
-      if (v.type === CARD_TYPES.spell && !!v.target) {
-        //console.log('v.target', v.target);
-        return $(v.target).length;
-      }
-      return true;
-    }).map(v => {
-      return {
-        card_id: v.card_id,
-        card: v,
-        type: ACTION_TYPES.playCard,
-        name: v.name,
-        cost: v.cost,
-        positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-        targetList: v.target && $(v.target)
-      };
-    });
-
-    //console.log(cards);
-
-    // i'd like options to just be a flat array (of actions), but sometimes i STILL need a debug info
-    //console.log('actions --', attack, cards);
-    return {
-      token: 'GO_GREEN_TODO_IMPLEMENT_ME',
-      actions: [
-        ...attack,
-        ...cards,
-        //usePower
-        {type: ACTION_TYPES.endTurn},
-        {type: ACTION_TYPES.concede}
-      ]
-    };
+  viewAvailableOptions = () => {
+    return viewAvailableOptions(this.board);
+  };
+  exportState = () => {
+    return exportStateJSON(this.board);
   }
-
-  /**
-   * First attemp at exporting state
-   * Should be:
-   * - all entities (all cards + buffs, 1 game, 2 players)
-   * - current available options
-   * - uid: game + turn + player
-   * - revealed state for entities
-   * - (?) animations
-   *
-   * Next step after this is done should be delta update
-   */
-  exportState () {
-    function sanitizeCard (card) {
-      //console.log(card);
-      return Object.assign({}, card, {
-        owner: card.owner.name, // change it to Player/EntityID
-
-        attack: card.attack,
-        cost: card.cost,
-        health: card.health,
-        tags: card.tags
-      });
-    }
-
-    function onlyLeaveInCardObject (card) {
-      //console.log(card);
-      return {
-        card_id: card.card_id
-      };
-    }
-
-    let options = this.viewAvailableOptions();
-
-    let aggregatedState = {
-      entities: this.board.$(this.activePlayer, '*').map(sanitizeCard),
-      token: options.token,
-      actions: options.actions.map(v => {
-        return {
-          card_id: v.card_id,
-          type: v.type,
-          //card: v.card, // unsafe direct reference
-          //unit: v.unit, // unsafe direct reference
-          targetList: v.targetList && v.targetList.map(onlyLeaveInCardObject),
-          positionList: v.positionList,
-          name: v.name
-
-        // id: v._id,
-        // unit: v,
-        // type: ACTION_TYPES.attack,
-        // name: v.name,
-        // //cost: 0, // well.. attacking is free, right ? (only a life of your minion -__-)
-        // targetList: sheeps
-
-        // id: v._id,
-        // card: v,
-        // type: v.ACTION_TYPES.playCard,
-        // name: v.name,
-        // cost: v.cost,
-        // positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-        // targetList: v.target && $(v.target)
-        }
-      }),
-      game: {
-        turn: this.turn,
-        //isStarted/isOver should be converted to state:enum
-        isStarted: this.isOver,
-        isOver: this.isOver,
-        activePlayer: { // consider returning players as array
-          name: this.activePlayer.name,
-          mana: this.activePlayer.mana,
-          manaCrystals: this.activePlayer.manaCrystals,
-          //lost:boolean should be converted to state:enum
-          lost: this.activePlayer.lost
-        },
-        passivePlayer: {
-          name: this.passivePlayer.name,
-          mana: this.passivePlayer.mana,
-          manaCrystals: this.passivePlayer.manaCrystals,
-          lost: this.passivePlayer.lost
-        },
-      }
-    };
-
-    let outputJSON;
-    outputJSON = JSON.stringify(aggregatedState, function (k,v) {
-        if (k === 'eventBus') return undefined;
-        if (k === '_listener') return undefined;
-
-        if (k === 'buffs') return undefined;
-        if (k === '_by') return undefined;
-
-        return v;
-      }, '  ');
-
-    return outputJSON;
-  }
-  //-----------------------------------
   view () {
     console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
-    this.players.forEach(player => {
-      let own_minions = this.board.$(player, 'own minion');
-
-      //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
-
-      if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
-
-      console.log(`
-player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${player.deck.size} hand:${player.hand.size} ${player.hand.list().map(v=>v.cost +') ' + v.name)}`
-      );
-      //console.log(this.board.$(player, 'own minion').map(v => v.name));
-      console.log('minions on board', own_minions.map(v=>
-      (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
-      (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
-      (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
-      (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
-
-      (v.tags.find(v => v.death) ? '☠️' : '') +
-      (v.tags.find(v => v.trigger) ? 'T' : '') +
-      (v.tags.find(v => v.aura) ? 'A' : '') +
-      (v.tags.find(v => v.type === CARD_TYPES.enchantments) ? 'E' : '') +
-      (v.incomingAuras.length ? 'a' : '') +
-
-      `${v.attack}/${v.health}`
-      ));
-    });
+    this.players.forEach(p => this.board.viewStateForPlayer(p));
 
     return this;
   }
 }
-
-export {
-  Game
-};

@@ -1,31 +1,26 @@
 import {
+    Types,
     ZONES,
     XXX_ZONE,
     CARD_TYPES,
     CardDefinition,
+    Cards,
     XXX_CARD, // todo: rethink this ..
     TAGS,
     PLAYERCLASS,
-    EVENTS
+    EVENTS,
+    EventBus
 } from '../data/constants';
 
 let card_id = 1;
 
-// type CardDefinition = {};
-type Player = {
-    name: string;
-    loose (): void;
-};
-type EventBus = {
-    emit (a: any, b: any): any;
-    removeListener (a: any, b: any): void;
-};
 
-class Card {
+class Card implements Cards.Card {
     eventBus: EventBus;
+
     id: string;
     // dbfId: number;
-    type: XXX_CARD; // ? :(
+    type: Types.CardsAllCAPS;
     name: string;
     text: string;
     // targetingArrowText: string;
@@ -44,17 +39,27 @@ class Card {
     incomingAuras: any[];
     _listener: any = null;
 
-    zone: string; // XXX_ZONE; // :(
+    zone: Types.ZonesAllCAPS;
     owner: Player;
 
-    card_id: number;
 
+    card_id: number;
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
-        if (!owner) throw new RangeError('Owner player required');
+        if (!owner && !(
+                cardDef.type === CARD_TYPES.game ||
+                cardDef.type === CARD_TYPES.player
+            )
+        ) throw new RangeError('Owner player required');
+
+        this.zone = ZONES.aside;
+        this.owner = owner;
+
+        this.card_id = card_id++;
+
 
         this.id = cardDef.id;
         //this.dbfId = cardDef.dbfId;
@@ -94,11 +99,6 @@ class Card {
                 aura: cardDef.aura
             });
         }
-
-        this.zone = ZONES.deck;
-        this.owner = owner;
-
-        this.card_id = card_id++;
     }
     get cost() {
         return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
@@ -128,54 +128,8 @@ class Card {
         //console.log(`card.tags returned: ${activeBuffs}`);
         return [].concat.apply([], activeBuffs);
     }
-    _draw() {
-        if (this.zone !== ZONES.deck) throw `Attempt to draw ${this.name} #${this.card_id} NOT from deck, but from: ${this.zone}`;
-        this.zone = ZONES.hand;
-    }
-    _play() {
-        if (this.type === CARD_TYPES.enchantment) {
-            // no idea from which zone to play it ..
-        } else {
-            if (this.zone !== ZONES.hand) throw `Attempt to play card NOT from hand: ${this.name} #${this.card_id}, but from: ${this.zone}`;
-        }
-        this.zone = ZONES.aside;
-
-        // todo: consider splitting this IF so proper event could be emitted
-        if (this.type === CARD_TYPES.minion || this.type === CARD_TYPES.weapon) {
-            this.zone = ZONES.play;
-        } else if (this.type === CARD_TYPES.spell) {
-            // todo: implements secrets
-            // this.zone = this.isSecret ? ZONES.secret : ZONES.grave;
-        } else if (this.type === CARD_TYPES.enchantment) {
-            this.zone = ZONES.play;
-        } else {
-            throw `Played card of unplayable type:${this.type}`;
-        }
-    }
-    _summon() {
-        this.zone = ZONES.play;
-
-        this.eventBus.emit(EVENTS.minion_summoned, {
-            target: this
-        });
-
-        //console.log(`card.js :: summoned ${this.name} for ${this.owner.name}`);
-    }
-    _mill() {
-        this.zone = ZONES.grave;
-    }
-    _die() {
-        console.log(`☠️ ${this.type.toLowerCase()} died: ${this.owner.name}'s ${this.name}`);
-        //this.death && this.death({self: this, $: game.board.$, game}); // deathrattle
-        this.zone = ZONES.grave;
-    }
-    _copy() {
-        let copy = (new (this.constructor as any)(this, this.owner));
-        // copy.tags[] are DIRTY !
-        copy.zone = ZONES.aside;
-    }
     toString() {
-        return `[Object Card ${this.type}: ${this.name} #${this.card_id}]`;
+        return `[${this.type}: ${this.name} #${this.card_id}]`;
     }
 }
 
@@ -240,7 +194,7 @@ class Character extends Card {
         //console.log(`🔥 ${this.name} was marked for destroy!`);
     }
     silence() {
-        console.log(`${this.owner.name}'s ${this.name} #${this.card_id} got SILENCED!`);
+        console.log(`${this.owner.name}'s ${this} got SILENCED!`);
         this.buffs.push(TAGS.silence);
 
         // super dirty solution for silencing triggers (copy paste from game.js deathsweep)
@@ -309,10 +263,6 @@ class Hero extends Character {
         this.armor = cardDef.armor || 0;
         //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]
     }
-    _die() {
-        super._die();
-        this.owner.loose();
-    }
 }
 class Power extends Card {
     attackedThisTurn: number;
@@ -361,6 +311,66 @@ class Enchantment extends Card {
     }
 }
 
+class Game extends Card {
+    card_id: number;
+    name: 'GAME_ENTITY';
+    zone: 'PLAY';
+    owner: Player = null;
+    type: 'GAME';
+
+    turn: number = 0;
+
+    isStarted: boolean = false;
+    isOver: boolean = false;
+    result: any = null;
+
+    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(cardDef, null, eventBus);
+    }
+}
+
+class Player extends Card implements Cards.Player {
+    card_id: number;
+    name = 'PLAYER_UNKNOWN';
+    zone: Types.ZonesAllCAPS = 'ASIDE';
+    owner: Player = null;
+    type: 'PLAYER';
+
+    deck: null;
+    hand: null;
+    hero: null;
+
+    manaCrystals: number = 0;
+    mana: number = 0;
+    fatigue: number = 1;
+    lost: boolean = false;
+
+    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(cardDef, null, eventBus);
+
+        if (this.type !== CARD_TYPES.player) throw new RangeError(
+            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
+
+        this.name = cardDef.name;
+        this.owner = this;
+
+        // this.manaCrystals = cardDef.manaCrystals || 0;
+        this.manaCrystals = 0;
+        this.mana = this.manaCrystals;
+        this.fatigue = 1;
+        this.lost = false;
+    }
+    draw (n: number) {
+
+    }
+    loose () {
+      if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
+      console.warn(`player ${this.name} LOST the game`);
+      this.lost = true;
+    }
+  }
+
+
 /**
  * This function calculates final value of attribute
  *  after applying all currently active buffs on the card
@@ -393,15 +403,14 @@ function getter_of_buffed_atribute(prop, initialValue) {
     return new_value > 0 ? new_value : 0;
 }
 
-export default {
+export {
     Card,
     Minion,
     Spell,
     Hero,
     Weapon,
     Power,
-    Enchantment
-}
-export {
-    Card
+    Enchantment,
+    Game,
+    Player
 }

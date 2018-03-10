@@ -4351,7 +4351,21 @@ export default <CardAbilities[]>[
   {
     id: `EX1_298`,
     _info: `(8) 8/8 [NEUTRAL]: Ragnaros the Firelord |ELEMENTAL`,
-    text: `Can't attack. At the end of your turn, deal 8 damage to a random enemy.`
+    text: `Can't attack. At the end of your turn, deal 8 damage to a random enemy.`,
+    xxx: 'event',
+    tags: [TAGS.cant_attack],
+    _triggers_v1: [
+      {
+        activeZone: 'play',
+        eventName: EVENTS.turn_ended,
+        // condition: 'own player',
+        condition: ({self}) => self.owner,
+        action ({$, self}) {
+          console.log(`${self.owner.name}'s RAGNAROS: Die, Insect !!!`);
+          $('enemy character .health>0').getRandom().dealDamage(8) //should be :alive (aka hp>0 and NOT pending destroy)
+        }
+      }
+    ]
   },
   {
     id: `EX1_301`,

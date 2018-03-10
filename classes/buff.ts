@@ -27,6 +27,7 @@ function applyBuff ({
   card,
   target,
   $,
+  board,
   game,
   type = 'buff'
 }) {
@@ -99,7 +100,7 @@ function applyBuff ({
  * @param {*} id_or_Tag
  * @returns {Object} auraTarget
  */
-function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
+function buffAura (game, $, board, auraGiver, auraTarget, id_or_Tag) {
     if (!auraTarget) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
@@ -113,12 +114,17 @@ function buffAura (game, $, auraGiver, auraTarget, id_or_Tag) {
       let c = id_or_Tag;
       if (typeof id_or_Tag !== 'object') {
         c = createCard(id_or_Tag, auraGiver.owner, game.eventBus);
-        c._play(); // unsafe ? where is the destructor ? TODO: check for leaks
+        board.add(c);
+        // ... no no no no
+        // again the "put in the game" and "play from hand are mixed" :(
+        // aura and buff need "put in play" (from ouside)
+        board._putInPlay(c); // unsafe ? where is the destructor ? TODO: check for leaks
       }
       applyBuff({
         card: c,
         target: t,
         $,
+        board,
         game,
         type: 'aura'
       });

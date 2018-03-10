@@ -44,7 +44,7 @@ export type EffectTarget = {
     buffs: {
         incomingAuras: Buff[]; // refreshing each tick
         temporary: Buff[]; // mutable
-        history: Buff[]; // append-only
+        history: Buff[]; // all, !append-only
         active: Buff[]; // calculated current state
     }
     tags: Set<Tag>; // fast query
@@ -123,6 +123,14 @@ let baseCard: EffectTarget = {
     }
 };
 
+/**
+this is interpreted as :(
+
+const tags: {
+    DIVINE_SHIELD: "DIVINE_SHIELD" | "TAUNT";
+    TAUNT: "DIVINE_SHIELD" | "TAUNT";
+}
+*/
 const tags: {[key in KnownTag]: KnownTag} = {
     'TAUNT': 'TAUNT',
     'DIVINE_SHIELD': 'DIVINE_SHIELD'

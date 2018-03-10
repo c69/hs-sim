@@ -31,8 +31,8 @@
   },
   "nyc": {
     "include": [
-      "src/**/*.ts",
-      "src/**/*.tsx"
+      "**/*.ts",
+      "**/*.tsx"
     ],
     "exclude": [
       "**/*.d.ts"

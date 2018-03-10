@@ -2,14 +2,25 @@
 
 import {
   CARD_TYPES,
-  CardDefinition
+  CardDefinition,
+  EventBus
   // ZONES
 } from '../data/constants';
 
 const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
 
 import abilitiesMixin from '../data/actions.collectiblePlus';
-import Card from './card';
+import {
+  Card,
+  Minion,
+  Spell,
+  Hero,
+  Weapon,
+  Power,
+  Enchantment,
+  Game,
+  Player
+} from './card';
 
 
 /** @private maybe its time to stop hubris and add lodash .. */
@@ -57,112 +68,124 @@ abilitiesMixin.forEach(({
 });
 
 //---Deck2.js sketch------------------
-const summerParty = [
-  'Fireball',
-  'Meteor',
-  'Arcane Missiles',
-  'Flame Imp',
-  'Unstable Ghoul',
-  'Shielded Minibot',
-  'Argent Horseraider',
-  'Young Dragonhawk',
-  'Ironbeak Owl',
-  'Hand of Protection',
-  'Aldor Peacekeeper',
-  'Unleash the Hounds',
-  'Knife Juggler',
-];
-const HeyCatch = [
-  'Knife Juggler'
-];
-const everyone = [
-  //'Chillwind Yeti',
-  //'River Crocolisk',
-  //'Bloodfen Raptor',
-  //--
-  //'Coin',
-  //--spells:damage
-  'Fireball',
-  'Meteor',
-  'Arcane Explosion',
-  'Arcane Missiles',
-  'Hellfire',
-  'Swipe',
-  'Assassinate',
+const DECKS = {
+  summerParty: [
+    'Fireball',
+    'Meteor',
+    'Arcane Missiles',
+    'Flame Imp',
+    'Unstable Ghoul',
+    'Shielded Minibot',
+    'Argent Horseraider',
+    'Young Dragonhawk',
+    'Ironbeak Owl',
+    'Hand of Protection',
+    'Aldor Peacekeeper',
+    'Unleash the Hounds',
+    'Knife Juggler',
+  ],
+  HeyCatch: [
+    'Knife Juggler'
+  ],
+  DieInsect: [
+    'Ragnaros the Firelord'
+  ],
+  Fuu: [
+    'Flame Imp'
+  ],
+  everyone: [
+    //'Chillwind Yeti',
+    //'River Crocolisk',
+    //'Bloodfen Raptor',
+    //--
+    //'Coin',
+    //--spells:damage
+    'Fireball',
+    'Meteor',
+    'Arcane Explosion',
+    'Arcane Missiles',
+    'Hellfire',
+    'Swipe',
+    'Assassinate',
 
-  //--basic minions with tags or battlecries
-  'Flame Imp',
-  'Ironfur Grizzly',
+    //--basic minions with tags or battlecries
+    'Flame Imp',
+    'Ironfur Grizzly',
 
-  'Leper Gnome',
-  'Unstable Ghoul',
-  //'Ravaging Ghoul',
-  //'Mad Bomber',
-  'Abomination',
-  //'Elven Archer',
-  //'Silent Knight', //-- stealth
-  'Annoy-o-Tron',
-  'Shielded Minibot',
-  'Argent Horseraider',
-  'Young Dragonhawk',
-  // 'Thrallmar Farseer',
+    'Leper Gnome',
+    'Unstable Ghoul',
+    //'Ravaging Ghoul',
+    //'Mad Bomber',
+    'Abomination',
+    //'Elven Archer',
+    //'Silent Knight', //-- stealth
+    'Annoy-o-Tron',
+    'Shielded Minibot',
+    'Argent Horseraider',
+    'Young Dragonhawk',
+    // 'Thrallmar Farseer',
 
-  // - silence
-  'Ironbeak Owl',
-  //'Mass Dispel',
+    // - silence
+    'Ironbeak Owl',
+    //'Mass Dispel',
 
-  // - give
-  //'Bloodsail Raider',
-  'Windfury',
-  'Hand of Protection',
-  // 'Shattered Sun Cleric',
-  //'Windspeaker',
-  //'Abusive Sergeant', // this turn
-  //'Bloodlust', // this turn
-  //'Houndmaster',
-  //'Sunfury Protector', // adjacent
-  'Defender of Argus', // adjacent
-  //'Blessing of Wisdom',
-  'Aldor Peacekeeper',
-  // 'Raging Worgen', //enrage
+    // - give
+    //'Bloodsail Raider',
+    'Windfury',
+    'Hand of Protection',
+    // 'Shattered Sun Cleric',
+    //'Windspeaker',
+    //'Abusive Sergeant', // this turn
+    //'Bloodlust', // this turn
+    //'Houndmaster',
+    //'Sunfury Protector', // adjacent
+    'Defender of Argus', // adjacent
+    //'Blessing of Wisdom',
+    'Aldor Peacekeeper',
+    // 'Raging Worgen', //enrage
 
-  // - aura
-  'Timber Wolf', //other
-  'Flametongue Totem', //adjacent
-  'Tundra Rhino',
-  //'Warsong Commander',
-  'Stormwind Champion', //other
-  'Summoning Portal', //mana cost
-  // 'Molten Giant', //self cost - NOT WORKING !
-  'Junkbot', //for its (5) 1/5
+    // - aura
+    'Timber Wolf', //other
+    'Flametongue Totem', //adjacent
+    'Tundra Rhino',
+    //'Warsong Commander',
+    'Stormwind Champion', //other
+    'Summoning Portal', //mana cost
+    // 'Molten Giant', //self cost - NOT WORKING !
+    'Junkbot', //for its (5) 1/5
 
-  //--summon
-  //'Blood To Ichor',
-  // 'Murloc Tidehunter',
-  //'Leeroy Jenkins',
-  //'Mirror Image',
-//    'Unleash the Hounds',
-  //'Dreadsteed',
-  // 'Sludge Belcher',
+    //--summon
+    //'Blood To Ichor',
+    // 'Murloc Tidehunter',
+    //'Leeroy Jenkins',
+    //'Mirror Image',
+  //    'Unleash the Hounds',
+    //'Dreadsteed',
+    // 'Sludge Belcher',
 
 
-  //--trigger, MVP minions
-  'Knife Juggler',
-  'Acolyte of Pain',
-  'Imp Gang Boss',
-  // 'Starving Buzzard',
-  // 'Patches the Pirate',
-  //'Doomsayer',
-  'Grim Patron',
+    //--trigger, MVP minions
+    'Knife Juggler',
+    'Acolyte of Pain',
+    'Imp Gang Boss',
+    // 'Starving Buzzard',
+    // 'Patches the Pirate',
+    //'Doomsayer',
+    'Grim Patron',
+    'Ragnaros the Firelord'
+  ]
+};
 
-];
-
-const theDeck = everyone;
-// const theDeck = summerParty;
-// const theDeck = HeyCatch;
+const theDeck = DECKS.everyone;
+// const theDeck = DECKS.summerParty;
+// const theDeck = DECKS.HeyCatch;
+// const theDeck = DECKS.DieInsect;
+// const theDeck = DECKS.Fuu;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
-  .filter(v => [CARD_TYPES.minion, CARD_TYPES.spell].includes(v.type))
+  .filter(v => {
+    return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
+  })
   .filter(v => {
     if (v.type === CARD_TYPES.spell) return !!v.play;
     return true;
@@ -177,24 +200,41 @@ console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 /**
  * todo: do we really need to couple card & player & eventBus
  */
-function createCard(id: string, player, eventBus) {
+function createCard(id: string, player: Player, eventBus: EventBus) {
   let card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 
-  let structor = {
-    [CARD_TYPES.minion]: Card.Minion,
-    [CARD_TYPES.hero]: Card.Hero,
-    [CARD_TYPES.weapon]: Card.Weapon,
-    [CARD_TYPES.spell]: Card.Spell,
-    [CARD_TYPES.power]: Card.Power,
-    [CARD_TYPES.enchantment]: Card.Enchantment,
-  }[card.type];
-
-  let new_card = new structor(card, player, eventBus);
-  return new_card;
+  let C = CARD_TYPES;
+  let _ = null;
+  switch (card.type) {
+    case C.minion: _ = Minion; break;
+    case C.hero: _ = Hero; break;
+    case C.weapon: _ = Weapon; break;
+    case C.spell: _ = Spell; break;
+    case C.power: _ = Power; break;
+    case C.enchantment: _ = Enchantment; break;
+//  case C.game: _ = Game; break;
+//  case C.player: _ = Player; break;
+    default: throw 'Attempt to create card of invalid type';
+  }
+  let new_card = new _ (
+    card,
+//  (card.type === C.player || card.type === C.game) ? null : player,
+    player,
+    eventBus
+  );
+  return new_card as Card;
 }
 
 /////
+function shuffle (arr: any[]): any[] {
+  // TODO: shuffle
+  return arr;
+}
+// function cardFromName (name: string): Card {
+//   // TODO: find by name
+//   return new Card();
+// }
 
 
 let coolCards = abilitiesMixin.filter(v => {

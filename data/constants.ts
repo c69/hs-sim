@@ -4,14 +4,14 @@ type UnionKeyToValue<U extends string, T> = {
 type MapString<T> = {
   readonly [index: string]: T;
 }
-type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
+export type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
 export namespace Types {
   export type Zones = 'play'|'deck'|'hand'|'grave'|'aside';
   export type ZonesAllCAPS = 'PLAY'|'DECK'|'HAND'|'GRAVE'|'ASIDE';
 
-  export type Cards = 'minion'|'spell'|'hero'|'weapon'|'power'|'enchantment';
-  export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT';
+  export type Cards = 'minion'|'spell'|'hero'|'weapon'|'power'|'enchantment|game|player';
+  export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT'|'GAME'|'PLAYER';
 
   export type Tags = 'taunt'|'enraged'|'divineShield';
 }
@@ -20,26 +20,30 @@ export namespace Types {
 // refer to http://hearthstone.gamepedia.com/Advanced_rulebook
 
 // http://hearthstone.gamepedia.com/Zone_enumeration
-const ZONES: U2<Types.Zones, string> = {
-  deck: 'DECK',
-  hand: 'HAND',
-  play: 'PLAY',
-  grave: 'GRAVE',
-  aside: 'ASIDE', //setaside
-  secret: 'SECRET',
+const ZONES = {
+  deck: 'DECK' as 'DECK',
+  hand: 'HAND' as 'HAND',
+  play: 'PLAY' as 'PLAY',
+  grave: 'GRAVE' as 'GRAVE',
+  aside: 'ASIDE' as 'ASIDE', //setaside
+  secret: 'SECRET' as 'SECRET',
   //
   //invalid: 'INVALID',
   //discard: 'DISCARD'
   //removedFromGame: 'REMOVEDFROMGAME' // o_O
 };
 
-const CARD_TYPES: U2<Types.Cards, string> = {
-  minion: 'MINION',
-  spell: 'SPELL',
-  weapon: 'WEAPON',
-  hero: 'HERO',
-  power: 'HERO_POWER',
-  enchantment: 'ENCHANTMENT'
+const CARD_TYPES = {
+  minion: 'MINION' as 'MINION',
+  spell: 'SPELL' as 'SPELL',
+  weapon: 'WEAPON' as 'WEAPON',
+  hero: 'HERO' as 'HERO',
+  power: 'HERO_POWER' as 'HERO_POWER',
+  enchantment: 'ENCHANTMENT' as 'ENCHANTMENT',
+
+  player: 'PLAYER' as 'PLAYER',
+  game: 'GAME' as 'GAME',
+
 };
 
 const PLAYERCLASS = {
@@ -66,6 +70,7 @@ const TAGS: U2<Types.Tags, string> = {
   stealth: 'STEALTH',
   silence: 'SILENCE',
   enraged: 'ENRAGED',
+  cant_attack: 'CANT_ATTACK',
   _pendingDestruction: '__DESTROY__' // check rulebook
 };
 
@@ -75,44 +80,147 @@ const EVENTS = {
   character_damaged: 'CHARACTER_DAMAGED',
   minion_summoned: 'MINION_SUMMONED',
   card_played: 'CARD_PLAYED',
-  turn_started: 'TURN_STARTED'
+  turn_started: 'TURN_STARTED',
+  turn_ended: 'TURN_ENDED'
 };
+
+type EventBus = {
+  emit (a: any, b: any): any;
+  removeListener (a: any, b: any): void;
+};
+
 
 /* @deprecated */
 const ACTION_TYPES = {
-  playCard: 'PLAY_CARD',
-  attack: 'ATTACK',
-  usePower: 'USE_POWER',
-  endTurn: 'END_TURN',
-  concede: 'CONCEDE'
+  playCard: 'PLAY_CARD' as 'PLAY_CARD',
+  attack: 'ATTACK' as 'ATTACK',
+  usePower: 'USE_POWER' as 'USE_POWER',
+  endTurn: 'END_TURN' as 'END_TURN',
+  concede: 'CONCEDE' as 'CONCEDE'
 };
 
+
+/**
+ * @see ..\classes\arrayOfCards.ts
+ */
+type TypedArrayHS<C extends Cards.Card> = C[];
+export interface AoC<
+  T extends Cards.Card = Cards.Card
+> extends TypedArrayHS<T> {
+
+/* DOES NOT WORK - attempt to make generic .filter
+  filter<S extends T = T>(callbackfn: (
+      value: S,
+      index: number,
+      array: S[]
+    ) => value is S, thisArg?: any
+  ): AoC<S>;
+*/
+  // from (x: T[]): AoC<T>;
+  [position: number]: T;
+
+  adjacent (x: Cards.Card): AoC<T>;
+  exclude (x: Cards.Card): AoC<T>;
+  getRandom (): AoC<T>;
+
+  destroy (): void;
+  silence (): void;
+  dealDamage (n: number): void;
+  dealDamageSpell (n: number): void;
+
+  // experimental
+  heal? (n: number): void;
+}
+
+
+export namespace Cards {
+  export type LegacyBuff = {
+    aura?: {
+      zone: string;
+      target: string;
+      buff: any; // o_O
+    };
+    death? (o: {}): void;
+    trigger? (): void;
+    type: string;
+  }
+  export interface Card {
+    card_id: number;
+    name: string;
+
+    zone: Types.ZonesAllCAPS;
+    owner: Player;
+    type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
+    tags: (string | LegacyBuff)[];
+    incomingAuras?: LegacyBuff[]
+
+    _listener?: [any, any];
+
+    target?: string;
+    // play (): void;
+    play?: CardAbilities["play"];
+    cost?: number;
+
+    [key: string]: any;
+  }
+  export interface Player  extends Card {
+    type: 'PLAYER';
+
+    manaCrystals: number;
+    mana: number;
+    fatigue: number;
+
+    deck: any;
+    hand: any;
+    hero: any;
+
+    /** @deprecated this is being overwritten on the instance in board5.ts */
+    draw: (n: number) => void;
+
+    loose: () => void;
+    lost: boolean;
+  }
+  export interface Character extends Card {
+    type: 'MINION' | 'HERO';
+    attack: number;
+    health: number;
+    isReady: boolean;
+    attackedThisTurn: number;
+    isAlive (): boolean;
+  }
+  export interface Spell extends Card {
+    type: 'SPELL';
+  }
+}
+
+export namespace StateMachine {
+  // see: board7.ts !
+}
+
 export namespace GameOptions {
-  type Card = any;
-  type Character = Card;
-  export type Types = 'ATTACK' | 'PLAY' | 'USE_POWER' | 'END_TURN' | 'CONCEDE';
+  export type Types = 'ATTACK' | 'PLAY_CARD' | 'USE_POWER' | 'END_TURN' | 'CONCEDE';
   interface BaseAction {
       entity_id: number;
-      entity: Card;
-      type: Types; // ACTION_TYPES.playCard;
+      entity: Cards.Card;
+      type: Types;
       name: string;
   }
-  type Attack = {
+  export type Attack = {
       card_id: number;
-      unit: Card; // read Object ?
+      unit: Cards.Character;
       type: 'ATTACK'; // ACTION_TYPES.attack;
       name: string;
-      cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
-      targetList: Character[];
+      // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
+      targetList: Cards.Character[];
   }
-  type Play = {
+  export type Play = {
       card_id: number;
-      card: Card;
-      type: 'PLAY'; // ACTION_TYPES.playCard;
+      card: Cards.Card;
+      type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?
-      targetList: Character[];
+      targetList?: Cards.Card[];
   };
   type EndTurn = {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
@@ -122,7 +230,7 @@ export namespace GameOptions {
   }
   export type Action = Attack | Play | EndTurn | Concede;
   export type Options = {
-      token: string;
+      token?: string;
       actions: Action[];
   }
 }
@@ -134,23 +242,11 @@ interface CardAction {
   dealDamageSpely (): this;
 }
 
-interface AoC<T extends {} = any> extends Array<T> {
-  adjacent (x: any): this;
-  exclude (x: any): this;
-  getRandom (): this;
-  destroy (): void;
-  silence (): void;
-  dealDamage (n: number): void;
-  dealDamageSpell (n: number): void;
-
-  // experimental
-  heal (n: number): void;
-}
-
 type KnownEnvConstants = {
   $ (query: string): AoC;// any[];  // >
   readonly game: any;
   readonly self: any;
+  readonly position?: number; // only for play() of minion ?
 }
 
 type KnownMechanics = {
@@ -163,15 +259,17 @@ type KnownMechanics = {
 }
 
 type CardDefinitionBase = {
-  id: string;
+  readonly id: string;
+  readonly type: Types.CardsAllCAPS;
+  readonly name: string;
+
   _info: string;
   text: string;
-  type: Types.CardsAllCAPS;
-  name: string;
-  playerClass: 'NEUTRAL';
-  rarity: 'EPIC';
-  collectible: boolean;
-  race: string;
+
+  playerClass?: 'NEUTRAL';
+  rarity?: 'EPIC';
+  collectible?: boolean;
+  race?: string;
 
   cost?: number;
   attack?: number | any; // | (a: any)=>number;
@@ -207,7 +305,7 @@ type CardAbilities = {
   tags?: string[];
 
   /** @deprecated */
-  attack: any;
+  attack?: any;
 }
 
 type CardDefinition = CardDefinitionBase & CardAbilities;
@@ -225,5 +323,6 @@ export {
     TAGS_LIST,
     PLAYERCLASS,
     ACTION_TYPES,
-    EVENTS
+    EVENTS,
+    EventBus
 };

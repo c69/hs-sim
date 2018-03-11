@@ -51,18 +51,21 @@ abilitiesMixin.forEach(({
   aura,
   enrage,
   xxx,
-  attack
+
+  attack,
+  health,
+  cost
   }) => {
   //console.log(id);
   if (attack) CardDefinitionsIndex[id].attack = attack;
 
-  if (play) CardDefinitionsIndex[id].play = play;
-  if (target) CardDefinitionsIndex[id].target = target;
-  if (death) CardDefinitionsIndex[id].death = death;
-  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
   if (tags) CardDefinitionsIndex[id].tags = tags;
+  if (target) CardDefinitionsIndex[id].target = target;
+  if (play) CardDefinitionsIndex[id].play = play;
+  if (death) CardDefinitionsIndex[id].death = death;
   if (aura) CardDefinitionsIndex[id].aura = aura;
-  if (enrage) CardDefinitionsIndex[id].enrage = enrage;
+  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
+  // if (enrage) CardDefinitionsIndex[id].enrage = enrage;
 
   if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true;
 });

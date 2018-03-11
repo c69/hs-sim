@@ -63,7 +63,7 @@ const PLAYERCLASS = {
 };
 
 const TAGS: U2<Types.Tags, string> = {
-  taunt: 'TAUNT',
+  taunt: 'TAUNT' as 'TAUNT',
   divineShield: 'DIVINE_SHIELD',
   charge: 'CHARGE',
   windfury: 'WINDFURY',
@@ -71,13 +71,15 @@ const TAGS: U2<Types.Tags, string> = {
   silence: 'SILENCE',
   enraged: 'ENRAGED',
   cant_attack: 'CANT_ATTACK',
+  immune: 'IMMUNE' as 'IMMUNE',
+  frozen: 'FROZEN' as 'FROZEN',
   _pendingDestruction: '__DESTROY__' // check rulebook
 };
 
 const TAGS_LIST = Object.keys(TAGS).reduce<string[]>((a,k) => a.concat(TAGS[k]), []);
 
 const EVENTS = {
-  character_damaged: 'CHARACTER_DAMAGED',
+  character_damaged: 'CHARACTER_DAMAGED' as 'CHARACTER_DAMAGED',
   minion_summoned: 'MINION_SUMMONED',
   card_played: 'CARD_PLAYED',
   turn_started: 'TURN_STARTED',
@@ -266,8 +268,10 @@ type CardDefinitionBase = {
   _info: string;
   text: string;
 
-  playerClass?: 'NEUTRAL';
-  rarity?: 'EPIC';
+  playerClass?: 'NEUTRAL'|
+    'MAGE' | 'PRIEST' | 'WARLOCK' | 'PALADIN' | 'WARRIOR' | 'ROGUE' | 'HUNTER' | 'DRUID' | 'SHAMAN'
+    | 'DREAM';
+  rarity?: 'FREE' | 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   collectible?: boolean;
   race?: string;
 
@@ -309,16 +313,14 @@ type CardAbilities = {
 }
 
 type CardDefinition = CardDefinitionBase & CardAbilities;
-type XXX_ZONE = Types.ZonesAllCAPS;
-type XXX_CARD = Types.CardsAllCAPS;
+
 export {
     ZONES,
-    XXX_ZONE,
     CARD_TYPES,
-    XXX_CARD,
     CardAbilities,
     CardDefinition,
     KnownMechanics,
+    KnownEnvConstants,
     TAGS,
     TAGS_LIST,
     PLAYERCLASS,

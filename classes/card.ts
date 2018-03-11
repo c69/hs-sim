@@ -1,11 +1,9 @@
 import {
     Types,
     ZONES,
-    XXX_ZONE,
     CARD_TYPES,
     CardDefinition,
     Cards,
-    XXX_CARD, // todo: rethink this ..
     TAGS,
     PLAYERCLASS,
     EVENTS,
@@ -16,7 +14,13 @@ let card_id = 1;
 
 
 class Card implements Cards.Card {
-    eventBus: EventBus;
+    zone: Types.ZonesAllCAPS;
+    owner: Player;
+
+    card_id: number;
+
+    eventBus: EventBus; // :(
+    _listener: any = null; // original implementation of triggers
 
     id: string;
     // dbfId: number;
@@ -31,19 +35,13 @@ class Card implements Cards.Card {
     rarity: string;
 
     costBase: number;
-    overload: number;
+    // overload: number;
 
     play: any;
     target: string;
     buffs: any[];
     incomingAuras: any[];
-    _listener: any = null;
 
-    zone: Types.ZonesAllCAPS;
-    owner: Player;
-
-
-    card_id: number;
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
@@ -73,7 +71,7 @@ class Card implements Cards.Card {
         this.rarity = cardDef.rarity;
 
         this.costBase = cardDef.cost;
-        this.overload = cardDef.overload;
+        // this.overload = cardDef.overload;
 
         this.play = cardDef.play;
         this.target = cardDef.target;

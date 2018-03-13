@@ -21,7 +21,7 @@ import {
     if (attacker.attack < 1) throw `harmless attacker ${attacker}`; //return;
     if (attacker.owner !== game.activePlayer) throw 'wrong turn'; //return; // is there a way to attack on enemy turn ? - UNGORO:WarriorLegendDino(8)
     if (target.owner === attacker.owner) throw 'own unit'; //return; // will fail for Hunter:Misdirection secret, and Ogres
-    if (attacker.tags.includes(TAGS.windfury)) {
+    if (attacker.tags.has(TAGS.windfury)) {
       if (attacker.attackedThisTurn > 1) throw 'already attacked too many times this turn'; //return
     } else {
       if (attacker.attackedThisTurn > 0) throw 'already attacked this turn'; //return

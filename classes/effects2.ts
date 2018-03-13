@@ -8,7 +8,8 @@ import {
     Cards,
     Types,
     EVENTS,
-    // ZONES
+    CARD_TYPES,
+    ZONES
 } from '../data/constants';
 
 
@@ -36,26 +37,33 @@ type CardDef = {
     tags?: string[];
 
     target?: string;
-    play? (options: {target: any} & Stuff): void | any; // play
+    play?: (options: {target: Cards.Card} & Stuff) => any; // play
 
-    spell? (): void; // play
-    battlecry? (): void; // play
-    deathrattle? (): void; // death
+    spell?: (x: {target: Cards.Card} & Stuff) => any; // play
+    battlecry?: (x: {target: Cards.Card} & Stuff) => any; // play
+    deathrattle?: ((x: Stuff) => any)[]; // death
     on?: {
-        [K in Events]?: {
-            if?: string | ((target: Cards.Card) => boolean);
-            zone?: Types.ZonesAllCAPS;
-            once?: true;
-            action: () => void;
-        }
-    },
+        event: Events;
+        if?: string | ((event: any) => boolean);
+        action: (x: {event: any} & Stuff) => any;
+        zone?: Types.ZonesAllCAPS;
+        once?: true;
+    }[],
     aura?: {
         target: string;
         buff: string; // no more FRIKING ANONYMOUS BUFFs !
 
         zone?: Types.ZonesAllCAPS
     }[],
-    buff?: string;
+    refresh?: {
+        cost: (n: number, x: Stuff) => number;
+        attack: (n: number, x: Stuff) => number;
+        // health ?
+        tags: (t: string[], x: Stuff) => string[];
+        // buffs ?
+    }
+    buffs: string[];
+
     xxx?: string;
     //_______________________
     _ideas_draft_?: {
@@ -353,3 +361,158 @@ const def2: CardDef[] = [
         health: 3
       }
 ];
+
+const q = {
+    attack: 42,
+    tags: new Set(['aaa', 'bbb']),
+    buffs: [
+        {
+            attack: 2
+        },
+        {
+            tags: ['silence']
+        },
+        {
+            attack: 4,
+            tags: ['taunt']
+        },
+        {
+            attack: -1
+        }
+    ],
+    buffsTemporary: [
+        {
+            attack: 2,
+            till: EVENTS.turn_end
+        }
+    ], // ?
+    aurasIncoming: [{
+        attack: 2
+    }, {
+        tags: ['charge']
+    }]
+}
+
+type BuffsOrTags = string[] | {
+    cost: any;
+    tags: Set<string>;
+    tagsDelete?: Set<string>;
+
+    attack?: any;
+    health?: any;
+    armor?: any;
+    durability?: any;
+
+    // death: any;
+    aura: any[];
+    on: any[];
+
+    [K: string]: any;
+}
+
+function _pick (obj: {[k: string]: any}, props: string[]) {
+    return props.reduce((a, v) => {
+        a[v] = obj[v];
+        return a;
+    }, {} as {[K: string]: any});
+};
+
+function applyEffects (card: Cards.Card): Cards.Card  {
+    let allBuffs = [].concat(card.buffs, card.incomingAuras);
+    if (!allBuffs.length) return card;
+
+
+    let baseStats = {
+        tags: new Set(card.tags)
+    } as {[K: string]: any};
+
+    switch (card.type) {
+        case CARD_TYPES.minion:
+            baseStats = _pick(card, ['cost', 'attack', 'health']);
+        break;
+        case CARD_TYPES.hero:
+            baseStats = _pick(card, ['cost', 'attack', 'health', 'armor']);
+        break;
+        case CARD_TYPES.weapon:
+            baseStats = _pick(card, ['cost', 'attack', 'durability']);
+        break;
+        case CARD_TYPES.spell:
+            baseStats = _pick(card, ['cost']);
+        break;
+        case CARD_TYPES.enchantment:
+            throw `Trying to buff the enchantment! ${card}`;
+        case CARD_TYPES.power:
+        case CARD_TYPES.game:
+        case CARD_TYPES.player:
+        default:
+            throw `NOT_IMPLEMENTED: buffing of ${card}`;
+    }
+
+    const env = {
+        self: card,
+        host: card, // this is needed for mind control
+        $: {}
+    };
+
+    // this will work as long as there are no composite buffs with silence
+    let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
+    // this is robust - but expensive...
+    // let ignoreOlder_2 = allBuffs.reduce((a, v, i) => (
+    //     (v === TAGS.silence || v.effects.tags.has(TAGS.silence)) ? i : a
+    // ), -1);
+
+    if (ignoreOlder === -1) ignoreOlder = 0;
+    let activeBuffs = allBuffs.slice(ignoreOlder);
+
+    const newStats = (activeBuffs as BuffsOrTags[]).reduce((stats, buff) => {
+        if (typeof buff === 'string') {
+            stats.tags.add(buff);
+            return stats;
+        }
+        if (Array.isArray(buff)) {
+            buff.forEach(t => stats.tags.add(t));
+            return stats;
+        }
+        if (buff.zone !== ZONES.play) throw `Zombie enchantment ${buff}`;
+        [
+            'cost',
+            'attack',
+            // --- TODO: damage-related stats are not ready for prime-time
+            // 'health',
+            // 'armor',
+            // 'durability'
+        ].forEach(k => {
+            const mutator = buff[k];
+            if (!mutator) return; // if mutator is 0, we also ignore it
+            if (!stats[k]) throw `(* will fail for .on or .deathrattle) Attempt to add unexpected stat ${k} into ${card}`;
+
+            if (typeof mutator === 'function') {
+                stats[k] = mutator(stats[k], env);
+            } else if (typeof mutator === 'number') {
+                stats[k] += mutator;
+            }
+        });
+        stats.tags.add(buff.tags);
+        buff.tagsDelete.forEach(t => buff.delete(t));
+
+        [
+            'on',
+            'aura',
+            'deathrattle'
+        ].forEach(k => {
+            const behavior = buff[k];
+            if (!behavior) return;
+            if (!Array.isArray(behavior)) throw `.${k} should be an array in ${buff}`;
+
+            // TODO: how to make {host} work ???
+            if (!stats[k]) {
+                stats[k] = [];
+            }
+            stats[k] = stats[k].concat(behavior);
+        })
+
+        return stats;
+    }, baseStats);
+
+    return card;
+}

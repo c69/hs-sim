@@ -10,6 +10,8 @@ import {
     EventBus
 } from '../data/constants';
 
+import { getter_of_buffed_atribute } from './effects0';
+
 let card_id = 1;
 
 
@@ -304,8 +306,6 @@ class Enchantment extends Card {
                 this.effects[prop] = v;
             }
         }, this);
-
-
     }
 }
 
@@ -359,47 +359,15 @@ class Player extends Card implements Cards.Player {
         this.lost = false;
     }
     draw (n: number) {
-
+        // ...
     }
     loose () {
-      if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
-      console.warn(`player ${this.name} LOST the game`);
-      this.lost = true;
+        if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
+        console.warn(`player ${this.name} LOST the game`);
+        this.lost = true;
     }
   }
 
-
-/**
- * This function calculates final value of attribute
- *  after applying all currently active buffs on the card
- * @this Card
- * @param {string} prop Name of the prop in .effects object
- * @param {*} initialValue
- */
-function getter_of_buffed_atribute(prop, initialValue) {
-    if (!this.tags.length) return initialValue;
-
-    let modifiers = this.tags.filter(v => (v.effects && (prop in v.effects)));
-    if (!modifiers.length) {
-        //console.log(this.tags);
-        return initialValue;
-    }
-    //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
-    //console.log(modifiers, this.tags);
-
-    let new_value = modifiers.reduce((a, v) => {
-        let mutator = v.effects[prop];
-        if (typeof mutator === 'number') {
-            a += mutator;
-        } else if (typeof mutator === 'function') {
-            a = mutator(a);
-        }
-        return a;
-    }, initialValue, this);
-
-    console.log(`${this.zone} ${this.name} ${this.card_id}'s ${prop} is modified from ${initialValue} to ${new_value}`);
-    return new_value > 0 ? new_value : 0;
-}
 
 export {
     Card,

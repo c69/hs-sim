@@ -144,6 +144,9 @@ export namespace Cards {
     };
     death? (o: {}): void;
     trigger? (): void;
+    effects?: {
+      [k: string]: any;
+    }
     type: string;
   }
   export interface Card {
@@ -192,6 +195,12 @@ export namespace Cards {
   }
   export interface Spell extends Card {
     type: 'SPELL';
+  }
+  export interface Enchantment extends Card {
+    type: typeof CARD_TYPES.enchantment;
+    effects?: {
+      [k: string]: any;
+    }
   }
 }
 

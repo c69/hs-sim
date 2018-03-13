@@ -32,12 +32,11 @@ function applyBuff ({
   type = 'buff'
 }) {
     //console.log(card);
-    if (!card) throw 'empty buff';
+    if (!card) throw 'Trying to apply empty buff (nothing)';
     if (!card.type && !card.effects) throw `invalid argument - lambda buff of unknown shape: ${JSON.stringify(card)}`;
     //if (!card.type && card.effects) throw `lambda buffs are forbidden: ${Object.keys(card.effects).map (v => `\n- ${v}  ${card.effects[v].toString()}`)}`;
-
-    if (card.type === CARD_TYPES.enchantment && !card.effects) throw 'invalid enchantment';
     if (card.type && card.type !== CARD_TYPES.enchantment) throw `attempt to buff with card of type: ${card.type}`;
+    if (card.type === CARD_TYPES.enchantment && !card.effects) throw 'invalid enchantment';
 
 
     //console.log(target);

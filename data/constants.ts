@@ -62,15 +62,21 @@ const PLAYERCLASS = {
   dream: 'DREAM'
 };
 
+type VerboseEnum<T extends string> = {
+  [K in T]: K;
+}
+type Zones_2 = VerboseEnum<Types.ZonesAllCAPS>;
+
+
 const TAGS: U2<Types.Tags, string> = {
   taunt: 'TAUNT' as 'TAUNT',
   divineShield: 'DIVINE_SHIELD',
   charge: 'CHARGE',
   windfury: 'WINDFURY',
   stealth: 'STEALTH',
-  silence: 'SILENCE',
+  silence: 'SILENCE' as 'SILENCE',
   enraged: 'ENRAGED',
-  cant_attack: 'CANT_ATTACK',
+  cant_attack: 'CANT_ATTACK' as 'CANT_ATTACK',
   immune: 'IMMUNE' as 'IMMUNE',
   frozen: 'FROZEN' as 'FROZEN',
   _pendingDestruction: '__DESTROY__' // check rulebook
@@ -156,7 +162,7 @@ export namespace Cards {
     zone: Types.ZonesAllCAPS;
     owner: Player;
     type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
-    tags: (string | LegacyBuff)[];
+    tags: Set<string | LegacyBuff>;
     incomingAuras?: LegacyBuff[]
 
     _listener?: [any, any];

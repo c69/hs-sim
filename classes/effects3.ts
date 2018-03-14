@@ -6,32 +6,39 @@ import {
     // KnownMechanics,
 
     Cards,
-    // Types,
+    Types,
     // EVENTS,
     ZONES
 } from '../data/constants';
 
 
 // ----------------- line 15
-type Tag = string[];
+type Tag = keyof typeof TAGS; //'taunt' | 'blabla';
 type _Fn_mechanics_Placeholder = (o: any) => any;
 type _Fn_condition = (o: any) => boolean;
 type _Fn_mutator<T> = (n: T, o: any) => T;
 
+type _singleOrArray<T> = T | T[];
+type _asMutators<T> = {
+    [K in keyof T]: T[K] | _Fn_mutator<T[K]>;
+};
 type StatsAsNumbers = {
     cost: number;
     attack?: number;
     health?: number;
     armor?: number;
     durability?: number;
+    [k: string]: number; // TODO: check that this works
 };
+type StatsAsMutators = _asMutators<StatsAsNumbers>;
 type HealthMaxMixin = {
-    healthMax: number; // ?
+    healthMax?: number;
 }
 type AuraContainer = {
     target: string;
-    buff?: string; // should this just be id ???
+    buffId?: string;
     tags?: string[];
+    zone: Types.ZonesAllCAPS;
 }
 type TriggerContainer = {
     event: string;
@@ -42,31 +49,31 @@ type TriggerContainer = {
 type DeathContainer = {
     death: _Fn_mechanics_Placeholder;
 }
-/** Real cards can have auras and triggers defined inline */
-type EffectDefinitionMixin = {
-    aura: AuraContainer | AuraContainer[];
-    on: TriggerContainer | TriggerContainer[];
-    death: _Fn_mechanics_Placeholder | _Fn_mechanics_Placeholder[];
+type EffectContainers = {
+    aura?: AuraContainer;
+    death?: DeathContainer;
+    on?: TriggerContainer;
 }
-type BuffDefinition = StatsAsNumbers & {
+type _arraysOrSingle<T> = {
+    [K in keyof T]: _singleOrArray<T[K]>;
+}
+type _onlyArrays<T> = {
+    [K in keyof T]: T[K][];
+}
+type EffectDefinitionMixin = _arraysOrSingle<EffectContainers>;
+type EffectMixin = _onlyArrays<EffectContainers>;
+
+type BuffDefinition = StatsAsMutators & {
     card_id: number; // one mandatory property to make sure type is non-weak
 }
-type BuffContainer = StatsAsNumbers & {
+type BuffContainer = StatsAsMutators & {
     card_id: number; // one mandatory property to make sure type is non-weak
 
-    // stats are actually mutators here !
-    tags?: string[];
-    tagsDelete?: string[];
-    aura?: AuraContainer[];
-    death?: DeathContainer[];
-    on?: TriggerContainer[];
-}
-let __TEST_ME: BuffContainer = {
-    card_id: 11,
-    cost: 2,
-    // on: [42]
-}
-type AnyPossibleBuff = Tag | BuffContainer;
+    tags?: Set<Tag>;
+    tagsDelete?: Set<Tag>;
+} & EffectMixin;
+
+type AnyPossibleBuff = Tag[] | BuffContainer;
 type CardState = {
     // consider union for (Hero, Minion, Weapon, Spell)
     // also - stats for Game or Player would be totally different !
@@ -75,78 +82,91 @@ type CardState = {
     tags: Set<string>;
 
     triggers: TriggerContainer[];
-    auras: AuraContainer[];
+    auras: (AuraContainer & { auraActivated?: Cards.Enchantment })[];
     deathrattles: DeathContainer[];
 
-    refresh: (a: any) => any;
+    // refresh looks dangerous in this form,
+    // and .incomingAuras here is only as a draft to implement Small-Time Buccaneer
+    // which might not work, because we now expect
+    // .auraActivated (buff card) inside of incomingAuras,
+    // and not simply a string id
+    // refresh: _asMutators<StatsAsNumbers & {incomingAuras: BuffOrTags[]}>; // woot
 }
 type Card_2 = {
+    card_id: number;
+    type: Types.CardsAllCAPS;
+} & Readonly<StatsAsNumbers> & {
+    readonly tags: Set<string>;
+
     _base: CardState;
     _current: CardState;
     _effects: {
+        // 5 collections are a good indication of
+        // our incomplete understanding of the problem :(
+        // real question is - do we even need ANY of them ?
+        log: AnyPossibleBuff[];
         original: AnyPossibleBuff[];
         given: AnyPossibleBuff[];
         temporary: AnyPossibleBuff[];
         auraEffects: AnyPossibleBuff[];
     }
-
-    readonly tags: Set<string>;
-} & Readonly<StatsAsNumbers>;
+};
 
 
 // --- was line 80 (= 65 lines total)
-type Buff = {
-    cost: any;
-    tags: Set<string>;
-    tagsDelete?: Set<string>;
 
-    attack?: any;
-    health?: any;
-    armor?: any;
-    durability?: any;
-
-    death?: any;
-    aura?: any[];
-    on?: any[];
-
-    [K: string]: any;
+let __TEST_ME: BuffContainer = {
+    card_id: 11,
+    cost: 2,
+    // on: [42]
+    on: [{
+        event: '',
+        action () {}
+    }]
 }
 
-type BuffOrTags = string[] | Buff;
+type BuffOrTags = Tag[] | BuffContainer;
 
-function _pick (obj: {[k: string]: any}, props: string[]) {
+function _pickStats<T extends StatsAsNumbers, P extends keyof StatsAsMutators>(obj: T, props: P[]) {
     return props.reduce((a, v) => {
         a[v] = obj[v + 'Base'];
         return a;
-    }, {} as {[K: string]: any});
+    }, {} as T);
 };
 
-export function applyEffects (card: Cards.Card): Buff  {
-    let allBuffs = [].concat(card.buffs, card.incomingAuras);
+export function applyEffects (card: Card_2): CardState {
+    let allBuffs = ([] as BuffOrTags[]).concat(card._effects.given, card._effects.auraEffects);
     if (!allBuffs.length) return null;
 
 
-    let baseStats = {
-    } as {[K: string]: any};
+    let baseState: CardState = {
+        stats: {
+            cost: null
+        },
+        tags: new Set(),
+        triggers: [],
+        auras: [],
+        deathrattles: []
+    };
 
     switch (card.type) {
         case CARD_TYPES.minion:
-            baseStats = _pick(card, ['cost', 'attack',
+            baseState.stats = _pickStats(card._base.stats, ['cost', 'attack',
             // 'health'
         ]);
         break;
         case CARD_TYPES.hero:
-            baseStats = _pick(card, ['cost', 'attack',
+            baseState.stats = _pickStats(card._base.stats, ['cost', 'attack',
             // 'health', 'armor'
         ]);
         break;
         case CARD_TYPES.weapon:
-            baseStats = _pick(card, ['cost', 'attack',
+            baseState.stats = _pickStats(card._base.stats, ['cost', 'attack',
             // 'durability'
         ]);
         break;
         case CARD_TYPES.spell:
-            baseStats = _pick(card, ['cost']);
+            baseState.stats = _pickStats(card._base.stats, ['cost']);
         break;
         case CARD_TYPES.enchantment:
             throw `Trying to buff the enchantment! ${card}`;
@@ -156,7 +176,6 @@ export function applyEffects (card: Cards.Card): Buff  {
         default:
             throw `NOT_IMPLEMENTED: buffing of ${card}`;
     }
-    baseStats.tags = new Set()
 
     const env = {
         self: card,
@@ -164,24 +183,26 @@ export function applyEffects (card: Cards.Card): Buff  {
         $: {}
     };
 
-    // this will work as long as there are no composite buffs with silence
-    let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
-    // this is robust - but expensive...
-    // let ignoreOlder_2 = allBuffs.reduce((a, v, i) => (
-    //     (v === TAGS.silence || v.effects.tags.has(TAGS.silence)) ? i : a
-    // ), -1);
+    // the expensive ".lastIndexOf" with 0 as default
+    let ignoreOlder = allBuffs.reduce((a, v, i) => {
+        let hasSilence = false;
+        if (Array.isArray(v)) {
+            hasSilence = v.includes(TAGS.silence);
+        } else {
+            hasSilence = v.tags.has(TAGS.silence);
+        }
 
-    if (ignoreOlder === -1) ignoreOlder = 0;
+        return hasSilence ? i : a;
+    }, 0);
+
     let activeBuffs = allBuffs.slice(ignoreOlder);
 
-    const newStats = (activeBuffs as BuffOrTags[]).reduce((stats, buff) => {
-        if (typeof buff === 'string') {
-            stats.tags.add(buff);
-            return stats;
-        }
+    const newState = (activeBuffs as BuffOrTags[]).reduce((state, buff) => {
+        if (typeof buff === 'string') throw `String buffs are not supported: ${buff}`;
+
         if (Array.isArray(buff)) {
-            buff.forEach(t => stats.tags.add(t));
-            return stats;
+            buff.forEach(t => state.tags.add(t));
+            return state;
         }
 //        if (buffCard.zone !== ZONES.play) throw `Zombie enchantment ${buff}`;
 
@@ -192,38 +213,25 @@ export function applyEffects (card: Cards.Card): Buff  {
             // 'health',
             // 'armor',
             // 'durability'
-        ].forEach(k => {
+        ].forEach((k: 'cost'|'attack') => {
             const mutator = buff[k];
             if (!mutator) return; // if mutator is 0, we also ignore it
-            // if (!stats[k]) throw `(* will fail for .on or .deathrattle) Attempt to add unexpected stat ${k} into ${card}`;
-            /* HACK */ //if (!stats[k]) stats[k] = stats[k + 'Base'];
+
             if (typeof mutator === 'function') {
-                stats[k] = mutator(stats[k], env);
+                state.stats[k] = mutator(state.stats[k], env);
             } else if (typeof mutator === 'number') {
-                stats[k] += mutator;
+                state.stats[k] += mutator;
             }
         });
-        buff.tags && stats.tags.add(buff.tags);
-        buff.tagsDelete && buff.tagsDelete.forEach(t => buff.delete(t));
+        buff.tags && buff.tags.forEach(t => state.tags.add(t));
+        buff.tagsDelete && buff.tagsDelete.forEach(t => state.tags.delete(t));
 
-        [
-            'on',
-            'aura',
-            'deathrattle'
-        ].forEach(k => {
-            const behavior = buff[k];
-            if (!behavior) return;
-            if (!Array.isArray(behavior)) throw `.${k} should be an array in ${buff}`;
+        state.triggers = state.triggers.concat(buff.on);
+        state.auras = state.auras.concat(buff.aura);
+        state.deathrattles = state.deathrattles.concat(buff.death);
 
-            // TODO: how to make {host} work ???
-            if (!stats[k]) {
-                stats[k] = [];
-            }
-            stats[k] = stats[k].concat(behavior);
-        })
+        return state;
+    }, baseState);
 
-        return stats;
-    }, baseStats);
-
-    return newStats;
+    return newState;
 }

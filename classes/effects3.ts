@@ -13,6 +13,8 @@ import {
 
 
 // ----------------- line 15
+namespace Effects {
+
 type Tag = keyof typeof TAGS; //'taunt' | 'blabla';
 type _Fn_mechanics_Placeholder = (o: any) => any;
 type _Fn_condition = (o: any) => boolean;
@@ -22,7 +24,7 @@ type _singleOrArray<T> = T | T[];
 type _asMutators<T> = {
     [K in keyof T]: T[K] | _Fn_mutator<T[K]>;
 };
-type StatsAsNumbers = {
+export type StatsAsNumbers = {
     cost: number;
     attack?: number;
     health?: number;
@@ -30,7 +32,7 @@ type StatsAsNumbers = {
     durability?: number;
     [k: string]: number; // TODO: check that this works
 };
-type StatsAsMutators = _asMutators<StatsAsNumbers>;
+export type StatsAsMutators = _asMutators<StatsAsNumbers>;
 type HealthMaxMixin = {
     healthMax?: number;
 }
@@ -73,8 +75,8 @@ type BuffContainer = StatsAsMutators & {
     tagsDelete?: Set<Tag>;
 } & EffectMixin;
 
-type AnyPossibleBuff = Tag[] | BuffContainer;
-type CardState = {
+export type AnyPossibleBuff = Tag[] | BuffContainer;
+export type CardState = {
     // consider union for (Hero, Minion, Weapon, Spell)
     // also - stats for Game or Player would be totally different !
     stats: StatsAsNumbers & HealthMaxMixin;
@@ -92,7 +94,15 @@ type CardState = {
     // and not simply a string id
     // refresh: _asMutators<StatsAsNumbers & {incomingAuras: BuffOrTags[]}>; // woot
 }
-type Card_2 = {
+
+}
+
+type StatsAsMutators = Effects.StatsAsMutators;
+type StatsAsNumbers = Effects.StatsAsNumbers;
+type CardState = Effects.CardState;
+type AnyPossibleBuff = Effects.AnyPossibleBuff;
+
+type Card_withEffects = {
     card_id: number;
     type: Types.CardsAllCAPS;
 } & Readonly<StatsAsNumbers> & {
@@ -115,17 +125,15 @@ type Card_2 = {
 
 // --- was line 80 (= 65 lines total)
 
-let __TEST_ME: BuffContainer = {
-    card_id: 11,
-    cost: 2,
-    // on: [42]
-    on: [{
-        event: '',
-        action () {}
-    }]
-}
-
-type BuffOrTags = Tag[] | BuffContainer;
+// let __TEST_ME: BuffContainer = {
+//     card_id: 11,
+//     cost: 2,
+//     // on: [42]
+//     on: [{
+//         event: '',
+//         action () {}
+//     }]
+// }
 
 function _pickStats<T extends StatsAsNumbers, P extends keyof StatsAsMutators>(obj: T, props: P[]) {
     return props.reduce((a, v) => {
@@ -134,8 +142,8 @@ function _pickStats<T extends StatsAsNumbers, P extends keyof StatsAsMutators>(o
     }, {} as T);
 };
 
-export function applyEffects (card: Card_2): CardState {
-    let allBuffs = ([] as BuffOrTags[]).concat(card._effects.given, card._effects.auraEffects);
+export function applyEffects (card: Card_withEffects): CardState {
+    let allBuffs = ([] as AnyPossibleBuff[]).concat(card._effects.given, card._effects.auraEffects);
     if (!allBuffs.length) return null;
 
 
@@ -197,7 +205,7 @@ export function applyEffects (card: Card_2): CardState {
 
     let activeBuffs = allBuffs.slice(ignoreOlder);
 
-    const newState = (activeBuffs as BuffOrTags[]).reduce((state, buff) => {
+    const newState = (activeBuffs as AnyPossibleBuff[]).reduce((state, buff) => {
         if (typeof buff === 'string') throw `String buffs are not supported: ${buff}`;
 
         if (Array.isArray(buff)) {

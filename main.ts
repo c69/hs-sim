@@ -78,7 +78,7 @@ g2.start();
 
     //console.log('starting the game...333');
 //AI - Artificial stupIdity
-for(let i = 0; i < 13 && !g2.isOver; i++) {
+for(let i = 0; i < 7 && !g2.isOver; i++) {
   g2.view();
   //console.log(g2.exportState());
 
@@ -88,18 +88,20 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   //g.viewState();
   //g.viewAvailableOptions();
 
-  let max_actions_per_turn = 10;
+  let max_actions_per_turn = 75;
   for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
     let opts = g2.viewAvailableOptions();
 
     g2.exportState(); // verify JSON export is working
     //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
-    if (!opts.actions.length) break;
+    if (opts.actions.length < 3) {
+      g2.chooseOption(opts.token);
+      break; // = end_turn and concede
+    }
     g2.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
   }
 
   console.log('___________________');
-  g2.endTurn();
 }
 //console.log(g2.exportState());
 

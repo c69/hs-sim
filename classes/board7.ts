@@ -169,7 +169,7 @@ export class Board {
         this.all.forEach(c => this.initCache(c));
         this.all = this.all.map(c => this.placeCardInit(c));
 
-        console.log(`Board setup for ${g} finished! ${p1} VS ${p2}\n`);
+        console.log(`Board setup finished for ${g} !: ${p1} VS ${p2}\n`);
     }
     select<T extends C = C>(this: this, p: Player, query: string): C[] {
         const isVaidSelector = /^(any|own|enemy)?\s*(card|card|player|minion|hero|character|weapon|spell|hero_power|enchantment)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
@@ -422,17 +422,17 @@ export class Board {
         }
 
         console.log('minions on board', own_minions.map(v=>
-        (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
-        (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
-        (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
-        (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
+        (v.tags && v.tags.has(TAGS.taunt) ? '🛡️' : '') +
+        (v.tags && v.tags.has(TAGS.divineShield) ? '🛡' : '') +
+        (v.tags && v.tags.has(TAGS.windfury) ? 'w' : '') +
+        (v.tags && v.tags.has(TAGS.charge) ? '!' : '') +
 
 
-        (v.tags.filter(isObjectTag).find(v => !!v.death) ? '☠️' : '') +
-        (v.tags.filter(isObjectTag).find(v => !!v.trigger) ? 'T' : '') +
-        (v.tags.filter(isObjectTag).find(v => !!v.aura) ? 'A' : '') +
-        (v.tags.filter(isObjectTag).find(v => v.type === CARD_TYPES.enchantment) ? 'E' : '') +
-        (v.incomingAuras.length ? 'a' : '') +
+        // (v.tags.filter(isObjectTag).find(v => !!v.death) ? '☠️' : '') +
+        // (v.tags.filter(isObjectTag).find(v => !!v.trigger) ? 'T' : '') +
+        // (v.tags.filter(isObjectTag).find(v => !!v.aura) ? 'A' : '') +
+        // (v.tags.filter(isObjectTag).find(v => v.type === CARD_TYPES.enchantment) ? 'E' : '') +
+        (v._effects.incomingAuraEffects.length ? 'a' : '') +
 
         `${v.attack}/${v.health}`
         ));

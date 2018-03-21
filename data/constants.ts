@@ -140,8 +140,95 @@ export interface AoC<
   heal? (n: number): void;
 }
 
+export namespace Effects {
+  type Tag = keyof typeof TAGS; //'taunt' | 'blabla';
+  type _Fn_mechanics_Placeholder = (o: any) => any;
+  type _Fn_condition = (o: any) => boolean;
+  type _Fn_mutator<T> = (n: T, o: any) => T;
+
+  type _singleOrArray<T> = T | T[];
+  type _asMutators<T> = {
+      [K in keyof T]: T[K] | _Fn_mutator<T[K]>;
+  };
+  export type StatsAsNumbers = {
+      cost: number;
+      attack?: number;
+      health?: number;
+      armor?: number;
+      durability?: number;
+      // [k: string]: number; // TODO: check that this works
+  };
+  export type StatsAsMutators = _asMutators<StatsAsNumbers>;
+  type HealthMaxMixin = {
+      healthMax?: number;
+  }
+  export type AuraContainer = {
+      target: string;
+      buffId?: string;
+      tags?: string[];
+      priority?: number;
+
+      zone?: Types.ZonesAllCAPS;
+  }
+  export type TriggerContainer = {
+      event: string;
+      action: _Fn_mechanics_Placeholder;
+      // matches?: string;
+      // if?: _Fn_condition;
+      condition?: string | _Fn_condition; // legacy
+
+      zone?: Types.ZonesAllCAPS;
+  }
+  export type DeathContainer = {
+      death: _Fn_mechanics_Placeholder;
+  }
+  type EffectContainers = {
+      aura?: AuraContainer;
+      death?: DeathContainer;
+      on?: TriggerContainer;
+  }
+  type _arraysOrSingle<T> = {
+      [K in keyof T]: _singleOrArray<T[K]>;
+  }
+  type _onlyArrays<T> = {
+      [K in keyof T]: T[K][];
+  }
+  type EffectDefinitionMixin = _arraysOrSingle<EffectContainers>;
+  type EffectMixin = _onlyArrays<EffectContainers>;
+
+  type BuffDefinition = StatsAsMutators & {
+      card_id: number; // one mandatory property to make sure type is non-weak
+  }
+  export type BuffContainer = StatsAsMutators & {
+      card_id: number; // one mandatory property to make sure type is non-weak
+
+      tags?: Set<Tag>;
+      tagsDelete?: Set<Tag>;
+  } & EffectMixin;
+
+  export type AnyPossibleBuff = Tag[] | BuffContainer;
+  export type CardState = {
+      // consider union for (Hero, Minion, Weapon, Spell)
+      // also - stats for Game or Player would be totally different !
+      stats: StatsAsNumbers & HealthMaxMixin;
+
+      tags: Set<string>;
+
+      triggers: TriggerContainer[];
+      auras: (AuraContainer & { auraActivated?: Cards.Enchantment })[];
+      deathrattles: DeathContainer[];
+
+      // refresh looks dangerous in this form,
+      // and .incomingAuras here is only as a draft to implement Small-Time Buccaneer
+      // which might not work, because we now expect
+      // .auraActivated (buff card) inside of incomingAuras,
+      // and not simply a string id
+      // refresh: _asMutators<StatsAsNumbers & {incomingAuras: BuffOrTags[]}>; // woot
+  }
+}
 
 export namespace Cards {
+  /** @deprecated */
   export type LegacyBuff = {
     aura?: {
       zone: string;
@@ -155,31 +242,76 @@ export namespace Cards {
     }
     type: string;
   }
-  export interface Card {
+
+  // -- from effects3.ts -----------
+  type StatsAsMutators = Effects.StatsAsMutators;
+  type StatsAsNumbers = Effects.StatsAsNumbers;
+  type CardState = Effects.CardState;
+  type AnyPossibleBuff = Effects.AnyPossibleBuff;
+
+  // type Card_withEffects = {
+  //     card_id: number;
+  //     type: Types.CardsAllCAPS;
+  // } & Readonly<StatsAsNumbers> & {
+  //     readonly tags: Set<string>;
+
+  //     _base: CardState;
+  //     _current: CardState;
+  //     _effects: {
+  //         // 5 collections are a good indication of
+  //         // our incomplete understanding of the problem :(
+  //         // real question is - do we even need ANY of them ?
+  //         log?: AnyPossibleBuff[];
+  //         original: AnyPossibleBuff[];
+  //         given: AnyPossibleBuff[];
+  //         temporary?: AnyPossibleBuff[];
+  //         auraEffects: AnyPossibleBuff[];
+  //     }
+  // };
+
+
+  export interface Card_Base {
     card_id: number;
     name: string;
 
     zone: Types.ZonesAllCAPS;
     owner: Player;
-    type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
-    tags: Set<string | LegacyBuff>;
-    incomingAuras?: LegacyBuff[]
+    type: Types.CardsAllCAPS;
+  }
+
+  type Tag = string;
+  type AnyContainer = Effects.AuraContainer | Effects.TriggerContainer | Effects.DeathContainer;
+  export interface Card extends Card_Base {
+    readonly cost?: number;
+    readonly attack?: number;
+    health?: number;
+    // armor?: number;
+    // durabilty?: number;
+
+    readonly tags: Set<Tag>;
+    _base: Effects.CardState;
+    _current: Effects.CardState;
+    _effects: {
+      original: (Effects.AnyPossibleBuff | AnyContainer[])[];
+      given: Effects.AnyPossibleBuff[];
+      incomingAuraEffects: Effects.AnyPossibleBuff[];
+    }
+
+    // tags: Set<string | LegacyBuff>;
+    // incomingAuras?: LegacyBuff[]
 
     _listener?: [any, any];
 
     target?: string;
     // play (): void;
     play?: CardAbilities["play"];
-    cost?: number;
-
-    [key: string]: any;
   }
-  export interface Player  extends Card {
-    type: 'PLAYER';
+  export interface Player extends Card {
+    type: typeof CARD_TYPES.player;
 
-    manaCrystals: number;
-    mana: number;
-    fatigue: number;
+    manaCrystals: number; // todo: player stats
+    mana: number; // todo: player stats
+    fatigue: number; // todo: player stats
 
     deck: any;
     hand: any;
@@ -189,20 +321,26 @@ export namespace Cards {
     draw: (n: number) => void;
 
     loose: () => void;
-    lost: boolean;
+    lost: boolean; // todo: tagify
   }
   export interface Character extends Card {
-    type: 'MINION' | 'HERO';
+    type: typeof CARD_TYPES.minion | typeof CARD_TYPES.hero;
     attack: number;
     health: number;
-    isReady: boolean;
-    attackedThisTurn: number;
-    isAlive (): boolean;
+    isReady: boolean; // todo: tagify
+    attackedThisTurn: number; // todo: tagify
+    isAlive (): boolean; // todo: tagify
   }
   export interface Spell extends Card {
     type: 'SPELL';
   }
-  export interface Enchantment extends Card {
+  export interface Enchantment extends Card_Base {
+    type: typeof CARD_TYPES.enchantment;
+    // extra checks has to be done in constructor
+  };
+
+  /** @deprecated */
+  export interface Enchantment_legacy extends Card_Base {
     type: typeof CARD_TYPES.enchantment;
     effects?: {
       [k: string]: any;
@@ -252,6 +390,95 @@ export namespace GameOptions {
   }
 }
 
+/*
+namespace Entities {
+  export interface Entity {
+    card_id: number;
+    name: string;
+    type: Types.CardsAllCAPS;
+    zone: Types.ZonesAllCAPS;
+  }
+  export interface Card_createdFromDefinition extends Entity {
+    // type
+    // zone
+    id: string;
+    text: string;
+    playerClass: string;
+    rarity?: string;
+  }
+  export interface Game extends Entity {
+    type: 'GAME';
+    turn: number;
+    // isStarted: boolean; << zone:play
+    // isOver: boolean; << zone: grave
+    result: any;
+  }
+  export interface Player extends Entity {
+    type: 'PLAYER';
+    //zone !DECK, !HAND
+    manaCrystals: number;
+    mana: number;
+    fatigue: number;
+    // lost: boolean; // << zone: grave
+  }
+  export interface Owned_hasOwner {
+    owner: Player;
+  }
+
+  export interface Buff_hasEffects {
+
+  }
+  // ....
+  type Tag = string;
+  export interface Buffable_canApplyEffectsTo {
+    readonly tags: Set<Tag>;
+    _base: Effects.CardState;
+    _current: Effects.CardState;
+    _effects: {
+      original: Effects.AnyPossibleBuff[];
+      given: Effects.AnyPossibleBuff[];
+      incomingAuraEffects: Effects.AnyPossibleBuff[];
+    }
+  }
+  export interface Playable_ extends Card_createdFromDefinition {
+    readonly cost: number;
+    readonly target?: string;
+    // spellAction, battlecry, powerAction 
+    readonly play: (a: any) => any;
+  }
+  // export interface Active_canDamage extends Card_createdFromDefinition {
+  //   attack: number;
+  // }
+  // export interface Living_canDie extends Card_createdFromDefinition {
+  //   #isAlive
+  //   #isDamaged
+  //   board.kill(this)
+  // }
+  export interface Minion {
+    type: 'MINION';
+    readonly attack: number;
+    readonly health: number;
+  }
+  export interface Hero {
+    type: 'HERO';
+    readonly attack: number;
+    readonly health: number;
+    readonly armor: number;
+  }
+  export interface Weapon {
+    type: 'WEAPON';
+    readonly attack: number;
+    readonly durability: number;
+  }
+  export interface Spell {
+    type: 'SPELL';
+  }
+  export interface HeroPower {
+    type: 'HERO_POWER';
+  }
+}
+*/
+
 interface CardAction {
   destroy (): this;
   silence (): this;
@@ -299,7 +526,7 @@ type CardDefinitionBase = {
   _NOT_IMPLEMENTED_?: boolean;
 }
 
-type Trigger = {
+type Trigger_legacy = {
   activeZone: 'play',
   eventName: string; // EVENTS.character_damaged,
   condition: any; //'self' | (options: KnownEnvConstants & KnownMechanics) => boolean;
@@ -313,13 +540,20 @@ type CardAbilities = {
 
   overload?: number;
   enrage?: any;
-  aura?: any;
   xxx?: string | number;
-  _trigger_v1?: Trigger; // in CardUniverse
-  _triggers_v1?: Trigger[]; // in actions
+  _trigger_v1?: Trigger_legacy; // in CardUniverse
+  _triggers_v1?: Trigger_legacy[]; // in actions
 
-  death?: (options: KnownEnvConstants & KnownMechanics) => void;
-  play?: (options: {target: any} & KnownEnvConstants & KnownMechanics) => void;
+  // aura?: Effects.AuraContainer | Effects.AuraContainer[];
+  // on?: Effects.TriggerContainer | Effects.TriggerContainer[];
+  // death?: Effects.DeathContainer | Effects.DeathContainer[];
+  aura?: Effects.AuraContainer[];
+  on?: Effects.TriggerContainer[];
+  death?: Effects.DeathContainer[];
+
+  //death?: (options: KnownEnvConstants & KnownMechanics) => any | ((options: KnownEnvConstants & KnownMechanics) => any)[];
+
+  play?: (options: {target: any} & KnownEnvConstants & KnownMechanics) => any;
   target?: string;
   tags?: string[];
 

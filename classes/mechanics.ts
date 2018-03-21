@@ -19,6 +19,10 @@ import {
     applyBuff
 } from './buff';
 
+import {
+    computeState
+} from './effects3';
+
 /* ----
 
 move(card, from, to)
@@ -208,6 +212,9 @@ export default function mechanics (card, game, $, board): KnownMechanics {
                     v.buffs.push(id_or_Tag); // check for duplicates
                 } else {
                     let enchantmentCard = createCard(id_or_Tag, card.owner, game.eventBus);
+
+                    let x = computeState(enchantmentCard);
+                    console.log('BUFF!', x);
 
                     applyBuff({
                         card: enchantmentCard,

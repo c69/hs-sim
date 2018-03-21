@@ -1117,7 +1117,7 @@ export default <CardAbilities[]>[
     xxx: 'summon ..',
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.character_damaged,
         condition: 'self',
         action: ({summon}) => summon('BRM_006t')
@@ -1233,7 +1233,7 @@ export default <CardAbilities[]>[
     xxx: 'just a SKECH',
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.character_damaged,
         //condition: ({target, self}) => target === self && !self.isMortallyWounded,
         condition: ({target, self}) => target === self && self.health > 0,
@@ -1993,7 +1993,7 @@ export default <CardAbilities[]>[
     tags: [TAGS.charge],
     _triggers_v1: [
       {
-        activeZone: 'deck',
+        activeZone: ZONES.deck,
         eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=pirate',
         action: ({summon, self}) => summon(self)
@@ -3308,7 +3308,7 @@ export default <CardAbilities[]>[
     xxx: 1,
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.minion_summoned,
         condition: 'own minion .race=beast',
         action: ({draw}) => draw(1) // sketch is sketch, lala lalala
@@ -3460,7 +3460,7 @@ export default <CardAbilities[]>[
     xxx: 0,
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.character_damaged,
         condition: ({self, target}) => target === self, // 'self'
         action: ({draw}) => draw(1) //should be :alive (aka hp>0 and NOT pending destroy)
@@ -3593,6 +3593,7 @@ export default <CardAbilities[]>[
     _info: `(1) 1/1 [NEUTRAL]: Leper Gnome`,
     text: `<b>Deathrattle:</b> Deal 2 damage to the enemy hero.`,
     death ({$}) {
+      console.log('Leper revenge!');
       $('enemy hero').dealDamage(2);
     }
   },
@@ -4356,7 +4357,7 @@ export default <CardAbilities[]>[
     tags: [TAGS.cant_attack],
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.turn_ended,
         // condition: 'own player',
         condition: ({self}) => self.owner,
@@ -5012,7 +5013,7 @@ export default <CardAbilities[]>[
     text: `Adjacent minions have +2 Attack.`,
     xxx: 'aura AND declarative adjacent ...',
     aura: {
-      buff: 'EX1_565o',
+      buffId: 'EX1_565o',
       target: 'adjacent'
     }
   },
@@ -5536,6 +5537,7 @@ export default <CardAbilities[]>[
     text: `<b>Taunt</b>. <b>Deathrattle:</b> Deal 1 damage to all minions.`,
     tags: [TAGS.taunt],
     death ({$}) {
+      console.log('<ghoul>Die, everyone !!!');
       $('minion').dealDamage(1);
     }
   },
@@ -7341,11 +7343,11 @@ export default <CardAbilities[]>[
     id: `NEW1_019`,
     _info: `(2) 2/2 [NEUTRAL]: Knife Juggler`,
     text: `[x]After you summon a\nminion, deal 1 damage\nto a random enemy.`,
-    xxx: 0,
-    _triggers_v1: [
+    xxx: 'version 2',
+    on: [
       {
-        activeZone: 'play',
-        eventName: EVENTS.minion_summoned,
+        zone: ZONES.play,
+        event: EVENTS.minion_summoned,
         condition: 'own minion',
         action: ({$, self}) => {
           console.log(`${self.owner.name}'s KNIFE JUGGLER: Hey, catch !`);
@@ -7366,7 +7368,7 @@ export default <CardAbilities[]>[
     xxx: 'untested',
     _triggers_v1: [
       {
-        activeZone: 'play',
+        activeZone: ZONES.play,
         eventName: EVENTS.turn_started,
         condition: ({target, self}) => target === self.owner,
         //shorthand

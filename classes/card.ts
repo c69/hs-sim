@@ -7,17 +7,36 @@ import {
     TAGS,
     PLAYERCLASS,
     EVENTS,
-    EventBus
+    EventBus,
+    Effects
 } from '../data/constants';
 
-import { getter_of_buffed_atribute } from './effects0';
+// import { getter_of_buffed_atribute } from './effects0';
+import { computeState } from './effects3';
+
+function createState ({
+    cost = 0,
+    attack = 0,
+    tags = ([] as string[])
+}): Effects.CardState {
+    return {
+        stats: {
+            cost: cost,
+            attack: attack
+        },
+        tags: new Set(tags),
+        triggers: [],
+        auras: [],
+        deathrattles: []
+    }
+}
 
 let card_id = 1;
 
 
 class Card implements Cards.Card {
     zone: Types.ZonesAllCAPS;
-    owner: Player;
+    owner: Cards.Player;
 
     card_id: number;
 
@@ -41,8 +60,22 @@ class Card implements Cards.Card {
 
     play: any;
     target: string;
-    buffs: any[];
-    incomingAuras: any[];
+
+    buffs: any[]; // @deprecated
+    incomingAuras: any[]; // @deprecated
+
+    _base = createState({});
+    _current = createState({});
+    _effects = {
+        original: [] as Effects.AppliedBuff[],
+        given: [] as Effects.AppliedBuff[],
+        incomingAuraEffects: [] as Effects.AppliedBuff[]
+    }
+    // effects.from(arr);
+    // effects.add(buff);
+    // effects.projectAura(activatedAura);
+    // effects.clearAuras();
+    // effects.remove(buff); // by card_id or
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
@@ -72,7 +105,6 @@ class Card implements Cards.Card {
         //.multiclass
         this.rarity = cardDef.rarity;
 
-        this.costBase = cardDef.cost;
         // this.overload = cardDef.overload;
 
         this.play = cardDef.play;
@@ -80,53 +112,52 @@ class Card implements Cards.Card {
         //this.chooseOne = ???
         //this.joust = ???
 
-        this.buffs = (cardDef.tags || []).slice(0);
-        this.incomingAuras = [];
-        //this.tags is a getter
 
-        if (cardDef.death) {
-            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
-                death: cardDef.death
-            });
+        const {
+            on: triggers = [],
+            aura: auras = [],
+            death: deathrattles = []
+        } = cardDef;
+
+        // todo: add _recalc function
+        if (this.type !== CARD_TYPES.enchantment) {
+            this._effects.original = this._effects.original.concat([{
+                result: {
+                    tags: this.tags
+                },
+                _by: {
+                    card_id: this.card_id, // :( expects enchantment
+                    effects: {
+                        triggers,
+                        deathrattles,
+                        auras
+                    }
+                }
+            }]);
+            this._base = createState({...{
+                cost: cardDef.cost,
+                attack: cardDef.attack,
+                tags: cardDef.tags,
+            }});
+
+            this._refresh();
         }
-        if (cardDef._trigger_v1) {
-            this.buffs.push({ //potentially shuld be .concat, as potentially card can have multiple triggers
-                trigger: cardDef._trigger_v1
-            });
-        }
-        if (cardDef.aura) {
-            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple auras
-                aura: cardDef.aura
-            });
-        }
+
+        //this.buffs = (cardDef.tags || []).slice(0);
+        //this.incomingAuras = [];
+        //this.projectedAuras = [];
+        //this.tags is a getter
     }
     get cost() {
-        return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
+        return this._current.stats.cost;
     }
-
     get tags() {
+        return this._current.tags;
         //console.log(`card.tags: #${this.card_id}`);
-        let allBuffs = [].concat(this.buffs, this.incomingAuras);
-        if (!allBuffs.length) return [];
-
-        let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
-        if (ignoreOlder === -1) ignoreOlder = 0;
-        let activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
-            //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
-
-            if (typeof buffOrTag === 'object') {
-                //   return (buffOrTag.tags || []).concat([
-                //       {effects: buffOrTag.effects},
-                //       {death: buffOrTag.death},
-                //       {aura: buffOrTag.aura},
-                //       //buffOrTag.trigger // is ignored, because EventEmitter.subscribe is called in playCard.js :(
-                //   ].filter(v => v));
-            }
-            return buffOrTag;
-        });
-
-        //console.log(`card.tags returned: ${activeBuffs}`);
-        return [].concat.apply([], activeBuffs);
+        // const newMe = applyEffects(this);
+    }
+    _refresh () {
+        this._current = computeState(this as any);
     }
     toString() {
         return `[${this.type}: ${this.name} #${this.card_id}]`;
@@ -146,6 +177,7 @@ class Character extends Card {
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
 
+        // todo: rewrite this
         this.attackBase = cardDef.attack || 0;
         //this.attack = this.attackBase;
 
@@ -156,13 +188,16 @@ class Character extends Card {
         this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
     get attack() {
-        return getter_of_buffed_atribute.call(this, 'attack', this.attackBase);
+        // return getter_of_buffed_atribute.call(this, 'attack', this.attackBase);
+        // const newMe = applyEffects(this);
+        // return newMe ? newMe.attack : this.attackBase; // o yeah, no attackBase
+        return this._current.stats.attack;
     }
     _damageApply(n: number, type = '') {
         if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
         let was = this.health;
 
-        if (n > 0 && this.tags.includes(TAGS.divineShield)) {
+        if (n > 0 && this.tags.has(TAGS.divineShield)) {
             this.buffs = this.buffs.filter(v => v !== TAGS.divineShield); // = "removeTag"
             console.log(`(!) ${this.name} loses ${TAGS.divineShield} !`);
         } else {
@@ -207,7 +242,7 @@ class Character extends Card {
         return this.health < this.healthMax;
     }
     isAlive() { // replace with death sweep in game
-        return this.health > 0 && !this.tags.includes(TAGS._pendingDestruction);
+        return this.health > 0 && !this.tags.has(TAGS._pendingDestruction);
     }
 }
 
@@ -277,8 +312,8 @@ class Power extends Card {
         this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
 }
-class Enchantment extends Card {
-    effects: any;
+class Enchantment extends Card implements Effects.CardEntity_buff {
+    effects = {};
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
@@ -291,19 +326,21 @@ class Enchantment extends Card {
         // todo: finalize when SET attack/health/cost will be implemented
         this.effects = {};
         //_.pick (-_-)
-        [
+        //  cannot use -> as keyof Effects.CardEntity_buff["effects"]
+        // because there is (1) renaming and (2) moving happeing
+        ([
             'attack',
             'health',
             'cost',
             'tags',
             'durability',
             'death',
-            'resource',
-            'owner'
-        ].forEach(prop => {
+            //'resource',
+            //'owner'
+        ]).forEach((prop) => {
             let v = cardDef[prop];
             if (v) {
-                this.effects[prop] = v;
+                this.effects[prop] = v; // will fail for .death -> .deathrattles
             }
         }, this);
     }

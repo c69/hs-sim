@@ -24,12 +24,29 @@ type AnyPossibleBuff = Effects.AppliedBuff;
 // --- was line 80 (= 65 lines total)
 
 
-function _pickStats<T extends StatsAsNumbers, P extends keyof StatsAsMutators>(obj: T, props: P[]) {
+function _pickStats<
+    T extends StatsAsNumbers,
+    P extends keyof StatsAsMutators
+>(obj: T, props: P[]) {
     return props.reduce((a, v) => {
         a[v] = obj[v];
         return a;
     }, {} as T);
 };
+//////////
+
+interface Test {
+    color?: string;
+    size?: number;
+    test: string | null;
+}
+
+function xxx (s: Test): string {
+    return s.color + 'hello' + s.test;
+}
+function xxx2 (s: Test): number {
+    return s.size * 5 + s.size;
+}
 
 let ccc = 0;
 
@@ -127,7 +144,7 @@ export function computeState (card: Card_withEffects): CardState {
         }
 
         console.log(state);
-        if(ccc++ > 70) throw ``;
+        // if(ccc++ > 700) throw `CELL DEATH :) - infinite aura loop debug`;
 
         return state;
     }, baseState);

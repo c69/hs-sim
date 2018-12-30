@@ -221,7 +221,7 @@ export class Board {
 
         let result = filters.reduce((a,v) => a.filter(v), baskets);
 
-        console.log(`${query} => ${result.length}`);
+        // console.log(`${query} => ${result.length}`);
         return result;
     }
     _$(ownPlayer: Player) {

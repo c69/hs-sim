@@ -379,7 +379,7 @@ export namespace GameOptions {
   };
   type EndTurn = {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
-  }
+  } 
   type Concede = {
       type: 'CONCEDE'; // ACTION_TYPES.concede;
   }
@@ -443,7 +443,7 @@ namespace Entities {
   export interface Playable_ extends Card_createdFromDefinition {
     readonly cost: number;
     readonly target?: string;
-    // spellAction, battlecry, powerAction 
+    // spellAction, battlecry, powerAction
     readonly play: (a: any) => any;
   }
   // export interface Active_canDamage extends Card_createdFromDefinition {

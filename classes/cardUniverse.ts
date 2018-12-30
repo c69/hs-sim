@@ -24,10 +24,15 @@ import {
 } from './card';
 
 
+type ObjectWithStringIndexSignature = {
+  [key: string]: any;
+}
+
 /** @private maybe its time to stop hubris and add lodash .. */
-function _pick (obj: object, props: string[]) {
-  const a = new Set([].concat(props));
-  const r = {};
+function _pick (obj: ObjectWithStringIndexSignature, props: string[] = []) {
+  const a = new Set(props);
+
+  const r: ObjectWithStringIndexSignature = {};
   for (let k in obj) {
     if (a.has(k)) {
       r[k] = obj[k];
@@ -205,10 +210,10 @@ const DECKS = {
 
 // const theDeck = DECKS.everyone;
 // const theDeck = DECKS.summerParty;
-// const theDeck = DECKS.HeyCatch;
+const theDeck = DECKS.HeyCatch;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
-const theDeck = DECKS.InsanityCheck;
+// const theDeck = DECKS.InsanityCheck;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {

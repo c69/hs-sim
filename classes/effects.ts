@@ -13,6 +13,42 @@ type KnownStat =
 'cost' |
 'owner';
 
+'attack' | Character | Weapon
+'health' |  Character
+'healthFull' |  Character
+'durability' | Weapon
+'armor' | Hero
+'cost' | Card
+
+type KnownStat2 = {
+    targetType: string;
+    cost?: number
+} & ({
+    targetType: 'WEAPON';
+    attack?: number;
+    durability?: number;
+} | {
+    targetType: 'CHARACTER';
+    attack?: number;
+    health?: number;
+    durability?: never;
+} | {
+    targetType: 'HERO';
+    // [K in 'attack' | 'health' | 'armor']?: number;
+    attack?: number;
+    health?: number;
+    durability?: never;
+    armor?: number;
+}); 
+
+let x: KnownStat2 = {
+    targetType: 'HERO',
+    health: 42,
+    durability: 5,
+    armor: 1
+};
+
+
 type UnionKeyToValue<U extends string, T> = {
     [K in U]: T;
 }

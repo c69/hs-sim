@@ -35,11 +35,11 @@ export function viewAvailableOptions (board: Board) {
     let pawns = $<Cards.Character>('own character');
     let warriors = pawns.filter(v => {
         if (v.attack < 1) return false;
-        if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
-        if (v.tags.includes(TAGS.cannot_attack)) return false;
+        if (!v.isReady && !v.tags.has(TAGS.charge)) return false;
+        if (v.tags.has(TAGS.cannot_attack)) return false;
 
         let MAX_ATTACKS_ALLOWED_PER_TURN = 1;
-        if (v.tags.includes(TAGS.windfury)) {
+        if (v.tags.has(TAGS.windfury)) {
             MAX_ATTACKS_ALLOWED_PER_TURN = 2;
         }
         //console.log(`${v.name}: atacked ${v.attackedThisTurn} times of ${MAX_ATTACKS_ALLOWED_PER_TURN}`);
@@ -52,7 +52,7 @@ export function viewAvailableOptions (board: Board) {
     });
 
     //scan for taunt
-    let sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
+    let sheepsTaunt = sheeps.filter(v => v.tags.has(TAGS.taunt));
     if (sheepsTaunt.length) sheeps = sheepsTaunt;
 
     // scan for spell shield

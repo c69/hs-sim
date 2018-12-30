@@ -2,10 +2,16 @@ import {
     Cards,
     CARD_TYPES,
     TAGS_LIST,
+    TAGS,
     // EVENTS,
+    Effects,
     ZONES
 } from '../data/constants';
 import mechanics from './mechanics';
+import {
+    createCard,
+    // CardDefinitionsIndex,
+} from './cardUniverse';
 
 
 function playFromHand ({card, game, board, $, target, position}: {
@@ -33,12 +39,13 @@ function playFromHand ({card, game, board, $, target, position}: {
     }
 
     card.owner.mana -= card.cost;
-    board._playFromHand(card);
+
     console.log(`playCard: ${card.owner.name} played `, card.name);
 
     const params = {card, game, $, target, position, board};
 
     if (card.type === CARD_TYPES.spell) {
+        board._playFromHand(card);
         doSpellAction(card, params);
     } else if (card.type === CARD_TYPES.minion) {
         summonMinion(card, board, game);
@@ -92,10 +99,29 @@ function summonMinion (card: Cards.Card, board, game) {
     board._summon(card);//({position}); // position is IGNORED for now
 
 
-    let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
-    _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
+    if (card.tags.has(TAGS.has_aura)) {
+        console.log(`${card} has aura ! ${card._current.auras}`);
+        card._current.auras.forEach(auraConfig => {
+            let id = auraConfig.buffId;
+            if (!id) {
+                // assume its just a tag-aura, no further action needed
+                return;
+            }
+            const c_aura = createCard(id, card.owner, game.eventBus);
+            if (c_aura.type !== 'ENCHANTMENT') {
+                throw `Invalid id ${id} used in aura! actual card is ${c_aura}`;
+            }
+            board.add(c_aura);
+            board._putInPlay(c_aura); // unsafe ? where is the destructor ? TODO: check for leaks
+            auraConfig.auraActivated = c_aura as Cards.Enchantment; // ts does not infer :(
+            console.log(`Activated aura for ${card}`);
+        });
+    }
 
-    if(_trigger_v1 && _trigger_v1.activeZone === 'play') {
+    let firstBuffWithTriggers = card._effects.original.find(v => !!v.on); // should be .filter, as there could be more than one
+    const _trigger_v1: Effects.TriggerContainer = firstBuffWithTriggers && firstBuffWithTriggers.on[0];
+
+    if(_trigger_v1 && _trigger_v1.zone === 'PLAY') {
         console.log(`playCard.js: ${card.name} trigger ...`);
         // {
         //   activeZone: 'deck',
@@ -103,7 +129,7 @@ function summonMinion (card: Cards.Card, board, game) {
         //   condition: 'own minion .race=pirate',
         //   action: ({summon, self}) => summon(self)
         // }
-        let event_name = _trigger_v1.eventName;
+        let event_name = _trigger_v1.event;
         let listener = function (evt) {
             let $ = board._$(card.owner);
             let condition = _trigger_v1.condition;
@@ -135,6 +161,7 @@ function summonMinion (card: Cards.Card, board, game) {
         //console.log('Hand.js NO TRIGGERS in ', Reflect.ownKeys(card));
     }
 
+    card._refresh();
     // console.log('playCARD:', card, card.play, card._trigger_v1);
 };
 

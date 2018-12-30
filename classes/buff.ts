@@ -4,6 +4,7 @@ import {
   CARD_TYPES,
   //ACTION_TYPES,
   //EVENTS
+  Cards
 } from '../data/constants';
 
 import {
@@ -30,14 +31,17 @@ function applyBuff ({
   board,
   game,
   type = 'buff'
+}: {
+  card: Cards.LegacyBuff;
+  // card: Cards.Enchantment;
+  target: Cards.Card;
 }) {
     //console.log(card);
-    if (!card) throw 'empty buff';
+    if (!card) throw 'Trying to apply empty buff (nothing)';
     if (!card.type && !card.effects) throw `invalid argument - lambda buff of unknown shape: ${JSON.stringify(card)}`;
     //if (!card.type && card.effects) throw `lambda buffs are forbidden: ${Object.keys(card.effects).map (v => `\n- ${v}  ${card.effects[v].toString()}`)}`;
-
-    if (card.type === CARD_TYPES.enchantment && !card.effects) throw 'invalid enchantment';
     if (card.type && card.type !== CARD_TYPES.enchantment) throw `attempt to buff with card of type: ${card.type}`;
+    if (card.type === CARD_TYPES.enchantment && !card.effects) throw 'invalid enchantment';
 
 
     //console.log(target);
@@ -91,6 +95,19 @@ function applyBuff ({
     }
 }
 
+export function projectAura (auraTarget: Cards.Card | Cards.Card[], tag_or_Buff) {
+  if (!auraTarget) throw new RangeError('No target provided for buff');
+  if (!tag_or_Buff) throw new RangeError('No Buff/Tag provided');
+
+  let auraTargetList = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
+  auraTargetList.forEach(t => {
+      // t._effects.incomingAuraEffects.push(tag_or_Buff);
+      t._refresh();
+  });
+
+  return auraTarget;
+}
+
 /**
  *
  * @param {Game} game
@@ -106,7 +123,7 @@ function buffAura (game, $, board, auraGiver, auraTarget, id_or_Tag) {
 
     let auraTargetList = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
     auraTargetList.forEach(t => {
-      if (TAGS_LIST.includes(id_or_Tag)) {
+      if (typeof id_or_Tag === 'string' && TAGS_LIST.includes(id_or_Tag)) {
         t.incomingAuras.push(id_or_Tag); // check for duplicates
         return;
       }

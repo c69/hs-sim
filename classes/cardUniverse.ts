@@ -3,7 +3,8 @@
 import {
   CARD_TYPES,
   CardDefinition,
-  EventBus
+  EventBus,
+  Effects,
   // ZONES
 } from '../data/constants';
 
@@ -23,10 +24,15 @@ import {
 } from './card';
 
 
+type ObjectWithStringIndexSignature = {
+  [key: string]: any;
+}
+
 /** @private maybe its time to stop hubris and add lodash .. */
-function _pick (obj: object, props: string[]) {
-  const a = new Set([].concat(props));
-  const r = {};
+function _pick (obj: ObjectWithStringIndexSignature, props: string[] = []) {
+  const a = new Set(props);
+
+  const r: ObjectWithStringIndexSignature = {};
   for (let k in obj) {
     if (a.has(k)) {
       r[k] = obj[k];
@@ -38,7 +44,7 @@ function _pick (obj: object, props: string[]) {
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
-}, {} as {[key: string]: CardDefinition});
+}, {} as {[key: string]: Effects.Definition_Universe});
 
 abilitiesMixin.forEach(({
   //long destructuring
@@ -47,24 +53,40 @@ abilitiesMixin.forEach(({
   target,
   play,
   death,
-  _triggers_v1,
+  on,
   aura,
-  enrage,
+  // enrage,
   xxx,
-  attack
+
+  attack,
+  // health,
+  // cost
   }) => {
   //console.log(id);
   if (attack) CardDefinitionsIndex[id].attack = attack;
 
-  if (play) CardDefinitionsIndex[id].play = play;
-  if (target) CardDefinitionsIndex[id].target = target;
-  if (death) CardDefinitionsIndex[id].death = death;
-  if (_triggers_v1) CardDefinitionsIndex[id]._trigger_v1 = _triggers_v1[0];
   if (tags) CardDefinitionsIndex[id].tags = tags;
-  if (aura) CardDefinitionsIndex[id].aura = aura;
-  if (enrage) CardDefinitionsIndex[id].enrage = enrage;
+
+  if (target) CardDefinitionsIndex[id].target = target;
+  if (play) CardDefinitionsIndex[id].play = play;
+
+  if (death) CardDefinitionsIndex[id].death = [].concat({
+    death: death // todo: handle complex definions and deathratles in ENCHANTMENTS
+  });
+  if (aura) CardDefinitionsIndex[id].aura = [].concat(aura).map(v => {
+    v.effectType = 'aura';
+    return v;
+  });
+  if (on) CardDefinitionsIndex[id].on = [].concat(on);
+  // if (enrage) CardDefinitionsIndex[id].enrage = enrage;
 
   if (xxx || xxx === 0) CardDefinitionsIndex[id]._NOT_IMPLEMENTED_ = true;
+
+  const obj = CardDefinitionsIndex[id];
+  Object.freeze(obj);
+  Object.keys(obj).forEach(k => {
+    Object.freeze(obj[k]);
+  })
 });
 
 //---Deck2.js sketch------------------
@@ -173,14 +195,25 @@ const DECKS = {
     //'Doomsayer',
     'Grim Patron',
     'Ragnaros the Firelord'
+  ],
+  InsanityCheck: [
+    // 'Timber Wolf', //aura, other
+    'Flametongue Totem', //aura, adjacent
+//    'Knife Juggler', // trigger
+    // 'Ironfur Grizzly', // taunt
+    // 'Leper Gnome', // death
+    // 'Unstable Ghoul', // taunt, death
+    // 'Flame Imp', // battlecry
+    // 'Swipe', // spell damage
   ]
 };
 
-const theDeck = DECKS.everyone;
+// const theDeck = DECKS.everyone;
 // const theDeck = DECKS.summerParty;
-// const theDeck = DECKS.HeyCatch;
+const theDeck = DECKS.HeyCatch;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
+// const theDeck = DECKS.InsanityCheck;
 
 let card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {
@@ -223,6 +256,8 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
     player,
     eventBus
   );
+
+  console.log(`Created ${card}`);
   return new_card as Card;
 }
 

@@ -14,27 +14,54 @@ import {
 // import { getter_of_buffed_atribute } from './effects0';
 import { computeState } from './effects3';
 
-function createState ({
-    cost = 0,
-    attack = 0,
-    tags = ([] as string[])
-}): Effects.CardState {
-    return {
-        stats: {
-            cost: cost,
-            attack: attack
-        },
-        tags: new Set(tags),
-        triggers: [],
-        auras: [],
-        deathrattles: []
-    }
+// function createState ({
+//     cost = 0,
+//     attack = 0,
+//     tags = ([] as string[])
+// }): Effects.CardState {
+//     return {
+//         stats: {
+//             cost: cost,
+//             attack: attack
+//         },
+//         tags: new Set(tags),
+//         triggers: [],
+//         auras: [],
+//         deathrattles: []
+//     }
+// }
+
+
+interface Entity {
+    readonly card_id: number; //auto-increment
+    readonly type: keyof typeof CARD_TYPES;
 }
 
 let card_id = 1;
+export type CardsAllCAPS = 'MINION'|'SPELL'|'HERO'|'WEAPON'|'HERO_POWER'|'ENCHANTMENT'|'GAME'|'PLAYER';
 
+export const enum HSCardType {
+	INVALID = 0,
+	GAME = 1,
+	PLAYER = 2,
+	HERO = 3,
+	MINION = 4,
+	SPELL = 5,
+	// ABILITY = 5,
+	ENCHANTMENT = 6,
+	WEAPON = 7,
+	// ITEM = 8,
+	// TOKEN = 9,
+	HERO_POWER = 10,
+}
 
-class Card implements Cards.Card {
+interface ICard extends Entity {
+    zone: Types.ZonesAllCAPS;
+    owner: Cards.Player;
+    type: HSCardType;
+}
+
+class Card implements ICard {
     zone: Types.ZonesAllCAPS;
     owner: Cards.Player;
 
@@ -45,7 +72,6 @@ class Card implements Cards.Card {
 
     id: string;
     // dbfId: number;
-    type: Types.CardsAllCAPS;
     name: string;
     text: string;
     // targetingArrowText: string;

@@ -23,7 +23,7 @@ function sanitizeCard (card1: Cards.Card) {
         attack: card.attack,
         cost: card.cost,
         health: card.health,
-        tags: card.tags
+        tags: [...card.tags]
     });
 }
 
@@ -119,9 +119,28 @@ export function exportStateJSON (board: Board): string {
     outputJSON = JSON.stringify(r, function (k, v) {
         if (k === 'eventBus') return undefined;
         if (k === '_listener') return undefined;
-
         if (k === 'buffs') return undefined;
         if (k === '_by') return undefined;
+
+        if (k === 'activatedAura') return undefined;
+
+        if (typeof v === 'function') return undefined;
+
+        if (k.startsWith('_')) return undefined;
+        const arr = Object.getPrototypeOf([]),
+         obj = Object.getPrototypeOf({});
+        if (
+            typeof v !== 'number'
+            && typeof v !== 'boolean' // consider converting booleans to tags ..
+            && typeof v !== 'string'
+            && v !== null
+            && v
+            && Object.getPrototypeOf(v) !== arr
+            && Object.getPrototypeOf(v) !== obj
+        ) {
+            throw `attempt to strigify unsanitized property: ${k}`;
+            // return undefined;
+        }
 
         return v;
     }, '  ');

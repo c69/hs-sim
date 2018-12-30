@@ -4,7 +4,7 @@ import {
   playCard
 } from './playCard';
 import {
-  buffAura
+  projectAura
 } from './buff';
 
 import { Board } from './board7';
@@ -258,57 +258,56 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     //http://hearthstone.gamepedia.com/Advanced_rulebook#Other_mechanics
     //PHASE: "Aura update: Health/Attack"
 
-    const characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
-
     let allCards = this.board.select(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
-    allCards.forEach(v => v.incomingAuras = []);
+    allCards.forEach(v => v._effects.incomingAuraEffects = []);
 
     //refresh/re-apply auras
 
-    function hasAura (a: any): a is Cards.LegacyBuff {
-      return a.aura;
-    }
-    function hasDeath (a: any): a is Cards.LegacyBuff {
-      return a.death;
-    }
+    allCards.forEach(projector => {
+      let auraList = projector._current.auras;
+      if (!auraList.length) return;
+      // throw `No .auras in computed _current state of ${projector}`;
 
-    allCards.forEach(character => {
-      character.tags.filter((tag) => {
-        //return true; // [broken?] hack to ignore aura checking code
+      if (auraList.length > 1) throw `${projector} has too many auras: ${auraList}`;
 
-        if (!hasAura(tag)) return false;
 
-        const zone = tag.aura.zone || ZONES.play; // move this to apply buff / aura
-        const shouldApply = (zone === character.zone);
+      auraList.filter((aura) => {
+
+        const zone = aura.zone || ZONES.play; // move this to apply buff / aura
+        const shouldApply = (zone === projector.zone);
         //console.log('emitting aura from', character.name, character.zone, tag);
         return shouldApply;
       })
-      .forEach(({aura}: Cards.LegacyBuff) => {
+      .forEach((aura) => {
         //console.log(aura);
-        let p = character.owner;
+        let p = projector.owner;
         let $ = this.board._$(p);
 
         let t;
-        if (aura.target === 'self') {
-          t = character;
-        } else if (aura.target === 'adjacent') {
-          t = $('own minion').adjacent(character);
+        if (aura.target === 'adjacent') {
+          t = $<Cards.Character>('own minion').adjacent(projector);
         } else if (/\bother\b/i.test(aura.target)) {
           let selector = aura.target.replace('other', '').trim().replace(/\s+/g, ' ');
-          t = $(selector).exclude(character);
+          t = $<Cards.Character>(selector).exclude(projector);
+        } else if (aura.target === 'self') {
+          t = projector;
         } else {
           t = $(aura.target);
         }
         //console.log(`Aura of ${character.name}: ${t.length} of "${aura.target}"`);
 
-        //the signature is EVEN MORE ugly... but i will refactor it
-        buffAura(this, $, this.board, character, t, aura.buff);
+        if (!t) return;
+        if (Array.isArray(t) && !t.length) return;
+        
+        console.log(`${projector} projecting ${aura.auraActivated} onto ${t}`);
+        projectAura(t, aura.auraActivated);
       });
     });
 
 
     //death logic onwards
+    const characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
     let death_list = characters.filter(character => {
       return !character.isAlive();
     });
@@ -325,10 +324,19 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       let $ = this.board._$(character.owner);
       let self = character;
       let game = this;
-      character.tags.filter(tag => hasDeath(tag)).filter(v => v).forEach((tag, i) => {
-        if (!hasDeath(tag)) return false; // TS does not activate inferrence without this line...
 
-        (tag.death as CardDefinition['death'])({
+      let deathrattles = character._current.deathrattles;
+      if (!deathrattles.length) {
+        console.log(`${character} has no deathrattle`,
+          character._effects,
+          character._base,
+          character._current
+        );
+        return;
+      }
+      deathrattles.forEach((deathObj, i) => {
+        console.log(`Deathrattle of ${character}`);
+        deathObj.death({
           self,
           $,
           game,
@@ -342,7 +350,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       }
     });
 
-    //PHASE: "Aura update: Health/Attack"
+    //PHASE: "Aura update: Health/Attack" --  TWICE ? todo: check reference guide
     //Mal'Ganis, Baron Riverdale, Auchenai Soulpriest, Brann Bronzebeard, (Spiritsinger Umbra ?)
 
     this._cleanup(); //recursion !

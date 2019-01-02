@@ -46,6 +46,8 @@ function neuterTheCard (card: Cards.Card) {
  * Next step after this is done should be delta update
  */
 export function exportState (board: Board) {
+    if (!board) throw 'Cannot export state of: ' + board;
+
     const select = (p: Player, q:string) => board.select(p, q);
     const activePlayer = board.activePlayer;
     const passivePlayer = board.passivePlayer;

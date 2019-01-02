@@ -171,11 +171,11 @@ export class Board {
 
         console.log(`Board setup for ${g} finished! ${p1} VS ${p2}\n`);
     }
-    select<T extends C = C>(this: this, p: Player, query: string) {
+    select<T extends C = C>(this: this, p: Player, query: string): C[] {
         if (query === '*') return this.all;
 
-        const isVaidSelector = /^(any|own|enemy)?\s*(card|card|player|minion|hero|character|weapon|spell|hero_power|enchantment)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
-        if (!isVaidSelector) throw 'Selector syntaxt invalid';
+        const isValidSelector = /^(any|own|enemy)?\s*(card|card|player|minion|hero|character|weapon|spell|hero_power|enchantment)?\s*(@(deck|hand|play|grave|aside|secret))?/.test(query);
+        if (!isValidSelector) throw 'Selector syntax invalid';
 
         const [
             ownPlayer,

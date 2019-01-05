@@ -7,9 +7,10 @@ It has two operating modes:
 
 ## Running
 
-To run e2e: `ts-node main.ts` or `npm run start`.
-To run e2e with dynamic number of runs (e.g. 42): `ts-node main.ts 42` or `npm run start -- 42`.
-To simply check that rpc connector works `ts-node main_rpc.ts`
+To run e2e: `npm run start` or `ts-node main.ts` (if you have global ts-node and typescript).
+
+To run e2e with dynamic number of runs (e.g. 42): `npm run start -- 42` (or `ts-node main.ts 42`).
+To simply check that rpc connector works `ts-node main_rpc.ts`.
 This is cross-platform project that should run OK on both Windows and Mac. Probably on Linux too, but we never tried.
 
 ## Building

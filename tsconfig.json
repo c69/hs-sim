@@ -3,9 +3,11 @@
         "target": "es2017",
         "module": "commonjs",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
+        "strict": false,
         "sourceMap": true,
         "types": ["node", "mocha"],
         "typeRoots": [ "../node_modules/@types" ]

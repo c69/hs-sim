@@ -1,41 +1,51 @@
+'use strict';
 /**
- * Allows to compact/convert raw cards from HearstoneJSON into more usable JSONs 
+ * Allows to compact/convert raw cards from HearstoneJSON into more usable JSONs
+ * https://hearthstonejson.com/
+ * https://github.com/HearthSim/hsdata
+ * + https://hearthstonejson.com/docs/images.html
+ * 
  * https://api.hearthstonejson.com/v1/18336/enUS/cards.collectible.json
  * https://api.hearthstonejson.com/v1/latest/enUS/cards.collectible.json
  * https://api.hearthstonejson.com/v1/18336/enUS/cards.json
  * https://api.hearthstonejson.com/v1/latest/enUS/cards.json
+ * latest = 23180
+ * latest = 28329
+ *
+ * https://api.hearthstonejson.com/v1/enums.d.ts
+ * https://api.hearthstonejson.com/v1/enums.json
  */
 const fs = require("fs");
 
-let _example  = {
-        //"artist": "Dany Orizio",
-        "attack": 8,
-        "cardClass": "NEUTRAL",
-        //"collectible": true,
-        "cost": 9,
-        "dbfId": 363,
-        //"elite": true,
-        //"flavor": "Onyxia long manipulated the Stormwind Court by disguising herself as Lady Katrana Prestor.   You would have thought that the giant wings and scales would have been a giveaway.",
-        "health": 8,
-        "id": "EX1_562",
-        "mechanics": [
-            "BATTLECRY"
-        ],
-        "name": "Onyxia",
-        "playerClass": "NEUTRAL",
-        "race": "DRAGON",
-        "rarity": "LEGENDARY",
-        "set": "EXPERT1",
-        "text": "<b>Battlecry:</b> Summon 1/1 Whelps until your side of the battlefield is full.",
-        "type": "MINION"
-    };
+let _example = {
+  //"artist": "Dany Orizio",
+  "attack": 8,
+  "cardClass": "NEUTRAL",
+  //"collectible": true,
+  "cost": 9,
+  "dbfId": 363,
+  //"elite": true,
+  //"flavor": "Onyxia long manipulated the Stormwind Court by disguising herself as Lady Katrana Prestor.   You would have thought that the giant wings and scales would have been a giveaway.",
+  "health": 8,
+  "id": "EX1_562",
+  "mechanics": [
+    "BATTLECRY"
+  ],
+  "name": "Onyxia",
+  "playerClass": "NEUTRAL",
+  "race": "DRAGON",
+  "rarity": "LEGENDARY",
+  "set": "EXPERT1",
+  "text": "<b>Battlecry:</b> Summon 1/1 Whelps until your side of the battlefield is full.",
+  "type": "MINION"
+};
 
 fs.readFile('cards.json', function (err, data) {
   if (err) {
     console.log(err);
     throw err;
-  } 
-  let unwanted_props = [  
+  }
+  let unwanted_props = [
     //'collectible', // cards.json is ONLY collectible
     'elite', // duplicates rarity:LEGENDARY
     'cardClass', // duplicate of playerClass
@@ -49,12 +59,12 @@ fs.readFile('cards.json', function (err, data) {
     //'rarity', //
     'set', //
     'dbfId' //
-  ];   
+  ];
   let all_cards_withoutJunkProps = JSON.parse(data, (k,v) => {
     return unwanted_props.indexOf(k) === -1 ? v : undefined;
   });
   console.log(`Found ${all_cards_withoutJunkProps.length} cards, compacting ..`);
-  
+
   let out_cards = all_cards_withoutJunkProps.map((card) => {
     let {
       id, type, cost, name, attack, health, durability, text, race, playerClass, collectible,
@@ -87,12 +97,12 @@ fs.readFile('cards.json', function (err, data) {
     };
   });
 
-  let _onlyCollectible = (v) => v.collectible; // filter: collectibles only 
+  let _onlyCollectible = (v) => v.collectible; // filter: collectibles only
   let _asCompact = ({id, _info, text}) => {return {id, _info, text};}; //output: compact
-  
-  // outputAsJSON('data/cards.all.cleaned.json', all_cards_withoutJunkProps); 
 
-  // outputAsJSON('data/cards.all.generated.json', out_cards); 
+  // outputAsJSON('data/cards.all.cleaned.json', all_cards_withoutJunkProps);
+
+  // outputAsJSON('data/cards.all.generated.json', out_cards);
   // outputAsJSON('data/cards.all.compact.json', out_cards.map(_asCompact));
   // outputAsJSON('data/cards.collectible.generated.json', out_cards.filter(v => v.collectible));
   // outputAsJSON('data/cards.collectible.compact.json', out_cards.filter(v => v.collectible).map(_asCompact));

@@ -23,18 +23,6 @@ import {
 } from './card';
 
 
-/** @private maybe its time to stop hubris and add lodash .. */
-function _pick (obj: object, props: string[]) {
-  const a = new Set([].concat(props));
-  const r = {};
-  for (let k in obj) {
-    if (a.has(k)) {
-      r[k] = obj[k];
-    }
-  }
-  return r;
-}
-
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
@@ -173,6 +161,16 @@ const DECKS = {
     //'Doomsayer',
     'Grim Patron',
     'Ragnaros the Firelord'
+  ],
+  InsanityCheck: [
+    // 'Timber Wolf', //aura, other
+    'Flametongue Totem', //aura, adjacent
+//    'Knife Juggler', // trigger
+    // 'Ironfur Grizzly', // taunt
+    // 'Leper Gnome', // death
+    // 'Unstable Ghoul', // taunt, death
+    // 'Flame Imp', // battlecry
+    // 'Swipe', // spell damage
   ]
 };
 
@@ -223,6 +221,8 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
     player,
     eventBus
   );
+
+  console.log(`Created ${new_card}`);
   return new_card as Card;
 }
 

@@ -169,7 +169,7 @@ export class Board {
         this.all.forEach(c => this.initCache(c));
         this.all = this.all.map(c => this.placeCardInit(c));
 
-        console.log(`Board setup for ${g} finished! ${p1} VS ${p2}\n`);
+        console.log(`Board setup finished for: ${g} !: ${p1} VS ${p2}\n`);
     }
     select<T extends C = C>(this: this, p: Player, query: string): C[] {
         if (query === '*') return this.all;

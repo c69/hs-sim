@@ -63,6 +63,9 @@ heal(n)
 2.23	Spell Damage -> aura(player, spell_damage_bonus)
 2.24	Taunt -> target#taunt
 2.25	Windfury -> target#windfury
+?? -    Echo
+?? -    Magnetic
+?? -    Overkill
 
 3	Other abilities
 3.1	Card draw -> effect - !draw(player, n)
@@ -118,54 +121,54 @@ heal(n)
 4.9	Triggered effect -> on() https://hearthstone.gamepedia.com/Triggered_effect
 
 2	Cards [with triggered abilities]
-2.1	Using Hero Powers
+2.1	Using Hero Powers - on(inspire = hero_power, own)
 2.2	Card-playing
-2.2.1	Any card type
-2.2.2	Spell-casting
+2.2.1	Any card type - on(card_played)
+2.2.2	Spell-casting - on(spell_cast)
 2.2.2.1	Whenever
 2.2.2.2	After
-2.2.3	Playing a minion from the hand
+2.2.3	Playing a minion from the hand - on(card_played_from_hand)
 2.2.3.1	That minion
 2.2.4	Another minion
 2.2.5	Secret-playing
 2.3	Minion summoning
-2.3.1	Whenever you summon
-2.3.2	After you summon
+2.3.1	Whenever you summon - on(minion_summon_intent)
+2.3.2	After you summon - on(minion_summoned)
 2.4	Attacking
-2.4.1	Hero attacks
-2.4.2	Minion attacks
-2.4.3	Any attack
+2.4.1	Hero attacks - on(character_attacked)
+2.4.2	Minion attacks - on(character_attacked)
+2.4.3	Any attack - on(character_attacked)
 2.5	Character damage
-2.5.1	Taking minion damage
+2.5.1	Taking minion damage - on(character_damaged)
 2.5.1.1	This minion
 2.5.1.2	Friendly minions
 2.5.1.3	Another minion
 2.5.1.4	Any minion
 2.5.2	Taking hero damage
-2.5.3	Dealing damage
-2.6	Healing
-2.7	Minion death
+2.5.3	Dealing damage - on(character_damage, attacker=self)
+2.6	Healing - on(character_healed)
+2.7	Minion death - on(minion_died)
 2.7.1	That minion
 2.7.2	Another minion
-2.7.3	Attacking and killing
+2.7.3	Attacking and killing - on(lethal_attack)
 2.8	End of turn
-2.8.1	End of your turn
-2.8.2	End of your opponent's turn
-2.8.3	End of each turn
-2.8.4	End of the turn
+2.8.1	End of your turn - on(turn_end, player=owner)
+2.8.2	End of your opponent's turn - on(turn_end, player!=own)
+2.8.3	End of each turn - on(turn_end, player=owner)
+2.8.4	End of the turn - once(turn_end)
 2.8.5	Related cards
 2.9	Start of turn
-2.9.1	Start of your turn
-2.9.2	Start of your opponent's turn
-2.9.3	Start of each turn
-2.10	Drawing a card
-2.10.1	Drawing another card
-2.11	Discarding a card
-2.11.1	Discarding another card
-2.12	Revealing a Secret
-2.13	Equipping a weapon
-2.14	Gaining Armor
-2.15	Overloading Mana Crystals
+2.9.1	Start of your turn - on(turn_start, player=owner)
+2.9.2	Start of your opponent's turn - on(turn_start, player!=owner)
+2.9.3	Start of each turn - on(turn_start)
+2.10	Drawing a card - on(card_drawn)
+2.10.1	Drawing another card - on(card_drawn) ???
+2.11	Discarding a card - on(card_discarded)
+2.11.1	Discarding another card - ???
+2.12	Revealing a Secret - on(secret_revealed)
+2.13	Equipping a weapon - on(weapon_equipped)
+2.14	Gaining Armor - on(armor_gained)
+2.15	Overloading Mana Crystals - on(mana_overloaded)
 2.16	Miscellaneous
 3	Patch changes
 4	References

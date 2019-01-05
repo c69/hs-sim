@@ -331,7 +331,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       }
     });
 
-    //PHASE: "Aura update: Health/Attack"
+    //PHASE: "Aura update: Health/Attack" --  TWICE ? todo: check reference guide
     //Mal'Ganis, Baron Riverdale, Auchenai Soulpriest, Brann Bronzebeard, (Spiritsinger Umbra ?)
 
     this._cleanup(); //recursion !

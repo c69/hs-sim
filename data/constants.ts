@@ -200,23 +200,23 @@ export namespace StateMachine {
 export namespace GameOptions {
   export type Types = 'ATTACK' | 'PLAY_CARD' | 'USE_POWER' | 'END_TURN' | 'CONCEDE';
   interface BaseAction {
-      entity_id: number;
-      entity: Cards.Card;
-      type: Types;
+    type: Types;
+    entity_id: number;
+    entity: Cards.Card;
       name: string;
   }
   export type Attack = {
+      type: 'ATTACK'; // ACTION_TYPES.attack;
       card_id: number;
       unit: Cards.Character;
-      type: 'ATTACK'; // ACTION_TYPES.attack;
       name: string;
       // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
       targetList: Cards.Character[];
   }
   export type Play = {
+      type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       card_id: number;
       card: Cards.Card;
-      type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?

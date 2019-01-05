@@ -8,13 +8,9 @@ import {
 } from './buff';
 
 import { Board } from './board7';
-// import { Card } from './card';
 import {
-  // TAGS,
-  CARD_TYPES,
   ACTION_TYPES,
   GameOptions,
-  AoC,
   Cards,
   CardDefinition,
   EVENTS,
@@ -26,24 +22,19 @@ import { exportStateJSON } from './exportState';
 import { viewAvailableOptions } from './frameOptions';
 
 
-type FluentMethod<T> = () => T;
 type ActionCoordinates = {
   targetIndex: number;
   positionIndex: number;
 }
 interface GameRunner<G> {
   start (): G;
-  _onTurnStart(): G;
   end (): G;
   disconnect (): G;
   concede (): G;
   endTurn (): G;
 
-  // usePower (0) hero power first suggested target
-  usePower (action: GameOptions.Action, o: ActionCoordinates): G;
-  // playCard (0,0) - to play first possible card at first target
+  usePower (action: GameOptions.Play, o: ActionCoordinates): G;
   playCard (action: GameOptions.Play, o: ActionCoordinates): G;
-  // attack(0,0) to attack with first suggested character first suggested target
   attack (action: GameOptions.Attack, o: ActionCoordinates): G;
 
 // g.viewState();
@@ -223,12 +214,10 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return this;
   }
   playCard (o: GameOptions.Play, {positionIndex = 0, targetIndex = 0}) {
-    if (o.targetList) { // spell:fireball OR minion:battlecry
-      var target = o.targetList[targetIndex];
-    }
-    if (o.positionList) { // minion
-      var position = o.positionList[positionIndex];
-    }
+    // spell:fireball OR minion:battlecry
+    const target = o.targetList && o.targetList[targetIndex];
+    // minion
+    const position = o.positionList && o.positionList[positionIndex];
 
     let $ = this.board._$(this.activePlayer);
     let card = o.card;
@@ -342,7 +331,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       }
     });
 
-    //PHASE: "Aura update: Health/Attack"
+    //PHASE: "Aura update: Health/Attack" --  TWICE ? todo: check reference guide
     //Mal'Ganis, Baron Riverdale, Auchenai Soulpriest, Brann Bronzebeard, (Spiritsinger Umbra ?)
 
     this._cleanup(); //recursion !

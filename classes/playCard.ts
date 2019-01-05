@@ -13,8 +13,8 @@ function playFromHand ({card, game, board, $, target, position}: {
     game: any,
     $: any,
     board: any,
-    target: Cards.Card,
-    position: number,
+    target?: Cards.Card,
+    position?: number,
 }) {
     if (!card) throw new RangeError('Card must be provided');
     // console.log('playCard.ts::DEBUG', card);
@@ -34,7 +34,7 @@ function playFromHand ({card, game, board, $, target, position}: {
 
     card.owner.mana -= card.cost;
     board._playFromHand(card);
-    console.log(`playCard: ${card.owner.name} played `, card.name);
+    console.log(`playCard: ${card.owner.name} played ${card}`, target ? `on ${target}`: '' );
 
     const params = {card, game, $, target, position, board};
 

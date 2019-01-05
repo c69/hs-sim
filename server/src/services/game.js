@@ -8,6 +8,7 @@ const debug = require('debug')('hs:service:game')
 const validate = require('../middlewares/validate')
 const postGameSchema = require('../schemas/postGame')
 
+// TODO: need a way to restart the game
 const hsGame = require('../../../dist/main_rpc')
 
 router.get('/game', getGame)

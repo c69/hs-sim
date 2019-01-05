@@ -397,6 +397,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return viewAvailableOptions(this.board);
   };
   exportState = () => {
+    // this.view(); // DEBUG
     return exportStateJSON(this.board);
   }
   view () {

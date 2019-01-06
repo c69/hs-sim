@@ -4,12 +4,15 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "strict": false,
+        "strict": true,
         "sourceMap": true,
-        "types": ["node", "mocha"],
+        "types": [
+            "node",
+            "mocha"
+        ],
         "typeRoots": [ "../node_modules/@types" ]
     }, "exclude": [
         "./test/**/*.spec.ts"

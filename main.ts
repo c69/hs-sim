@@ -4,9 +4,6 @@ import {
   initGame,
   _GAME_profile
 } from './classes/bootstrap';
-
-import { Board } from './classes/board5';
-
 import {
   _progress
 } from './classes/cardUniverse';

@@ -1,5 +1,5 @@
 import ArrayOfCards from './arrayOfCards';
-import {Board} from './board2';
+import {Board} from './board2.legacy';
 import {
     ZONES,
     CARD_TYPES,

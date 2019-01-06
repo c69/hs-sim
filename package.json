@@ -18,7 +18,7 @@
   },
   "scripts": {
     "dev-dep_nyc": "^13.1.0",
-    "start": "ts-node main.ts",
+    "start": "ts-node -T main.ts",
     "build": "tsc --pretty --module commonjs --target es2017 --outDir ./dist main_rpc.ts && npm run copy-data",
     "build2_with-profile_WIP": "tsc --pretty --outDir ./dist main_rpc.ts",
     "copy-data": "echo Please, now go, and manually copy all .json files from ./data to ./dist/data",

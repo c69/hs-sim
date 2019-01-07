@@ -7,7 +7,9 @@ import {
   // ZONES
 } from '../data/constants';
 
-const CardDefinitions = require('../data/cards.all.generated.json')  as Readonly<CardDefinition>[];
+const CardDefinitions = require('../data/cards.all.generated.json') as Readonly<CardDefinition>[];
+// TODO: find a way to import JSON via TS
+// import CardDefinitions from '../data/cards.all.generated.json';
 
 import abilitiesMixin from '../data/actions.collectiblePlus';
 import {
@@ -21,7 +23,6 @@ import {
   Game,
   Player
 } from './card';
-
 
 const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
@@ -151,7 +152,6 @@ const DECKS = {
     //'Dreadsteed',
     // 'Sludge Belcher',
 
-
     //--trigger, MVP minions
     'Knife Juggler',
     'Acolyte of Pain',
@@ -180,7 +180,7 @@ const theDeck = DECKS.everyone;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
 
-let card_defs = CardDefinitions.filter(v => v.collectible === true)
+const card_defs = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {
     return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
   })
@@ -194,15 +194,14 @@ let card_defs = CardDefinitions.filter(v => v.collectible === true)
 console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 /////
 
-
 /**
  * todo: do we really need to couple card & player & eventBus
  */
 function createCard(id: string, player: Player, eventBus: EventBus) {
-  let card = CardDefinitionsIndex[id];
+  const card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 
-  let C = CARD_TYPES;
+  const C = CARD_TYPES;
   let _ = null;
   switch (card.type) {
     case C.minion: _ = Minion; break;
@@ -215,7 +214,7 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
 //  case C.player: _ = Player; break;
     default: throw 'Attempt to create card of invalid type';
   }
-  let new_card = new _ (
+  const new_card = new _ (
     card,
 //  (card.type === C.player || card.type === C.game) ? null : player,
     player,
@@ -236,27 +235,26 @@ function shuffle (arr: any[]): any[] {
 //   return new Card();
 // }
 
+const coolCards = abilitiesMixin.filter(v => {
+  const keys = Reflect.ownKeys(v);
 
-let coolCards = abilitiesMixin.filter(v => {
-  let keys = Reflect.ownKeys(v);
-
-  let [id, _info] = keys;
+  const [id, _info] = keys;
   if (keys.length === 2 && id === 'id' && _info === '_info') {
     return false;
   }
   return true;
 });
 
-let progressOfCards = coolCards.reduce((a, v) => {
-  let keys = Reflect.ownKeys(v) as string[]; //TODO: check what is signature of Reflect.ownKeys
+const progressOfCards = coolCards.reduce((a, v) => {
+  const keys = Reflect.ownKeys(v) as string[]; //TODO: check what is signature of Reflect.ownKeys
 
-  let [id, _info, text] = keys;
+  const [id, _info, text] = keys;
   if (keys.length === 3 && id === 'id' && _info === '_info' && text === 'text') {
     a.not_started += 1;
     return a;
   }
 
-  let hasWeirdProps = keys.some(k => ![
+  const hasWeirdProps = keys.some(k => ![
     'id',
     '_info',
     'text',

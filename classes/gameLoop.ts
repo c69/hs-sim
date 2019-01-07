@@ -21,8 +21,7 @@ import {
 import { exportStateJSON } from './exportState';
 import { viewAvailableOptions } from './frameOptions';
 
-
-type ActionCoordinates = {
+interface ActionCoordinates {
   targetIndex: number;
   positionIndex: number;
 }
@@ -49,9 +48,9 @@ interface GameRPC {
     positionIndex?: number;
     targetIndex?: number;
   }): any;
-};
+}
 
-var _frame_count_active = 0;
+let _frame_count_active = 0;
 
 /*
  *
@@ -87,6 +86,12 @@ FINAL_GAMEOVER 15
 type Player = Cards.Player;
 
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
+  static _profile () {
+    return {
+      _frame_count_active
+    };
+  }
+
   eventBus: EventBus;
   board: Board;
   players: Player[];
@@ -100,7 +105,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   result: any = null; // ~ temporary hack
 
   constructor (board: Board, players: [Player, Player], eventBus: any) {
-    if (players.length !== 2) throw new RangeError("Game expects two players");
+    if (players.length !== 2) throw new RangeError('Game expects two players');
 
     this.board = board;
     this.players = players;
@@ -109,11 +114,6 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     this.turn = 0;
 
     this._toggleActivePlayer();
-  }
-  static _profile () {
-    return {
-      _frame_count_active
-    };
   }
   _init () {
     //console.log('starting the game...');
@@ -139,7 +139,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     this.turn += 1;
 
     this._toggleActivePlayer();
-    let activePlayer = this.activePlayer;
+    const activePlayer = this.activePlayer;
 
     if (this.players.some(v => v.hero.health < 1)) {
       return this.end();
@@ -205,8 +205,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return this;
   }
   attack (o: GameOptions.Attack, {targetIndex = 0}) {
-    let a = o.unit;
-    let t = o.targetList[targetIndex];
+    const a = o.unit;
+    const t = o.targetList[targetIndex];
     // if Ogre retarget - choose new target :)
     //this._onBeforeAttack(a, t);
     combat(a, t, this);
@@ -219,8 +219,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     // minion
     const position = o.positionList && o.positionList[positionIndex];
 
-    let $ = this.board._$(this.activePlayer);
-    let card = o.card;
+    const $ = this.board._$(this.activePlayer);
+    const card = o.card;
     //console.log('play card', c.name, target, position);
     playCard({
       card, // vs "self" - we should standartize on name
@@ -249,7 +249,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
 
     const characters = this.board.select<Cards.Character>(this.activePlayer, 'character');
 
-    let allCards = this.board.select(this.activePlayer, '*');
+    const allCards = this.board.select(this.activePlayer, '*');
     console.log('== RESET ALL AURA EFFECTS ==');
     allCards.forEach(v => v.incomingAuras = []);
 
@@ -284,7 +284,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
         } else if (aura.target === 'adjacent') {
           t = $('own minion').adjacent(character);
         } else if (/\bother\b/i.test(aura.target)) {
-          let selector = aura.target.replace('other', '').trim().replace(/\s+/g, ' ');
+          const selector = aura.target.replace('other', '').trim().replace(/\s+/g, ' ');
           t = $(selector).exclude(character);
         } else {
           t = $(aura.target);
@@ -296,9 +296,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       });
     });
 
-
     //death logic onwards
-    let death_list = characters.filter(character => {
+    const death_list = characters.filter(character => {
       return !character.isAlive();
     });
 
@@ -311,9 +310,9 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       //console.log(character.tags);
       this.board.kill(character);
 
-      let $ = this.board._$(character.owner);
-      let self = character;
-      let game = this;
+      const $ = this.board._$(character.owner);
+      const self = character;
+      const game = this;
       character.tags.filter(tag => hasDeath(tag)).filter(v => v).forEach((tag, i) => {
         if (!hasDeath(tag)) return false; // TS does not activate inferrence without this line...
 
@@ -355,13 +354,13 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     console.log('-- frame: MAIN_ACTION ---');
     if (this.board.game.isOver) return this; // if game ended - nobody can do anything
 
-    let options: GameOptions.Options = viewAvailableOptions(this.board);
+    const options: GameOptions.Options = viewAvailableOptions(this.board);
 
     //if (token !== options.token) throw `security violation - attempt to use wrong token. Expected: [**SECRET**] , got: ${token}`;
-    let actions = options.actions;
+    const actions = options.actions;
     if (!actions.length) throw 'options.actions[] are empty'; //return;
 
-    let action = actions[optionIndex];
+    const action = actions[optionIndex];
     if (!action) throw new RangeError('Invalid option index provided.');
 
     //console.log(action.type);
@@ -395,7 +394,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
   viewAvailableOptions = () => {
     return viewAvailableOptions(this.board);
-  };
+  }
   exportState = () => {
     // this.view(); // DEBUG
     return exportStateJSON(this.board);

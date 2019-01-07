@@ -14,7 +14,6 @@ import {
 
 let card_id = 1;
 
-
 class Card implements Cards.Card {
     eventBus: EventBus;
 
@@ -42,7 +41,6 @@ class Card implements Cards.Card {
     zone: Types.ZonesAllCAPS;
     owner: Player;
 
-
     card_id: number;
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
@@ -59,7 +57,6 @@ class Card implements Cards.Card {
         this.owner = owner;
 
         this.card_id = card_id++;
-
 
         this.id = cardDef.id;
         //this.dbfId = cardDef.dbfId;
@@ -106,12 +103,12 @@ class Card implements Cards.Card {
 
     get tags() {
         //console.log(`card.tags: #${this.card_id}`);
-        let allBuffs = [].concat(this.buffs, this.incomingAuras);
+        const allBuffs = [].concat(this.buffs, this.incomingAuras);
         if (!allBuffs.length) return [];
 
         let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
         if (ignoreOlder === -1) ignoreOlder = 0;
-        let activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
+        const activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
             //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
 
             if (typeof buffOrTag === 'object') {
@@ -133,7 +130,7 @@ class Card implements Cards.Card {
     }
 }
 
-
+/* tslint:disable:max-classes-per-file */
 class Character extends Card {
     health: number = 0;
 
@@ -160,7 +157,7 @@ class Character extends Card {
     }
     _damageApply(n: number, type = '') {
         if (!Number.isInteger) throw new RangeError(`Damage must be integer number, instead got ${n}`);
-        let was = this.health;
+        const was = this.health;
 
         if (n > 0 && this.tags.includes(TAGS.divineShield)) {
             this.buffs = this.buffs.filter(v => v !== TAGS.divineShield); // = "removeTag"
@@ -168,10 +165,10 @@ class Character extends Card {
         } else {
             this.health -= n;
         }
-        let received_damage = was - this.health;
-        received_damage > 0 && console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`);
+        const received_damage = was - this.health;
+        if (received_damage > 0) {
+            console.log(`${type && '🔥 '}${this.name} takes ${received_damage} ${type} damage!`);
 
-        if (received_damage) {
             this.eventBus.emit(EVENTS.character_damaged, {
                 target: this,
                 amount: received_damage
@@ -301,12 +298,11 @@ class Enchantment extends Card {
             'resource',
             'owner'
         ].forEach(prop => {
-            let v = cardDef[prop];
+            const v = cardDef[prop];
             if (v) {
                 this.effects[prop] = v;
             }
         }, this);
-
 
     }
 }
@@ -361,7 +357,7 @@ class Player extends Card implements Cards.Player {
         this.lost = false;
     }
     draw (n: number) {
-
+        throw 'Player.draw(n) is not implemented';
     }
     loose () {
       if (this.lost) throw 'Trying to loose the game twice - Infinite loop upon game end ?';
@@ -370,18 +366,16 @@ class Player extends Card implements Cards.Player {
     }
   }
 
-
 /**
  * This function calculates final value of attribute
  *  after applying all currently active buffs on the card
- * @this Card
- * @param {string} prop Name of the prop in .effects object
- * @param {*} initialValue
+ * @param prop Name of the prop in .effects object
+ * @param initialValue
  */
-function getter_of_buffed_atribute(prop, initialValue) {
+function getter_of_buffed_atribute(this: Card, prop: string, initialValue: any) {
     if (!this.tags.length) return initialValue;
 
-    let modifiers = this.tags.filter(v => (v.effects && (prop in v.effects)));
+    const modifiers = this.tags.filter(v => (v.effects && (prop in v.effects)));
     if (!modifiers.length) {
         //console.log(this.tags);
         return initialValue;
@@ -389,17 +383,18 @@ function getter_of_buffed_atribute(prop, initialValue) {
     //console.log(modifiers.length, this.buffs.length, this.incomingAuras.length);
     //console.log(modifiers, this.tags);
 
-    let new_value = modifiers.reduce((a, v) => {
-        let mutator = v.effects[prop];
+    const new_value = modifiers.reduce((a, v) => {
+        const mutator = v.effects[prop];
         if (typeof mutator === 'number') {
             a += mutator;
         } else if (typeof mutator === 'function') {
+            // mutator is <T>(_: T)=>T
             a = mutator(a);
         }
         return a;
-    }, initialValue, this);
+    }, initialValue);
 
-    console.log(`${this.zone} ${this.name} ${this.card_id}'s ${prop} is modified from ${initialValue} to ${new_value}`);
+    console.log(`${this.zone} ${this} .${prop} is modified: ${initialValue} -> ${new_value}`);
     return new_value > 0 ? new_value : 0;
 }
 
@@ -413,4 +408,4 @@ export {
     Enchantment,
     Game,
     Player
-}
+};

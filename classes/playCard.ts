@@ -6,30 +6,30 @@ import {
     ZONES
 } from '../data/constants';
 import mechanics from './mechanics';
-
+import { Card } from './card';
 
 function playFromHand ({card, game, board, $, target, position}: {
-    card: Cards.Card,
+    card: Cards.PlayableCard, // Cards.Spell | Cards.Minion | Cards.Weapon | Cards.Hero,
     game: any,
     $: any,
     board: any,
-    target?: Cards.Card,
+    target?: Cards.Character,
     position?: number,
-}) {
+}): void {
     if (!card) throw new RangeError('Card must be provided');
     // console.log('playCard.ts::DEBUG', card);
 
     if (!card.owner === game.activePlayer) {
         console.warn(`playCard: ${card.owner.name} cannot play card on other player's turn`);
-        return () => {};
+        return;
     }
     if (card.zone !== ZONES.hand) {
         console.warn(`playCard: ${card.name} is not in hand, but rather in: ${card.zone}`);
-        return () => {};
+        return;
     }
     if (card.cost > card.owner.mana) {
         console.warn(`playCard: cannot play card ${card} - not enough mana`);
-        return () => {};
+        return;
     }
 
     card.owner.mana -= card.cost;
@@ -50,7 +50,7 @@ function playFromHand ({card, game, board, $, target, position}: {
         // equipWeapon(card, board);
         doBattlecry(card, params);
     } else {
-        throw `Unexpected type of card to be played from hand: ${card.type}`
+        throw `Unexpected type of card to be played from hand: ${card.type}`;
     }
 }
 
@@ -58,7 +58,7 @@ function doBattlecry (card: Cards.Card, args) {
     if (!card.play) return;
 
     const { target, game, $, board } = args;
-    if (target && !card.target) throw `unexpected target for card which does not need it: ${args.target, card.target}`;
+    if (target && !card.target) throw `unexpected target for card ${card} which does not need it: ${args.target}`;
     if (!target && card.target) return;
 
     card.play({
@@ -69,8 +69,8 @@ function doBattlecry (card: Cards.Card, args) {
 }
 function doSpellAction (card: Cards.Card, args) {
     const { target, game, $, board } = args;
-    if (!card.play) throw `Spell ${card.name} has no action!`
-    if (target && !card.target) throw `unexpected target for card which does not need it: ${args.target, card.target}`;
+    if (!card.play) throw `Spell ${card.name} has no action!`;
+    if (target && !card.target) throw `unexpected target for card ${card} which does not need it: ${args.target}`;
     if (!target && card.target && !card.targetIsOptional) {
         throw `spell which require target, MUST have target: ${card} | ${card.target}`;
     }
@@ -91,7 +91,6 @@ function summonMinion (card: Cards.Card, board, game) {
     // });
     board._summon(card);//({position}); // position is IGNORED for now
 
-
     let _trigger_v1 = card.buffs.find(v => !!v.trigger); // should be .filter, as there could be more than one
     _trigger_v1 = _trigger_v1 && _trigger_v1.trigger;
 
@@ -103,10 +102,10 @@ function summonMinion (card: Cards.Card, board, game) {
         //   condition: 'own minion .race=pirate',
         //   action: ({summon, self}) => summon(self)
         // }
-        let event_name = _trigger_v1.eventName;
-        let listener = function (evt) {
-            let $ = board._$(card.owner);
-            let condition = _trigger_v1.condition;
+        const event_name = _trigger_v1.eventName;
+        const listener = function (evt) {
+            const $ = board._$(card.owner);
+            const condition = _trigger_v1.condition;
             if (condition === 'self') {
                 // proceed
             } else if (typeof condition === 'string' && ($(condition).findIndex(v => v === evt.target) === -1)) {
@@ -136,7 +135,7 @@ function summonMinion (card: Cards.Card, board, game) {
     }
 
     // console.log('playCARD:', card, card.play, card._trigger_v1);
-};
+}
 
 export {
     playFromHand as playCard

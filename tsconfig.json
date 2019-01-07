@@ -4,6 +4,8 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
+        "esModuleInterop": false, // true will break json import
+        "resolveJsonModule": true,
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,

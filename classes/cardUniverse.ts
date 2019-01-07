@@ -1,17 +1,9 @@
-/// <reference types="node" />
-
 import {
   CARD_TYPES,
   CardDefinition,
   EventBus
   // ZONES
 } from '../data/constants';
-
-const CardDefinitions = require('../data/cards.all.generated.json') as Readonly<CardDefinition>[];
-// TODO: find a way to import JSON via TS
-// import CardDefinitions from '../data/cards.all.generated.json';
-
-import abilitiesMixin from '../data/actions.collectiblePlus';
 import {
   Card,
   Minion,
@@ -24,7 +16,10 @@ import {
   Player
 } from './card';
 
-const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
+import * as CardDefinitions from '../data/cards.all.generated.json';
+import abilitiesMixin from '../data/actions.collectiblePlus';
+
+const CardDefinitionsIndex = (CardDefinitions as Readonly<CardDefinition>[]).reduce((a, v) => {
   a[v.id] = v;
   return a;
 }, {} as {[key: string]: CardDefinition});

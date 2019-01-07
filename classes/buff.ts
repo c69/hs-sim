@@ -41,20 +41,20 @@ function applyBuff ({
 
     //console.log(target);
     //console.log(this.effect, '_______');
-    let effect = card.effects || card;
+    const effect = card.effects || card;
     if (!effect) throw 'empty effect';
     //console.log(effect);
 
-    let attack_modifier = (({
+    const attack_modifier = (({
       'number': effect.attack,
-      'function': function (v, card) {
+      'function': (v, card) => {
         return effect.attack(v, {target, $, game});
      }
     } as MapString<(a: number, b: any ) => number>)[typeof effect.attack]);
 
     let cost_modifier = (({
       'number': effect.cost,
-      'function': function (v, card) {
+      'function': (v, card) => {
         return effect.cost(v, {target, $, game});
       }
     } as MapString<(a: number, b: any ) => number>)[typeof effect.cost]);
@@ -66,7 +66,7 @@ function applyBuff ({
 
     //here we directly modify the target.incomingAuras or target.buffs
     // watch out for bugs (-_-)
-    let container = type === 'aura' ? target.incomingAuras : target.buffs;
+    const container = type === 'aura' ? target.incomingAuras : target.buffs;
     container.push({
         effects: Object.assign(
             {},
@@ -104,7 +104,7 @@ function buffAura (game, $, board, auraGiver, auraTarget, id_or_Tag) {
     if (!auraTarget) throw new RangeError('No target provided for buff');
     if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
-    let auraTargetList = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
+    const auraTargetList = Array.isArray(auraTarget) ? auraTarget : [auraTarget];
     auraTargetList.forEach(t => {
       if (TAGS_LIST.includes(id_or_Tag)) {
         t.incomingAuras.push(id_or_Tag); // check for duplicates

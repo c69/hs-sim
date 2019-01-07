@@ -20,9 +20,7 @@ import { Board } from './board7';
 import { Card, Game, Player } from './card';
 import { GameLoop } from './gameLoop';
 
-
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
-
 
 function generateDeck_legacy (
     player: Player,
@@ -30,16 +28,16 @@ function generateDeck_legacy (
     starting_deck: Card[],
     eventBus: EventBus
 ) {
-    let deck = [];
+    const deck = [];
     //add Hero
     deck.push(createCard(hero_card_id, player, eventBus));
 
     //add 30 random cards to deck
     for (let i = 0; i < STARTING_DECK_SIZE; i++) {
-        let dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
-        let card = _cardDefinitionArray[dice];
+        const dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
+        const card = _cardDefinitionArray[dice];
 
-        let new_card = createCard(card.id, player, eventBus);
+        const new_card = createCard(card.id, player, eventBus);
         deck.push(new_card);
     }
 
@@ -49,7 +47,6 @@ function generateDeck_legacy (
 //     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
 // }
 
-
 function gameDef () {
     return {
         id: 'xxx_GAME_ENTITY',
@@ -57,7 +54,7 @@ function gameDef () {
         name: 'GAME',
         _info: '...',
         text: '...'
-    }
+    };
 }
 function playerDef (name: string) {
     return {
@@ -66,7 +63,7 @@ function playerDef (name: string) {
         name: name,
         _info: '...',
         text: '...'
-    }
+    };
 }
 type PlayerConfig = [string, string[]];
 

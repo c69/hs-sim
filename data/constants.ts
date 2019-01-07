@@ -1,9 +1,9 @@
 type UnionKeyToValue<U extends string, T> = {
   [K in U]: T;
-}
+};
 type MapString<T> = {
   readonly [index: string]: T;
-}
+};
 export type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
 export namespace Types {
@@ -15,7 +15,6 @@ export namespace Types {
 
   export type Tags = 'taunt'|'enraged'|'divineShield';
 }
-
 
 // refer to http://hearthstone.gamepedia.com/Advanced_rulebook
 
@@ -89,7 +88,6 @@ type EventBus = {
   removeListener (a: any, b: any): void;
 };
 
-
 /* @deprecated */
 const ACTION_TYPES = {
   playCard: 'PLAY_CARD' as 'PLAY_CARD',
@@ -98,7 +96,6 @@ const ACTION_TYPES = {
   endTurn: 'END_TURN' as 'END_TURN',
   concede: 'CONCEDE' as 'CONCEDE'
 };
-
 
 /**
  * @see ..\classes\arrayOfCards.ts
@@ -132,7 +129,6 @@ export interface AoC<
   heal? (n: number): void;
 }
 
-
 export namespace Cards {
   export type LegacyBuff = {
     aura?: {
@@ -143,7 +139,7 @@ export namespace Cards {
     death? (o: {}): void;
     trigger? (): void;
     type: string;
-  }
+  };
   export interface Card {
     card_id: number;
     name: string;
@@ -191,6 +187,9 @@ export namespace Cards {
   export interface Spell extends Card {
     type: 'SPELL';
   }
+  export interface PlayableCard extends Card {
+    cost: number;
+  }
 }
 
 export namespace StateMachine {
@@ -212,7 +211,7 @@ export namespace GameOptions {
       name: string;
       // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
       targetList: Cards.Character[];
-  }
+  };
   export type Play = {
       type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       card_id: number;
@@ -224,15 +223,15 @@ export namespace GameOptions {
   };
   type EndTurn = {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
-  }
+  };
   type Concede = {
       type: 'CONCEDE'; // ACTION_TYPES.concede;
-  }
+  };
   export type Action = Attack | Play | EndTurn | Concede;
   export type Options = {
       token?: string;
       actions: Action[];
-  }
+  };
 }
 
 interface CardAction {
@@ -247,7 +246,7 @@ type KnownEnvConstants = {
   readonly game: any;
   readonly self: any;
   readonly position?: number; // only for play() of minion ?
-}
+};
 
 type KnownMechanics = {
   summon (id: string): void;
@@ -256,7 +255,7 @@ type KnownMechanics = {
 
   // experimental
   summonEnemy?(id: string): void;
-}
+};
 
 type CardDefinitionBase = {
   readonly id: string;
@@ -278,7 +277,7 @@ type CardDefinitionBase = {
   durability?: number;
 
   _NOT_IMPLEMENTED_?: boolean;
-}
+};
 
 type Trigger = {
   activeZone: 'play',
@@ -306,7 +305,7 @@ type CardAbilities = {
 
   /** @deprecated */
   attack?: any;
-}
+};
 
 type CardDefinition = CardDefinitionBase & CardAbilities;
 type XXX_ZONE = Types.ZonesAllCAPS;

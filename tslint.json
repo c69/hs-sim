@@ -7,16 +7,22 @@
     "rules": {
         "quotemark": [true, "single"],
         "member-access": false,
+        "no-namespace": false,
+        "interface-name": false,
         "object-literal-sort-keys": false,
+        "ordered-imports": false,
+        "object-literal-shorthand": false,
 
         "no-console": false,
         "no-string-throw": false,
 
         "arrow-parens": false,
         "curly": false,
+        "array-type": false,
         "trailing-comma": false,
 
         "max-line-length": false,
+        "variable-name": false,
         "align": false,
         "jsdoc-format": false,
         "whitespace": false,

@@ -103,6 +103,8 @@ function summonMinion (card: Cards.Card, board, game) {
         //   action: ({summon, self}) => summon(self)
         // }
         const event_name = _trigger_v1.eventName;
+
+        // TODO: check whether we need .bind(game) here, as no this is being used
         const listener = function (evt) {
             const $ = board._$(card.owner);
             const condition = _trigger_v1.condition;
@@ -127,6 +129,7 @@ function summonMinion (card: Cards.Card, board, game) {
                 ...mechanics(card, game, $, board)
             });
         }.bind(game);
+
         game.eventBus.on(event_name, listener);
         console.log(`${card.name} is now listening to ${event_name}`);
         card._listener = [event_name, listener];

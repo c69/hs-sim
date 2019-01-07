@@ -78,7 +78,7 @@ function applyBuff ({
 
         _by: card,
         toString () {
-            return `[Object Buff: ${this._by.name} #${this._by.card_id}]`
+            return `[Object Buff: ${this._by.name} #${this._by.card_id}]`;
         }
     });
 

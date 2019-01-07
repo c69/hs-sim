@@ -275,8 +275,8 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       })
       .forEach(({aura}: Cards.LegacyBuff) => {
         //console.log(aura);
-        let p = character.owner;
-        let $ = this.board._$(p);
+        const p = character.owner;
+        const $ = this.board._$(p);
 
         let t;
         if (aura.target === 'self') {

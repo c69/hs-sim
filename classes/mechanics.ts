@@ -34,8 +34,7 @@ BASIC_MECHANICS
 hit(n)
 heal(n)
 
-
-
+_________________________________
 2	Keywords
 2.1	Adapt -> target.adapt() >> from (3 of 9) choose (1) apply .buff
 2.2	Battlecry -> .on(play).battlecry()
@@ -117,7 +116,6 @@ heal(n)
 4.7	Random effect -- https://hearthstone.gamepedia.com/Random_effect
 4.8	Removal
 
-
 4.9	Triggered effect -> on() https://hearthstone.gamepedia.com/Triggered_effect
 
 2	Cards [with triggered abilities]
@@ -188,7 +186,7 @@ export default function mechanics (card, game, $, board): KnownMechanics {
             console.log(`TRIGGER.summon: Summoning ${id}`);
             if ($('own minion').length >= 7) return;
 
-            let MY_CREATION = createCard(id, card.owner, game.eventBus);
+            const MY_CREATION = createCard(id, card.owner, game.eventBus);
             board.add(MY_CREATION);
             board._summon(MY_CREATION);
             //console.log('its real!!!', MY_CREATION);
@@ -201,12 +199,12 @@ export default function mechanics (card, game, $, board): KnownMechanics {
             if (!t) throw new RangeError('No target provided for buff');
             if (!id_or_Tag) throw new RangeError('No Buff/Tag provided');
 
-            let targetArray = Array.isArray(t) ? t : [t];
+            const targetArray = Array.isArray(t) ? t : [t];
             targetArray.forEach(v => {
                 if (TAGS_LIST.includes(id_or_Tag)) {
                     v.buffs.push(id_or_Tag); // check for duplicates
                 } else {
-                    let enchantmentCard = createCard(id_or_Tag, card.owner, game.eventBus);
+                    const enchantmentCard = createCard(id_or_Tag, card.owner, game.eventBus);
 
                     applyBuff({
                         card: enchantmentCard,
@@ -219,5 +217,5 @@ export default function mechanics (card, game, $, board): KnownMechanics {
             });
             return t;
         }
-    }
+    };
 }

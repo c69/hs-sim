@@ -182,7 +182,7 @@ export class Board {
             enemyPlayer
         ] = this.player1 === p ? [this.player1, this.player2] : [this.player2, this.player1];
 
-        let tokens = query.split(/\s+/);
+        const tokens = query.split(/\s+/);
         const searchQuery = tokens.reduce(buildFilterSets, {
             ownPlayer: ownPlayer,
             enemyPlayer: enemyPlayer,
@@ -228,7 +228,7 @@ export class Board {
             // TODO: make sure this is bound properly
             const result = this.select(ownPlayer, query);
             return (new ArrayOfCards()).concat(result) as AoC<T>;
-        }
+        };
     }
     private $<T extends C = C>(query: string): AoC<T> {
         // TODO: make sure this is bound properly

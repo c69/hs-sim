@@ -18,8 +18,8 @@ export default class ArrayOfCards<T extends Cards.Card> extends Array implements
      * @return 0..2 matching minions
      */
     adjacent (this: this, minion: Cards.Card) {
-        let minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
-        let i = minions.findIndex(v => v === minion);
+        const minions = this.filter(v => v.owner === minion.owner && v.zone === minion.zone);
+        const i = minions.findIndex(v => v === minion);
 
         return (new this.constructor()).concat([minions[i - 1], minions[i + 1]]).filter(v => v) as AoC<T>;
     }

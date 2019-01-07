@@ -5,16 +5,15 @@ import {
   _GAME_profile
 } from './classes/bootstrap';
 
-let gameInstance = initGame(
+const gameInstance = initGame(
   ['Alizee', ['HERO_08']],
   ['Sir Bob', ['HERO_01']]
 );
 gameInstance.start();
 
-
 /** debug output for performance testing */
 function showPerformance () {
-  let g_profile = _GAME_profile();
+  const g_profile = _GAME_profile();
   console.log(g_profile);
 }
 

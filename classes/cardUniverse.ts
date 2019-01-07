@@ -16,10 +16,11 @@ import {
   Player
 } from './card';
 
-import * as CardDefinitions from '../data/cards.all.generated.json';
+import * as CardDefinitionsUntyped from '../data/cards.all.generated.json';
+const CardDefinitions = CardDefinitionsUntyped as Readonly<CardDefinition>[];
 import abilitiesMixin from '../data/actions.collectiblePlus';
 
-const CardDefinitionsIndex = (CardDefinitions as Readonly<CardDefinition>[]).reduce((a, v) => {
+const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
   a[v.id] = v;
   return a;
 }, {} as {[key: string]: CardDefinition});

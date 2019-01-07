@@ -25,24 +25,24 @@ class Card implements Cards.Card {
     // targetingArrowText: string;
 
     // todo: check deathknight cards ? maybe different Player/Card class
-    playerClass: string; // .cardClass seems to be missing on some cards
+    playerClass?: string; // .cardClass seems to be missing on some cards
     // .multiclass ?
-    rarity: string;
+    rarity?: string;
 
-    costBase: number;
-    overload: number;
+    costBase?: number;
+    overload?: number;
 
     play: any;
-    target: string;
+    target?: string;
     buffs: any[];
     incomingAuras: any[];
     _listener: any = null;
 
     zone: Types.ZonesAllCAPS;
-    owner: Player;
+    owner: Player | any; // TODO: refactor Entity hirerarchy, so Player and Game do not inherit Card
 
     card_id: number;
-    constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
+    constructor(cardDef: CardDefinition, owner: Player|undefined, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
 
@@ -103,7 +103,7 @@ class Card implements Cards.Card {
 
     get tags() {
         //console.log(`card.tags: #${this.card_id}`);
-        const allBuffs = [].concat(this.buffs, this.incomingAuras);
+        const allBuffs = this.buffs.concat(this.incomingAuras);
         if (!allBuffs.length) return [];
 
         let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
@@ -123,7 +123,7 @@ class Card implements Cards.Card {
         });
 
         //console.log(`card.tags returned: ${activeBuffs}`);
-        return [].concat.apply([], activeBuffs);
+        return ([] as any[]).concat.apply([], activeBuffs);
     }
     toString() {
         return `[${this.type}: ${this.name} #${this.card_id}]`;
@@ -209,7 +209,7 @@ class Character extends Card {
 }
 
 class Minion extends Character {
-    race: string;
+    race?: string;
     isReady: boolean; // TODO: this is our own extension
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
@@ -309,10 +309,10 @@ class Enchantment extends Card {
 
 class Game extends Card {
     card_id: number;
-    name: 'GAME_ENTITY';
-    zone: 'PLAY';
-    owner: Player = null;
-    type: 'GAME';
+    name = 'GAME_ENTITY';
+    zone = ZONES.play;
+    // owner: Player = null;
+    type = CARD_TYPES.game;
 
     turn: number = 0;
 
@@ -321,7 +321,8 @@ class Game extends Card {
     result: any = null;
 
     constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, null, eventBus);
+        super(cardDef, undefined, eventBus);
+        this.card_id = card_id++;
     }
 }
 
@@ -329,8 +330,8 @@ class Player extends Card implements Cards.Player {
     card_id: number;
     name = 'PLAYER_UNKNOWN';
     zone: Types.ZonesAllCAPS = 'ASIDE';
-    owner: Player = null;
-    type: 'PLAYER';
+    owner: Player;
+    type = CARD_TYPES.player;
 
     deck: null;
     hand: null;
@@ -342,10 +343,12 @@ class Player extends Card implements Cards.Player {
     lost: boolean = false;
 
     constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, null, eventBus);
+        super(cardDef, undefined, eventBus);
 
         if (this.type !== CARD_TYPES.player) throw new RangeError(
             `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
+
+        this.card_id = card_id++;
 
         this.name = cardDef.name;
         this.owner = this;

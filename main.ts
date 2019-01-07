@@ -102,7 +102,7 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
 }
 //console.log(g2.exportState());
 
-const jjj = [];
+const jjj: any[] = [];
 const _timeStart = Date.now();
 const _N_RUNS = process.argv[2] || 50;
 for (let j = 0; j < _N_RUNS; j++) {

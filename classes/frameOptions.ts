@@ -72,7 +72,7 @@ export function viewAvailableOptions (board: Board) {
     const canSummonMore = (pawns.length <= 7); // with hero
     //console.log('canSummonMore', canSummonMore, pawns.length);
 
-    const playable: Cards.Card[] = board.playableCards(board.activePlayer);
+    const playable: Cards.PlayableCard[] = board.playableCards(board.activePlayer);
 
     //console.log(playable.map(v => `${v}`));
 
@@ -93,7 +93,7 @@ export function viewAvailableOptions (board: Board) {
             name: v.name,
             cost: v.cost,
             positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-            targetList: v.target && board.select(board.activePlayer, v.target)
+            targetList: (v.target ? board.select(board.activePlayer, v.target) : []) as Cards.Character[]
         };
     });
 

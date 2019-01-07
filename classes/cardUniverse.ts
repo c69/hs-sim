@@ -198,7 +198,17 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
   if (!card) throw `Cannot find card with ID ${id}`;
 
   const C = CARD_TYPES;
-  let _ = null;
+
+  /* tslint:disable:callable-types */
+  /* tslint:disable:interface-over-type-literal */
+  type Constructor<T> = {
+    new(...args: any[]): T;
+  };
+  type Ctor<T> = Constructor<T extends Card ? T : never>;
+  /* tslint:enable:callable-types */
+  /* tslint:enable:interface-over-type-literal */
+
+  let _: Ctor<Card>;
   switch (card.type) {
     case C.minion: _ = Minion; break;
     case C.hero: _ = Hero; break;
@@ -218,7 +228,7 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
   );
 
   console.log(`Created ${new_card}`);
-  return new_card as Card;
+  return new_card;
 }
 
 /////

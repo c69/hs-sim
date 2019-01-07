@@ -6,11 +6,12 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": false, // true will break json import
         "resolveJsonModule": true,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "suppressExcessPropertyErrors": true,
-        "strict": true,
+        "strict": false,
         "sourceMap": true,
         "types": [
             "node",

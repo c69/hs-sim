@@ -216,6 +216,9 @@ export default function mechanics (card, game, $, board): KnownMechanics {
                 }
             });
             return t;
+        },
+        summonEnemy() {
+            throw 'mechanics.summonEnemy() is not implemented';
         }
     };
 }

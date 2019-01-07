@@ -245,8 +245,8 @@ export class Board {
             .filter(v => v.zone === Z.hand && this.byOwner.get(p).has(v));
     }
     // playable card ONLY make sence for active player
-    playableCards (p: Player) {
-        return this.hand(p).filter(v => v.cost <= p.mana);
+    playableCards (p: Player): Cards.PlayableCard[] {
+        return this.hand(p).filter(v => v.cost <= p.mana) as Cards.PlayableCard[];
         // todo: add mandatory targets
     }
 

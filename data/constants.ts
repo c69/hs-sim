@@ -215,11 +215,11 @@ export namespace GameOptions {
   export interface Play {
       type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       card_id: number;
-      card: Cards.Card;
+      card: Cards.PlayableCard;
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?
-      targetList?: Cards.Card[];
+      targetList?: Cards.Character[];
   }
   interface EndTurn {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
@@ -254,7 +254,7 @@ interface KnownMechanics {
   buff(id_or_tag: any, t: any): void;
 
   // experimental
-  summonEnemy?(id: string): void;
+  summonEnemy(id: string): void;
 }
 
 interface CardDefinitionBase {

@@ -28,7 +28,7 @@ function generateDeck_legacy (
     starting_deck: Card[],
     eventBus: EventBus
 ) {
-    const deck = [];
+    const deck: Card[] = [];
     //add Hero
     deck.push(createCard(hero_card_id, player, eventBus));
 

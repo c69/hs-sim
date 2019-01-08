@@ -26,6 +26,10 @@ class Entity implements Cards.Entity {
 
     name: string;
 
+    buffs: any[];
+    incomingAuras: any[];
+    _listener: any = null;
+
     constructor(cardDef: CardDefinition, eventBus: EventBus) {
         this.entity_id = entity_id++; // can this oveflow ?
 
@@ -37,6 +41,53 @@ class Entity implements Cards.Entity {
         this.id = cardDef.id;
         this.type = cardDef.type;
         this.name = cardDef.name;
+
+        // -- EFFECTS ------
+
+        this.buffs = (cardDef.tags || []).slice(0);
+        this.incomingAuras = [];
+        //this.tags is a getter
+
+        if (cardDef.death) {
+            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
+                death: cardDef.death
+            });
+        }
+        if (cardDef._trigger_v1) {
+            this.buffs.push({ //potentially shuld be .concat, as potentially card can have multiple triggers
+                trigger: cardDef._trigger_v1
+            });
+        }
+        if (cardDef.aura) {
+            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple auras
+                aura: cardDef.aura
+            });
+        }
+    }
+
+    get tags() {
+        //console.log(`card.tags: #${this.entity_id}`);
+        const allBuffs = this.buffs.concat(this.incomingAuras);
+        if (!allBuffs.length) return [];
+
+        let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
+        if (ignoreOlder === -1) ignoreOlder = 0;
+        const activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
+            //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
+
+            if (typeof buffOrTag === 'object') {
+                //   return (buffOrTag.tags || []).concat([
+                //       {effects: buffOrTag.effects},
+                //       {death: buffOrTag.death},
+                //       {aura: buffOrTag.aura},
+                //       //buffOrTag.trigger // is ignored, because EventEmitter.subscribe is called in playCard.js :(
+                //   ].filter(v => v));
+            }
+            return buffOrTag;
+        });
+
+        //console.log(`card.tags returned: ${activeBuffs}`);
+        return ([] as any[]).concat.apply([], activeBuffs);
     }
     toString() {
         return `[${this.type}: ${this.name} #${this.entity_id}]`;
@@ -60,9 +111,6 @@ class Card extends Entity implements Cards.Card {
 
     play: any;
     target?: string;
-    buffs: any[];
-    incomingAuras: any[];
-    _listener: any = null;
 
     owner: Player | any; // TODO: refactor Entity hirerarchy, so Player and Game do not inherit Card
 
@@ -94,54 +142,9 @@ class Card extends Entity implements Cards.Card {
         this.target = cardDef.target;
         //this.chooseOne = ???
         //this.joust = ???
-
-        this.buffs = (cardDef.tags || []).slice(0);
-        this.incomingAuras = [];
-        //this.tags is a getter
-
-        if (cardDef.death) {
-            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple deathrattles, even initially
-                death: cardDef.death
-            });
-        }
-        if (cardDef._trigger_v1) {
-            this.buffs.push({ //potentially shuld be .concat, as potentially card can have multiple triggers
-                trigger: cardDef._trigger_v1
-            });
-        }
-        if (cardDef.aura) {
-            this.buffs.push({//potentially shuld be .concat, as potentially card can have multiple auras
-                aura: cardDef.aura
-            });
-        }
     }
     get cost() {
         return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
-    }
-
-    get tags() {
-        //console.log(`card.tags: #${this.entity_id}`);
-        const allBuffs = this.buffs.concat(this.incomingAuras);
-        if (!allBuffs.length) return [];
-
-        let ignoreOlder = allBuffs.lastIndexOf(TAGS.silence);
-        if (ignoreOlder === -1) ignoreOlder = 0;
-        const activeBuffs = allBuffs.slice(ignoreOlder).map(buffOrTag => {
-            //todo: its unclear how to make DoA-like buff work (both stat modifier and tag in same buff)
-
-            if (typeof buffOrTag === 'object') {
-                //   return (buffOrTag.tags || []).concat([
-                //       {effects: buffOrTag.effects},
-                //       {death: buffOrTag.death},
-                //       {aura: buffOrTag.aura},
-                //       //buffOrTag.trigger // is ignored, because EventEmitter.subscribe is called in playCard.js :(
-                //   ].filter(v => v));
-            }
-            return buffOrTag;
-        });
-
-        //console.log(`card.tags returned: ${activeBuffs}`);
-        return ([] as any[]).concat.apply([], activeBuffs);
     }
 }
 
@@ -244,8 +247,8 @@ class Spell extends Card {
         if (this.type !== CARD_TYPES.spell) throw new RangeError(
             `Card definition has type: ${this.type}, expected: ${CARD_TYPES.spell}`);
 
-        //this.secret = cardDef.secret; //must be a function
-        //this.quest = cardDef.quest; //must be a function
+        //this.secret = cardDef.secret;
+        //this.quest = cardDef.quest;
     }
 }
 class Weapon extends Card {
@@ -332,8 +335,8 @@ class Game extends Entity {
     isOver: boolean = false;
     result: any = null;
 
-    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, eventBus);
+    constructor(gameDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(gameDef, eventBus);
     }
 }
 
@@ -351,8 +354,8 @@ class Player extends Entity implements Cards.Player {
     fatigue: number = 1;
     lost: boolean = false;
 
-    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, eventBus);
+    constructor(playerDef: CardDefinition, owner: null, eventBus: EventBus) {
+        super(playerDef, eventBus);
 
         if (this.type !== CARD_TYPES.player) throw new RangeError(
             `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);

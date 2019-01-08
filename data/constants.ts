@@ -145,17 +145,16 @@ export namespace Cards {
     readonly type: Types.CardsAllCAPS | 'GAME' | 'PLAYER'; // todo rename that union
     zone: Types.ZonesAllCAPS;
     name: string;
+
+    tags: (string | LegacyBuff)[];
+    incomingAuras?: LegacyBuff[];
+    _listener?: [any, any];
   }
   export interface Card extends Entity {
     readonly type: Types.CardsAllCAPS;
 
     readonly text: string;
     owner: Player;
-
-    tags: (string | LegacyBuff)[];
-    incomingAuras?: LegacyBuff[];
-
-    _listener?: [any, any];
 
     target?: string;
     // play (): void;

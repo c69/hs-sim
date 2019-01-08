@@ -12,14 +12,40 @@ import {
     EventBus
 } from '../data/constants';
 
-let card_id = 1;
+let entity_id = 1;
 
-class Card implements Cards.Card {
+/* tslint:disable:max-classes-per-file */
+
+class Entity implements Cards.Entity {
+    entity_id: number;
     eventBus: EventBus;
 
     id: string;
-    // dbfId: number;
     type: Types.CardsAllCAPS;
+    zone: Types.ZonesAllCAPS = ZONES.aside;
+
+    name: string;
+
+    constructor(cardDef: CardDefinition, eventBus: EventBus) {
+        this.entity_id = entity_id++; // can this oveflow ?
+
+        if (!eventBus) throw new RangeError('EventBus required');
+        this.eventBus = eventBus;
+
+        if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
+
+        this.id = cardDef.id;
+        this.type = cardDef.type;
+        this.name = cardDef.name;
+    }
+    toString() {
+        return `[${this.type}: ${this.name} #${this.entity_id}]`;
+    }
+}
+
+class Card extends Entity implements Cards.Card {
+    // dbfId: number;
+    type: Exclude<Types.CardsAllCAPS, typeof CARD_TYPES.game | typeof CARD_TYPES.player>;
     name: string;
     text: string;
     // targetingArrowText: string;
@@ -38,13 +64,10 @@ class Card implements Cards.Card {
     incomingAuras: any[];
     _listener: any = null;
 
-    zone: Types.ZonesAllCAPS;
     owner: Player | any; // TODO: refactor Entity hirerarchy, so Player and Game do not inherit Card
 
-    card_id: number;
     constructor(cardDef: CardDefinition, owner: Player|undefined, eventBus: EventBus) {
-        if (!eventBus) throw new RangeError('EventBus required');
-        this.eventBus = eventBus;
+        super(cardDef, eventBus);
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
         if (!owner && !(
@@ -53,15 +76,11 @@ class Card implements Cards.Card {
             )
         ) throw new RangeError('Owner player required');
 
-        this.zone = ZONES.aside;
         this.owner = owner;
 
-        this.card_id = card_id++;
 
         this.id = cardDef.id;
         //this.dbfId = cardDef.dbfId;
-        this.type = cardDef.type;
-        this.name = cardDef.name;
         this.text = cardDef.text;
         //this.targetingArrowText = cardDef.targetingArrowText;
 
@@ -97,6 +116,10 @@ class Card implements Cards.Card {
             });
         }
     }
+    /** @deprecated compatibility hack */
+    get card_id () {
+        return this.entity_id;
+    }
     get cost() {
         return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
     }
@@ -125,12 +148,8 @@ class Card implements Cards.Card {
         //console.log(`card.tags returned: ${activeBuffs}`);
         return ([] as any[]).concat.apply([], activeBuffs);
     }
-    toString() {
-        return `[${this.type}: ${this.name} #${this.card_id}]`;
-    }
 }
 
-/* tslint:disable:max-classes-per-file */
 class Character extends Card {
     health: number = 0;
 
@@ -307,11 +326,9 @@ class Enchantment extends Card {
     }
 }
 
-class Game extends Card {
-    card_id: number;
+class Game extends Entity {
     name = 'GAME_ENTITY';
     zone = ZONES.play;
-    // owner: Player = null;
     type = CARD_TYPES.game;
 
     turn: number = 0;
@@ -321,16 +338,13 @@ class Game extends Card {
     result: any = null;
 
     constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, undefined, eventBus);
-        this.card_id = card_id++;
+        super(cardDef, eventBus);
     }
 }
 
-class Player extends Card implements Cards.Player {
-    card_id: number;
+class Player extends Entity implements Cards.Player {
     name = 'PLAYER_UNKNOWN';
-    zone: Types.ZonesAllCAPS = 'ASIDE';
-    owner: Player;
+    zone: Types.ZonesAllCAPS = ZONES.aside;
     type = CARD_TYPES.player;
 
     deck: null;
@@ -343,15 +357,10 @@ class Player extends Card implements Cards.Player {
     lost: boolean = false;
 
     constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, undefined, eventBus);
+        super(cardDef, eventBus);
 
         if (this.type !== CARD_TYPES.player) throw new RangeError(
             `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
-
-        this.card_id = card_id++;
-
-        this.name = cardDef.name;
-        this.owner = this;
 
         // this.manaCrystals = cardDef.manaCrystals || 0;
         this.manaCrystals = 0;

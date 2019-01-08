@@ -140,13 +140,19 @@ export namespace Cards {
     death? (o: {}): void;
     trigger? (): void;
   };
-  export interface Card {
-    card_id: number;
-    name: string;
-
+  export interface Entity {
+    entity_id: number;
+    readonly type: Types.CardsAllCAPS | 'GAME' | 'PLAYER'; // todo rename that union
     zone: Types.ZonesAllCAPS;
+    name: string;
+  }
+  export interface Card {
+    /** @deprecated */ card_id: number;
+
+    readonly text: string;
+
     owner: Player;
-    type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
+    readonly type: Types.CardsAllCAPS;
     tags: (string | LegacyBuff)[];
     incomingAuras?: LegacyBuff[];
 
@@ -159,7 +165,7 @@ export namespace Cards {
 
     [key: string]: any;
   }
-  export interface Player  extends Card {
+  export interface Player extends Entity {
     type: 'PLAYER';
 
     manaCrystals: number;

@@ -12,13 +12,19 @@
         "preserveConstEnums": true,
         "suppressExcessPropertyErrors": true,
         "strict": false,
+        "pretty": true,
         "sourceMap": true,
+        "outDir": "./dist",
         "types": [
             "node",
             "mocha"
         ],
         "typeRoots": [ "../node_modules/@types" ]
-    }, "exclude": [
+    },
+    "files": [
+        "./main_rpc.ts"
+    ],
+    "exclude": [
         "./test/**/*.spec.ts"
     ]
 }

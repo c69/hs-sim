@@ -10,14 +10,14 @@ import {
 
 /** Play with random actions */
 function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
-  let _c = console.log;
-  let _w = console.warn;
+  const _c = console.log;
+  const _w = console.warn;
   if (mute) {
-    console.log = function () {};
-    console.warn = function () {};
+    console.log = () => void(0);
+    console.warn = () => void(0);
   }
   // actual play
-  let g = initGame(['Red', ['HERO_01']], ['Blue', ['HERO_02']]);
+  const g = initGame(['Red', ['HERO_01']], ['Blue', ['HERO_02']]);
   g.start();
   //actual HS hardcoded maximum round is 87 or so..
   for(let i = 0; i < 90 && !g.isOver; i++) {
@@ -29,9 +29,9 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
     //g.viewState();
     //g.viewAvailableOptions();
 
-    let max_actions_per_turn = 10;
+    const max_actions_per_turn = 10;
     for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
-      let opts = g.viewAvailableOptions();
+      const opts = g.viewAvailableOptions();
       //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
       if (!opts.actions.length) break;
       g.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
@@ -52,7 +52,7 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
 //---------------
 
 //e2e test for Fatigue
-var g_fatigue = initGame(
+const g_fatigue = initGame(
   ['Lazy1', ['HERO_09']],
   ['Lazy', ['HERO_07']]
 );
@@ -67,7 +67,7 @@ console.log('==================');
 
 // bootstrap / init
 // actual play
-let g2 = initGame(
+const g2 = initGame(
   ['Alice', ['HERO_08']],
   ['Bob', ['HERO_01']]
 );
@@ -85,9 +85,9 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   //g.viewState();
   //g.viewAvailableOptions();
 
-  let max_actions_per_turn = 75;
+  const max_actions_per_turn = 75;
   for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
-    let opts = g2.viewAvailableOptions();
+    const opts = g2.viewAvailableOptions();
 
     g2.exportState(); // verify JSON export is working
     //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
@@ -102,19 +102,19 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
 }
 //console.log(g2.exportState());
 
-let jjj = [];
-let _timeStart = Date.now();
-let _N_RUNS = process.argv[2] || 50;
+const jjj: any[] = [];
+const _timeStart = Date.now();
+const _N_RUNS = process.argv[2] || 50;
 for (let j = 0; j < _N_RUNS; j++) {
   // current speed is 100 games in 15 seconds
   // @ 09 Mar 2018 - current speed is 100 games in 5 seconds, node 9.7.1
   jjj.push(_quick_play(0, {mute: true}));
 }
-let duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
+const duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
 
 console.log(`completed ${_N_RUNS} games in ${duration_of_quick_run}s`);
 console.log(jjj.reduce((a,v) => {
-  let k = v.winner;
+  const k = v.winner;
   if (!a[k]) a[k] = 0;
   a[k] += 1;
 
@@ -135,7 +135,7 @@ _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 
 //debug output for performance testing
-let g_profile = _GAME_profile();
+const g_profile = _GAME_profile();
 // let b_profile = Board._profile()
 console.log(g_profile);
 // console.log(b_profile);

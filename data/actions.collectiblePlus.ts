@@ -5,7 +5,7 @@ import {
   CardAbilities
 } from './constants';
 
-export default <CardAbilities[]>[
+export default [
   {
     id: `AT_001`,
     _info: `(5) SPELL [MAGE]: Flame Lance`,
@@ -3407,7 +3407,7 @@ export default <CardAbilities[]>[
     _info: `(2) SPELL [PRIEST]: Mind Blast`,
     text: `Deal $5 damage to the enemy hero.`,
     play ({$}) {
-      $('enemy hero').dealDamageSpell(5)
+      $('enemy hero').dealDamageSpell(5);
     }
   },
   {
@@ -3426,7 +3426,7 @@ export default <CardAbilities[]>[
     text: `<b>Battlecry:</b> Destroy an enemy minion with <b>Taunt</b>.`,
     target: 'enemy minion #taunt',
     play ({target}) {
-      target.destroy()
+      target.destroy();
     }
   },
   {
@@ -3445,7 +3445,7 @@ export default <CardAbilities[]>[
     text: `<b>Battlecry:</b> Destroy a minion with 7 or more Attack.`,
     target: 'minion .attack>=7',
     play ({target}) {
-      target.destroy()
+      target.destroy();
     }
   },
   {
@@ -3659,7 +3659,7 @@ export default <CardAbilities[]>[
     xxx: 'sketch',
     target: 'own minion',
     play ({target}) {
-      target.returnToHand()
+      target.returnToHand();
     }
   },
   {
@@ -3687,8 +3687,8 @@ export default <CardAbilities[]>[
     _info: `(2) 2/3 [NEUTRAL]: Sunfury Protector`,
     text: `<b>Battlecry:</b> Give adjacent minions <b>Taunt</b>.`,
     play ({buff, $, self}) {
-      let pals = $('minion').adjacent(self);
-      buff(pals, TAGS.taunt)
+      const pals = $('minion').adjacent(self);
+      buff(pals, TAGS.taunt);
     }
   },
   {
@@ -3789,8 +3789,8 @@ export default <CardAbilities[]>[
     text: `<b>Battlecry:</b> Give adjacent minions +1/+1 and <b>Taunt</b>.`,
     xxx: 'adjacent',
     play ({buff, $, self}) {
-      let dudes = $('minion').adjacent(self);
-      buff(dudes, 'EX1_093e')
+      const dudes = $('minion').adjacent(self);
+      buff(dudes, 'EX1_093e');
     }
   },
   {
@@ -4362,7 +4362,7 @@ export default <CardAbilities[]>[
         condition: ({self}) => self.owner,
         action ({$, self}) {
           console.log(`${self.owner.name}'s RAGNAROS: Die, Insect !!!`);
-          $('enemy character .health>0').getRandom().dealDamage(8) //should be :alive (aka hp>0 and NOT pending destroy)
+          $('enemy character .health>0').getRandom().dealDamage(8); //should be :alive (aka hp>0 and NOT pending destroy)
         }
       }
     ]
@@ -4437,7 +4437,7 @@ export default <CardAbilities[]>[
       target: 'own minion @hand', // maybe @anywhere ??
       buff: { effects :{
         cost (v, {target}) {
-          let c = v - 2;
+          const c = v - 2;
           return  c < 1 ? 1 : c;
         }
       }}
@@ -5107,7 +5107,7 @@ export default <CardAbilities[]>[
     text: `Deal damage equal to your hero's Attack to a minion.`,
     target: 'minion',
     play ({target, $}) {
-      let damage = $('own hero')[0].attack;
+      const damage = $('own hero')[0].attack;
       target.dealDamageSpell(damage);
     }
   },
@@ -5316,8 +5316,8 @@ export default <CardAbilities[]>[
       buff: {
         effects: {
           cost (v, {$}) {
-            let h = $('own hero')[0].health;
-            let c = v - (30 - h);
+            const h = $('own hero')[0].health;
+            const c = v - (30 - h);
             return c > 0 ? c : 0;
           }
         }
@@ -6099,7 +6099,7 @@ export default <CardAbilities[]>[
     text: `<b>Battlecry:</b> Restore 8 Health to your hero.`,
     xxx: 'wtf BUFF ? o_O',
     play ({$}) {
-      $('own hero').heal(8);
+      // $('own hero').heal(8);
     }
   },
   {
@@ -9712,5 +9712,4 @@ export default <CardAbilities[]>[
     id: `tt_010a`,
     _info: `(1) 1/3 [*MAGE]: Spellbender`
   }
-];
-
+] as CardAbilities[];

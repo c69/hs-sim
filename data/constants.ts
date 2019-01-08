@@ -1,9 +1,9 @@
 type UnionKeyToValue<U extends string, T> = {
   [K in U]: T;
-}
+};
 type MapString<T> = {
   readonly [index: string]: T;
-}
+};
 export type U2<K extends string, T> = UnionKeyToValue<K, T> & MapString<T>;
 
 export namespace Types {
@@ -15,7 +15,6 @@ export namespace Types {
 
   export type Tags = 'taunt'|'enraged'|'divineShield';
 }
-
 
 // refer to http://hearthstone.gamepedia.com/Advanced_rulebook
 
@@ -84,11 +83,10 @@ const EVENTS = {
   turn_ended: 'TURN_ENDED'
 };
 
-type EventBus = {
+interface EventBus {
   emit (a: any, b: any): any;
   removeListener (a: any, b: any): void;
-};
-
+}
 
 /* @deprecated */
 const ACTION_TYPES = {
@@ -98,7 +96,6 @@ const ACTION_TYPES = {
   endTurn: 'END_TURN' as 'END_TURN',
   concede: 'CONCEDE' as 'CONCEDE'
 };
-
 
 /**
  * @see ..\classes\arrayOfCards.ts
@@ -132,9 +129,9 @@ export interface AoC<
   heal? (n: number): void;
 }
 
-
 export namespace Cards {
   export type LegacyBuff = {
+    type: string;
     aura?: {
       zone: string;
       target: string;
@@ -142,8 +139,7 @@ export namespace Cards {
     };
     death? (o: {}): void;
     trigger? (): void;
-    type: string;
-  }
+  };
   export interface Card {
     card_id: number;
     name: string;
@@ -152,13 +148,13 @@ export namespace Cards {
     owner: Player;
     type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
     tags: (string | LegacyBuff)[];
-    incomingAuras?: LegacyBuff[]
+    incomingAuras?: LegacyBuff[];
 
     _listener?: [any, any];
 
     target?: string;
     // play (): void;
-    play?: CardAbilities["play"];
+    play?: CardAbilities['play'];
     cost?: number;
 
     [key: string]: any;
@@ -191,6 +187,9 @@ export namespace Cards {
   export interface Spell extends Card {
     type: 'SPELL';
   }
+  export interface PlayableCard extends Card {
+    cost: number;
+  }
 }
 
 export namespace StateMachine {
@@ -205,7 +204,7 @@ export namespace GameOptions {
     entity: Cards.Card;
       name: string;
   }
-  export type Attack = {
+  export interface Attack {
       type: 'ATTACK'; // ACTION_TYPES.attack;
       card_id: number;
       unit: Cards.Character;
@@ -213,23 +212,23 @@ export namespace GameOptions {
       // cost: 0; // well.. attacking is free, right ? (only a life of your minion -__-)
       targetList: Cards.Character[];
   }
-  export type Play = {
+  export interface Play {
       type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
       card_id: number;
-      card: Cards.Card;
+      card: Cards.PlayableCard;
       name: string;
       cost: number;
       positionList: number[]; //slots between tokens, lol ? //?
-      targetList?: Cards.Card[];
-  };
-  type EndTurn = {
+      targetList?: Cards.Character[];
+  }
+  interface EndTurn {
       type: 'END_TURN'; // ACTION_TYPES.endTurn;
   }
-  type Concede = {
+  interface Concede {
       type: 'CONCEDE'; // ACTION_TYPES.concede;
   }
   export type Action = Attack | Play | EndTurn | Concede;
-  export type Options = {
+  export interface Options {
       token?: string;
       actions: Action[];
   }
@@ -242,23 +241,23 @@ interface CardAction {
   dealDamageSpely (): this;
 }
 
-type KnownEnvConstants = {
-  $ (query: string): AoC;// any[];  // >
+interface KnownEnvConstants {
   readonly game: any;
   readonly self: any;
   readonly position?: number; // only for play() of minion ?
+  $ (query: string): AoC;// any[];  // >
 }
 
-type KnownMechanics = {
+interface KnownMechanics {
   summon (id: string): void;
   draw (n: number): void;
   buff(id_or_tag: any, t: any): void;
 
   // experimental
-  summonEnemy?(id: string): void;
+  summonEnemy(id: string): void;
 }
 
-type CardDefinitionBase = {
+interface CardDefinitionBase {
   readonly id: string;
   readonly type: Types.CardsAllCAPS;
   readonly name: string;
@@ -266,8 +265,8 @@ type CardDefinitionBase = {
   _info: string;
   text: string;
 
-  playerClass?: 'NEUTRAL';
-  rarity?: 'EPIC';
+  playerClass?: 'NEUTRAL'; // lol
+  rarity?: 'EPIC'; // lol
   collectible?: boolean;
   race?: string;
 
@@ -278,14 +277,16 @@ type CardDefinitionBase = {
   durability?: number;
 
   _NOT_IMPLEMENTED_?: boolean;
+
+  [key: string]: any;
 }
 
-type Trigger = {
-  activeZone: 'play',
+interface Trigger {
+  activeZone: 'play';
   eventName: string; // EVENTS.character_damaged,
   condition: any; //'self' | (options: KnownEnvConstants & KnownMechanics) => boolean;
   action (options: KnownEnvConstants & KnownMechanics): void;
-};
+}
 
 type CardAbilities = {
   readonly id: string;
@@ -306,7 +307,7 @@ type CardAbilities = {
 
   /** @deprecated */
   attack?: any;
-}
+};
 
 type CardDefinition = CardDefinitionBase & CardAbilities;
 type XXX_ZONE = Types.ZonesAllCAPS;

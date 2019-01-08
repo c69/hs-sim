@@ -17,7 +17,7 @@ type Player = Cards.Player;
  * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
  */
 export function viewAvailableOptions (board: Board) {
-    const select = (p: Player, q:string) => board.select(p, q);
+    const select = (p: Player, q: string) => board.select(p, q);
     const activePlayer = board.activePlayer;
     const passivePlayer = board.passivePlayer;
     const game = board.game;
@@ -32,8 +32,8 @@ export function viewAvailableOptions (board: Board) {
         };
     }
 
-    let pawns = $<Cards.Character>('own character');
-    let warriors = pawns.filter(v => {
+    const pawns = $<Cards.Character>('own character');
+    const warriors = pawns.filter(v => {
         if (v.attack < 1) return false;
         if (!v.isReady && !v.tags.includes(TAGS.charge)) return false;
         if (v.tags.includes(TAGS.cannot_attack)) return false;
@@ -46,19 +46,19 @@ export function viewAvailableOptions (board: Board) {
         return v.attackedThisTurn < MAX_ATTACKS_ALLOWED_PER_TURN;
     });
 
-    let aubergines = $<Cards.Character>('enemy character');
+    const aubergines = $<Cards.Character>('enemy character');
     let sheeps = aubergines.filter(v => {
         return v.isAlive(); // this check is kinda superficial.. as all dead unit MUST be in grave already
     });
 
     //scan for taunt
-    let sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
+    const sheepsTaunt = sheeps.filter(v => v.tags.includes(TAGS.taunt));
     if (sheepsTaunt.length) sheeps = sheepsTaunt;
 
     // scan for spell shield
     // ..
 
-    let attack = warriors.map(v => {
+    const attack = warriors.map(v => {
         return {
             card_id: v.card_id,
             unit: v,
@@ -72,11 +72,11 @@ export function viewAvailableOptions (board: Board) {
     const canSummonMore = (pawns.length <= 7); // with hero
     //console.log('canSummonMore', canSummonMore, pawns.length);
 
-    const playable: Cards.Card[] = board.playableCards(board.activePlayer);
+    const playable: Cards.PlayableCard[] = board.playableCards(board.activePlayer);
 
     //console.log(playable.map(v => `${v}`));
 
-    let cards = playable.filter((v) => {
+    const cards = playable.filter((v) => {
         if (v.type === CARD_TYPES.minion) {
             return canSummonMore;
         }
@@ -93,7 +93,7 @@ export function viewAvailableOptions (board: Board) {
             name: v.name,
             cost: v.cost,
             positionList: [0], //this.board.listOwn(this.activePlayer).minions.map((v,i)=>i), //slots between tokens, lol ? //?
-            targetList: v.target && board.select(board.activePlayer, v.target)
+            targetList: (v.target ? board.select(board.activePlayer, v.target) : []) as Cards.Character[]
         };
     });
 

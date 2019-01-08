@@ -4,11 +4,14 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "noImplicitAny": true,
+        "esModuleInterop": false, // true will break json import
+        "resolveJsonModule": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "suppressExcessPropertyErrors": true,
-        "strict": true,
+        "strict": false,
         "sourceMap": true,
         "types": [
             "node",

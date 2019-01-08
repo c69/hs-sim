@@ -1,3 +1,4 @@
+/* tslint:disable:member-ordering */
 import {
     U2,
     Types,
@@ -17,9 +18,9 @@ import ArrayOfCards from './arrayOfCards';
 type C = Cards.Card;
 type Player = Cards.Player;
 
-type bZx = U2<Types.ZonesAllCAPS, C[]>
-type bZ = U2<Types.ZonesAllCAPS, Set<C>>
-type bT = U2<Types.CardsAllCAPS, Set<C>>
+type bZx = U2<Types.ZonesAllCAPS, C[]>;
+type bZ = U2<Types.ZonesAllCAPS, Set<C>>;
+type bT = U2<Types.CardsAllCAPS, Set<C>>;
 
 function intersect<T=any> (smaller: Set<T>, larger: Set<T>): Set<T> {
     return new Set(
@@ -35,7 +36,7 @@ function intersect2<T=any> (smaller: Set<T>, larger: Set<T>): Set<T> {
 
 // --- QueryBuilder ----
 type CardFilterFunction = (a: Cards.Card) => boolean;
-type FilterAccumulator = {
+interface FilterAccumulator {
     owners: Set<Player>;
     types: Set<string>; //
     zones: Set<string>; //
@@ -112,7 +113,6 @@ function buildFilterSets (a: FilterAccumulator, t: string) {
     return a;
 }
 
-
 export class Board {
     private all: C[] = [];
 
@@ -160,10 +160,10 @@ export class Board {
         this.byOwner.set(p2, new Set());
         p1.draw = (n: number) => {
             this.draw(p1, n);
-        }
+        };
         p2.draw = (n: number) => {
             this.draw(p2, n);
-        }
+        };
 
         this.all = d1.concat(d2);
         this.all.forEach(c => this.initCache(c));
@@ -182,7 +182,7 @@ export class Board {
             enemyPlayer
         ] = this.player1 === p ? [this.player1, this.player2] : [this.player2, this.player1];
 
-        let tokens = query.split(/\s+/);
+        const tokens = query.split(/\s+/);
         const searchQuery = tokens.reduce(buildFilterSets, {
             ownPlayer: ownPlayer,
             enemyPlayer: enemyPlayer,
@@ -203,23 +203,23 @@ export class Board {
         // let baskets: C[] = [];
         // searchQuery.zones.forEach(z => baskets = baskets.concat(this.byZone[z]));
 
-        let baskets = this.all.filter(v => searchQuery.zones.has(v.zone));
-        let filters = [];
+        const baskets = this.all.filter(v => searchQuery.zones.has(v.zone));
+        const filters = [];
 
         // zone is the most discriminating of light weight checks
         // type less so - because 99% of @play are minions or heroes
         if (searchQuery.types.size) {
-            filters.push(function (v: Cards.Card) {
+            filters.push((v: Cards.Card) => {
                 return searchQuery.types.has(v.type);
-            })
+            });
         }
         if (searchQuery.owners.size) {
-            filters.push(function (v: Cards.Card) {
+            filters.push((v: Cards.Card) => {
                 return searchQuery.owners.has(v.owner);
-            })
+            });
         }
 
-        let result = filters.reduce((a,v) => a.filter(v), baskets);
+        const result = filters.reduce((a,v) => a.filter(v), baskets);
 
         return result;
     }
@@ -228,7 +228,7 @@ export class Board {
             // TODO: make sure this is bound properly
             const result = this.select(ownPlayer, query);
             return (new ArrayOfCards()).concat(result) as AoC<T>;
-        }
+        };
     }
     private $<T extends C = C>(query: string): AoC<T> {
         // TODO: make sure this is bound properly
@@ -245,8 +245,8 @@ export class Board {
             .filter(v => v.zone === Z.hand && this.byOwner.get(p).has(v));
     }
     // playable card ONLY make sence for active player
-    playableCards (p: Player) {
-        return this.hand(p).filter(v => v.cost <= p.mana);
+    playableCards (p: Player): Cards.PlayableCard[] {
+        return this.hand(p).filter(v => v.cost <= p.mana) as Cards.PlayableCard[];
         // todo: add mandatory targets
     }
 
@@ -332,7 +332,7 @@ export class Board {
         // TBD -- new hero_power replaces existing one
         // TBD -- new secret cannot be added if same one exists
 
-        this._update(card, {zone: to})
+        this._update(card, {zone: to});
         return this;
     }
     private possess(card: C, player: Player): this {
@@ -341,10 +341,10 @@ export class Board {
     }
     draw(this: this, p: Player, n: number): C[] {
         const MAX_HAND_SIZE = 10;
-        let r = [];
-        let deckProxy = this.deck(p);
+        const r = [];
+        const deckProxy = this.deck(p);
         for (let i = 0; i < n; i++) {
-            let card = deckProxy.shift();
+            const card = deckProxy.shift();
 
             if (!card) {
                 p.hero.dealDamage(p.fatigue++);
@@ -354,7 +354,7 @@ export class Board {
 
             this.move(card, Z.hand, Z.deck);
             r.push(card);
-        };
+        }
         return r;
     }
     _playFromHand(this: this, card: Cards.Card) {
@@ -402,7 +402,7 @@ export class Board {
     }
     // --------------
     viewStateForPlayer (this: this, player: Player): void {
-        let own_minions = this.select<Cards.Character>(player, 'own minion');
+        const own_minions = this.select<Cards.Character>(player, 'own minion');
 
         //console.log(own_minions.map(({buffs, incomingAuras, tags}) => {return {buffs, incomingAuras, tags}} ))
 
@@ -429,11 +429,10 @@ export class Board {
         (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
         (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
 
-
-        (v.tags.filter(isObjectTag).find(v => !!v.death) ? '☠️' : '') +
-        (v.tags.filter(isObjectTag).find(v => !!v.trigger) ? 'T' : '') +
-        (v.tags.filter(isObjectTag).find(v => !!v.aura) ? 'A' : '') +
-        (v.tags.filter(isObjectTag).find(v => v.type === CARD_TYPES.enchantment) ? 'E' : '') +
+        (v.tags.filter(isObjectTag).find(_ => !!_.death) ? '☠️' : '') +
+        (v.tags.filter(isObjectTag).find(_ => !!_.trigger) ? 'T' : '') +
+        (v.tags.filter(isObjectTag).find(_ => !!_.aura) ? 'A' : '') +
+        (v.tags.filter(isObjectTag).find(_ => _.type === CARD_TYPES.enchantment) ? 'E' : '') +
         (v.incomingAuras.length ? 'a' : '') +
 
         `${v.attack}/${v.health}`

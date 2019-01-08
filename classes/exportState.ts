@@ -13,9 +13,8 @@ import { viewAvailableOptions } from './frameOptions';
 
 type Player = Cards.Player;
 
-function sanitizeCard (card1: Cards.Card) {
+function sanitizeCard<T extends Cards.Card>(card: T): T & {owner: string} {
     //console.log(card);
-    let card = card1 as Cards.Card & Cards.Character;
     return Object.assign({}, card, {
         owner: card.owner.name, // change it to Player/EntityID
 
@@ -48,12 +47,12 @@ function neuterTheCard (card: Cards.Card) {
 export function exportState (board: Board) {
     if (!board) throw 'Cannot export state of: ' + board;
 
-    const select = (p: Player, q:string) => board.select(p, q);
+    const select = (p: Player, q: string) => board.select(p, q);
     const activePlayer = board.activePlayer;
     const passivePlayer = board.passivePlayer;
-    let game = board.game;
+    const game = board.game;
 
-    let options: GameOptions.Options = viewAvailableOptions(board);
+    const options: GameOptions.Options = viewAvailableOptions(board);
 
     const aggregatedState = {
         entities: select(activePlayer, '*').map(sanitizeCard),
@@ -118,7 +117,7 @@ export function exportState (board: Board) {
 export function exportStateJSON (board: Board): string {
     const r = exportState(board);
     let outputJSON;
-    outputJSON = JSON.stringify(r, function (k, v) {
+    outputJSON = JSON.stringify(r, (k, v) => {
         if (k === 'eventBus') return undefined;
         if (k === '_listener') return undefined;
 

@@ -51,6 +51,11 @@ interface GameRPC {
 }
 
 let _frame_count_active = 0;
+export function profileGame () {
+  return {
+    _frame_count_active
+  };
+}
 
 /*
  *
@@ -86,12 +91,6 @@ FINAL_GAMEOVER 15
 type Player = Cards.Player;
 
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
-  static _profile () {
-    return {
-      _frame_count_active
-    };
-  }
-
   eventBus: EventBus;
   board: Board;
   players: Player[];

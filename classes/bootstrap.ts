@@ -18,7 +18,7 @@ import {
 
 import { Board } from './board7';
 import { Card, Game, Player } from './card';
-import { GameLoop } from './gameLoop';
+import { GameLoop, profileGame } from './gameLoop';
 
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
@@ -92,7 +92,7 @@ function initGame (
     return runner;
 }
 
-const _profile = GameLoop._profile;
+const _profile = profileGame;
 export {
     initGame,
     _profile as _GAME_profile

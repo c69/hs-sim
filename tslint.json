@@ -6,23 +6,32 @@
     "jsRules": {},
     "rules": {
         "quotemark": [true, "single"],
-        "member-access": false,
-        "no-namespace": false,
-        "interface-name": false,
-        "object-literal-sort-keys": false,
-        "ordered-imports": false,
+
+        // === DISABLED RULES ===
+
+        // NAH - rules i disagree or consider waste of time
+        "member-access": false, // lol "public" on every method, NO!
+        "interface-name": false, // hungarian notation
+        "object-literal-sort-keys": false, // manual sorting
+        "ordered-imports": false, // manual sorting
+
+        // NO, CLASHES WITH CURRENT CODE - maybe can reconsider, but not now
         "object-literal-shorthand": false,
-
-        "no-console": false,
-        "no-string-throw": false,
-
-        "arrow-parens": false,
-        "curly": false,
-        "array-type": false,
-        "trailing-comma": false,
-
-        "max-line-length": false,
+        "no-namespace": false,
         "variable-name": false,
+
+        // TODO:
+        "no-console": false, // replace console with proper logging
+        "no-string-throw": false, // replace throws with asserts
+
+        // I AM TOO SMART FOR THIS - nice best practices, but too much code depends on it now
+        "arrow-parens": false, // feels kinda verbose ..
+        "curly": false, // mostly if (x) throw, will be fixed by assert()
+        "array-type": false, // does not cause any trouble yet
+
+        // STYLING - low priotity, fix gradually
+        "trailing-comma": false,
+        "max-line-length": false,
         "align": false,
         "jsdoc-format": false,
         "whitespace": false,

@@ -146,13 +146,12 @@ export namespace Cards {
     zone: Types.ZonesAllCAPS;
     name: string;
   }
-  export interface Card {
-    /** @deprecated */ card_id: number;
+  export interface Card extends Entity {
+    readonly type: Types.CardsAllCAPS;
 
     readonly text: string;
-
     owner: Player;
-    readonly type: Types.CardsAllCAPS;
+
     tags: (string | LegacyBuff)[];
     incomingAuras?: LegacyBuff[];
 
@@ -208,10 +207,11 @@ export namespace GameOptions {
     type: Types;
     entity_id: number;
     entity: Cards.Card;
-      name: string;
+    name: string;
   }
   export interface Attack {
       type: 'ATTACK'; // ACTION_TYPES.attack;
+      /** @deprecated - keep till client is updated */
       card_id: number;
       unit: Cards.Character;
       name: string;
@@ -220,6 +220,7 @@ export namespace GameOptions {
   }
   export interface Play {
       type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
+      /** @deprecated - keep till client is updated */
       card_id: number;
       card: Cards.PlayableCard;
       name: string;

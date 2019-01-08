@@ -78,7 +78,6 @@ class Card extends Entity implements Cards.Card {
 
         this.owner = owner;
 
-
         this.id = cardDef.id;
         //this.dbfId = cardDef.dbfId;
         this.text = cardDef.text;
@@ -116,16 +115,12 @@ class Card extends Entity implements Cards.Card {
             });
         }
     }
-    /** @deprecated compatibility hack */
-    get card_id () {
-        return this.entity_id;
-    }
     get cost() {
         return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
     }
 
     get tags() {
-        //console.log(`card.tags: #${this.card_id}`);
+        //console.log(`card.tags: #${this.entity_id}`);
         const allBuffs = this.buffs.concat(this.incomingAuras);
         if (!allBuffs.length) return [];
 

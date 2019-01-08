@@ -324,7 +324,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
         });
       });
       if (character._listener) { // remove triggers - super dirty solution...
-        console.log(`removed triggers for ${character.card_id}`);
+        console.log(`removed triggers for ${character.entity_id}`);
         this.eventBus.removeListener(character._listener[0], character._listener[1]);
         delete character._listener;
       }

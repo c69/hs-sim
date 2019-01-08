@@ -29,7 +29,7 @@ function sanitizeCard<T extends Cards.Card>(card: T): T & {owner: string} {
 function neuterTheCard (card: Cards.Card) {
     //console.log(card);
     return {
-        card_id: card.card_id
+        card_id: card.entity_id
     };
 }
 

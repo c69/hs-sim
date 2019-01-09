@@ -77,9 +77,9 @@ function initGame (
     // const state = {}; // current turn, mana, etc
 
     // todo: simplify constructor signatures for game and player
-    const g = new Game(gameDef(), null, eb);
-    const p1 = new Player(playerDef(name1), null, eb);
-    const p2 = new Player(playerDef(name2), null, eb);
+    const g = new Game(gameDef(), eb);
+    const p1 = new Player(playerDef(name1), eb);
+    const p2 = new Player(playerDef(name2), eb);
 
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);

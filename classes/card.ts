@@ -333,7 +333,7 @@ class Game extends Entity {
     isOver: boolean = false;
     result: any = null;
 
-    constructor(gameDef: CardDefinition, owner: null, eventBus: EventBus) {
+    constructor(gameDef: CardDefinition, eventBus: EventBus) {
         super(gameDef, eventBus);
         this._verifyDefinitionType(gameDef.type);
     }
@@ -352,7 +352,7 @@ class Player extends Entity implements Cards.Player {
     fatigue: number = 1;
     lost: boolean = false;
 
-    constructor(playerDef: CardDefinition, owner: null, eventBus: EventBus) {
+    constructor(playerDef: CardDefinition, eventBus: EventBus) {
         super(playerDef, eventBus);
         this._verifyDefinitionType(playerDef.type);
 

@@ -341,8 +341,7 @@ class Game extends Entity {
 }
 
 class Player extends Entity implements Cards.Player {
-    name = 'PLAYER_UNKNOWN';
-    zone: Types.ZonesAllCAPS = ZONES.aside;
+    zone: Types.ZonesAllCAPS = ZONES.play;
     type = CARD_TYPES.player;
 
     deck: null;
@@ -359,6 +358,8 @@ class Player extends Entity implements Cards.Player {
 
         if (this.type !== CARD_TYPES.player) throw new RangeError(
             `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
+
+        this.name = this.name || 'PLAYER_UNKNOWN';
 
         // this.manaCrystals = cardDef.manaCrystals || 0;
         this.manaCrystals = 0;

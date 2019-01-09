@@ -51,6 +51,11 @@ interface GameRPC {
 }
 
 let _frame_count_active = 0;
+export function profileGame () {
+  return {
+    _frame_count_active
+  };
+}
 
 /*
  *
@@ -86,12 +91,6 @@ FINAL_GAMEOVER 15
 type Player = Cards.Player;
 
 export class GameLoop implements GameRPC, GameRunner<GameLoop> {
-  static _profile () {
-    return {
-      _frame_count_active
-    };
-  }
-
   eventBus: EventBus;
   board: Board;
   players: Player[];
@@ -276,7 +275,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       .forEach(({aura}: Cards.LegacyBuff) => {
         //console.log(aura);
         const p = character.owner;
-        const $ = this.board._$(p);
+        const $ = this.board._$(p); // this will break, as Player and Game dont have owners, but they are nevertheless returned from *
 
         let t;
         if (aura.target === 'self') {
@@ -324,7 +323,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
         });
       });
       if (character._listener) { // remove triggers - super dirty solution...
-        console.log(`removed triggers for ${character.card_id}`);
+        console.log(`removed triggers for ${character.entity_id}`);
         this.eventBus.removeListener(character._listener[0], character._listener[1]);
         delete character._listener;
       }

@@ -12,70 +12,36 @@ import {
     EventBus
 } from '../data/constants';
 
-let card_id = 1;
+let entity_id = 1;
 
-class Card implements Cards.Card {
+/* tslint:disable:max-classes-per-file */
+
+export abstract class Entity implements Cards.Entity {
+    entity_id: number;
     eventBus: EventBus;
 
     id: string;
-    // dbfId: number;
     type: Types.CardsAllCAPS;
+    zone: Types.ZonesAllCAPS = ZONES.aside;
+
     name: string;
-    text: string;
-    // targetingArrowText: string;
 
-    // todo: check deathknight cards ? maybe different Player/Card class
-    playerClass?: string; // .cardClass seems to be missing on some cards
-    // .multiclass ?
-    rarity?: string;
-
-    costBase?: number;
-    overload?: number;
-
-    play: any;
-    target?: string;
     buffs: any[];
     incomingAuras: any[];
     _listener: any = null;
 
-    zone: Types.ZonesAllCAPS;
-    owner: Player | any; // TODO: refactor Entity hirerarchy, so Player and Game do not inherit Card
+    constructor(cardDef: CardDefinition, eventBus: EventBus) {
+        this.entity_id = entity_id++; // can this oveflow ?
 
-    card_id: number;
-    constructor(cardDef: CardDefinition, owner: Player|undefined, eventBus: EventBus) {
         if (!eventBus) throw new RangeError('EventBus required');
         this.eventBus = eventBus;
 
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
-        if (!owner && !(
-                cardDef.type === CARD_TYPES.game ||
-                cardDef.type === CARD_TYPES.player
-            )
-        ) throw new RangeError('Owner player required');
-
-        this.zone = ZONES.aside;
-        this.owner = owner;
-
-        this.card_id = card_id++;
 
         this.id = cardDef.id;
-        //this.dbfId = cardDef.dbfId;
-        this.type = cardDef.type;
         this.name = cardDef.name;
-        this.text = cardDef.text;
-        //this.targetingArrowText = cardDef.targetingArrowText;
 
-        this.playerClass = cardDef.playerClass; // .cardClass seems to be missing on some cards
-        //.multiclass
-        this.rarity = cardDef.rarity;
-
-        this.costBase = cardDef.cost;
-        this.overload = cardDef.overload;
-
-        this.play = cardDef.play;
-        this.target = cardDef.target;
-        //this.chooseOne = ???
-        //this.joust = ???
+        // -- EFFECTS ------
 
         this.buffs = (cardDef.tags || []).slice(0);
         this.incomingAuras = [];
@@ -97,12 +63,9 @@ class Card implements Cards.Card {
             });
         }
     }
-    get cost() {
-        return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
-    }
 
     get tags() {
-        //console.log(`card.tags: #${this.card_id}`);
+        //console.log(`card.tags: #${this.entity_id}`);
         const allBuffs = this.buffs.concat(this.incomingAuras);
         if (!allBuffs.length) return [];
 
@@ -126,12 +89,65 @@ class Card implements Cards.Card {
         return ([] as any[]).concat.apply([], activeBuffs);
     }
     toString() {
-        return `[${this.type}: ${this.name} #${this.card_id}]`;
+        return `[${this.type}: ${this.name} #${this.entity_id}]`;
+    }
+    _verifyDefinitionType(entityType: any) {
+        if (this.type !== entityType) throw new RangeError(
+            `Card definition has type: ${entityType}, expected: ${this.type}`
+        );
     }
 }
 
-/* tslint:disable:max-classes-per-file */
-class Character extends Card {
+abstract class Card extends Entity implements Cards.Card {
+    // dbfId: number;
+    type: Exclude<Types.CardsAllCAPS, typeof CARD_TYPES.game | typeof CARD_TYPES.player>;
+    name: string;
+    text: string;
+    // targetingArrowText: string;
+
+    // todo: check deathknight cards ? maybe different Player/Card class
+    playerClass?: string; // .cardClass seems to be missing on some cards
+    // .multiclass ?
+    rarity?: string;
+
+    costBase?: number;
+    overload?: number;
+
+    play: any;
+    target?: string;
+
+    owner: Player;
+
+    constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
+        super(cardDef, eventBus);
+
+        if (!owner) throw new RangeError('Owner player required');
+
+        this.owner = owner;
+
+        this.id = cardDef.id;
+        //this.dbfId = cardDef.dbfId;
+        this.text = cardDef.text;
+        //this.targetingArrowText = cardDef.targetingArrowText;
+
+        this.playerClass = cardDef.playerClass; // .cardClass seems to be missing on some cards
+        //.multiclass
+        this.rarity = cardDef.rarity;
+
+        this.costBase = cardDef.cost;
+        this.overload = cardDef.overload;
+
+        this.play = cardDef.play;
+        this.target = cardDef.target;
+        //this.chooseOne = ???
+        //this.joust = ???
+    }
+    get cost() {
+        return getter_of_buffed_atribute.call(this, 'cost', this.costBase);
+    }
+}
+
+abstract class Character extends Card {
     health: number = 0;
 
     // herecy !
@@ -209,79 +225,78 @@ class Character extends Card {
 }
 
 class Minion extends Character {
+    type = CARD_TYPES.minion;
+
     race?: string;
     isReady: boolean; // TODO: this is our own extension
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.minion) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.minion}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.race = cardDef.race; // or undefined
-
         this.isReady = false; //applies only to minion - initial ZZZ / sleep
     }
 }
 class Spell extends Card {
+    type = CARD_TYPES.spell;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
+        this._verifyDefinitionType(cardDef.type);
 
-        if (this.type !== CARD_TYPES.spell) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.spell}`);
-
-        //this.secret = cardDef.secret; //must be a function
-        //this.quest = cardDef.quest; //must be a function
+        //this.secret = cardDef.secret;
+        //this.quest = cardDef.quest;
     }
 }
 class Weapon extends Card {
+    type = CARD_TYPES.weapon;
+
     attack: number = 0;
     durability: number = 0;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.weapon) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.weapon}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.attack = cardDef.attack || 0;
         this.durability = cardDef.durability || 0;
     }
 }
 class Hero extends Character {
+    type = CARD_TYPES.hero;
+
     armor: number = 0;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.hero) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.hero}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.armor = cardDef.armor || 0;
         //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]
     }
 }
 class Power extends Card {
+    type = CARD_TYPES.power;
+
     attackedThisTurn: number;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.power) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.power}`);
+        this._verifyDefinitionType(cardDef.type);
 
         //maybe rename to .usedThisTurn ?
         this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
 }
 class Enchantment extends Card {
+    type = CARD_TYPES.enchantment;
+
     effects: any;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.enchantment) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.enchantment}`);
+        this._verifyDefinitionType(cardDef.type);
 
         //console.log('EXCH', cardDef);
         //DESIGN BUG: clunky object shape
@@ -307,11 +322,9 @@ class Enchantment extends Card {
     }
 }
 
-class Game extends Card {
-    card_id: number;
+class Game extends Entity {
     name = 'GAME_ENTITY';
     zone = ZONES.play;
-    // owner: Player = null;
     type = CARD_TYPES.game;
 
     turn: number = 0;
@@ -320,17 +333,14 @@ class Game extends Card {
     isOver: boolean = false;
     result: any = null;
 
-    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, undefined, eventBus);
-        this.card_id = card_id++;
+    constructor(gameDef: CardDefinition, eventBus: EventBus) {
+        super(gameDef, eventBus);
+        this._verifyDefinitionType(gameDef.type);
     }
 }
 
-class Player extends Card implements Cards.Player {
-    card_id: number;
-    name = 'PLAYER_UNKNOWN';
-    zone: Types.ZonesAllCAPS = 'ASIDE';
-    owner: Player;
+class Player extends Entity implements Cards.Player {
+    zone: Types.ZonesAllCAPS = ZONES.play;
     type = CARD_TYPES.player;
 
     deck: null;
@@ -342,16 +352,11 @@ class Player extends Card implements Cards.Player {
     fatigue: number = 1;
     lost: boolean = false;
 
-    constructor(cardDef: CardDefinition, owner: null, eventBus: EventBus) {
-        super(cardDef, undefined, eventBus);
+    constructor(playerDef: CardDefinition, eventBus: EventBus) {
+        super(playerDef, eventBus);
+        this._verifyDefinitionType(playerDef.type);
 
-        if (this.type !== CARD_TYPES.player) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
-
-        this.card_id = card_id++;
-
-        this.name = cardDef.name;
-        this.owner = this;
+        this.name = this.name || 'PLAYER_UNKNOWN';
 
         // this.manaCrystals = cardDef.manaCrystals || 0;
         this.manaCrystals = 0;

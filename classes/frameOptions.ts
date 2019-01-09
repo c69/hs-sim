@@ -60,7 +60,7 @@ export function viewAvailableOptions (board: Board) {
 
     const attack = warriors.map(v => {
         return {
-            card_id: v.card_id,
+            card_id: v.entity_id,
             unit: v,
             type: ACTION_TYPES.attack,
             name: v.name,
@@ -87,7 +87,7 @@ export function viewAvailableOptions (board: Board) {
         return true;
     }).map(v => {
         return {
-            card_id: v.card_id,
+            card_id: v.entity_id,
             card: v,
             type: ACTION_TYPES.playCard,
             name: v.name,

@@ -140,17 +140,21 @@ export namespace Cards {
     death? (o: {}): void;
     trigger? (): void;
   };
-  export interface Card {
-    card_id: number;
+  export interface Entity {
+    entity_id: number;
+    readonly type: Types.CardsAllCAPS | 'GAME' | 'PLAYER'; // todo rename that union
+    zone: Types.ZonesAllCAPS;
     name: string;
 
-    zone: Types.ZonesAllCAPS;
-    owner: Player;
-    type: Types.CardsAllCAPS | 'GAME' | 'PLAYER';
     tags: (string | LegacyBuff)[];
     incomingAuras?: LegacyBuff[];
-
     _listener?: [any, any];
+  }
+  export interface Card extends Entity {
+    readonly type: Types.CardsAllCAPS;
+
+    readonly text: string;
+    owner: Player;
 
     target?: string;
     // play (): void;
@@ -159,7 +163,7 @@ export namespace Cards {
 
     [key: string]: any;
   }
-  export interface Player  extends Card {
+  export interface Player extends Entity {
     type: 'PLAYER';
 
     manaCrystals: number;
@@ -202,10 +206,11 @@ export namespace GameOptions {
     type: Types;
     entity_id: number;
     entity: Cards.Card;
-      name: string;
+    name: string;
   }
   export interface Attack {
       type: 'ATTACK'; // ACTION_TYPES.attack;
+      /** @deprecated - keep till client is updated */
       card_id: number;
       unit: Cards.Character;
       name: string;
@@ -214,6 +219,7 @@ export namespace GameOptions {
   }
   export interface Play {
       type: 'PLAY_CARD'; // ACTION_TYPES.playCard;
+      /** @deprecated - keep till client is updated */
       card_id: number;
       card: Cards.PlayableCard;
       name: string;

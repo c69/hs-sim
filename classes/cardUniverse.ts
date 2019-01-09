@@ -5,6 +5,7 @@ import {
   // ZONES
 } from '../data/constants';
 import {
+  Entity,
   Card,
   Minion,
   Spell,
@@ -26,17 +27,17 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
 }, {} as {[key: string]: CardDefinition});
 
 abilitiesMixin.forEach(({
-  //long destructuring
-  id,
-  tags,
-  target,
-  play,
-  death,
-  _triggers_v1,
-  aura,
-  enrage,
-  xxx,
-  attack
+    //long destructuring
+    id,
+    tags,
+    target,
+    play,
+    death,
+    _triggers_v1,
+    aura,
+    enrage,
+    xxx,
+    attack
   }) => {
   //console.log(id);
   if (attack) CardDefinitionsIndex[id].attack = attack;
@@ -216,13 +217,10 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
     case C.spell: _ = Spell; break;
     case C.power: _ = Power; break;
     case C.enchantment: _ = Enchantment; break;
-//  case C.game: _ = Game; break;
-//  case C.player: _ = Player; break;
     default: throw 'Attempt to create card of invalid type';
   }
   const new_card = new _ (
     card,
-//  (card.type === C.player || card.type === C.game) ? null : player,
     player,
     eventBus
   );

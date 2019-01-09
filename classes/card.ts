@@ -16,7 +16,7 @@ let entity_id = 1;
 
 /* tslint:disable:max-classes-per-file */
 
-class Entity implements Cards.Entity {
+export abstract class Entity implements Cards.Entity {
     entity_id: number;
     eventBus: EventBus;
 
@@ -39,7 +39,6 @@ class Entity implements Cards.Entity {
         if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
 
         this.id = cardDef.id;
-        this.type = cardDef.type;
         this.name = cardDef.name;
 
         // -- EFFECTS ------
@@ -92,9 +91,14 @@ class Entity implements Cards.Entity {
     toString() {
         return `[${this.type}: ${this.name} #${this.entity_id}]`;
     }
+    _verifyDefinitionType(entityType: any) {
+        if (this.type !== entityType) throw new RangeError(
+            `Card definition has type: ${entityType}, expected: ${this.type}`
+        );
+    }
 }
 
-class Card extends Entity implements Cards.Card {
+abstract class Card extends Entity implements Cards.Card {
     // dbfId: number;
     type: Exclude<Types.CardsAllCAPS, typeof CARD_TYPES.game | typeof CARD_TYPES.player>;
     name: string;
@@ -112,17 +116,12 @@ class Card extends Entity implements Cards.Card {
     play: any;
     target?: string;
 
-    owner: Player | any; // TODO: refactor Entity hirerarchy, so Player and Game do not inherit Card
+    owner: Player;
 
-    constructor(cardDef: CardDefinition, owner: Player|undefined, eventBus: EventBus) {
+    constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, eventBus);
 
-        if (!cardDef || typeof cardDef !== 'object') throw new TypeError('Object expected');
-        if (!owner && !(
-                cardDef.type === CARD_TYPES.game ||
-                cardDef.type === CARD_TYPES.player
-            )
-        ) throw new RangeError('Owner player required');
+        if (!owner) throw new RangeError('Owner player required');
 
         this.owner = owner;
 
@@ -148,7 +147,7 @@ class Card extends Entity implements Cards.Card {
     }
 }
 
-class Character extends Card {
+abstract class Character extends Card {
     health: number = 0;
 
     // herecy !
@@ -226,79 +225,78 @@ class Character extends Card {
 }
 
 class Minion extends Character {
+    type = CARD_TYPES.minion;
+
     race?: string;
     isReady: boolean; // TODO: this is our own extension
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.minion) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.minion}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.race = cardDef.race; // or undefined
-
         this.isReady = false; //applies only to minion - initial ZZZ / sleep
     }
 }
 class Spell extends Card {
+    type = CARD_TYPES.spell;
+
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.spell) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.spell}`);
+        this._verifyDefinitionType(cardDef.type);
 
         //this.secret = cardDef.secret;
         //this.quest = cardDef.quest;
     }
 }
 class Weapon extends Card {
+    type = CARD_TYPES.weapon;
+
     attack: number = 0;
     durability: number = 0;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.weapon) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.weapon}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.attack = cardDef.attack || 0;
         this.durability = cardDef.durability || 0;
     }
 }
 class Hero extends Character {
+    type = CARD_TYPES.hero;
+
     armor: number = 0;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.hero) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.hero}`);
+        this._verifyDefinitionType(cardDef.type);
 
         this.armor = cardDef.armor || 0;
         //this.power = card_id ? or this.tags[battlecry () {change_power(card_id)}]
     }
 }
 class Power extends Card {
+    type = CARD_TYPES.power;
+
     attackedThisTurn: number;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.power) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.power}`);
+        this._verifyDefinitionType(cardDef.type);
 
         //maybe rename to .usedThisTurn ?
         this.attackedThisTurn = 0; //applies to: Minion, Hero, Power
     }
 }
 class Enchantment extends Card {
+    type = CARD_TYPES.enchantment;
+
     effects: any;
 
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, owner, eventBus);
-
-        if (this.type !== CARD_TYPES.enchantment) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.enchantment}`);
+        this._verifyDefinitionType(cardDef.type);
 
         //console.log('EXCH', cardDef);
         //DESIGN BUG: clunky object shape
@@ -337,6 +335,7 @@ class Game extends Entity {
 
     constructor(gameDef: CardDefinition, owner: null, eventBus: EventBus) {
         super(gameDef, eventBus);
+        this._verifyDefinitionType(gameDef.type);
     }
 }
 
@@ -355,9 +354,7 @@ class Player extends Entity implements Cards.Player {
 
     constructor(playerDef: CardDefinition, owner: null, eventBus: EventBus) {
         super(playerDef, eventBus);
-
-        if (this.type !== CARD_TYPES.player) throw new RangeError(
-            `Card definition has type: ${this.type}, expected: ${CARD_TYPES.player}`);
+        this._verifyDefinitionType(playerDef.type);
 
         this.name = this.name || 'PLAYER_UNKNOWN';
 

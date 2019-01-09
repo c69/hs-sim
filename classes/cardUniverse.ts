@@ -5,6 +5,7 @@ import {
   // ZONES
 } from '../data/constants';
 import {
+  Entity,
   Card,
   Minion,
   Spell,
@@ -26,17 +27,17 @@ const CardDefinitionsIndex = CardDefinitions.reduce((a, v) => {
 }, {} as {[key: string]: CardDefinition});
 
 abilitiesMixin.forEach(({
-  //long destructuring
-  id,
-  tags,
-  target,
-  play,
-  death,
-  _triggers_v1,
-  aura,
-  enrage,
-  xxx,
-  attack
+    //long destructuring
+    id,
+    tags,
+    target,
+    play,
+    death,
+    _triggers_v1,
+    aura,
+    enrage,
+    xxx,
+    attack
   }) => {
   //console.log(id);
   if (attack) CardDefinitionsIndex[id].attack = attack;
@@ -192,6 +193,7 @@ console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
 
 /**
  * todo: do we really need to couple card & player & eventBus
+ * TODO #2: explore generic, like the not-working <T1 extends Entity = Entity>
  */
 function createCard(id: string, player: Player, eventBus: EventBus) {
   const card = CardDefinitionsIndex[id];
@@ -204,11 +206,11 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
   type Constructor<T> = {
     new(...args: any[]): T;
   };
-  type Ctor<T> = Constructor<T extends Card ? T : never>;
+  type Ctor<T> = Constructor<T extends Entity ? T : never>;
   /* tslint:enable:callable-types */
   /* tslint:enable:interface-over-type-literal */
 
-  let _: Ctor<Card>;
+  let _: Ctor<Entity>;
   switch (card.type) {
     case C.minion: _ = Minion; break;
     case C.hero: _ = Hero; break;
@@ -216,13 +218,12 @@ function createCard(id: string, player: Player, eventBus: EventBus) {
     case C.spell: _ = Spell; break;
     case C.power: _ = Power; break;
     case C.enchantment: _ = Enchantment; break;
-//  case C.game: _ = Game; break;
-//  case C.player: _ = Player; break;
+    case C.game: _ = Game; break;
+    case C.player: _ = Player; break;
     default: throw 'Attempt to create card of invalid type';
   }
   const new_card = new _ (
     card,
-//  (card.type === C.player || card.type === C.game) ? null : player,
     player,
     eventBus
   );

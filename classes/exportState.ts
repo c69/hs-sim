@@ -11,18 +11,24 @@ import {
 import { Board } from './board7';
 import { viewAvailableOptions } from './frameOptions';
 
+// have to alias, becase namespaced types are not inferring correctly
 type Player = Cards.Player;
+type Card = Cards.Card;
+type Entity = Cards.Card;
 
-function sanitizeCard<T extends Cards.Card>(card: T): T & {owner: string} {
-    //console.log(card);
-    return Object.assign({}, card, {
-        owner: card.owner.name, // change it to Player/EntityID
+function sanitizeEntity(entity: Entity | Card) {
+    // console.log(entity);
+    if (entity.type === CARD_TYPES.game || entity.type === CARD_TYPES.player) {
+        return entity;
+    }
+    return Object.assign({}, entity, {
+        owner: entity.owner.entity_id,
 
         // resolve getters
-        attack: card.attack,
-        cost: card.cost,
-        health: card.health,
-        tags: card.tags
+        attack: entity.attack,
+        cost: entity.cost,
+        health: entity.health,
+        tags: entity.tags
     });
 }
 
@@ -55,7 +61,7 @@ export function exportState (board: Board) {
     const options: GameOptions.Options = viewAvailableOptions(board);
 
     const aggregatedState = {
-        entities: select(activePlayer, '*').map(sanitizeCard),
+        entities: select(activePlayer, '*').map(sanitizeEntity),
         token: options.token,
         actions: options.actions.map(v => {
             const {

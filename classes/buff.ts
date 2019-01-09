@@ -86,6 +86,7 @@ function applyBuff ({
     if (type === 'aura') {
         //console.log(`Aura refresh: ${this.name} on ${target.owner.name}'s ${target.name} by [source?]`);
     } else {
+        // this will fail on GAME and PLAYER
         console.log(`${target.owner.name}'s ${target.name} got buffed with ${card.name}`);
     }
 }

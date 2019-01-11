@@ -401,6 +401,15 @@ export class Board {
         // copy.zone = ZONES.aside;
     }
     // --------------
+    viewStateForGame() {
+        const a = this.activePlayer;
+        const p = this.passivePlayer;
+        console.log(`[PLAY.game]`, [
+            `${this.game.turn}/87:${this.game}`,
+            `${a.mana}/${a.manaCrystals}:"${a.name}"`,
+            `${p.mana}/${p.manaCrystals}:"${p.name}"`
+        ]);
+    }
     viewStateForPlayer (this: this, player: Player): void {
         const own_minions = this.select<Cards.Character>(player, 'own minion');
 
@@ -408,34 +417,36 @@ export class Board {
 
         if (own_minions.length > 7) throw 'Invalid state: more that 7 minions on board.';
 
-        console.log(`
-  player:${player.name} hp❤️:${player.hero.health} mana💎:${player.mana}/${player.manaCrystals} deck:${this.deck(player).length} hand:${this.hand(player).length} ${this.hand(player).map(v=>v.cost +') ' + v.name)}`
+        const h = player.hero;
+        console.log(
+            `[PLAY.hero]`,
+            [`${h.attack}/${h.health}?${h.healthMax}/${h.armor}:"${h.name}"`],
+            [`${h.attack}/${h.health}(${h.healthMax})/${h.armor}:${h.id}`],
+            `\n[PLAY.minions] `,
+            own_minions.map(v=>
+                `${v.attack}/${v.health}` +
+                `${v.tags.map(
+                    _ => '+' + (typeof _ !== 'string' ?
+                        Object.keys(_).filter(
+                            tag => /(death|aura|trigger|effect)/.test(tag)
+                            ).join('|') :
+                        _)
+                ).join('')}`
+            ),
+            `\n[HAND: ${this.hand(player).length}]`,
+            this.hand(player).map(v=>
+                `$${v.cost}:"${v.name}"`
+                // +
+                // `${v.tags.map(
+                //     _ => '+' + (typeof _ !== 'string' ?
+                //         Object.keys(_).filter(
+                //             tag => /(death|aura|trigger|effect)/.test(tag)
+                //             ).join('|') :
+                //         _)
+                // ).join('')}`
+            ),
+            `\n[DECK: ${this.deck(player).length}]`,
+
         );
-        //console.log(this.board.$(player, 'own minion').map(v => v.name));
-
-        /** this is a HACK: fix type errors in fancy way */
-        function isObjectTag (v: any): v is ({
-          death: any,
-          aura: any,
-          trigger: any,
-          type: any
-        }) {
-          return typeof v !== 'string';
-        }
-
-        console.log('minions on board', own_minions.map(v=>
-        (v.tags && v.tags.includes(TAGS.taunt) ? '🛡️' : '') +
-        (v.tags && v.tags.includes(TAGS.divineShield) ? '🛡' : '') +
-        (v.tags && v.tags.includes(TAGS.windfury) ? 'w' : '') +
-        (v.tags && v.tags.includes(TAGS.charge) ? '!' : '') +
-
-        (v.tags.filter(isObjectTag).find(_ => !!_.death) ? '☠️' : '') +
-        (v.tags.filter(isObjectTag).find(_ => !!_.trigger) ? 'T' : '') +
-        (v.tags.filter(isObjectTag).find(_ => !!_.aura) ? 'A' : '') +
-        (v.tags.filter(isObjectTag).find(_ => _.type === CARD_TYPES.enchantment) ? 'E' : '') +
-        (v.incomingAuras.length ? 'a' : '') +
-
-        `${v.attack}/${v.health}`
-        ));
     }
 }

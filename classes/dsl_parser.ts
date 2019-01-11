@@ -76,23 +76,44 @@ interface HeroConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeRefe
     armor?: number;
 }
 
+function str2num (n: string | undefined) {
+    return n ? Number(n) : undefined;
+}
+
+function assignDefined(
+    // target: object,
+     ...sources: object[]): object {
+    const target = {};
+    for (const source of sources) {
+        for (const key of Object.keys(source)) {
+            const val = source[key];
+            if (val !== undefined) {
+                target[key] = val;
+            }
+        }
+    }
+    return target;
+}
+
 const DEFAULT_MINION = {
     type: 'MINION' as 'MINION',
-    attack: null,
-    health: null,
-    healthMax: null,
-    tags: []
+    attack: undefined,
+    health: undefined,
+    healthMax: undefined,
+    tags: undefined
 };
+const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?/;
+
 export function play_minion_parser (minion: string): MinionConfig {
-    '2/44?53/5'.match(
-        /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?$/
-    );
+    // '2/44?53/5'.match(
+    //     /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?$/
+    // );
 
-    console.log(minion);
-    const char_re = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?/;
-
+    //console.log(minion);
     // console.log(minion.match(char_re));
-    const stats = (minion.match(char_re).groups as any);
+
+    const stats_raw = minion.match(CHARACTER_STATS_RE);
+    const stats = stats_raw ? stats_raw.groups : {};
 
     const buffs = minion.split('+').slice(1).map(v => ({
         vanilla_tag: v
@@ -115,30 +136,29 @@ export function play_minion_parser (minion: string): MinionConfig {
 
     const parsed = {
         stats: {
-            attack: stats.attack,
-            health: stats.health,
-            healthMax: stats.healthMax
+            attack: str2num(stats.attack),
+            health: str2num(stats.health),
+            healthMax: str2num(stats.healthMax)
         },
         locator: {
             by_id: 'GVG_044',
             by_name: 'Fine Bug'
         },
-        buffs: [].concat(buffs)
+        buffs: [].concat(buffs).filter(v => v.vanilla_tag).map(v => v.vanilla_tag)
     } as {
         stats: CharacterBase,
         buffs: CanBeMutated['buffs'],
         locator: EntitySelector
     };
 
-    return {
-        ...DEFAULT_MINION,
-        ... {
+    return assignDefined(DEFAULT_MINION,
+        {
             attack: parsed.stats.attack,
             health: parsed.stats.health,
             healthMax: parsed.stats.healthMax || parsed.stats.health,
-            tags: parsed.buffs ? parsed.buffs.filter(v => v.vanilla_tag).map(v => v.vanilla_tag): []
+            tags: parsed.buffs.length ? parsed.buffs: undefined
         }
-    };
+    ) as MinionConfig;
 }
 
 function play_hero_parser (hero: string): HeroConfig {

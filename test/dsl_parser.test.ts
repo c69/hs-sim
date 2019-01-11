@@ -66,38 +66,48 @@ describe('tokenize', function() {
             });
         });
     });
+});
 
-    describe('play_minion_parser', function() {
-        it('should parse a simle minion', function () {
-            const minionConfig = play_minion_parser(
-                '1/2+TAUNT'
-            );
-            assert.deepEqual(
-                minionConfig,
-                {
-                    type: 'MINION',
-                    attack: 1,
-                    health: 2,
-                    healthMax: 2,
-                    tags: ['TAUNT']
-                }
-            );
-        });
-        it('should parse multiple buffs', function () {
-            const minionConfig = play_minion_parser(
-                '1/2+CHARGE+DIVINE_SHIELD'
-            );
-            assert.deepEqual(
-                minionConfig,
-                {
-                    type: 'MINION',
-                    attack: 1,
-                    health: 2,
-                    healthMax: 2,
-                    tags: ['CHARGE', 'DIVINE_SHIELD']
-                }
-            );
-        });
+describe('play_minion_parser', function() {
+    it('should parse a simle minion', function () {
+        const minionConfig = play_minion_parser(
+            '1/2+TAUNT'
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                attack: 1,
+                health: 2,
+                healthMax: 2,
+                tags: ['TAUNT']
+            }
+        );
     });
-
+    it('should parse multiple buffs', function () {
+        const minionConfig = play_minion_parser(
+            '1/2+CHARGE+DIVINE_SHIELD'
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                attack: 1,
+                health: 2,
+                healthMax: 2,
+                tags: ['CHARGE', 'DIVINE_SHIELD']
+            }
+        );
+    });
+    it('should return empty object +type, for unparseable token', function () {
+        const minionConfig = play_minion_parser(
+            'abc waa'
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION'
+            }
+        );
+    });
 });

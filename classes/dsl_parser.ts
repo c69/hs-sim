@@ -103,6 +103,7 @@ const DEFAULT_MINION = {
     tags: undefined
 };
 const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?/;
+const CHARACTER_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
 
 export function play_minion_parser (minion: string): MinionConfig {
     // '2/44?53/5'.match(
@@ -118,6 +119,10 @@ export function play_minion_parser (minion: string): MinionConfig {
     const buffs = minion.split('+').slice(1).map(v => ({
         vanilla_tag: v
     }));
+
+    const locator_raw = minion.match(CHARACTER_LOCATOR_RE);
+    //console.log(locator_raw);
+    const locator = locator_raw ? locator_raw.groups : {};
     //----------------------
     // in HS-SIM, only props are:
     //      race, isReady, attackedThisTurn,
@@ -141,8 +146,8 @@ export function play_minion_parser (minion: string): MinionConfig {
             healthMax: str2num(stats.healthMax)
         },
         locator: {
-            by_id: 'GVG_044',
-            by_name: 'Fine Bug'
+            by_id: locator.by_id,
+            by_name: locator.by_name
         },
         buffs: [].concat(buffs).filter(v => v.vanilla_tag).map(v => v.vanilla_tag)
     } as {
@@ -153,6 +158,8 @@ export function play_minion_parser (minion: string): MinionConfig {
 
     return assignDefined(DEFAULT_MINION,
         {
+            by_id: parsed.locator.by_id,
+            by_name: parsed.locator.by_name,
             attack: parsed.stats.attack,
             health: parsed.stats.health,
             healthMax: parsed.stats.healthMax || parsed.stats.health,

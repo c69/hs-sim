@@ -99,6 +99,32 @@ describe('play_minion_parser', function() {
             }
         );
     });
+    it('should parse minion by locator :id', function () {
+        const minionConfig = play_minion_parser(
+            ':CS2_125' // Ironfur Grizzly
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                by_id: 'CS2_125'
+            }
+        );
+    });
+
+    it('should parse minion by locator :"name"', function () {
+        const minionConfig = play_minion_parser(
+            ':"Ironfur Grizzly"'
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                by_name: 'Ironfur Grizzly'
+            }
+        );
+    });
+
     it('should return empty object +type, for unparseable token', function () {
         const minionConfig = play_minion_parser(
             'abc waa'

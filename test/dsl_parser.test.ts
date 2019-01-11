@@ -1,7 +1,8 @@
 import assert = require('assert');
 import {
     split_into_lines,
-    tokenize
+    tokenize,
+    play_minion_parser
 } from '../classes/dsl_parser';
 
 describe('split_into_lines', function() {
@@ -63,6 +64,39 @@ describe('tokenize', function() {
                     EXPECTED
                 );
             });
+        });
+    });
+
+    describe('play_minion_parser', function() {
+        it('should parse a simle minion', function () {
+            const minionConfig = play_minion_parser(
+                '1/2+TAUNT'
+            );
+            assert.deepEqual(
+                minionConfig,
+                {
+                    type: 'MINION',
+                    attack: 1,
+                    health: 2,
+                    healthMax: 2,
+                    tags: ['TAUNT']
+                }
+            );
+        });
+        it('should parse multiple buffs', function () {
+            const minionConfig = play_minion_parser(
+                '1/2+CHARGE+DIVINE_SHIELD'
+            );
+            assert.deepEqual(
+                minionConfig,
+                {
+                    type: 'MINION',
+                    attack: 1,
+                    health: 2,
+                    healthMax: 2,
+                    tags: ['CHARGE', 'DIVINE_SHIELD']
+                }
+            );
         });
     });
 

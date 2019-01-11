@@ -26,11 +26,12 @@ interface CanBePlayed {
     cost?: number;
 }
 interface EntitySelector {
-    by_id: number;
+    by_id: string;
     by_name: string;
 }
 interface CanBeMutated {
-    buffs?: any;
+    tags: string[];
+    buffs?: any[];
     props?: any;
 }
 interface CanBeReferenced {
@@ -75,29 +76,79 @@ interface HeroConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeRefe
     armor?: number;
 }
 
-function play_minion_parser (minion: string): MinionConfig {
+const DEFAULT_MINION = {
+    type: 'MINION' as 'MINION',
+    attack: null,
+    health: null,
+    healthMax: null,
+    tags: []
+};
+export function play_minion_parser (minion: string): MinionConfig {
     '2/44?53/5'.match(
         /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?$/
     );
 
-    const char_re = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?$/;
+    console.log(minion);
+    const char_re = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?/;
 
-    const stats = minion.match(char_re).groups;
+    // console.log(minion.match(char_re));
+    const stats = (minion.match(char_re).groups as any);
+
+    const buffs = minion.split('+').slice(1).map(v => ({
+        vanilla_tag: v
+    }));
+    //----------------------
+    // in HS-SIM, only props are:
+    //      race, isReady, attackedThisTurn,
+    //   vanilla tags with args:
+    //      overload(3)
+    // 2/3(5):GVG_OK.isReady=TRUE+TAUNT+A+B+:XXX_01#omg
+    // 2/3(100):"Hungry Goblin"#01.race(DRAGON)+TAUNT+:XXX_01(:ZZZ_022)
+    // stats = 0/0(0)[/0]
+    // locator = :[id | name]
+    // ref = #[000 | a-z_A-Z0-9]
+    // prop = .[[_a-zA-Z0-9]  (-A-Za-z0-9_)]   // !!! no locator
+    // buff = +[vanilla_tag | locator] [(locator)]
+    // vanilla_tag = _A-Z0-9    // CAPS_LOCK_WITH_UNDERSCORE_11
+    // [stats] [locator] [ref] [prop]* [buff]*
+    // [stats] [buff/vanilla_tag]*
+
+    const parsed = {
+        stats: {
+            attack: stats.attack,
+            health: stats.health,
+            healthMax: stats.healthMax
+        },
+        locator: {
+            by_id: 'GVG_044',
+            by_name: 'Fine Bug'
+        },
+        buffs: [].concat(buffs)
+    } as {
+        stats: CharacterBase,
+        buffs: CanBeMutated['buffs'],
+        locator: EntitySelector
+    };
 
     return {
-        type: 'MINION',
-        attack: 2,
-        health: 3,
-        healthMax: 5
+        ...DEFAULT_MINION,
+        ... {
+            attack: parsed.stats.attack,
+            health: parsed.stats.health,
+            healthMax: parsed.stats.healthMax || parsed.stats.health,
+            tags: parsed.buffs ? parsed.buffs.filter(v => v.vanilla_tag).map(v => v.vanilla_tag): []
+        }
     };
 }
+
 function play_hero_parser (hero: string): HeroConfig {
     return {
         type: 'HERO',
-        attack: 1,
-        health: 2,
-        healthMax: 2,
-        armor: 0
+        attack: null,
+        health: null,
+        healthMax: null,
+        armor: null,
+        tags: []
     };
 }
 function play_power_parser (power: string) {

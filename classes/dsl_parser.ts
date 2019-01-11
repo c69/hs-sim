@@ -190,16 +190,16 @@ function play_weapon_parser (weapon: string) {
         tags: parsed.buffs.length ? parsed.buffs: undefined
     });
 }
-function play_game_parser (game: string) {
+function play_game_parser (game: string): GameConfig {
     const parsed = play_generic_parser(game);
     return assignDefined({
         type: 'GAME' as 'GAME',
-        turns: parsed.stats.s1,
+        turn: parsed.stats.s1,
         turnMax: parsed.stats.s2,
         tags: parsed.buffs.length ? parsed.buffs: undefined
     });
 }
-function play_player_parser (player: string) {
+function play_player_parser (player: string): PlayerConfig {
     const parsed = play_generic_parser(player);
     return assignDefined({
         type: 'PLAYER' as 'PLAYER',

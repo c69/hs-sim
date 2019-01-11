@@ -80,10 +80,10 @@ function str2num (n: string | undefined) {
     return n ? Number(n) : undefined;
 }
 
-function assignDefined(
+function assignDefined<T={}>(
     // target: object,
-     ...sources: object[]): object {
-    const target = {};
+     ...sources: T[]): T {
+    const target = {} as T;
     for (const source of sources) {
         for (const key of Object.keys(source)) {
             const val = source[key];
@@ -95,34 +95,23 @@ function assignDefined(
     return target;
 }
 
-const DEFAULT_MINION = {
-    type: 'MINION' as 'MINION',
-    attack: undefined,
-    health: undefined,
-    healthMax: undefined,
-    tags: undefined
-};
-const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\((?<healthMax>\d+)\))?(:?\/?(?<armor>\d+))?/;
-const CHARACTER_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
+// const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\((?<healthMax>\d+)\))?(:?\/?(?<armor>\d+))?/;
+const GENERIC_STATS_RE = /^(?<s1>\d+)\/(?<s2>\d+)(:?\((?<s2_max>\d+)\))?(:?\/?(?<s3>\d+))?/;
 
-export function play_minion_parser (minion: string): MinionConfig {
-    // '2/44?53/5'.match(
-    //     /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?$/
-    // );
+// const CHARACTER_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
+const GENERIC_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
 
-    //console.log(minion);
-    // console.log(minion.match(char_re));
-
-    const stats_raw = minion.match(CHARACTER_STATS_RE);
+export function play_generic_parser (token: string) {
+    const stats_raw = token.match(GENERIC_STATS_RE);
     const stats = stats_raw ? stats_raw.groups : {};
 
-    const buffs = minion.split('+').slice(1).map(v => ({
+    const buffs = token.split('+').slice(1).map(v => ({
         vanilla_tag: v
     }));
 
-    const locator_raw = minion.match(CHARACTER_LOCATOR_RE);
-    //console.log(locator_raw);
+    const locator_raw = token.match(GENERIC_LOCATOR_RE);
     const locator = locator_raw ? locator_raw.groups : {};
+
     //----------------------
     // in HS-SIM, only props are:
     //      race, isReady, attackedThisTurn,
@@ -141,9 +130,10 @@ export function play_minion_parser (minion: string): MinionConfig {
 
     const parsed = {
         stats: {
-            attack: str2num(stats.attack),
-            health: str2num(stats.health),
-            healthMax: str2num(stats.healthMax)
+            s1: str2num(stats.s1),
+            s2: str2num(stats.s2),
+            s2_max: str2num(stats.s2_max),
+            s3: str2num(stats.s3)
         },
         locator: {
             by_id: locator.by_id,
@@ -151,45 +141,73 @@ export function play_minion_parser (minion: string): MinionConfig {
         },
         buffs: [].concat(buffs).filter(v => v.vanilla_tag).map(v => v.vanilla_tag)
     } as {
-        stats: CharacterBase,
+        stats: {[k in 's1'|'s2'|'s2_max'|'s3' ]: number|undefined},
         buffs: CanBeMutated['buffs'],
         locator: EntitySelector
     };
 
-    return assignDefined(DEFAULT_MINION,
-        {
-            by_id: parsed.locator.by_id,
-            by_name: parsed.locator.by_name,
-            attack: parsed.stats.attack,
-            health: parsed.stats.health,
-            healthMax: parsed.stats.healthMax,
-            tags: parsed.buffs.length ? parsed.buffs: undefined
-        }
-    ) as MinionConfig;
+    return parsed;
+}
+
+export function play_minion_parser (minion: string): MinionConfig {
+    const parsed = play_generic_parser(minion);
+    return assignDefined({
+        type: 'MINION' as 'MINION',
+        by_id: parsed.locator.by_id,
+        by_name: parsed.locator.by_name,
+        attack: parsed.stats.s1,
+        health: parsed.stats.s2,
+        healthMax: parsed.stats.s2_max,
+        tags: parsed.buffs.length ? parsed.buffs: undefined
+    });
 }
 
 function play_hero_parser (hero: string): HeroConfig {
-    return {
-        type: 'HERO',
-        attack: null,
-        health: null,
-        healthMax: null,
-        armor: null,
-        tags: []
-    };
+    const parsed = play_generic_parser(hero);
+    return assignDefined({
+        type: 'HERO' as 'HERO',
+        by_id: parsed.locator.by_id,
+        by_name: parsed.locator.by_name,
+        attack: parsed.stats.s1,
+        health: parsed.stats.s2,
+        healthMax: parsed.stats.s2_max,
+        armor: parsed.stats.s3,
+        tags: parsed.buffs.length ? parsed.buffs: undefined
+    });
 }
 
 function play_power_parser (power: string) {
     return {};
 }
 function play_weapon_parser (weapon: string) {
-    return {};
+    const parsed = play_generic_parser(weapon);
+    return assignDefined({
+        type: 'WEAPON' as 'WEAPON',
+        by_id: parsed.locator.by_id,
+        by_name: parsed.locator.by_name,
+        attack: parsed.stats.s1,
+        durability: parsed.stats.s2,
+        tags: parsed.buffs.length ? parsed.buffs: undefined
+    });
 }
 function play_game_parser (game: string) {
-    return {};
+    const parsed = play_generic_parser(game);
+    return assignDefined({
+        type: 'GAME' as 'GAME',
+        turns: parsed.stats.s1,
+        turnMax: parsed.stats.s2,
+        tags: parsed.buffs.length ? parsed.buffs: undefined
+    });
 }
 function play_player_parser (player: string) {
-    return {};
+    const parsed = play_generic_parser(player);
+    return assignDefined({
+        type: 'PLAYER' as 'PLAYER',
+        mana: parsed.stats.s1,
+        manaCrystals: parsed.stats.s2,
+        manaCrystalsMax: parsed.stats.s2_max,
+        tags: parsed.buffs.length ? parsed.buffs: undefined
+    });
 }
 
 function hand_parser (card: string) {
@@ -208,9 +226,16 @@ function hand_parser (card: string) {
  * So its the weakest and the most generic parser
  * Its only assumption, is that tokens are Cards
  * (not Game, Player or Enchantment)
- * @param card
+ * @param card_token
  */
-function simple_parser (card: string) {
+function simple_parser (card_token: string) {
+    const buffs = card_token.split('+').slice(1).map(v => ({
+        vanilla_tag: v
+    }));
+
+    const locator_raw = card_token.match(GENERIC_LOCATOR_RE);
+    const locator = locator_raw ? locator_raw.groups : {};
+
     // DECK| :"Fireball", :"Imp"+:OG_345e, :"Aviana"
     return {
         type: 'UNKNOWN_PLAYABLE', // LOL ..
@@ -228,7 +253,7 @@ const parsers = {
     'PLAY.hero': ([hero, power, weapon]) => {
         return [
             play_hero_parser(hero),
-            play_power_parser(power),
+            play_power_parser(power), // TODO
             play_weapon_parser(weapon)
         ];
     },

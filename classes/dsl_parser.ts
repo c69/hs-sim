@@ -102,7 +102,7 @@ const DEFAULT_MINION = {
     healthMax: undefined,
     tags: undefined
 };
-const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\?(?<health_max>\d+))?(:?\/?(?<armor>\d+))?/;
+const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\((?<healthMax>\d+)\))?(:?\/?(?<armor>\d+))?/;
 const CHARACTER_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
 
 export function play_minion_parser (minion: string): MinionConfig {
@@ -162,7 +162,7 @@ export function play_minion_parser (minion: string): MinionConfig {
             by_name: parsed.locator.by_name,
             attack: parsed.stats.attack,
             health: parsed.stats.health,
-            healthMax: parsed.stats.healthMax || parsed.stats.health,
+            healthMax: parsed.stats.healthMax,
             tags: parsed.buffs.length ? parsed.buffs: undefined
         }
     ) as MinionConfig;
@@ -178,6 +178,7 @@ function play_hero_parser (hero: string): HeroConfig {
         tags: []
     };
 }
+
 function play_power_parser (power: string) {
     return {};
 }
@@ -191,6 +192,37 @@ function play_player_parser (player: string) {
     return {};
 }
 
+function hand_parser (card: string) {
+    // HAND| $4:"Fireball", $3:GVG_097.powered_up, 3/2:"Imp"+:OG_345e, $6(10):"Aviana"
+    return {
+        type: 'UNKNOWN_PLAYABLE', // LOL ..
+        attack: null,
+        health: null,
+        healthMax: null,
+        armor: null,
+        tags: []
+    };
+}
+/**
+ * This parser does not try to guess the type
+ * So its the weakest and the most generic parser
+ * Its only assumption, is that tokens are Cards
+ * (not Game, Player or Enchantment)
+ * @param card
+ */
+function simple_parser (card: string) {
+    // DECK| :"Fireball", :"Imp"+:OG_345e, :"Aviana"
+    return {
+        type: 'UNKNOWN_PLAYABLE', // LOL ..
+        attack: null,
+        health: null,
+        healthMax: null,
+        armor: null,
+        tags: []
+    };
+}
+
+// WHERE SHOULD WE VALIDATE ZONE .legnth ?
 const parsers = {
     'PLAY.minion': (minions) => minions.map(play_minion_parser),
     'PLAY.hero': ([hero, power, weapon]) => {
@@ -209,15 +241,18 @@ const parsers = {
     },
     'PLAY.secret': null,
     'PLAY.quest': null,
-    'HAND': null,
-    'DECK': null,
-    'GRAVE': null
+    'HAND': (cards) => cards.map(hand_parser),
+    'DECK': (cards) => cards.map(simple_parser),
+    'GRAVE': (cards) => cards.map(simple_parser)
 };
 
 export function get_parser_for_zone (zone: string) {
     return parsers[zone] || null;
 }
 
-export function parse(zone: string, tokens: string[]) {
-    return [];
+export function parse_row(zone: string, tokens: string[]) {
+    return get_parser_for_zone(zone)(tokens);
 }
+
+/// IN THE INIT
+// healthMax: parsed.stats.healthMax || parsed.stats.health,

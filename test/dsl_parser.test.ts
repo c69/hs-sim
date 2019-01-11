@@ -2,6 +2,7 @@ import assert = require('assert');
 import {
     split_into_lines,
     tokenize,
+    parse_row,
     play_minion_parser
 } from '../classes/dsl_parser';
 
@@ -26,6 +27,24 @@ a
 c
             `),
             ['a', 'b', 'c']
+        );
+    });
+});
+
+describe('parse_row', function() {
+    it('should parse minion line into array of minion-config object', function () {
+        const minions = parse_row(
+            'PLAY.minion',
+            ['3/2', ':"Annoy-o-Tron"', '1/1+TAUNT']
+        );
+        assert.equal(minions.length, 3);
+        assert.deepEqual(
+            minions,
+            [
+                {type: 'MINION', attack: 3, health: 2},
+                {type: 'MINION', by_name: 'Annoy-o-Tron'},
+                {type: 'MINION', attack: 1, health: 1, tags: ['TAUNT']},
+            ]
         );
     });
 });
@@ -69,7 +88,7 @@ describe('tokenize', function() {
 });
 
 describe('play_minion_parser', function() {
-    it('should parse a simle minion', function () {
+    it('should parse a simple minion', function () {
         const minionConfig = play_minion_parser(
             '1/2+TAUNT'
         );
@@ -79,7 +98,21 @@ describe('play_minion_parser', function() {
                 type: 'MINION',
                 attack: 1,
                 health: 2,
-                healthMax: 2,
+                tags: ['TAUNT']
+            }
+        );
+    });
+    it('should parse a simple minion with max health', function () {
+        const minionConfig = play_minion_parser(
+            '1/2(5)+TAUNT'
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                attack: 1,
+                health: 2,
+                healthMax: 5,
                 tags: ['TAUNT']
             }
         );
@@ -94,7 +127,6 @@ describe('play_minion_parser', function() {
                 type: 'MINION',
                 attack: 1,
                 health: 2,
-                healthMax: 2,
                 tags: ['CHARGE', 'DIVINE_SHIELD']
             }
         );

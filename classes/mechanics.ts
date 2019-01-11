@@ -37,34 +37,38 @@ heal(n)
 _________________________________
 2	Keywords
 2.1	Adapt -> target.adapt() >> from (3 of 9) choose (1) apply .buff
-2.2	Battlecry -> .on(play).battlecry()
-2.3	Charge -> target#charge
-2.4	Choose One -> .on(play).chooseOne();
-2.4.1 Choose Twice (2 of 3) -> https://hearthstone.gamepedia.com/Choose_Twice
-2.5	Combo -> if(combo).on(play).combo()
+2.2	Battlecry -> .on(play).do()
+2.3	Charge -> target+charge
+2.4	Choose One -> .on(play).chooseOne(1,2).do();
+2.4.1 Choose Twice (2 of 3) -> .on(play).chooseOne(1,2,3).do().chooseOne(1,2,3).do(); https://hearthstone.gamepedia.com/Choose_Twice
+2.5	Combo -> if(combo).on(play).do()
 2.6	Counter -> @@counter_spell .on(before_spell)
-2.7	Deathrattle -> .on(die).deathrattle()
+2.7	Deathrattle -> .on(die).do()
 2.8	Discover -> discover(query) AND move to @aside ?
-2.9	Divine Shield -> target#divine_shield
-2.10	Enrage -> if(damaged)#enraged
-2.11	Freeze -> target#frozen
-2.12	Immune -> target#immune
-2.13	Inspire -> on(power).inspire()
+2.9	Divine Shield -> target+divine_shield
+2.10	Enrage -> if(damaged)+enraged
+2.11	Freeze -> target+frozen
+2.12	Immune -> target+immune
+2.13	Inspire -> on(power).do()
 2.14	Lifesteal -> on(caused_damage).lifesteal(n)
-2.15	Mega-Windfury -> target#mega_winfury
-2.16	Overload -> player#overload(n)
-2.17	Poisonous -> target#poisonous
-2.18	Quest -> on(play).quest.start().progress().complete()
+2.15	Mega-Windfury -> target+mega_winfury
+2.16	Overload -> player+overload(n)
+2.17	Poisonous -> target+poisonous
+2.18	Quest -> on(play).quest.add(1).progress().complete()
 2.19	Recruit -> (query)from(@deck)move(@play)
-2.20	Secret -> on(play).secret.add(1).toggle(own_turn).trigger()
-2.21	Silence -> target#silence
-2.22	Stealth -> target#stealth
-2.23	Spell Damage -> aura(player, spell_damage_bonus)
-2.24	Taunt -> target#taunt
-2.25	Windfury -> target#windfury
-?? -    Echo
-?? -    Magnetic
-?? -    Overkill
+2.20	Secret -> on(play).secret.add(1).toggle(own_turn).on(condition).do()
+2.21	Silence -> target+silence
+2.22	Stealth -> target+stealth
+2.23	Spell Damage -> aura(player, +spell_damage_bonus)
+2.24	Taunt -> target+taunt
+2.25	Windfury -> target+windfury
+?? -    Echo -> on(play).copy(+echo+echoed).addToHand()
+?? -    Magnetic -> on(play).if(right_adjacent.race=MECH) target+self
+?? -    Overkill -> on(overkill).do()
+?? - odd/even
+?? - 2/3/4 prince
+?? - ritual
+?? - jade_golem
 
 3	Other abilities
 3.1	Card draw -> effect - !draw(player, n)
@@ -75,7 +79,7 @@ _________________________________
 3.6	Disable -> Hero Power disableHeroPower(player) / enable?
 3.7	Discard -> target.discard()
 3.8	Enchant -> target.enchant ~ buff // permanent, temporary, aura
-3.9	Elusive -> target#elusive (cannot be targeted by spells or hero powers)
+3.9	Elusive -> target+elusive (cannot be targeted by spells or hero powers)
 3.10	Equip -> create(weapon_id, player) move @play
 3.11	Forgetful -> on(before_attack, self) random(0.5) pickNewTarget()
 3.12	Gain Armor -> armor(player)
@@ -83,18 +87,18 @@ _________________________________
 3.14	Increment attribute -> target.stats(s: +n)
 3.15	Joust -> "Reveals a random minion from each player's deck. If the player who initiated the Joust produces a minion with a higher mana cost, they win the Joust, activating a secondary effect. Both minions are then shuffled back into their respective decks."
 3.16	Mind control effect -> target.giveTo(player) / posess(target, player)
-3.17	Modify cost -> stats
-3.18	Multiply attribute -> stats
-3.19	No Durability loss -> target#indestructible
+3.17	Modify cost -> target.stats(c: <~n)
+3.18	Multiply attribute -> target.stats(s: *n)
+3.19	No Durability loss -> target+indestructible
 3.20	Permanent target#permanent (minions @play without health/attack/cost)
 3.21	Put into battlefield -> move(target)to @play
 3.22	Put into hand -> draw(query) from deck to hand
 3.23	Refresh Mana -> player.(mana = maxMana)
 3.24	Remove from deck -> target@deck.mill()
-3.25	Replace -> "Replace one card with another, without destroying or discarding the original card."
+3.25	Replace -> target.getZone(as Z).getPosition(as P).remove().zone(P).add(new_card) "Replace one card with another, without destroying or discarding the original card."
 3.26	Restore Health -> target.heal()
 3.27	Return -> target.returnToHand()
-3.28	Set attribute -> stats
+3.28	Set attribute -> target.stats(a: =n)
 3.29	Shuffle into deck -> shuffle(target, player)
 3.30	Spend mana -> "Spends mana in addition to the normal mana cost to produce an extra effect. Currently, all cards with this ability spend all available mana, and the effect is proportional to the amount of mana spent."
 3.31	Summon -> summon(create(minion), player)

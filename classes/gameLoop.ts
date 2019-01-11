@@ -136,6 +136,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
   _onTurnStart () {
     this.turn += 1;
+    this.board.game.turn = this.turn; // LOL ..
 
     this._toggleActivePlayer();
     const activePlayer = this.activePlayer;
@@ -399,7 +400,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     return exportStateJSON(this.board);
   }
   view () {
-    console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
+    this.board.viewStateForGame();
     this.players.forEach(p => this.board.viewStateForPlayer(p));
 
     return this;

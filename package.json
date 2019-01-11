@@ -26,6 +26,7 @@
     "ts-version": "tsc -v",
     "lint": "tslint './classes/*.ts'",
     "test": "mocha --timeout=3000",
+    "test:watch": "mocha --timeout=3000 --watch-extensions ts --watch",
     "coverage": "nyc --reporter=html --reporter=text mocha",
     "coverage-ts": "echo https://istanbul.js.org/docs/tutorials/typescript/",
     "deps": "dependency-tree --directory ./dist/ ./dist/main_rpc.js > deps.json"

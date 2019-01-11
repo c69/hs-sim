@@ -1,6 +1,10 @@
 {
     "compilerOptions": {
-        "target": "es2017",
+        "target": "es2018",
+        "lib": [
+            "es2017",
+            "es2018.regexp"
+        ],
         "module": "commonjs",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
@@ -19,7 +23,9 @@
             "node",
             "mocha"
         ],
-        "typeRoots": [ "../node_modules/@types" ]
+        "typeRoots": [
+            "../node_modules/@types"
+        ]
     },
     "files": [
         "./main_rpc.ts"

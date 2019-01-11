@@ -4,7 +4,7 @@ export function split_into_lines (txt: string): string[] {
 
 export function tokenize (s: string) {
     try {
-        const header = s.match(/^([[A-Z]{1,20}\.?[a-z]{1,20}])\s/).slice(1)[0];
+        const header = s.match(/^([[A-Z]{1,20}]|[[A-Z]{1,20}\.?[a-z]{1,20}])\s/).slice(1)[0];
 
         const tail = s.slice(header.length).trim();
         // const [, entities] = tail.match(

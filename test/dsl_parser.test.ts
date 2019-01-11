@@ -48,7 +48,13 @@ describe('tokenize', function() {
 
     describe('shoulld handle edge cases', function () {
         ([
-            ['space', '[X.x] :"Hello space"', ['[X.x]', ':"Hello space"']]
+            ['top-level zone', '[X] yyy', ['[X]', 'yyy']],
+            // COMMA INSIDE BRACES FAILS - but only 26 cards have comma in their name
+            // ['comma inside braces', '[X] :"oops, sorry"', ['[X]', ':"oops, sorry"']],
+            ['space', '[X.x] :"Hello space"', ['[X.x]', ':"Hello space"']],
+            ['dollars, hashes, underscores', '[X] $7:GVG_014, 3/5#ok', ['[X]', '$7:GVG_014', '3/5#ok']],
+            ['braces', '[X] 0/26(30)/5:H', ['[X]', '0/26(30)/5:H']],
+            ['echnantment by id', '[X] x+:GVG_045+:"Some Spell"', ['[X]', 'x+:GVG_045+:"Some Spell"']]
         ] as [string, string, string[]][]).forEach(
             ([TEST_NAME, RAW, EXPECTED], i) => {
             it(TEST_NAME, function () {

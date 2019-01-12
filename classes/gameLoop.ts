@@ -25,6 +25,7 @@ interface ActionCoordinates {
   targetIndex: number;
   positionIndex: number;
 }
+
 interface GameRunner<G> {
   start (): G;
   end (): G;

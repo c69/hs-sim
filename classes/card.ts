@@ -324,7 +324,7 @@ class Enchantment extends Card {
 
 class Game extends Entity {
     name = 'GAME_ENTITY';
-    zone = ZONES.play;
+    zone: Types.ZonesAllCAPS = ZONES.play;
     type = CARD_TYPES.game;
 
     turn: number = 0;
@@ -337,6 +337,17 @@ class Game extends Entity {
         super(gameDef, eventBus);
         this._verifyDefinitionType(gameDef.type);
     }
+    // getting game state by zone is CUTE
+    // and CUTE is a design smell ..
+    // yes,
+    //      BEGIN = DECK
+    //      MULLIGAN = HAND
+    //      MAIN = PLAY
+    //      FINAL = GRAVE
+    // but this is very non-obvious ..
+    // get isStarted () {return this.zone === ZONES.play;}
+    // get isOver() {return this.zone === ZONES.grave;}
+
 }
 
 class Player extends Entity implements Cards.Player {

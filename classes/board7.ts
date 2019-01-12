@@ -429,8 +429,7 @@ export class Board {
         const h = player.hero;
         console.log(
             `[PLAY.hero]`,
-            [`${h.attack}/${h.health}?${h.healthMax}/${h.armor}:"${h.name}"`],
-            [`${h.attack}/${h.health}(${h.healthMax})/${h.armor}:${h.id}`],
+            [`${h.attack}/${h.health}(${h.healthMax})/${h.armor}:"${h.name}"`],
             `\n[PLAY.minions] `,
             own_minions.map(v=>
                 `${v.attack}/${v.health}` +

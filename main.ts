@@ -7,6 +7,28 @@ import {
 import {
   _progress
 } from './classes/cardUniverse';
+import { GameLoop } from './classes/gameLoop';
+
+const NUMBER_OF_GAMES_IN_QUICK_RUN = process.argv[2] || 50;
+
+function _ai_turn (
+  game: GameLoop,
+  max_actions_per_turn = 25,
+  exportState = false
+) {
+  for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
+    const opts = game.viewAvailableOptions();
+
+    if (exportState) game.exportState(); // verify JSON export is working
+
+    //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
+    if (opts.actions.length < 3) {
+      game.chooseOption(opts.token);
+      break; // = [end_turn, concede]
+    }
+    game.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
+  }
+}
 
 /** Play with random actions */
 function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
@@ -29,13 +51,7 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
     //g.viewState();
     //g.viewAvailableOptions();
 
-    const max_actions_per_turn = 10;
-    for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
-      const opts = g.viewAvailableOptions();
-      //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
-      if (!opts.actions.length) break;
-      g.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
-    }
+    _ai_turn(g, 10);
     console.log('___________________');
     g.endTurn();
   }
@@ -67,16 +83,16 @@ console.log('==================');
 
 // bootstrap / init
 // actual play
-const g2 = initGame(
+const g_visible = initGame(
   ['Alice', ['HERO_08']],
   ['Bob', ['HERO_01']]
 );
-g2.start();
+g_visible.start();
 
     //console.log('starting the game...333');
 //AI - Artificial stupIdity
-for(let i = 0; i < 13 && !g2.isOver; i++) {
-  g2.view();
+for(let i = 0; i < 13 && !g_visible.isOver; i++) {
+  g_visible.view();
   //console.log(g2.exportState());
 
   //g.usePower(0); // hero power first suggested target
@@ -85,35 +101,24 @@ for(let i = 0; i < 13 && !g2.isOver; i++) {
   //g.viewState();
   //g.viewAvailableOptions();
 
-  const max_actions_per_turn = 75;
-  for (let actionCount = 0; actionCount < max_actions_per_turn; actionCount++) {
-    const opts = g2.viewAvailableOptions();
-
-    g2.exportState(); // verify JSON export is working
-    //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
-    if (opts.actions.length < 3) {
-      g2.chooseOption(opts.token);
-      break; // = end_turn and concede
-    }
-    g2.chooseOption(opts.token); // just greedy do whatever you can (Hero is always first target, and attacks are free)
-  }
+  _ai_turn(g_visible, 75, true);
 
   console.log('___________________');
 }
 //console.log(g2.exportState());
 
-const jjj: any[] = [];
+const results: any[] = [];
 const _timeStart = Date.now();
-const _N_RUNS = process.argv[2] || 50;
-for (let j = 0; j < _N_RUNS; j++) {
+for (let i = 0; i < NUMBER_OF_GAMES_IN_QUICK_RUN; i++) {
   // current speed is 100 games in 15 seconds
   // @ 09 Mar 2018 - current speed is 100 games in 5 seconds, node 9.7.1
-  jjj.push(_quick_play(0, {mute: true}));
+  // @ 11 Jan 2018 - current speed is 100 games (1500 frames) in 3.5 sec, ts-node, node 11.6.0
+  results.push(_quick_play(0, {mute: true}));
 }
 const duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
 
-console.log(`completed ${_N_RUNS} games in ${duration_of_quick_run}s`);
-console.log(jjj.reduce((a,v) => {
+console.log(`completed ${NUMBER_OF_GAMES_IN_QUICK_RUN} games in ${duration_of_quick_run}s`);
+console.log(results.reduce((a,v) => {
   const k = v.winner;
   if (!a[k]) a[k] = 0;
   a[k] += 1;

@@ -122,7 +122,10 @@ function initGame (
 
     const g = new Game(initialState.g, eb);
     const p1 = new Player(initialState.p1, eb);
-    const p2 = new Player(initialState.p1, eb);
+    const p2 = new Player(initialState.p2, eb);
+
+    // :( .. Players are not comparable
+    // [cannot] if (p1 === p2) throw
 
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);

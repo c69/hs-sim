@@ -177,7 +177,7 @@ const theDeck = DECKS.everyone;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
 
-const card_defs = CardDefinitions.filter(v => v.collectible === true)
+const allowedCardDefinitions = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {
     return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
   })
@@ -188,7 +188,7 @@ const card_defs = CardDefinitions.filter(v => v.collectible === true)
   //.filter(v => !v._NOT_IMPLEMENTED_)
   .filter(v => theDeck.includes(v.name));
 /////
-console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
+console.log('\n == Cards allowed: ==== \n', allowedCardDefinitions.map(v => v.name));
 /////
 
 /**
@@ -284,14 +284,14 @@ const progressOfCards = coolCards.reduce((a, v) => {
 /**
  * Just console.log the progress stats
  */
-function _progress() {
+function _card_implementation_progress() {
   console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);
   //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 }
 
 export {
   CardDefinitionsIndex,
-  card_defs as _cardDefinitionArray, //INTERNAL
+  allowedCardDefinitions as _cardDefinitionArray, //INTERNAL
   createCard,
-  _progress
+  _card_implementation_progress as _progress
 };

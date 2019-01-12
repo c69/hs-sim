@@ -43,6 +43,16 @@ function generateDeck_legacy (
 
     return deck;
 }
+
+function generateWorldState (
+    player: Player,
+    hero_card_id: string,
+    state: any[],
+    eventBus: EventBus
+) {
+
+}
+
 // function generateDeck([hero, ...others]: string[]): Card[] {
 //     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
 // }
@@ -67,26 +77,59 @@ function playerDef (name: string) {
 }
 type PlayerConfig = [string, string[]];
 
+// const stateOverride = {
+//     game: {
+//         turn, turnMax
+//     },
+//     activePlayer: 1,
+//     passivePlayer: 2,
+//     p1_state: ['hero1', 'power1', 'everyhingElse'],
+//     p2_state: ['hero2', 'power2', 'everyhingElse'],
+//     p2_: {
+//         hero: 'hero',
+//         power: 'p',
+//         weapon: {
+//             seq: 3,
+//             ref: 'enemy_p',
+//             id: 'xx',
+//             name: 'A a',
+//             attack: 12,
+//             durability: 3
+//         },
+//         minions: ['minions'],
+//         hand: [],
+//         deck: [],
+//         grave: []
+//     }
+// };
+
 function initGame (
     [name1, deck1]: PlayerConfig,
-    [name2, deck2]: PlayerConfig
+    [name2, deck2]: PlayerConfig,
+    state?: object
 ) {
     const eb = new EventBus();
 
     // const rules = {}; // max, min, etc
     // const state = {}; // current turn, mana, etc
 
-    // todo: simplify constructor signatures for game and player
-    const g = new Game(gameDef(), eb);
-    const p1 = new Player(playerDef(name1), eb);
-    const p2 = new Player(playerDef(name2), eb);
+    const defaultState = {
+        g: gameDef(),
+        p1: playerDef(name1),
+        p2: playerDef(name2)
+    };
+    const initialState = defaultState; // << state
+
+    const g = new Game(initialState.g, eb);
+    const p1 = new Player(initialState.p1, eb);
+    const p2 = new Player(initialState.p1, eb);
 
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);
     const d1 = generateDeck_legacy(p1, deck1[0], [], eb);
     const d2 = generateDeck_legacy(p2, deck2[0], [], eb);
 
-    const board = new Board(g, [p1, d1], [p2, d2], eb);
+    const board = new Board(g, [p1, d1], [p2, d2]);
     const runner = new GameLoop(board, [p1, p2], eb);
 
     return runner;

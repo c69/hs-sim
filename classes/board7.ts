@@ -149,8 +149,7 @@ export class Board {
     constructor(
         g: Game,
         [p1, d1]: [Player, C[]],
-        [p2, d2]: [Player, C[]],
-        eb: any
+        [p2, d2]: [Player, C[]]
     ) {
         this.game = g;
 
@@ -300,12 +299,22 @@ export class Board {
         return this;
     }
     placeCardInit (card: C) {
+        // -- handle FORCED_INITIAL state
         this.add(card, Z.deck);
         if (card.type === CARD_TYPES.hero && !card.owner.hero) {
             card.owner.hero = card;
             this.move(card, Z.play, Z.deck);
         }
         return card;
+    }
+    putInitialHands (state?: any) {
+        if (!state) {
+          [this.player1, this.player2].forEach(player => {
+            this.draw(player, 5); // PUT ~ "draw without triggers"
+          });
+        } else {
+            throw 'draw5: state support not implemented';
+        }
     }
     /**
      * https://hearthstone.gamepedia.com/Advanced_rulebook#Moving_between_Zones

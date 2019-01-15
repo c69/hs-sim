@@ -1,3 +1,5 @@
+import { str2num, assignDefined } from './utils';
+
 interface CanBePlayed {
     cost?: number;
 }
@@ -50,25 +52,6 @@ interface MinionConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeRe
 interface HeroConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeReferenced, Partial<EntitySelector> {
     type: 'HERO';
     armor?: number;
-}
-
-function str2num (n: string | undefined) {
-    return n ? Number(n) : undefined;
-}
-
-function assignDefined<T={}>(
-    // target: object,
-     ...sources: T[]): T {
-    const target = {} as T;
-    for (const source of sources) {
-        for (const key of Object.keys(source)) {
-            const val = source[key];
-            if (val !== undefined) {
-                target[key] = val;
-            }
-        }
-    }
-    return target;
 }
 
 // const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\((?<healthMax>\d+)\))?(:?\/?(?<armor>\d+))?/;
@@ -247,6 +230,6 @@ const parsers = {
     'GRAVE': (cards) => cards.map(simple_parser)
 };
 
-export function get_parser_for_zone (zone: string) {
+export function get_parser_for_zone (zone: keyof typeof parsers) {
     return parsers[zone] || null;
 }

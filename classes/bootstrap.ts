@@ -13,12 +13,15 @@ import {
 
 import {
     CARD_TYPES,
-    ZONES
+    ZONES,
+    CardDefinition
 } from '../data/constants';
 
 import { Board } from './board7';
-import { Card, Game, Player } from './card';
+import { Card, Game, Player, Minion } from './card';
 import { GameLoop, profileGame } from './gameLoop';
+import { parse_row, tail_split } from './state-dsl-tokenizer';
+import { assignDefined } from './utils';
 
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
@@ -44,6 +47,18 @@ function generateDeck_legacy (
     return deck;
 }
 
+function generateBoard (
+    player: Player,
+    minions: CardDefinition[] = [],
+    eventBus: EventBus
+) {
+    return minions.map(v => {
+        // const c = createCard(DEFAULT_MINION_ID, player, eventBus);
+        const d = defaultMinionDef(v);
+        return new Minion(d, player, eventBus);
+    });
+}
+
 function generateWorldState (
     player: Player,
     hero_card_id: string,
@@ -57,6 +72,13 @@ function generateWorldState (
 //     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
 // }
 
+interface EntityDef {
+    id: string;
+    type: 'GAME' | 'PLAYER';
+    name: string;
+    _info: string;
+    text: string;
+}
 function gameDef () {
     return {
         id: 'xxx_GAME_ENTITY',
@@ -74,6 +96,39 @@ function playerDef (name: string) {
         _info: '...',
         text: '...'
     };
+}
+function defaultMinionDef(override: Partial<CardDefinition> = {}): CardDefinition {
+    return {
+        id: 'HS-SIM_TestMinion_001',
+        type: CARD_TYPES.minion,
+        name: 'Mindless Minion',
+        attack: ('attack' in override) ? override.attack : 0,
+        health:  ('health' in override) ? override.health : 1,
+        tags: ('tags' in override) ? override.tags : [],
+        _info: '',
+        text: ''
+      };
+}
+function defaultStateDef (override = {}) {
+    return assignDefined({
+        game: { turn: 1 },
+        p1: {
+            mana: 0, manaCrystals: 0, fatigue: 1,
+            minions: '',
+            hero: '0/30/0:HERO_01',
+            hand: '',
+            deck: '',
+            grave: ''
+        },
+        p2: {
+            mana: 0, manaCrystals: 0, fatigue: 1,
+            minions: '',
+            hero: '0/30/0:HERO_01',
+            hand: '',
+            deck: '',
+            grave: ''
+        }
+    }, override);
 }
 type PlayerConfig = [string, string[]];
 
@@ -113,26 +168,44 @@ function initGame (
     // const rules = {}; // max, min, etc
     // const state = {}; // current turn, mana, etc
 
-    const defaultState = {
-        g: gameDef(),
-        p1: playerDef(name1),
-        p2: playerDef(name2)
-    };
-    const initialState = defaultState; // << state
+    const defaultDefs = new Map<string, EntityDef>([
+        ['g', gameDef()],
+        ['p1', playerDef(name1)],
+        ['p2', playerDef(name2)]
+    ]);
 
-    const g = new Game(initialState.g, eb);
-    const p1 = new Player(initialState.p1, eb);
-    const p2 = new Player(initialState.p2, eb);
+    //g .turn, .maxTurn
+    //p .mana .manaCrystals .active .first // MAYBE manaMax ?
+    // p minions / hero / hand / deck / grave
+    const g = new Game(defaultDefs.get('g'), eb);
+    const p1 = new Player(defaultDefs.get('p1'), eb);
+    const p2 = new Player(defaultDefs.get('p2'), eb);
 
     // :( .. Players are not comparable
     // [cannot] if (p1 === p2) throw
 
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);
+
+    const initialState = defaultStateDef(state);
+
+    const [m1, m2] = ['p1', 'p2'].map((p,i) => {
+        const { minions } = initialState[p];
+        if (!minions) return [];
+        return generateBoard(
+            i===0 ? p1 : p2,
+            parse_row('PLAY.minion', tail_split(minions)),
+            eb
+        );
+    });
+
     const d1 = generateDeck_legacy(p1, deck1[0], [], eb);
     const d2 = generateDeck_legacy(p2, deck2[0], [], eb);
 
     const board = new Board(g, [p1, d1], [p2, d2]);
+    board.add_as_OVERRIDE(m1);
+    board.add_as_OVERRIDE(m2);
+
     const runner = new GameLoop(board, [p1, p2], eb);
 
     return runner;

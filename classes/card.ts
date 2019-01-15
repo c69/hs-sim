@@ -328,6 +328,7 @@ class Game extends Entity {
     type = CARD_TYPES.game;
 
     turn: number = 0;
+    turnMax: number = 87;
 
     isStarted: boolean = false;
     isOver: boolean = false;
@@ -361,6 +362,7 @@ class Player extends Entity implements Cards.Player {
     manaCrystals: number = 0;
     mana: number = 0;
     fatigue: number = 1;
+
     lost: boolean = false;
 
     constructor(playerDef: CardDefinition, eventBus: EventBus) {

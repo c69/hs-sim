@@ -19,13 +19,22 @@ export function tokenize (s: string) {
         return null;
     }
 }
+export function tail_split (tail: string) {
+    return tail.split(/,\s*/);
+}
 
 export function get_zone (header: string): string {
     return header.slice(1, -1);
 }
 
-export function parse_row(zone: string, tokens: string[]) {
-    return get_parser_for_zone(zone)(tokens);
+type LOL = Parameters<typeof get_parser_for_zone>[0];
+export function parse_row(zone: LOL, tokens: string[]) {
+    try {
+        return get_parser_for_zone(zone)(tokens);
+    } catch (e) {
+        console.log(`parse_row:: args: ${zone}`, tokens);
+        throw e;
+    }
 }
 
 /// IN THE INIT

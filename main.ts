@@ -81,6 +81,30 @@ g_fatigue.view();
 
 console.log('==================');
 
+const state_definition_TAUNT_start = {
+  game: { turn: 5 },
+  p1: { active: true, mana: 5, manaCrystals: 7,
+        minions: `1/10` },
+  p2: { minions: `1/1, 1/1, 1/1, 5/1+TAUNT, 1/1, 1/1, 1/1` }
+};
+
+const state_definition_TAUNT_end = {
+  p1: { minions: `1/5` },
+  p2: { minions: `1/1, 1/1, 1/1, 1/1, 1/1, 1/1` }
+};
+
+const g_parse1 = initGame(
+  ['Alice', ['HERO_08']],
+  ['Bob', ['HERO_01']],
+  state_definition_TAUNT_start
+);
+g_parse1.start();
+// console.log(g_parse1.viewState());
+g_parse1.view();
+g_parse1.chooseOption();
+g_parse1.view();
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
 // bootstrap / init
 // actual play
 const g_visible = initGame(

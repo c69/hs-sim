@@ -18,7 +18,7 @@ import {
   ZONES
 } from '../data/constants';
 
-import { exportStateJSON } from './exportState';
+import { exportState, exportStateJSON } from './exportState';
 import { viewAvailableOptions } from './frameOptions';
 
 interface ActionCoordinates {
@@ -386,6 +386,9 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
   viewAvailableOptions = () => {
     return viewAvailableOptions(this.board);
+  }
+  viewState () {
+    return exportState(this.board);
   }
   exportState = () => {
     // this.view(); // DEBUG

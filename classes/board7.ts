@@ -170,6 +170,14 @@ export class Board {
 
         console.log(`Board setup finished for: ${g} !: ${p1} VS ${p2}\n`);
     }
+    add_as_OVERRIDE (arr: Card[]) {
+        if (!arr) return;
+        this.all = this.all.concat(arr);
+        this.all.forEach(c => this.initCache(c));
+        arr.map(c => this.putInitialMinions(c));
+
+        console.log(`Board override finished for: ${this.game} !: ${this.player1} VS ${this.player2}\n`);
+    }
     select<T extends C = C>(this: this, p: Player, query: string): C[] {
         if (query === '*') return this.all;
 
@@ -305,6 +313,11 @@ export class Board {
             card.owner.hero = card;
             this.move(card, Z.play, Z.deck);
         }
+        return card;
+    }
+    putInitialMinions (card: C) {
+        this.add(card, Z.play);
+        card.isReady = true;
         return card;
     }
     putInitialHands (state?: any) {

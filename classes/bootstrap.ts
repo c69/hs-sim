@@ -25,6 +25,10 @@ import { assignDefined } from './utils';
 
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
+// function generateDeck([hero, ...others]: string[]): Card[] {
+//     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
+// }
+
 function generateDeck_legacy (
     player: Player,
     hero_card_id: string,
@@ -53,24 +57,10 @@ function generateBoard (
     eventBus: EventBus
 ) {
     return minions.map(v => {
-        // const c = createCard(DEFAULT_MINION_ID, player, eventBus);
-        const d = defaultMinionDef(v);
+        const d = minionDef(v);
         return new Minion(d, player, eventBus);
     });
 }
-
-function generateWorldState (
-    player: Player,
-    hero_card_id: string,
-    state: any[],
-    eventBus: EventBus
-) {
-
-}
-
-// function generateDeck([hero, ...others]: string[]): Card[] {
-//     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
-// }
 
 interface EntityDef {
     id: string;
@@ -97,7 +87,7 @@ function playerDef (name: string) {
         text: '...'
     };
 }
-function defaultMinionDef(override: Partial<CardDefinition> = {}): CardDefinition {
+function minionDef(override: Partial<CardDefinition> = {}): CardDefinition {
     return {
         id: 'HS-SIM_TestMinion_001',
         type: CARD_TYPES.minion,
@@ -132,32 +122,6 @@ function defaultStateDef (override = {}) {
 }
 type PlayerConfig = [string, string[]];
 
-// const stateOverride = {
-//     game: {
-//         turn, turnMax
-//     },
-//     activePlayer: 1,
-//     passivePlayer: 2,
-//     p1_state: ['hero1', 'power1', 'everyhingElse'],
-//     p2_state: ['hero2', 'power2', 'everyhingElse'],
-//     p2_: {
-//         hero: 'hero',
-//         power: 'p',
-//         weapon: {
-//             seq: 3,
-//             ref: 'enemy_p',
-//             id: 'xx',
-//             name: 'A a',
-//             attack: 12,
-//             durability: 3
-//         },
-//         minions: ['minions'],
-//         hand: [],
-//         deck: [],
-//         grave: []
-//     }
-// };
-
 function initGame (
     [name1, deck1]: PlayerConfig,
     [name2, deck2]: PlayerConfig,
@@ -166,7 +130,6 @@ function initGame (
     const eb = new EventBus();
 
     // const rules = {}; // max, min, etc
-    // const state = {}; // current turn, mana, etc
 
     const defaultDefs = new Map<string, EntityDef>([
         ['g', gameDef()],

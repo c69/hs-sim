@@ -118,6 +118,7 @@ abstract class Card extends Entity implements Cards.Card {
 
     owner: Player;
 
+    // TODO: do we really need to couple card & player & eventBus
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, eventBus);
 

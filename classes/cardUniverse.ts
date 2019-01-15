@@ -192,9 +192,14 @@ console.log('\n == Cards allowed: ==== \n', allowedCardDefinitions.map(v => v.na
 /////
 
 /**
- * todo: do we really need to couple card & player & eventBus
+ * If you only know the ID of the card, and not its type
+ * then costructor must be resolved in run-time.
+ *
+ * For normal cases (summon, buff, bootstrap):
+ * - just use concrete subclasses of Card: new Minion(def, ..), new Enchantment(def, ..), etc
+ * - TODO: implement getDefinitionById(id)
  */
-function createCard(id: string, player: Player, eventBus: EventBus) {
+function createCardById(id: string, player: Player, eventBus: EventBus) {
   const card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 
@@ -292,6 +297,6 @@ function _card_implementation_progress() {
 export {
   CardDefinitionsIndex,
   allowedCardDefinitions as _cardDefinitionArray, //INTERNAL
-  createCard,
+  createCardById as createCard,
   _card_implementation_progress as _progress
 };

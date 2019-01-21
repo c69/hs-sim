@@ -170,8 +170,9 @@ export class Board {
 
         console.log(`Board setup finished for: ${g} !: ${p1} VS ${p2}\n`);
     }
-    add_as_OVERRIDE (arr: Card[]) {
+    putDirectlyIntoPlay(arr: Card[]) {
         if (!arr) return;
+
         this.all = this.all.concat(arr);
         this.all.forEach(c => this.initCache(c));
         arr.map(c => this.putInitialMinions(c));
@@ -307,7 +308,6 @@ export class Board {
         return this;
     }
     placeCardInit (card: C) {
-        // -- handle FORCED_INITIAL state
         this.add(card, Z.deck);
         if (card.type === CARD_TYPES.hero && !card.owner.hero) {
             card.owner.hero = card;
@@ -320,9 +320,12 @@ export class Board {
         card.isReady = true;
         return card;
     }
-    putInitialHands () {
+    dealInitialHands () {
         [this.player1, this.player2].forEach(player => {
-        this.draw(player, 5); // PUT ~ "draw without triggers"
+            // DEAL ~ "draw without triggers"
+            // should it be draw(player, n, silent:false) ?
+            // and actually - what is the expected behavior ?
+            this.draw(player, 5);
         });
     }
     /**
@@ -463,7 +466,7 @@ export class Board {
                 // ).join('')}`
             ),
             `\n[DECK: ${this.deck(player).length}]`,
-
+            // todo: add GRAVE -> this.grave(player)
         );
     }
 }

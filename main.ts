@@ -21,7 +21,6 @@ function _ai_turn (
 
     if (exportState) game.exportState(); // verify JSON export is working
 
-    //console.log(`XXX ${g2.activePlayer.name}'s options:`, opts);
     if (opts.actions.length < 3) {
       game.chooseOption(opts.token);
       break; // = [end_turn, concede]
@@ -39,7 +38,10 @@ function _quick_play (seed: number = 0, {mute}: {mute?: boolean}) {
     console.warn = () => void(0);
   }
   // actual play
-  const g = initGame(['Red', ['HERO_01']], ['Blue', ['HERO_02']]);
+  const g = initGame(
+    ['Red', ['HERO_01']],
+    ['Blue', ['HERO_02']]
+  );
   g.start();
   //actual HS hardcoded maximum round is 87 or so..
   for(let i = 0; i < 90 && !g.isOver; i++) {
@@ -115,11 +117,11 @@ const g_visible = initGame(
 );
 g_visible.start();
 
-    //console.log('starting the game...333');
+//console.log('starting the game...333');
 //AI - Artificial stupIdity
 for(let i = 0; i < 13 && !g_visible.isOver; i++) {
   g_visible.view();
-  //console.log(g2.exportState());
+  //console.log(g.exportState());
 
   //g.usePower(0); // hero power first suggested target
   //g.playCard(0,0); // play first possible card at first target
@@ -131,7 +133,7 @@ for(let i = 0; i < 13 && !g_visible.isOver; i++) {
 
   console.log('___________________');
 }
-//console.log(g2.exportState());
+//console.log(g.exportState());
 
 const results: any[] = [];
 const _timeStart = Date.now();

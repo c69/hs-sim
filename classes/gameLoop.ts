@@ -164,7 +164,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     if (this.board.game.isStarted) return this; // multiple chain calls to .start could be ignored
     this.board.game.isStarted = true;
     this.board.game.isOver = false;
-    this.board.putInitialHands();
+    this.board.dealInitialHands();
 
     return this;
   }

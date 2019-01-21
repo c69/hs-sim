@@ -225,8 +225,8 @@ function initGame (
 
     if (state) {
         if (m1 || m2) {
-            board.add_as_OVERRIDE(m1);
-            board.add_as_OVERRIDE(m2);
+            board.putDirectlyIntoPlay(m1);
+            board.putDirectlyIntoPlay(m2);
         }
         board.game.isStarted = true; // HACK !
     }

@@ -105,7 +105,8 @@ g_parse1.view();
 g_parse1.chooseOption();
 g_parse1.view();
 console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-throw '!';
+// throw '!';
+
 // bootstrap / init
 // actual play
 const g_visible = initGame(

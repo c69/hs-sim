@@ -5,6 +5,7 @@
 - UI: start new game
 - UI: view card(id)
 
+- move e2e tests (like fatigue) from main.ts to e2e
 - fluent API for gameRunner: .tap, .do, .attack(id), .playCard(id), etc
 - use predefined deck from simple open source format
 - implement ONE popular deck (Keleseth Warlock, Freeze Mage, MSG Murloc Shaman)

@@ -54,12 +54,17 @@ interface HeroConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeRefe
     armor?: number;
 }
 
-// const CHARACTER_STATS_RE = /^(?<attack>\d+)\/(?<health>\d+)(:?\((?<healthMax>\d+)\))?(:?\/?(?<armor>\d+))?/;
 const GENERIC_STATS_RE = /^(?<s1>\d+)\/(?<s2>\d+)(:?\((?<s2_max>\d+)\))?(:?\/?(?<s3>\d+))?/;
-
-// const CHARACTER_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
 const GENERIC_LOCATOR_RE =/^(:?[\/\D()])?:(?<by_id>[_0-9A-Za-z]{1,})|"(?<by_name>[^"]{1,})"/;
 
+/**
+ * WIP
+ * This parser is aimed to provide ability to parse any* entity in PLAY zone
+ * - though, SPELL and ENCHANTMENT are not supported yet
+ * - and WEAPON and HERO_POWER are not in simulator yet
+ * @param token s1/s2(s2_max)/s3:by_id+buff1+buff2 -- (EITHER stats or locator), plus vanilla tags
+ * - by_name is being parsed, but its not yet implemented in overrides
+ */
 export function play_generic_parser (token: string) {
     const stats_raw = token.match(GENERIC_STATS_RE);
     const stats = stats_raw ? stats_raw.groups : {};
@@ -82,6 +87,7 @@ export function play_generic_parser (token: string) {
     //
     // 2/3(5):GVG_OK.isReady=TRUE+TAUNT+A+B+:XXX_01#omg
     // 2/3(100):"Hungry Goblin"#01.race(DRAGON)+TAUNT+:XXX_01(:ZZZ_022)
+    //
     // stats = 0/0(0)[/0]
     // locator = :[id | name]
     // ref = #[000 | a-z_A-Z0-9]
@@ -91,7 +97,6 @@ export function play_generic_parser (token: string) {
     //
     // Now:
     // [stats] [buff/vanilla_tag]*
-    // TODO: add locator :id
     // TODO: add buff locator +:id
     // FUTURE: add byName :"xxx",
     // FUTURE: consider if we even need/can .prop

@@ -27,28 +27,32 @@ const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selec
 
 // function generateDeck([hero, ...others]: string[]): Card[] {
 //     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
+
+//     //    return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
 // }
 
+function generateRandomDeck (n: number): CardDefinition[] {
+    return (new Array(n)).fill(1).map(v => {
+        const dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
+        const card = _cardDefinitionArray[dice];
+        return card;
+    });
+}
+
+/** Hero (configurable) + random allowed cards */
 function generateDeck_legacy (
     player: Player,
     hero_card_id: string,
-    starting_deck: Card[],
     eventBus: EventBus
-) {
-    const deck: Card[] = [];
-    //add Hero
-    deck.push(createCard(hero_card_id, player, eventBus));
-
-    //add 30 random cards to deck
-    for (let i = 0; i < STARTING_DECK_SIZE; i++) {
-        const dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
-        const card = _cardDefinitionArray[dice];
-
-        const new_card = createCard(card.id, player, eventBus);
-        deck.push(new_card);
-    }
-
-    return deck;
+): Card[] {
+    return [
+        //add Hero
+        createCard(hero_card_id, player, eventBus),
+        //add 30 random cards to deck
+        ...generateRandomDeck(STARTING_DECK_SIZE).map(
+            card => createCard(card.id, player, eventBus)
+        )
+    ];
 }
 
 function generateBoard (
@@ -122,6 +126,14 @@ function defaultStateDef (override = {}) {
 }
 type PlayerConfig = [string, string[]];
 
+/**
+ * Initialize game:
+ * - decks are list of Card Id, with first assumed to be Hero
+ * - state is applied aferwards
+ * @param param0
+ * @param param1
+ * @param state
+ */
 function initGame (
     [name1, deck1]: PlayerConfig,
     [name2, deck2]: PlayerConfig,
@@ -149,25 +161,48 @@ function initGame (
 
     // const d1 = generateDeck(deck1);
     // const d2 = generateDeck(deck2);
+    let d1 = [];
+    let d2 = [];
+    let m1;
+    let m2;
+    const hero1 = deck1[0];
+    const hero2 = deck2[0];
 
-    const initialState = defaultStateDef(state);
+    if (!state) {
+        d1 = generateDeck_legacy(p1, hero1, eb);
+        d2 = generateDeck_legacy(p2, hero2, eb);
+    } else {
+        const initialState = defaultStateDef(state);
 
-    const [m1, m2] = ['p1', 'p2'].map((p,i) => {
-        const { minions } = initialState[p];
-        if (!minions) return [];
-        return generateBoard(
-            i===0 ? p1 : p2,
-            parse_row('PLAY.minion', tail_split(minions)),
-            eb
-        );
-    });
+        [m1, m2] = ['p1', 'p2'].map((p,i) => {
+            const { minions } = initialState[p];
+            if (!minions) return [];
 
-    const d1 = generateDeck_legacy(p1, deck1[0], [], eb);
-    const d2 = generateDeck_legacy(p2, deck2[0], [], eb);
+            return generateBoard(
+                i===0 ? p1 : p2,
+                parse_row('PLAY.minion', tail_split(minions)),
+                eb
+            );
+        });
+
+        d1 = [createCard(hero1, p1, eb)];
+        d2 = [createCard(hero2, p2, eb)];
+
+        // if ((initialState as any).p1.deck) {
+        // }
+        // if ((initialState as any).p2.deck) {
+        // }
+    }
 
     const board = new Board(g, [p1, d1], [p2, d2]);
-    board.add_as_OVERRIDE(m1);
-    board.add_as_OVERRIDE(m2);
+
+    if (state) {
+        if (m1 || m2) {
+            board.add_as_OVERRIDE(m1);
+            board.add_as_OVERRIDE(m2);
+        }
+        board.game.isStarted = true; // HACK !
+    }
 
     const runner = new GameLoop(board, [p1, p2], eb);
 

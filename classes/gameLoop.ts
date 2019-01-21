@@ -160,11 +160,11 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     //execute triggers: "When player draws a card"
   }
 
-  start (state?: any) {
+  start () {
     if (this.board.game.isStarted) return this; // multiple chain calls to .start could be ignored
     this.board.game.isStarted = true;
     this.board.game.isOver = false;
-    this.board.putInitialHands(/*state*/);
+    this.board.putInitialHands();
 
     return this;
   }

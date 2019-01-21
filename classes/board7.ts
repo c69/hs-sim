@@ -320,14 +320,10 @@ export class Board {
         card.isReady = true;
         return card;
     }
-    putInitialHands (state?: any) {
-        if (!state) {
-          [this.player1, this.player2].forEach(player => {
-            this.draw(player, 5); // PUT ~ "draw without triggers"
-          });
-        } else {
-            throw 'draw5: state support not implemented';
-        }
+    putInitialHands () {
+        [this.player1, this.player2].forEach(player => {
+        this.draw(player, 5); // PUT ~ "draw without triggers"
+        });
     }
     /**
      * https://hearthstone.gamepedia.com/Advanced_rulebook#Moving_between_Zones

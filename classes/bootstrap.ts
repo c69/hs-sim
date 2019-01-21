@@ -96,15 +96,15 @@ function playerDef (name: string) {
     };
 }
 function minionDef(override: Partial<MinionConfig> = {}): CardDefinition {
-    console.log(override);
+    // console.log(override);
     const id = override.by_id;
     let def;
     if (id) {
-        console.log('Locator!', id);
+        // console.log('Locator!', id);
         def = findCardByIdLocator(id, override.type);
         if (!def) throw `invalid locator: ${id}`;
     }
-    console.log(def);
+    // console.log(def);
     return  assignDefined({}, def ? def : {
         id: 'HS-SIM_TestMinion_001',
         type: CARD_TYPES.minion,
@@ -181,8 +181,6 @@ function initGame (
     // :( .. Players are not comparable
     // [cannot] if (p1 === p2) throw
 
-    // const d1 = generateDeck(deck1);
-    // const d2 = generateDeck(deck2);
     let d1 = [];
     let d2 = [];
     let m1;
@@ -201,7 +199,7 @@ function initGame (
             if (!minions) return [];
 
             return generateBoard(
-                i===0 ? p1 : p2,
+                i === 0 ? p1 : p2,
                 processOverrides(
                     parse_row(
                         'PLAY.minion',
@@ -214,11 +212,6 @@ function initGame (
 
         d1 = [createCard(hero1, p1, eb)];
         d2 = [createCard(hero2, p2, eb)];
-
-        // if ((initialState as any).p1.deck) {
-        // }
-        // if ((initialState as any).p2.deck) {
-        // }
     }
 
     const board = new Board(g, [p1, d1], [p2, d2]);

@@ -422,6 +422,29 @@ export class Board {
         // copy.zone = ZONES.aside;
     }
     // --------------
+    viewStateDSL() {
+        function formatDSL (minions) {
+            return minions.map(v => (
+                `${v.attack}/${v.health}` + (
+                    v.isDamaged() ? `(${v.healthMax})`: ''
+                ) + `${v.tags.map(tag => typeof tag === 'string' ? '+' + tag : 'fx').join('')}`
+            )).join(', ');
+        }
+        const a = this.activePlayer;
+        const p = this.passivePlayer;
+
+        const own_minions = this.select<Cards.Character>(a, 'own minion');
+        const enemy_minions = this.select<Cards.Character>(a, 'enemy minion');
+
+        return {
+            p1: {
+                minions: formatDSL(own_minions)
+            },
+            p2: {
+                minions: formatDSL(enemy_minions)
+            }
+        };
+    }
     viewStateForGame() {
         const a = this.activePlayer;
         const p = this.passivePlayer;

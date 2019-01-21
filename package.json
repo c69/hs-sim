@@ -18,7 +18,6 @@
   },
   "scripts": {
     "dev-dep_nyc": "^13.1.0",
-    "ts-node:help": "ts-node --help",
     "start": "ts-node -T main.ts",
     "start:qa": "ts-node main.ts",
     "start:inspect": "echo 'Go to chrome://inspect' && node --inspect -r ts-node/register main.ts",

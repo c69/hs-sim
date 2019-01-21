@@ -2,27 +2,26 @@ import assert = require('assert');
 import { initGame } from './../classes/bootstrap';
 import { GameOptions } from './../data/constants';
 
+// todo: only minions are supported in snapshot testing
 const state_definition_TAUNT_start = {
-    game: { turn: 5 },
+    // game: { turn: 5 },
     p1: {
-        active: true, mana: 5, manaCrystals: 7,
+        // active: true, mana: 5, manaCrystals: 7,
         minions: `2/10`
     },
     p2: { minions: `1/1, 1/1, 1/1, 5/1+TAUNT, 1/1, 1/1, 1/1` }
 };
 
 const state_definition_TAUNT_end = {
-    p1: { minions: `1/5` },
+    p1: { minions: `2/5(10)` },
     p2: { minions: `1/1, 1/1, 1/1, 1/1, 1/1, 1/1` }
 };
 
 /**
- * TODO: 20/01/2019 - takes 90ms to complete
- * TODO: verbose syntax, lots of inner knowledge
- * TODO: NOW STIL creates deck, draws hand, etc
+ * TODO: 21/01/2019 - takes 50ms to complete
  * TODO: no easy way to silence console output
  */
-describe('TAUNT', function () {
+describe('Mechanics: TAUNT', function () {
 
     let game: ReturnType<typeof initGame>;
 
@@ -50,20 +49,14 @@ describe('TAUNT', function () {
         });
 
         it('should be the one killed by auto attack by e2e bot', function () {
-            const ownMinions = (state: ReturnType<typeof game.viewState>) => state.entities.filter(v => v.type === 'MINION' && v.attack === 2 && v.zone === 'PLAY');
-            const enemyMinions = (state) => state.entities.filter(v => v.type === 'MINION' && v.health === 1 && v.zone === 'PLAY');
-
-            const s1 = game.viewState();
-            assert.equal(ownMinions(s1).length, 1);
-            assert.equal(enemyMinions(s1).length, 7);
+            const s1_dsl = game.board.viewStateDSL();
+            assert.deepEqual(s1_dsl, state_definition_TAUNT_start);
 
             game.chooseOption();
             game.view(); // DEBUG
 
-            const s2 = game.viewState();
-            assert.equal(ownMinions(s2).length, 1);
-            assert.equal(ownMinions(s2)[0].health, 5);
-            assert.equal(enemyMinions(s2).length, 6);
+            const s2_dsl = game.board.viewStateDSL();
+            assert.deepEqual(s2_dsl, state_definition_TAUNT_end);
         });
     });
 });

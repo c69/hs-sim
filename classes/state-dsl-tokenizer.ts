@@ -1,4 +1,4 @@
-import { get_parser_for_zone } from './state-dsl-parsers';
+import { PARSERS } from './state-dsl-parsers';
 
 export function split_into_lines (txt: string): string[] {
     return txt.split(/\n|;/).map(v => v.trim()).filter(v => !!v);
@@ -27,15 +27,23 @@ export function get_zone (header: string): string {
     return header.slice(1, -1);
 }
 
-type LOL = Parameters<typeof get_parser_for_zone>[0];
-export function parse_row(zone: LOL, tokens: string[]) {
+// https://github.com/Microsoft/TypeScript/issues/24197#issuecomment-389928513
+export function parse_row <
+    K extends keyof typeof PARSERS,
+    T extends typeof PARSERS
+>(zone: K, tokens: string[]): ReturnType<T[K]> {
     try {
-        return get_parser_for_zone(zone)(tokens);
+        return PARSERS[zone](tokens);
     } catch (e) {
         console.log(`parse_row:: args: ${zone}`, tokens);
         throw e;
     }
 }
+
+// type LOL = Parameters<typeof get_parser_for_zone>[0];
+// export function parse_row(zone: LOL, tokens: string[]) {
+// type LOL = Parameters<typeof get_parser_for_zone>[0];
+// type RET = ReturnType<typeof get_parser_for_zone>;
 
 /// IN THE INIT
 // healthMax: parsed.stats.healthMax || parsed.stats.health,

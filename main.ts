@@ -85,13 +85,13 @@ console.log('==================');
 const state_definition_TAUNT_start = {
   game: { turn: 5 },
   p1: { active: true, mana: 5, manaCrystals: 7,
-        minions: `1/10` },
-  p2: { minions: `1/1, 1/1, 1/1, 5/1+TAUNT, 1/1, 1/1, 1/1` }
+        minions: `3/10` },
+  p2: { minions: `1/1+CHARGE, 1/1, 1/1, :CS2_125, 1/1, 1/1, 1/1` }
 };
 
 const state_definition_TAUNT_end = {
-  p1: { minions: `1/5` },
-  p2: { minions: `1/1, 1/1, 1/1, 1/1, 1/1, 1/1` }
+  p1: { minions: `3/7` },
+  p2: { minions: `1/1+CHARGE, 1/1, 1/1, 1/1, 1/1, 1/1` }
 };
 
 const g_parse1 = initGame(
@@ -105,7 +105,7 @@ g_parse1.view();
 g_parse1.chooseOption();
 g_parse1.view();
 console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-
+throw '!';
 // bootstrap / init
 // actual play
 const g_visible = initGame(

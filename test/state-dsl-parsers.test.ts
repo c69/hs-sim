@@ -59,6 +59,33 @@ describe('play_minion_parser', function() {
             }
         );
     });
+    xit('should parse minion by locator :id, when stats are present', function () {
+        const minionConfig = play_minion_parser(
+            '1/42:CS2_125' // Ironfur Grizzly
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                by_id: 'CS2_125',
+                attack: 1,
+                health: 42
+            }
+        );
+    });
+    xit('should parse minion by locator :id, when buffs are present.', function () {
+        const minionConfig = play_minion_parser(
+            ':CS2_125+DIVINE_SHIELD' // Ironfur Grizzly
+        );
+        assert.deepEqual(
+            minionConfig,
+            {
+                type: 'MINION',
+                by_id: 'CS2_125',
+                tags: ['DIVINE_SHIELD']
+            }
+        );
+    });
 
     it('should parse minion by locator :"name"', function () {
         const minionConfig = play_minion_parser(

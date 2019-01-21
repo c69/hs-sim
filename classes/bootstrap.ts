@@ -7,7 +7,7 @@ class EventBus extends EventEmitter {
 import {
     createCard,
     _cardDefinitionArray,
-    // CardDefinitionsIndex,
+    CardDefinitionsIndex,
     // _progress
 } from './cardUniverse';
 
@@ -20,6 +20,7 @@ import {
 import { Board } from './board7';
 import { Card, Game, Player, Minion } from './card';
 import { GameLoop, profileGame } from './gameLoop';
+import { MinionConfig } from './state-dsl-parsers';
 import { parse_row, tail_split } from './state-dsl-tokenizer';
 import { assignDefined } from './utils';
 
@@ -55,14 +56,17 @@ function generateDeck_legacy (
     ];
 }
 
+function processOverrides(minions: MinionConfig[]): CardDefinition[] {
+    return minions.map(v => minionDef(v));
+}
+
 function generateBoard (
     player: Player,
     minions: CardDefinition[] = [],
     eventBus: EventBus
 ) {
     return minions.map(v => {
-        const d = minionDef(v);
-        return new Minion(d, player, eventBus);
+        return new Minion(v, player, eventBus);
     });
 }
 
@@ -91,17 +95,35 @@ function playerDef (name: string) {
         text: '...'
     };
 }
-function minionDef(override: Partial<CardDefinition> = {}): CardDefinition {
-    return {
+function minionDef(override: Partial<MinionConfig> = {}): CardDefinition {
+    console.log(override);
+    const id = override.by_id;
+    let def;
+    if (id) {
+        console.log('Locator!', id);
+        def = findCardByIdLocator(id, override.type);
+        if (!def) throw `invalid locator: ${id}`;
+    }
+    console.log(def);
+    return  assignDefined({}, def ? def : {
         id: 'HS-SIM_TestMinion_001',
         type: CARD_TYPES.minion,
         name: 'Mindless Minion',
-        attack: ('attack' in override) ? override.attack : 0,
-        health:  ('health' in override) ? override.health : 1,
-        tags: ('tags' in override) ? override.tags : [],
+        attack: 0,
+        health: 1,
+        tags: [], // TODO: merge buffs
         _info: '',
         text: ''
-      };
+      }, override);
+}
+function findCardByIdLocator (id: string, type: any): CardDefinition | undefined {
+    const candidate = CardDefinitionsIndex[id];
+    if (!candidate) return;
+    if (candidate.type !== type) {
+        console.error(candidate);
+        throw `Locator id :${id} is searching for type ${type}, but instead got: ${candidate.type} ${candidate.name}`;
+    }
+    return candidate;
 }
 function defaultStateDef (override = {}) {
     return assignDefined({
@@ -180,7 +202,12 @@ function initGame (
 
             return generateBoard(
                 i===0 ? p1 : p2,
-                parse_row('PLAY.minion', tail_split(minions)),
+                processOverrides(
+                    parse_row(
+                        'PLAY.minion',
+                        tail_split(minions)
+                    )
+                ),
                 eb
             );
         });

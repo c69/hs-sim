@@ -46,7 +46,7 @@ interface PlayerConfig extends CanBeMutated, CanBeReferenced, Partial<EntitySele
     manaCrystals: number;
     manaCrystalsMax: number; // with overloaded
 }
-interface MinionConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeReferenced, Partial<EntitySelector> {
+export interface MinionConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeReferenced, Partial<EntitySelector> {
     type: 'MINION';
 }
 interface HeroConfig extends CharacterBase, CanBePlayed, CanBeMutated, CanBeReferenced, Partial<EntitySelector> {
@@ -220,8 +220,8 @@ function simple_parser (card_token: string) {
 }
 
 // WHERE SHOULD WE VALIDATE ZONE .legnth ?
-const parsers = {
-    'PLAY.minion': (minions) => minions.map(play_minion_parser),
+export const PARSERS = {
+    'PLAY.minion': (minions: string[]) => minions.map(play_minion_parser),
     'PLAY.hero': ([hero, power, weapon]) => {
         return [
             play_hero_parser(hero),
@@ -242,7 +242,3 @@ const parsers = {
     'DECK': (cards) => cards.map(simple_parser),
     'GRAVE': (cards) => cards.map(simple_parser)
 };
-
-export function get_parser_for_zone (zone: keyof typeof parsers) {
-    return parsers[zone] || null;
-}

@@ -78,6 +78,7 @@ for(let i = 0; i < 66 && !g_fatigue.isOver; i++) {
   g_fatigue.endTurn();
 }
 g_fatigue.view();
+g_fatigue.end();
 
 console.log('==================');
 
@@ -141,8 +142,7 @@ for (let i = 0; i < NUMBER_OF_GAMES_IN_QUICK_RUN; i++) {
 }
 const duration_of_quick_run = ((Date.now()- _timeStart)/1000).toFixed(3);
 
-console.log(`completed ${NUMBER_OF_GAMES_IN_QUICK_RUN} games in ${duration_of_quick_run}s`);
-console.log(results.reduce((a,v) => {
+const final_stats = results.reduce((a,v) => {
   const k = v.winner;
   if (!a[k]) a[k] = 0;
   a[k] += 1;
@@ -158,17 +158,38 @@ console.log(results.reduce((a,v) => {
   shortestGame: 100
 } as {
   [key: string]: any;
-}));
+});
+// speed max: 570 fps (2500 runs)
+// speed avg: 350..400 fps (50..100 runs)
+// speed min: 150..220 fps (1 run)
+console.log(
+`completed ${NUMBER_OF_GAMES_IN_QUICK_RUN} games in ${duration_of_quick_run}s.
+ Speed ~ ${(final_stats.turns / Number(duration_of_quick_run)).toFixed(2)} fps`
+);
 
 _progress();
 //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
+//card implementation progress (of 1809): { done: 146, in_progress: 70, not_started: 1453 }
 
 //debug output for performance testing
-const g_profile = _GAME_profile();
-// let b_profile = Board._profile()
-console.log(g_profile);
-// console.log(b_profile);
+console.log(_GAME_profile());
+//TODO: reimplement profiling for Board/selector (see board2.legacy.ts)
 console.log( {
   // 'selectorsPerFrame': (b_profile._$_count / g_profile._frame_count_active).toFixed(3)
 });
-console.log(process.memoryUsage(), process.cpuUsage());
+const {
+  rss,
+  heapTotal,
+  heapUsed
+} = process.memoryUsage();
+
+const toMb = (n: number) => (n / (2 ** 20)).toFixed(2);
+  console.log(
+  {
+    rss: toMb(rss), // 92
+    heapTotal: toMb(heapTotal), // 70
+    heapUsed: toMb(heapUsed), // 50
+    stackAndCode: toMb(rss - heapTotal) // 13
+  },
+  process.cpuUsage()
+);

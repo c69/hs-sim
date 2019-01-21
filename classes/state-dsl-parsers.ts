@@ -74,8 +74,12 @@ export function play_generic_parser (token: string) {
     //----------------------
     // in HS-SIM, only props are:
     //      race, isReady, attackedThisTurn,
+    //      .enity_id - TOO DANGEROUS
     //   vanilla tags with args:
     //      overload(3)
+    //      spell_power(2) which is also an aura
+    //      COUNTER EXAMPLE: aura(target, OG_452)
+    //
     // 2/3(5):GVG_OK.isReady=TRUE+TAUNT+A+B+:XXX_01#omg
     // 2/3(100):"Hungry Goblin"#01.race(DRAGON)+TAUNT+:XXX_01(:ZZZ_022)
     // stats = 0/0(0)[/0]
@@ -84,8 +88,15 @@ export function play_generic_parser (token: string) {
     // prop = .[[_a-zA-Z0-9]  (-A-Za-z0-9_)]   // !!! no locator
     // buff = +[vanilla_tag | locator] [(locator)]
     // vanilla_tag = _A-Z0-9    // CAPS_LOCK_WITH_UNDERSCORE_11
-    // [stats] [locator] [ref] [prop]* [buff]*
+    //
+    // Now:
     // [stats] [buff/vanilla_tag]*
+    // TODO: add locator :id
+    // TODO: add buff locator +:id
+    // FUTURE: add byName :"xxx",
+    // FUTURE: consider if we even need/can .prop
+    // -- as it needs to be applied AFTER the entity is initialized
+    // -- sometimes .prop can be a getter, or computable
 
     const parsed = {
         stats: {
@@ -136,6 +147,7 @@ function play_hero_parser (hero: string): HeroConfig {
 }
 
 function play_power_parser (power: string) {
+    throw 'not implemented';
     return {};
 }
 function play_weapon_parser (weapon: string) {
@@ -170,6 +182,7 @@ function play_player_parser (player: string): PlayerConfig {
 }
 
 function hand_parser (card: string) {
+    throw 'not implemented';
     // HAND| $4:"Fireball", $3:GVG_097.powered_up, 3/2:"Imp"+:OG_345e, $6(10):"Aviana"
     return {
         type: 'UNKNOWN_PLAYABLE', // LOL ..

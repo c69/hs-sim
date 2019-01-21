@@ -64,6 +64,11 @@ export abstract class Entity implements Cards.Entity {
         }
     }
 
+    /** TODO: convert to O(1) accessor,
+     *  this is the most slow part of the code now !!!
+     * @deprecated - signature must be Map<[k in TAGS], TAGS[k]>
+     * yes, not "Set<TAGS>, because overoad, spell damage, etc"
+     */
     get tags() {
         //console.log(`card.tags: #${this.entity_id}`);
         const allBuffs = this.buffs.concat(this.incomingAuras);

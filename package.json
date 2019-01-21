@@ -18,8 +18,10 @@
   },
   "scripts": {
     "dev-dep_nyc": "^13.1.0",
+    "ts-node:help": "ts-node --help",
     "start": "ts-node -T main.ts",
     "start:qa": "ts-node main.ts",
+    "start:inspect": "echo 'Go to chrome://inspect' && node --inspect -r ts-node/register main.ts",
     "build": "tsc --project ./ && npm run copy-data",
     "build:debug": "tsc --listFiles --diagnostics --project ./ && npm run copy-data",
     "copy-data": "echo Please, now go, and manually copy all .json files from ./data to ./dist/data",

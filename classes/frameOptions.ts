@@ -16,7 +16,10 @@ type Player = Cards.Player;
  * A nice GOD method
  * @returns {Object} options //options.actions[]<{id, type, name, ?unit, ?cost, ?targetList[], ?positionList[]}>
  */
-export function viewAvailableOptions (board: Board) {
+export function viewAvailableOptions (board: Board): {
+    token: string;
+    actions: GameOptions.Action[];
+} {
     const select = (p: Player, q: string) => board.select(p, q);
     const activePlayer = board.activePlayer;
     const passivePlayer = board.passivePlayer;
@@ -27,7 +30,7 @@ export function viewAvailableOptions (board: Board) {
     if (!game.isStarted || game.isOver) {
         console.log(`No options are available - game ${game} state is wrong: s ${game.isStarted} | o ${game.isOver}`);
         return {
-            // token ?
+            token: `${game}:${game.turn}`,
             actions: [] as GameOptions.Action[]
         };
     }

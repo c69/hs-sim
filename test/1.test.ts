@@ -12,7 +12,7 @@ describe('Array', function() {
 
 describe('arrayOfCard.ts should load', function() {
     it('should return array-like object ', function() {
-      let a = new ArrayOfCards();
+      const a = new ArrayOfCards();
       assert.equal(a.concat(42)[0], 42);
     });
 });

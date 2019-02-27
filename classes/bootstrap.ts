@@ -7,46 +7,76 @@ class EventBus extends EventEmitter {
 import {
     createCard,
     _cardDefinitionArray,
-    // CardDefinitionsIndex,
+    CardDefinitionsIndex,
     // _progress
 } from './cardUniverse';
 
 import {
     CARD_TYPES,
-    ZONES
+    ZONES,
+    CardDefinition
 } from '../data/constants';
 
 import { Board } from './board7';
-import { Card, Game, Player } from './card';
+import { Card, Game, Player, Minion } from './card';
 import { GameLoop, profileGame } from './gameLoop';
+import { MinionConfig } from './state-dsl-parsers';
+import { parse_row, tail_split } from './state-dsl-tokenizer';
+import { assignDefined } from './utils';
 
 const STARTING_DECK_SIZE = 30; // change to 300 if you want to stress test selectors
 
+// function generateDeck([hero, ...others]: string[]): Card[] {
+//     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
+
+//     //    return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
+// }
+
+function generateRandomDeck (n: number): CardDefinition[] {
+    return (new Array(n)).fill(1).map(v => {
+        const dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
+        const card = _cardDefinitionArray[dice];
+        return card;
+    });
+}
+
+/** Hero (configurable) + random allowed cards */
 function generateDeck_legacy (
     player: Player,
     hero_card_id: string,
-    starting_deck: Card[],
+    eventBus: EventBus
+): Card[] {
+    return [
+        //add Hero
+        createCard(hero_card_id, player, eventBus),
+        //add 30 random cards to deck
+        ...generateRandomDeck(STARTING_DECK_SIZE).map(
+            card => createCard(card.id, player, eventBus)
+        )
+    ];
+}
+
+function processOverrides(minions: MinionConfig[]): CardDefinition[] {
+    return minions.map(v => minionDef(v));
+}
+
+function generateBoard (
+    player: Player,
+    minions: CardDefinition[] = [],
     eventBus: EventBus
 ) {
-    const deck: Card[] = [];
-    //add Hero
-    deck.push(createCard(hero_card_id, player, eventBus));
-
-    //add 30 random cards to deck
-    for (let i = 0; i < STARTING_DECK_SIZE; i++) {
-        const dice = Math.floor(Math.random() * (_cardDefinitionArray.length));
-        const card = _cardDefinitionArray[dice];
-
-        const new_card = createCard(card.id, player, eventBus);
-        deck.push(new_card);
-    }
-
-    return deck;
+    return minions.map(v => {
+        return new Minion(v, player, eventBus);
+    });
 }
-// function generateDeck([hero, ...others]: string[]): Card[] {
-//     return [new Card.Hero(hero), ...(shuffle(others.map(cardFromName)))];
-// }
 
+interface EntityDef {
+    id: string;
+    type: 'GAME' | 'PLAYER';
+    name: string;
+    _info: string;
+    text: string;
+}
 function gameDef () {
     return {
         id: 'xxx_GAME_ENTITY',
@@ -65,28 +95,135 @@ function playerDef (name: string) {
         text: '...'
     };
 }
+function minionDef(override: Partial<MinionConfig> = {}): CardDefinition {
+    // console.log(override);
+    const id = override.by_id;
+    let def;
+    if (id) {
+        // console.log('Locator!', id);
+        def = findCardByIdLocator(id, override.type);
+        if (!def) throw `invalid locator: ${id}`;
+    }
+    // console.log(def);
+    return  assignDefined({}, def ? def : {
+        id: 'HS-SIM_TestMinion_001',
+        type: CARD_TYPES.minion,
+        name: 'Mindless Minion',
+        attack: 0,
+        health: 1,
+        tags: [], // TODO: merge buffs
+        _info: '',
+        text: ''
+      }, override);
+}
+function findCardByIdLocator (id: string, type: any): CardDefinition | undefined {
+    const candidate = CardDefinitionsIndex[id];
+    if (!candidate) return;
+    if (candidate.type !== type) {
+        console.error(candidate);
+        throw `Locator id :${id} is searching for type ${type}, but instead got: ${candidate.type} ${candidate.name}`;
+    }
+    return candidate;
+}
+function defaultStateDef (override = {}) {
+    return assignDefined({
+        game: { turn: 1 },
+        p1: {
+            mana: 0, manaCrystals: 0, fatigue: 1,
+            minions: '',
+            hero: '0/30/0:HERO_01',
+            hand: '',
+            deck: '',
+            grave: ''
+        },
+        p2: {
+            mana: 0, manaCrystals: 0, fatigue: 1,
+            minions: '',
+            hero: '0/30/0:HERO_01',
+            hand: '',
+            deck: '',
+            grave: ''
+        }
+    }, override);
+}
 type PlayerConfig = [string, string[]];
 
+/**
+ * Initialize game:
+ * - decks are list of Card Id, with first assumed to be Hero
+ * - state is applied aferwards
+ * @param param0
+ * @param param1
+ * @param state
+ */
 function initGame (
     [name1, deck1]: PlayerConfig,
-    [name2, deck2]: PlayerConfig
+    [name2, deck2]: PlayerConfig,
+    state?: object
 ) {
     const eb = new EventBus();
 
     // const rules = {}; // max, min, etc
-    // const state = {}; // current turn, mana, etc
 
-    // todo: simplify constructor signatures for game and player
-    const g = new Game(gameDef(), eb);
-    const p1 = new Player(playerDef(name1), eb);
-    const p2 = new Player(playerDef(name2), eb);
+    const defaultDefs = new Map<string, EntityDef>([
+        ['g', gameDef()],
+        ['p1', playerDef(name1)],
+        ['p2', playerDef(name2)]
+    ]);
 
-    // const d1 = generateDeck(deck1);
-    // const d2 = generateDeck(deck2);
-    const d1 = generateDeck_legacy(p1, deck1[0], [], eb);
-    const d2 = generateDeck_legacy(p2, deck2[0], [], eb);
+    //g .turn, .maxTurn
+    //p .mana .manaCrystals .active .first // MAYBE manaMax ?
+    // p minions / hero / hand / deck / grave
+    const g = new Game(defaultDefs.get('g'), eb);
+    const p1 = new Player(defaultDefs.get('p1'), eb);
+    const p2 = new Player(defaultDefs.get('p2'), eb);
 
-    const board = new Board(g, [p1, d1], [p2, d2], eb);
+    // :( .. Players are not comparable
+    // [cannot] if (p1 === p2) throw
+
+    let d1 = [];
+    let d2 = [];
+    let m1;
+    let m2;
+    const hero1 = deck1[0];
+    const hero2 = deck2[0];
+
+    if (!state) {
+        d1 = generateDeck_legacy(p1, hero1, eb);
+        d2 = generateDeck_legacy(p2, hero2, eb);
+    } else {
+        const initialState = defaultStateDef(state);
+
+        [m1, m2] = ['p1', 'p2'].map((p,i) => {
+            const { minions } = initialState[p];
+            if (!minions) return [];
+
+            return generateBoard(
+                i === 0 ? p1 : p2,
+                processOverrides(
+                    parse_row(
+                        'PLAY.minion',
+                        tail_split(minions)
+                    )
+                ),
+                eb
+            );
+        });
+
+        d1 = [createCard(hero1, p1, eb)];
+        d2 = [createCard(hero2, p2, eb)];
+    }
+
+    const board = new Board(g, [p1, d1], [p2, d2]);
+
+    if (state) {
+        if (m1 || m2) {
+            board.putDirectlyIntoPlay(m1);
+            board.putDirectlyIntoPlay(m2);
+        }
+        board.game.isStarted = true; // HACK !
+    }
+
     const runner = new GameLoop(board, [p1, p2], eb);
 
     return runner;

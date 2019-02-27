@@ -177,7 +177,7 @@ const theDeck = DECKS.everyone;
 // const theDeck = DECKS.DieInsect;
 // const theDeck = DECKS.Fuu;
 
-const card_defs = CardDefinitions.filter(v => v.collectible === true)
+const allowedCardDefinitions = CardDefinitions.filter(v => v.collectible === true)
   .filter(v => {
     return v.type === CARD_TYPES.minion || v.type === CARD_TYPES.spell;
   })
@@ -188,13 +188,18 @@ const card_defs = CardDefinitions.filter(v => v.collectible === true)
   //.filter(v => !v._NOT_IMPLEMENTED_)
   .filter(v => theDeck.includes(v.name));
 /////
-console.log('\n == Cards allowed: ==== \n', card_defs.map(v => v.name));
+console.log('\n == Cards allowed: ==== \n', allowedCardDefinitions.map(v => v.name));
 /////
 
 /**
- * todo: do we really need to couple card & player & eventBus
+ * If you only know the ID of the card, and not its type
+ * then costructor must be resolved in run-time.
+ *
+ * For normal cases (summon, buff, bootstrap):
+ * - just use concrete subclasses of Card: new Minion(def, ..), new Enchantment(def, ..), etc
+ * - TODO: implement getDefinitionById(id)
  */
-function createCard(id: string, player: Player, eventBus: EventBus) {
+function createCardById(id: string, player: Player, eventBus: EventBus) {
   const card = CardDefinitionsIndex[id];
   if (!card) throw `Cannot find card with ID ${id}`;
 
@@ -284,14 +289,14 @@ const progressOfCards = coolCards.reduce((a, v) => {
 /**
  * Just console.log the progress stats
  */
-function _progress() {
+function _card_implementation_progress() {
   console.log(`~~~~~~\n card implementation progress (of ${abilitiesMixin.length}):`, progressOfCards);
   //card implementation progress (of 1206): { done: 41, in_progress: 7, not_started: 1110 }
 }
 
 export {
   CardDefinitionsIndex,
-  card_defs as _cardDefinitionArray, //INTERNAL
-  createCard,
-  _progress
+  allowedCardDefinitions as _cardDefinitionArray, //INTERNAL
+  createCardById as createCard,
+  _card_implementation_progress as _progress
 };

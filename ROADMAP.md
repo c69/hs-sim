@@ -1,9 +1,16 @@
+- [v] put Game and Player entities into board, so they can have tags
 
+- State - split board to state manager and selector
+- Context - mechanics(context)
+- UI: start new game
+- UI: view card(id)
+
+- move e2e tests (like fatigue) from main.ts to e2e
+- fluent API for gameRunner: .tap, .do, .attack(id), .playCard(id), etc
 - use predefined deck from simple open source format
 - implement ONE popular deck (Keleseth Warlock, Freeze Mage, MSG Murloc Shaman)
 
 - import fresh cards, merge abilities definitions
-- put Game and Player entities into board, so they can have tags
 
 - support Morph (Faceless, Echoing Ooze)
 - support hero_power
@@ -15,7 +22,7 @@
 - support heavy chained events (Defile, "summon Knife Juggler")
 - fix silence
 - support Steal (and Blessing of DrawCard)
-- support Discover (Amber)
+- support Discover (priest $8 Amber)
 - support ChooseOne + feinhel
 - add seed-based PRNG
 - ??? ritual / script
@@ -28,3 +35,4 @@
 - support auchenai aura
 - support malganis
 - support fresh Darksteed
+- Shudderwock ?! add History ?

@@ -64,6 +64,11 @@ export abstract class Entity implements Cards.Entity {
         }
     }
 
+    /** TODO: convert to O(1) accessor,
+     *  this is the most slow part of the code now !!!
+     * @deprecated - signature must be Map<[k in TAGS], TAGS[k]>
+     * yes, not "Set<TAGS>, because overoad, spell damage, etc"
+     */
     get tags() {
         //console.log(`card.tags: #${this.entity_id}`);
         const allBuffs = this.buffs.concat(this.incomingAuras);
@@ -118,6 +123,7 @@ abstract class Card extends Entity implements Cards.Card {
 
     owner: Player;
 
+    // TODO: do we really need to couple card & player & eventBus
     constructor(cardDef: CardDefinition, owner: Player, eventBus: EventBus) {
         super(cardDef, eventBus);
 
@@ -324,10 +330,11 @@ class Enchantment extends Card {
 
 class Game extends Entity {
     name = 'GAME_ENTITY';
-    zone = ZONES.play;
+    zone: Types.ZonesAllCAPS = ZONES.play;
     type = CARD_TYPES.game;
 
     turn: number = 0;
+    turnMax: number = 87;
 
     isStarted: boolean = false;
     isOver: boolean = false;
@@ -337,6 +344,17 @@ class Game extends Entity {
         super(gameDef, eventBus);
         this._verifyDefinitionType(gameDef.type);
     }
+    // getting game state by zone is CUTE
+    // and CUTE is a design smell ..
+    // yes,
+    //      BEGIN = DECK
+    //      MULLIGAN = HAND
+    //      MAIN = PLAY
+    //      FINAL = GRAVE
+    // but this is very non-obvious ..
+    // get isStarted () {return this.zone === ZONES.play;}
+    // get isOver() {return this.zone === ZONES.grave;}
+
 }
 
 class Player extends Entity implements Cards.Player {
@@ -350,6 +368,7 @@ class Player extends Entity implements Cards.Player {
     manaCrystals: number = 0;
     mana: number = 0;
     fatigue: number = 1;
+
     lost: boolean = false;
 
     constructor(playerDef: CardDefinition, eventBus: EventBus) {

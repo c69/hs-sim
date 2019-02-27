@@ -131,7 +131,7 @@ function summonMinion (card: Cards.Card, board, game) {
         }.bind(game);
 
         game.eventBus.on(event_name, listener);
-        console.log(`${card.name} is now listening to ${event_name}`);
+        console.log(`${card} is now listening to ${event_name}`);
         card._listener = [event_name, listener];
     } else {
         //console.log('Hand.js NO TRIGGERS in ', Reflect.ownKeys(card));

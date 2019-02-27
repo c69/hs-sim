@@ -99,7 +99,7 @@ export function exportState (board: Board) {
         game: {
             turn: game.turn,
             //isStarted/isOver should be converted to state:enum
-            isStarted: game.isOver,
+            isStarted: game.isStarted,
             isOver: game.isOver,
             activePlayer: { // consider returning players as array
                 name: activePlayer.name,

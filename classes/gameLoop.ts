@@ -18,13 +18,14 @@ import {
   ZONES
 } from '../data/constants';
 
-import { exportStateJSON } from './exportState';
+import { exportState, exportStateJSON } from './exportState';
 import { viewAvailableOptions } from './frameOptions';
 
 interface ActionCoordinates {
   targetIndex: number;
   positionIndex: number;
 }
+
 interface GameRunner<G> {
   start (): G;
   end (): G;
@@ -114,14 +115,6 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
 
     this._toggleActivePlayer();
   }
-  _init () {
-    //console.log('starting the game...');
-    this.players.forEach(player => {
-      this.board.draw(player, 5);
-      player.manaCrystals = 1;
-      player.mana = player.manaCrystals;
-    });
-  }
   _toggleActivePlayer () {
     this.activePlayer = this.players[this.turn % 2];
     this.passivePlayer = this.players[(this.turn + 1) % 2];
@@ -136,6 +129,7 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   }
   _onTurnStart () {
     this.turn += 1;
+    this.board.game.turn = this.turn; // LOL ..
 
     this._toggleActivePlayer();
     const activePlayer = this.activePlayer;
@@ -144,10 +138,10 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
       return this.end();
     }
 
+    if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     if (activePlayer.manaCrystals < 10) {
       activePlayer.manaCrystals += 1;
     }
-    if (activePlayer.mana < 0) throw `Unexpected state: player ${activePlayer.name} has negative mana:${activePlayer.mana}, check code for bugs!`;
     activePlayer.mana = activePlayer.manaCrystals;
 
     this.board.select(activePlayer, 'own minion').forEach(v => {
@@ -170,12 +164,11 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
     if (this.board.game.isStarted) return this; // multiple chain calls to .start could be ignored
     this.board.game.isStarted = true;
     this.board.game.isOver = false;
-    this._init();//maybe with rules ? like min/max mana, etc
+    this.board.dealInitialHands();
 
     return this;
   }
   end () {
-
     this.board.game.isOver = true;
     this.board.game.result = {
       //could be a draw, too.. (when turn #87 is reached ?)
@@ -394,12 +387,15 @@ export class GameLoop implements GameRPC, GameRunner<GameLoop> {
   viewAvailableOptions = () => {
     return viewAvailableOptions(this.board);
   }
+  viewState () {
+    return exportState(this.board);
+  }
   exportState = () => {
     // this.view(); // DEBUG
     return exportStateJSON(this.board);
   }
   view () {
-    console.log(`turn # ${this.turn}: ${this.activePlayer.name}`);
+    this.board.viewStateForGame();
     this.players.forEach(p => this.board.viewStateForPlayer(p));
 
     return this;
